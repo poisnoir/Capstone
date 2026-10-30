@@ -1,0 +1,14 @@
+* M16 current-loop behavioural model: AC loop gain + step
+* Error amp: A0=1e6, pole 10 Hz, zero 30 kHz, second pole 3 MHz
+* Buffer: ideal unity gain; coil 70u + 2R; sense 1R; coupling 100u
+Vcmd cmd 0 DC 0 AC 0 PULSE(0 0.15 1m 1u 1u 10m 20m)
+Vinj inj 0 DC 0 AC 1
+Eea ea 0 LAPLACE {V(cmd)-V(sense)}={1e6*(1+s/(2*pi*30k))/((1+s/(2*pi*10))*(1+s/(2*pi*3meg)))}
+Ebuf buf 0 ea inj 1
+C1 buf coil 100u
+L1 coil sense 70u
+R1 coil sense 2
+Rsen sense 0 1
+.ac dec 300 100 3meg
+.tran 0 20m 0 100n
+.end

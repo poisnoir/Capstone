@@ -1,0 +1,34 @@
+name: hdl
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check for RTL
+        id: rtl
+        run: |
+          if find fpga/rtl -type f \( -name '*.sv' -o -name '*.v' \) | grep -q .; then
+            echo "found=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "found=false" >> "$GITHUB_OUTPUT"
+            echo "no RTL yet; skipping"
+          fi
+
+      - name: Install Verilator
+        if: steps.rtl.outputs.found == 'true'
+        run: sudo apt-get update && sudo apt-get install -y verilator
+
+      - name: Lint
+        if: steps.rtl.outputs.found == 'true'
+        run: |
+          find fpga/rtl -type f \( -name '*.sv' -o -name '*.v' \) -print0 \
+            | xargs -0 verilator --lint-only -Wall

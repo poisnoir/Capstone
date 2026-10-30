@@ -1,0 +1,9 @@
+* M16 summer 7-tone (24 kHz off): 3rd-order nonlinearity sweep
+* A3 is set from a single-tone THD: a3 = 4*10^(THD/20)/A^2
+.param A=0.15
+.param A3=1.78e-3
+B1 s 0 V=A*(sin(2*pi*20k*time)+sin(2*pi*22k*time)+sin(2*pi*26k*time)+sin(2*pi*28k*time)+sin(2*pi*30k*time)+sin(2*pi*32k*time)+sin(2*pi*34k*time))
+B2 out 0 V=V(s)+A3*V(s)*V(s)*V(s)
+.step param A3 list 1.78e-3 1.78e-2 1.78e-1
+.tran 0 10m 0 100n
+.end

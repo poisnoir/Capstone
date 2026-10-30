@@ -1,0 +1,30 @@
+name: docs
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install PyYAML
+        run: python3 -m pip install --quiet pyyaml
+
+      - name: Internal paths
+        run: python3 tools/check_doc_paths.py
+
+      - name: External references
+        run: python3 tools/check_references.py
+
+      - name: Generated manifest is current
+        run: python3 tools/gen_reference_manifest.py --check

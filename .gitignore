@@ -1,0 +1,66 @@
+# --- Excluded references (see docs/reference/MANIFEST.md) ---
+/HAJ_Thesis_2018.pdf
+/AnserEMT-onlineversion.pdf
+/Catheter Position Tracking System*.pdf
+/12477_Cavaliere.pdf
+/Capstone_Manual_2026.pdf
+/vendor/
+/reference-cache/
+/docs/extracts/*.pdf
+/docs/ad7768-ad7768-4.pdf
+/docs/Materials procurement.pdf
+
+# --- Generated simulation output (regenerable from .cir) ---
+*.raw
+*.op.raw
+*.fft
+*.sav
+*.plt
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.ruff_cache/
+
+# --- OS / editors ---
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# --- Office lock files ---
+~$*
+.~lock.*
+
+# --- Build output ---
+build/
+out/
+*.o
+*.jou
+*.str
+.Xil/
+*.dcp
+*.bit
+*.ltx
+
+# --- KiCad local state ---
+*-backups/
+fp-info-cache
+*.kicad_prl
+*.bak
+
+# --- Local agent state ---
+.opencode/
+
+# --- Arm repo checkout (integration) ---
+/robot-arm/vendor/
+
+# --- Private / personal / local-only (public repo) ---
+/docs/phase1/Phase 1 Report - Team 25 (ELEC-COEN 490).docx
+/docs/setup/CLIENT_SETUP.md
+/docs/extracts/*.txt

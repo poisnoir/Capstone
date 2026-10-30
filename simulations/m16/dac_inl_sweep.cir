@@ -1,0 +1,11 @@
+* M16 DAC 7-tone (24 kHz off): INL pattern sweep, 1 LSB amplitude
+.param A=0.1
+.param LSB=5/65536
+.param NC=257
+B1 d 0 V=2.5 + A*(sin(2*pi*20k*time)+sin(2*pi*22k*time)+sin(2*pi*26k*time)+sin(2*pi*28k*time)+sin(2*pi*30k*time)+sin(2*pi*32k*time)+sin(2*pi*34k*time))
+B2 q 0 V=int(V(d)/5*65536)/65536*5
+B3 e 0 V=1.0*LSB*sin(2*pi*V(q)/5*NC)
+B4 out 0 V=V(q)+V(e)
+.step param NC list 1 2 3 5 7 11 17 31 63 127 257 511 1023
+.tran 0 10m 0 100n
+.end

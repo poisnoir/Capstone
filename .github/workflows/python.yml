@@ -1,0 +1,27 @@
+name: python
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  compile:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install PyYAML
+        run: python3 -m pip install --quiet pyyaml
+
+      - name: Byte-compile tools and simulations
+        run: python3 -m compileall -q tools simulations
+
+      - name: Contract check
+        run: python3 tools/contract_ci.py check

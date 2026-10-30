@@ -1,0 +1,48 @@
+name: contract-guard
+
+on:
+  pull_request:
+    paths:
+      - "contract/**"
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  guard:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install PyYAML
+        run: python3 -m pip install --quiet pyyaml
+
+      - name: Validate contract
+        run: python3 tools/contract_ci.py check
+
+      - name: Require version, changelog and decision updates
+        run: |
+          git diff --name-only "${{ github.event.pull_request.base.sha }}...HEAD" > changed.txt
+          cat changed.txt
+          for f in contract/VERSION contract/CHANGELOG.md contract/decisions_log.md; do
+            if ! grep -qx "$f" changed.txt; then
+              echo "::error::$f must change in a contract PR"
+              exit 1
+            fi
+          done
+
+      - name: Require Contract-Change marker
+        env:
+          BODY: ${{ github.event.pull_request.body }}
+        run: |
+          if ! grep -qi 'Contract-Change: yes' <<< "$BODY"; then
+            echo "::error::Add 'Contract-Change: yes' to the PR body (use the contract-change template)."
+            exit 1
+          fi

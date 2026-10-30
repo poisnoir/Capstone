@@ -1,0 +1,23 @@
+# CODEOWNERS — review ownership
+# Teams must exist in the poisnoir org for these handles to resolve.
+# Replace with individual usernames if the org teams are not created yet.
+
+# The contract is the shared write surface. Only the integration team owns it;
+# interface owners review through the contract-change PR template.
+/contract/                @poisnoir/integration
+
+# Team folders
+/fpga/                    @poisnoir/fpga
+/hardware/                @poisnoir/hardware
+/robot-arm/               @poisnoir/robot-arm @poisnoir/integration
+
+# Shared docs and tooling
+/docs/                    @poisnoir/integration
+/tools/                   @poisnoir/integration
+/.github/                 @poisnoir/integration
+
+# Root governance
+/README.md                @poisnoir/integration
+/AGENTS.md                @poisnoir/integration
+/CONTRIBUTING.md          @poisnoir/integration
+/CODEOWNERS               @poisnoir/integration

@@ -1,0 +1,24 @@
+name: contract-check
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Verify contract snapshot
+        run: |
+          if [ -x capstone/tools/sync-contract.sh ]; then
+            capstone/tools/sync-contract.sh --check
+          else
+            echo "capstone/tools/sync-contract.sh missing; copy it from Capstone/robot-arm/templates/"
+            exit 1
+          fi

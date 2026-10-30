@@ -1,0 +1,11 @@
+* M16 current-loop step only
+Vcmd cmd 0 PULSE(0 0.15 1m 1u 1u 10m 20m)
+Vinj inj 0 DC 0
+Eea ea 0 LAPLACE {V(cmd)-V(sense)}={1e6*(1+s/(2*pi*30k))/((1+s/(2*pi*10))*(1+s/(2*pi*3meg)))}
+Ebuf buf 0 ea inj 1
+C1 buf coil 100u
+L1 coil sense 70u
+R1 coil sense 2
+Rsen sense 0 1
+.tran 0 20m 0 100n
+.end

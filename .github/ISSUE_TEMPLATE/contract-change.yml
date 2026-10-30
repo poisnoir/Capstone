@@ -1,0 +1,71 @@
+name: Contract change
+description: Propose a change to a locked SC row, decision, ICD or requirement.
+title: "[contract] "
+labels: ["contract-change"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Read `contract/README.md` first. A contract change needs two approvals
+        (interface owner + contract owner) and a PR that bumps `VERSION`, updates
+        `CHANGELOG.md` and updates `decisions_log.md`.
+  - type: input
+    id: affected
+    attributes:
+      label: Affected ID(s)
+      description: SC-xx, decision #N, ICD file, or RQ-Mx.
+      placeholder: "SC-05b, decision #19"
+    validations:
+      required: true
+  - type: textarea
+    id: current
+    attributes:
+      label: Current text
+      description: Quote the current contract text.
+    validations:
+      required: true
+  - type: textarea
+    id: proposed
+    attributes:
+      label: Proposed text
+      description: The exact replacement, not a description.
+    validations:
+      required: true
+  - type: textarea
+    id: reason
+    attributes:
+      label: Reason / evidence
+      description: Source, measurement or test that justifies the change.
+    validations:
+      required: true
+  - type: textarea
+    id: impact
+    attributes:
+      label: Impact
+      description: Which teams, boards, HDL, firmware or gates are affected?
+    validations:
+      required: true
+  - type: textarea
+    id: gates
+    attributes:
+      label: Gates to re-run
+      description: FG-1, DRV-2, PEN-3, FE-4, ADC-5, DIG-6, INT-7, or none.
+    validations:
+      required: true
+  - type: checkboxes
+    id: approvals
+    attributes:
+      label: Approvals
+      options:
+        - label: Interface owner on each side has reviewed
+        - label: Contract owner has reviewed
+        - label: Arm repo sync is planned (if the pico link changes)
+  - type: checkboxes
+    id: pr
+    attributes:
+      label: PR checklist (the PR must contain these)
+      options:
+        - label: contract/VERSION bumped (semver)
+        - label: contract/CHANGELOG.md entry added
+        - label: contract/decisions_log.md row added or updated
+        - label: 'PR body contains "Contract-Change: yes"'

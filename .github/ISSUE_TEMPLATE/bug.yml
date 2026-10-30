@@ -1,0 +1,44 @@
+name: Bug
+description: Something is broken or does not match the contract.
+title: "[bug] "
+labels: ["bug"]
+body:
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected
+      description: What should happen? Cite the contract/requirement if relevant.
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual
+      description: What happens instead? Include the error, screenshot or log.
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Reproduction
+      description: Steps, commit, board/bench setup, input files.
+    validations:
+      required: true
+  - type: dropdown
+    id: team
+    attributes:
+      label: Team
+      options:
+        - FPGA
+        - Hardware
+        - Robot arm
+        - Integration
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence
+      description: Links to logs, screenshots, scope captures, test output.
+    validations:
+      required: false

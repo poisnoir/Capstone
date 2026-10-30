@@ -1,0 +1,9 @@
+* M16 DAC 7-tone (24 kHz off): measure the 3rd-order product at 24 kHz
+.param A=0.1
+.param LSB=5/65536
+B1 d 0 V=2.5 + A*(sin(2*pi*20k*time)+sin(2*pi*22k*time)+sin(2*pi*26k*time)+sin(2*pi*28k*time)+sin(2*pi*30k*time)+sin(2*pi*32k*time)+sin(2*pi*34k*time))
+B2 q 0 V=int(V(d)/5*65536)/65536*5
+B3 e 0 V=0.5*LSB*sin(2*pi*V(q)/5*257)
+B4 out 0 V=V(q)+V(e)
+.tran 0 10m 0 100n
+.end

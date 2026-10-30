@@ -1,0 +1,59 @@
+name: contract-sync
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Contract version (e.g. 1.0.0) or latest"
+        required: false
+        default: latest
+  schedule:
+    - cron: "0 14 * * 1" # Monday 14:00 UTC
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Sync contract
+        env:
+          CONTRACT_READ_TOKEN: ${{ secrets.CONTRACT_READ_TOKEN }}
+          VERSION: ${{ github.event.inputs.version || 'latest' }}
+        run: |
+          chmod +x capstone/tools/sync-contract.sh
+          capstone/tools/sync-contract.sh "$VERSION"
+
+      - name: Verify snapshot
+        run: capstone/tools/sync-contract.sh --check
+
+      - name: Run ICD tests
+        run: |
+          if [ -x capstone/tests/run.sh ]; then
+            capstone/tests/run.sh
+          else
+            echo "no capstone/tests/run.sh yet; skipping"
+          fi
+
+      - name: Open sync PR
+        uses: peter-evans/create-pull-request@v6
+        with:
+          commit-message: "contract: sync to ${{ github.event.inputs.version || 'latest' }}"
+          title: "contract: sync to ${{ github.event.inputs.version || 'latest' }}"
+          body: |
+            Automated contract sync from `poisnoir/Capstone`.
+
+            - Updated `capstone/contract/`
+            - Updated `capstone/CONTRACT_VERSION`
+            - Updated `capstone/contract-release.json`
+            - Verified every SHA-256 against the release manifest
+          branch: contract/sync-${{ github.event.inputs.version || 'latest' }}
+          delete-branch: true

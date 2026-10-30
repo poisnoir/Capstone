@@ -1,0 +1,26 @@
+* text=auto eol=lf
+
+# Binary documents and images
+*.pdf binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.docx binary
+*.xlsx binary
+*.xls binary
+*.zip binary
+*.raw binary
+*.bit binary
+*.dcp binary
+*.step binary
+*.stp binary
+*.stl binary
+
+# KiCad is text (S-expression); keep it diffable
+*.kicad_pcb text
+*.kicad_sch text
+*.kicad_pro text
+
+# SVG is text
+*.svg text

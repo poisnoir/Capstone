@@ -1,0 +1,205 @@
+# Reference manifest — source of truth for files NOT in the repo.
+# `python3 tools/gen_reference_manifest.py` generates MANIFEST.md from this file.
+# `python3 tools/check_references.py` verifies every external reference has a row.
+#
+# publish: false = never publish (copyright/size); "link-only" = cite/link,
+# do not redistribute the file. Local-only files are gitignored.
+
+version: 1
+updated: "2026-10-29"
+
+entries:
+  - id: REF-01
+    file: HAJ_Thesis_2018.pdf
+    title: "Jaeger, electromagnetic tracking thesis (UCC, 2018), 282 pp"
+    size: "116 MB"
+    needed_for:
+      - "AGENTS.md reference model"
+      - "contract/system_contract.md SC-01…SC-04"
+      - "docs/phase2/README.md and the design record"
+    obtain:
+      method: "UCC CORA repository / author; a local copy is already on a team machine"
+      url: ""
+      local: "<local>/CAPSTONE/HAJ_Thesis_2018.pdf"
+    publish: false
+    sha256: "eebd2824176a1af256fd1e3361289dd8a110bd29eb318e36d1d4a2b843809e8e"
+    regenerate: "docs/extracts/*.txt and the PDF crop via tools/extract_jaeger.sh"
+
+  - id: REF-02
+    file: AnserEMT-onlineversion.pdf
+    title: "Jaeger et al., Anser EMT (IEEE TBME, 2017)"
+    size: "2.1 MB"
+    needed_for:
+      - "docs/phase2/README.md baseline (1.14 mm / 0.04°)"
+      - "docs/phase2/anser-baseline-findings.md"
+    obtain:
+      method: "Publisher / IEEE; cite the paper, do not redistribute"
+      url: ""
+      local: "<local>/CAPSTONE/AnserEMT-onlineversion.pdf"
+    publish: link-only
+    sha256: "2fa9926ae2758b5af40cd16a801190821a01eb35834f7e8dced8747d6a1dc520"
+    regenerate: ""
+
+  - id: REF-03
+    file: "Catheter Position Tracking System Using Planar Magnetics and Closed Loop Current Control - Kilian ODonoghue et al.pdf"
+    title: "O'Donoghue et al., catheter tracking with planar magnetics (2014)"
+    size: "1.8 MB"
+    needed_for:
+      - "AGENTS.md closed-loop current-driver rule"
+      - "docs/phase2/pen_link_budget.md"
+    obtain:
+      method: "Publisher / IEEE; cite the paper, do not redistribute"
+      url: ""
+      local: "<local>/CAPSTONE/Catheter Position Tracking System Using Planar Magnetics and Closed Loop Current Control - Kilian ODonoghue et al.pdf"
+    publish: link-only
+    sha256: "b05e3d82fdae04b52dcc2541691f10af3c3b059ac2838022524bbab8bc087af9"
+    regenerate: ""
+
+  - id: REF-04
+    file: Capstone_Manual_2026.pdf
+    title: "Concordia ELEC/COEN 490 Capstone manual 2026"
+    size: "456 KB"
+    needed_for:
+      - "docs/phase2/README.md Phase 2 deliverables"
+      - "docs/phase2/design_order.md"
+    obtain:
+      method: "Concordia course Moodle"
+      url: ""
+      local: "<local>/CAPSTONE/Capstone_Manual_2026.pdf"
+    publish: false
+    sha256: "2ba7b441a31877a31d0e0416103b7bb66e8ac4697107b7dc5aa56b17397c06c4"
+    regenerate: ""
+
+  - id: REF-05
+    file: 12477_Cavaliere.pdf
+    title: "Cavaliere reference document (local copy)"
+    size: "21 MB"
+    needed_for:
+      - "background reading only"
+    obtain:
+      method: "Local copy / library; provenance to be confirmed"
+      url: ""
+      local: "<local>/CAPSTONE/12477_Cavaliere.pdf"
+    publish: false
+    sha256: "d337f4ebb04611408f6ec238b79f92c7a3a17e8bb0f1ea0ec5198b81c8ab988c"
+    regenerate: ""
+
+  - id: REF-06
+    file: "vendor/anser-osf/"
+    title: "Anser OSF snapshot (node 47q8q, 35 files, 2026-10-13)"
+    size: "43 MB"
+    needed_for:
+      - "hardware/fg-01/, hardware/brd-01/driver/, hardware/brd-01/frontend/"
+      - "software/anser-matlab-ref/ (unpacked MATLAB golden model)"
+      - "docs/reference/anser-osf-provenance.md"
+    obtain:
+      method: "OSF node 47q8q; download the snapshot, keep it pristine"
+      url: "https://osf.io/47q8q/"
+      local: "<local>/CAPSTONE/vendor/anser-osf/"
+    publish: false
+    sha256: "3b4446554229825f57d2f7e8fcf72e74ba61e0ca850b7e627f75c092b071d9ad"
+    regenerate: "see docs/reference/anser-osf-provenance.md"
+
+  - id: REF-07
+    file: docs/ad7768-ad7768-4.pdf
+    title: "Analog Devices AD7768 / AD7768-4 datasheet Rev.D"
+    size: "4.0 MB"
+    needed_for:
+      - "contract/system_contract.md SC-05"
+      - "docs/phase2/adc_justification.md"
+      - "docs/phase2/adc_interface_closure.md"
+    obtain:
+      method: "Analog Devices product page (AD7768-4), datasheet Rev.D"
+      url: "https://www.analog.com/en/products/ad7768-4.html"
+      local: "<local>/CAPSTONE/docs/ad7768-ad7768-4.pdf"
+    publish: link-only
+    sha256: "bbb52b34c5a251b9dc01719357f3f80a1d4c2b274f2136704c80500cdd7d3e27"
+    regenerate: ""
+
+  - id: REF-08
+    file: "reference-cache/datasheets/"
+    title: "Manufacturer datasheets (ADC, DAC, driver, connectors, cable)"
+    size: "16 MB"
+    needed_for:
+      - "hardware/brd-01/ part selection and layout"
+      - "docs/phase2/driver_power_requirements.md"
+    obtain:
+      method: "Each manufacturer by part number: AD7768-4, ADS1274, DAC80508, LTC1563-2, LMH6321, INA163, ADA4940-2, ADR434, ME60A1503F01, RV-1515D, TPS7A4701/TPS7A33/TPS7A20, XC7A35T/XC7A50T, Citizen CSX750FBC32.768M; Neutrik/Mogami connectors and cable"
+      url: ""
+      local: "<local>/CAPSTONE/reference-cache/datasheets/"
+    publish: false
+    sha256: "08782fd1accd4bfe586a5f1e83a547d940913ad303f28500998afbc5d8fd60a4"
+    regenerate: "download from each vendor; keep the filename"
+
+  - id: REF-09
+    file: docs/extracts/Jaeger2018_filament-sensor-model_extract.pdf
+    title: "Jaeger thesis extract, PDF pp.84–94 + 199–214 (27 pp)"
+    size: "4.2 MB"
+    needed_for:
+      - "agent working set; Ch.3 model/solver and Ch.7 coil design"
+    obtain:
+      method: "Generated from REF-01; do not redistribute the crop"
+      url: ""
+      local: "<local>/CAPSTONE/docs/extracts/Jaeger2018_filament-sensor-model_extract.pdf"
+    publish: false
+    sha256: "547966dbd079fe2e303aecc25bc1da23aa163418bebcd1f899888321a433d0c1"
+    regenerate: "tools/extract_jaeger.sh (needs REF-01)"
+
+  - id: REF-10
+    file: "docs/Materials procurement.pdf"
+    title: "COEN/ELEC 390 materials-procurement lecture (course material)"
+    size: "1.2 MB"
+    needed_for:
+      - "procurement/BOM practice reference"
+    obtain:
+      method: "Concordia course Moodle"
+      url: ""
+      local: "<local>/CAPSTONE/docs/Materials procurement.pdf"
+    publish: false
+    sha256: "d3b91997360d8b05a39356cbaf6ce3da1eee69a4009f7a31863e243db2628726"
+    regenerate: ""
+
+  - id: REF-11
+    file: "docs/phase1/Phase 1 Report - Team 25 (ELEC-COEN 490).docx"
+    title: "Team 25 Phase 1 report (contains student IDs)"
+    size: "228 KB"
+    needed_for:
+      - "Phase 1 specs #1–25 and the frozen baseline"
+      - "docs/phase2/README.md"
+    obtain:
+      method: "Team file; local-only, not in the repo (contains student IDs)"
+      url: ""
+      local: "<local>/CAPSTONE/docs/phase1/Phase 1 Report - Team 25 (ELEC-COEN 490).docx"
+    publish: no
+    sha256: "24367e96278e5915f5d284fd3ab2a7793fe1be6be71fdba9ea64e68475d7142e"
+    regenerate: ""
+
+  - id: REF-12
+    file: "docs/extracts/Jaeger2018_filament-sensor-model_Ch3_extract.txt"
+    title: "Jaeger Ch.3 text extract (local-only)"
+    size: "22 KB"
+    needed_for:
+      - "AGENTS.md reference model"
+      - "fpga/ solver port"
+    obtain:
+      method: "Generated from REF-01; local-only, not in the repo (thesis copyright)"
+      url: ""
+      local: "<local>/CAPSTONE/docs/extracts/Jaeger2018_filament-sensor-model_Ch3_extract.txt"
+    publish: no
+    sha256: "generated; see tools/extract_jaeger.sh"
+    regenerate: "tools/extract_jaeger.sh (needs REF-01)"
+
+  - id: REF-13
+    file: "docs/extracts/Jaeger2018_bespoke-sensor_Ch7_extract.txt"
+    title: "Jaeger Ch.7 text extract (local-only)"
+    size: "33 KB"
+    needed_for:
+      - "AGENTS.md coil design (Table 7.1)"
+      - "hardware/pen/"
+    obtain:
+      method: "Generated from REF-01; local-only, not in the repo (thesis copyright)"
+      url: ""
+      local: "<local>/CAPSTONE/docs/extracts/Jaeger2018_bespoke-sensor_Ch7_extract.txt"
+    publish: no
+    sha256: "generated; see tools/extract_jaeger.sh"
+    regenerate: "tools/extract_jaeger.sh (needs REF-01)"

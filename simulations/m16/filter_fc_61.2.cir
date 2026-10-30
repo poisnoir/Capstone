@@ -1,0 +1,10 @@
+* M16 / LTC1563-2 — 4th-order Butterworth low-pass, AC reference
+* fc = 60 kHz, Q1 = 0.5412, Q2 = 1.3066
+.param fc=61.2k
+.param wc=2*pi*61.2k
+.param Q1=0.5411961
+.param Q2=1.306563
+V1 in 0 AC 1
+E1 out 0 LAPLACE {V(in)}={1/((1+s/(Q1*wc)+s*s/(wc*wc))*(1+s/(Q2*wc)+s*s/(wc*wc)))}
+.ac dec 500 1k 1meg
+.end
