@@ -100,6 +100,10 @@ def main() -> int:
             )
             if covered:
                 continue
+            if "/" not in value and "vendor/" in text:
+                # A bare vendor filename listed in a doc that points at vendor/.
+                # The vendor snapshot is covered by its own manifest entry.
+                continue
             if local is None:
                 missing.append((str(doc.relative_to(ROOT)), value))
             elif value.startswith(("vendor/", "reference-cache/", "docs/extracts/")) or "/" not in value:

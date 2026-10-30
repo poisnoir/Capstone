@@ -199,4 +199,4 @@ CI runs the same checks plus `contract-guard`, `contract-release`,
 - The team's internal desktop/Tailscale notes are kept locally and are not in
   the repo. Public setup docs: `docs/setup/README.md`.
 - Private/local-only files are gitignored: the Phase 1 report (student IDs),
-  `docs/setup/CLIENT_SETUP.md`, and the thesis `.txt` extracts (copyright).
+  the internal desktop setup notes, and the thesis `.txt` extracts (copyright).
