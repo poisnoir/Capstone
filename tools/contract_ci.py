@@ -86,6 +86,21 @@ def check() -> int:
     return 0
 
 
+def _working_files() -> list[tuple[str, Path]]:
+    """Contract files as (relative posix path, path), sorted by the string path.
+
+    Sorting by Path objects puts a directory before a same-named file
+    (`pico_link/` before `pico_link.md`); sorting by the relative string keeps
+    the hash stable across the working tree and a git revision.
+    """
+    items: list[tuple[str, Path]] = []
+    for path in CONTRACT.rglob("*"):
+        if path.is_dir() or "__pycache__" in path.parts:
+            continue
+        items.append((path.relative_to(CONTRACT).as_posix(), path))
+    return sorted(items)
+
+
 def tree_hash(rev: str | None = None) -> str:
     digest = hashlib.sha256()
     if rev:
@@ -93,20 +108,19 @@ def tree_hash(rev: str | None = None) -> str:
             ["git", "-C", str(ROOT), "ls-tree", "-r", "--name-only", rev, "contract"],
             text=True,
         )
-        paths = [p for p in out.splitlines() if p.startswith("contract/")]
-        for path in sorted(paths):
+        items: list[tuple[str, str]] = []
+        for path in out.splitlines():
+            if path.startswith("contract/"):
+                items.append((path[len("contract/"):], path))
+        for rel, path in sorted(items):
             content = subprocess.check_output(["git", "-C", str(ROOT), "show", f"{rev}:{path}"])
-            rel = path[len("contract/"):]
             digest.update(rel.encode())
             digest.update(b"\0")
             digest.update(content)
             digest.update(b"\0")
         return digest.hexdigest()
 
-    for path in sorted(CONTRACT.rglob("*")):
-        if path.is_dir() or "__pycache__" in path.parts:
-            continue
-        rel = path.relative_to(CONTRACT).as_posix()
+    for rel, path in _working_files():
         digest.update(rel.encode())
         digest.update(b"\0")
         digest.update(path.read_bytes())
@@ -115,13 +129,10 @@ def tree_hash(rev: str | None = None) -> str:
 
 
 def per_file_hashes() -> dict[str, str]:
-    result: dict[str, str] = {}
-    for path in sorted(CONTRACT.rglob("*")):
-        if path.is_dir() or "__pycache__" in path.parts:
-            continue
-        rel = path.relative_to(CONTRACT).as_posix()
-        result[rel] = hashlib.sha256(path.read_bytes()).hexdigest()
-    return result
+    return {
+        rel: hashlib.sha256(path.read_bytes()).hexdigest()
+        for rel, path in _working_files()
+    }
 
 
 def make_zip(out: Path) -> None:
