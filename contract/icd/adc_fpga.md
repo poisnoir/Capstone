@@ -1,6 +1,6 @@
 # ICD — ADC ↔ FPGA capture
 
-**Status:** stub, not frozen. **Owners:** Tung (hardware/ADC), William (FPGA
+**Status:** stub, not frozen — but decision **#18 is LOCKED (2026-11-02)**: 4 ch, 4 DOUT lanes, DCLK 8.192 MHz, 32-bit frames, RC range 10–82 Ω / 470–680 pF. The capture-side detail below is what remains open. **Owners:** Tung (hardware/ADC), William (FPGA
 capture). **Canonical sources:** `contract/system_contract.md` SC-05, SC-05a,
 SC-05b, SC-05c, SC-06, SC-07; `docs/phase2/adc_justification.md`;
 `docs/phase2/adc_interface_closure.md`; `docs/phase2/system_schematic.md` §6.

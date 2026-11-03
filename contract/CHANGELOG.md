@@ -3,6 +3,14 @@
 All notable contract changes. Versioning: MAJOR = breaking interface change,
 MINOR = additive, PATCH = clarification.
 
+## Unreleased
+
+- `icd/dac_fpga.md` — frozen Rev A (2026-11-02): 216-bit burst, TRIGGER cadence, CS gaps,
+  CPOL/CPHA, SDI +2.5 ns delay, readback/CRC limits.
+- `decisions_log.md` — #18, #20, #22, #23 promoted to LOCKED; #21 updated for the PS-less
+  Artix-7 on BRD-01 (no 2×20 IDC); #27 FG-01 vendor coils.
+- Version bump and tag pending the contract-change PR.
+
 ## 1.0.0 — 2026-10-29
 
 Initial freeze imported from the Phase 2 design record.

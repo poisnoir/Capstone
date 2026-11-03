@@ -14,7 +14,7 @@ left-to-right, power top-to-bottom, faults red dashed, calibration blue dashed.
 | Board | Function | Size | Power |
 |---|---|---|---|
 | **BRD-01** | **single electronics board** — power entry + E-stop + DC-DC/LDO; FPGA + clock (§6.0); DAC80508 + 8× LTC1563-2 + 8 current loops + current sense; receiver (INA163 + ADA4940-2 + AD7768-4 + ADR434); FG and pen connectors | ~250 × 200 mm, 4-layer | +15 V in |
-| FG-01 | 8-coil field generator (passive; mechanically separate) | 300 × 300 mm, 2-layer | passive |
+| FG-01 | 8 vendor emitter coils on machined plates (passive; mechanically separate) | 8 × ~91 mm PCB + 2 plates | passive |
 | PEN-01 | Coil B + cable + mini-XLR | pen | passive |
 | PMS-01 | Pico 2 + XYZ stage + camera | bench | 5 V |
 | FPGA | **XC7A35T-1FTG256C** (PS-less; 50T same-footprint upgrade), QSPI config, USB-UART (§6.0) | FTBGA-256, 15×15 mm | 1.0 / 1.8 / 3.3 V |
@@ -102,13 +102,14 @@ total ≈ 40 W. The LMH6321 thermal soak, not the adapter, is the limit.
 
 | Item | Value |
 |---|---|
-| Coils | 8, 25 turns, 70 mm square, 0.5 mm trace / 0.25 mm gap, 1.6 mm PCB |
+| Coils | **8 × vendor AnserEMT Rev C PCB coil** (dual-layer, 25 turns total, 70 mm outer, 0.5 mm track / 0.25 mm gap, 1.6 mm FR4, L ≈ 79 µH, R ≈ 2.9 Ω) |
+| Assembly | one coil per position, **no stacking**; 2 machined plates + M3 standoffs at the centres below |
 | Centres | \(x=[-93.543,0,93.543,-68.55,68.55,-93.543,0,93.543]\) mm; \(y=[93.543,68.55,93.543,0,0,-93.543,-68.55,-93.543]\) mm |
 | Orientation | vertical: 1,3,6,8; angled 45°: 2,4,5,7 |
 | Tone map | coil \(i\) → tone \(i\): 20,22,24,26,28,30,32,34 kHz (FG-1 may reassign weakest → 34 kHz) |
 | Connector | J1–J8, 2-pin 3 A keyed (Molex Mini-Fit Jr or JST VH), pin 1 = drive, pin 2 = return |
 | Guard | non-metal open-top ring at the ~57 mm contour (27 µT at 250 mA); removable |
-| Metal rule | no metal within 150 mm of the 150 mm cube; plastic fasteners |
+| Metal rule | no metal within 150 mm of the 150 mm cube; the plates sit below the coil plane and outside the 57 mm guard contour |
 
 The coil return is separate from the driver ground; the 8 returns meet at the
 FG star point, then one cable to the driver board. Do not daisy-chain the
