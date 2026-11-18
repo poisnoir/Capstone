@@ -1,0 +1,4 @@
+(sym_lib_table
+	(version 7)
+	(lib (name "accubot") (type "KiCad") (uri "${KIPRJMOD}/../../kicad/lib/accubot.kicad_sym") (options "") (descr "EM AccuBot curated symbols"))
+)

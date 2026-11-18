@@ -8,7 +8,7 @@ items, not suggestions.
 
 | Path | Contents |
 |---|---|
-| `brd-01/` | One 4-layer board: power/E-stop, FPGA + clock, DAC/filter/current loops, receiver/ADC, connectors |
+| `brd-01/` | One 4-layer board: power/E-stop, FPGA + clock, DAC/filter/current loops, receiver/ADC, connectors; [KiCad scaffold](brd-01/kicad/README.md) |
 | `brd-01/driver/` | Pointer to the vendor AC current-driver reference + new driver work |
 | `brd-01/frontend/` | Pointer to the vendor sensor-amplifier reference + new INA163/ADA4940 chain |
 | `fg-01/` | 8-coil planar field-generator PCB (separate passive board) |
@@ -37,5 +37,6 @@ adding binary board files.
 
 ## Current status
 
-The vendor references are pointers only; the new KiCad project and BOM Rev 0.02
-are the next deliverables. Do not edit `vendor/`.
+The vendor references are pointers only. The KiCad scaffold and BOM-to-CAD
+mapping are available; circuit capture and unresolved BOM selections remain.
+Do not edit `vendor/`.

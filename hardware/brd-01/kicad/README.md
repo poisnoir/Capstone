@@ -1,22 +1,42 @@
 # BRD-01 KiCad project
 
-The KiCad project lives here:
+Open [brd-01.kicad_pro](brd-01.kicad_pro) in KiCad **10.0.8** with the
+official 10.0.8 symbol and footprint libraries installed. The root schematic
+retains the power, driver, FPGA, receiver and connector sheets from `ca3ad55`.
+The sheets have no components or wires; the PCB has no outline, layout, or
+approved stackup settings. This is a capture scaffold, not a design release.
 
+Use the [BOM-to-CAD ledger](bom-to-cad.md) to add verified parts to the
+appropriate sheet. Where the ledger specifies a footprint different from the
+symbol default (including empty defaults), assign the listed footprint
+explicitly. Use the BOM's actual MPN as the part value, not the name of a
+generic symbol. Do not place procurement spares or promote alternates.
+
+The project tables resolve `accubot` relative to `${KIPRJMOD}` at
+[the shared hardware library](../../kicad/lib/). No global `accubot` table,
+plugin, 3D model, or external CAD download is needed. To add more selected
+parts in one batch, first check the official libraries against manufacturer
+pin tables and package drawings, then curate only missing or incorrect
+definitions directly in the shared library and update the ledger. Do not
+commit downloaded libraries, datasheets, or per-part import projects.
+
+From the repository root:
+
+```bash
+kicad-cli --version
+kicad-cli sch erc --exit-code-violations -o /tmp/opencode/brd01-setup-erc.rpt hardware/brd-01/kicad/brd-01.kicad_sch
+kicad-cli pcb drc --exit-code-violations -o /tmp/opencode/brd01-setup-drc.rpt hardware/brd-01/kicad/brd-01.kicad_pcb
+mkdir -p /tmp/opencode/brd01-symbol-svg
+kicad-cli sym export svg --output /tmp/opencode/brd01-symbol-svg hardware/kicad/lib/accubot.kicad_sym
 ```
-kicad/
-├─ brd-01.kicad_pro
-├─ brd-01.kicad_sch
-├─ brd-01.kicad_pcb
-├─ sym-lib-table
-└─ fp-lib-table
-```
 
-Rules:
+Empty-sheet ERC checks hierarchy loading, not component connectivity. The
+blank PCB reports `invalid_outline` until layout adds a real outline. Do not
+silence that check or treat empty-sheet ERC as a release gate. Put only the
+released fabrication package in [fab](../fab/).
 
-- KiCad files are text (S-expression); commit them.
-- Do not commit `*-backups/`, `fp-info-cache`, `*.kicad_prl`, `*.bak`
-  (gitignored).
-- Run ERC/DRC before a fab release; put the released package in `../fab/`.
-- The schematic is not frozen until the part checks in
-  `contract/decisions_log.md` are closed (35T→50T pin compatibility, HR banks,
-  shield can, connectors).
+Setup verification also used a disposable project at the same relative paths
+with only the standard global KiCad tables. All 19 units of the 15 curated
+symbols loaded; removing the project symbol table produced 19 library errors.
+The curated footprint passed DRC on a disposable board with an outline.
+Numbered symbol pins matched numbered pads for all 22 ledger entries.

@@ -52,6 +52,7 @@ out/
 *-backups/
 fp-info-cache
 *.kicad_prl
+~*.lck
 *.bak
 
 # --- Local agent state ---
