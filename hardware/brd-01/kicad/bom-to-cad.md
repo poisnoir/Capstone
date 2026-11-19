@@ -127,11 +127,34 @@ and footprint.
 | 27 / R20–R27 | The searched 1206 options did not verify the BOM's 1 Ω, ±0.1%, 0.5 W combination. [Thin Film Technology TFT-DMS-165-1](https://www.thin-film.com/wp-content/uploads/2023/03/TFT-DMS-165-1.pdf) pp. 1–2 factory-code candidate: `TF2512HQ1R00B-T4`, two-terminal 2512, 1 Ω, ±0.1%, 1 W per the series table. Confirm that exact combination, MOQ, lead time and land pattern with the factory before selection. Footprint open; no availability claim or footprint reservation. |
 | 28 / C20–C27 | Hold selection and footprint; see the characterization shortlist below. |
 | 29 / C30–C31 | Hardware-owner hold: SYSTEM-01 describes both as 1000 µF / 25 V mid-rail reservoirs, while the system schematic describes one adapter-input reservoir (§2) and one mid-rail reservoir (§4.2). Reconcile the roles and reference designators before shortlisting or assigning footprints. |
-| 32 / K2 | Select the actual force-guided 15 V relay and approve its contact allocation and E-stop chain. §4.5 mentions both dropping driver power and feeding enables; LMH6321 has no enable pin. Do not infer a relay from coil voltage. |
+| 32 / K2 | Force-guided electromechanical relay; its NO power contact is intended to switch +15 V_DRV directly. Exact CAD mapping is blocked pending the [K1/K2 owner review](#k1k2-intended-roles-and-capture-hold). The BOM's 15 V coil entry is not a relay selection. |
 | 33 / PROT | [Protection inventory](#prot--input-protection): holder and TVS mapped; cartridge, input filtering and reverse protection open. |
 | 34 / PASS-A | [Driver inventory](#pass-a--driver-and-excitation): loop, filter, mid-rail, current-sense and access parts not fully mapped. |
 | 45 / PASS-C | [Digital inventory](#pass-c--fpga-and-host): host USB provisional; digital passives, JTAG, watchdog and test access open. |
 | 60 / PASS-B | [Receiver inventory](#pass-b--receiver-and-adc): front-end, ADC support and connector population open. |
+
+### K1/K2 intended roles and capture hold
+
+**User clarification of intended circuit roles only.** This is not approval
+of the safety design, a part selection, or a contract change.
+
+- **K1** is a separate panel-mounted, latching, normally closed mushroom
+  pushbutton. Schneider Harmony `XB4BS8444` (2 NC, turn-to-release) is a
+  datasheet reference only, not a final selection. K1 has no BRD-01 footprint.
+- **K2** is a force-guided electromechanical relay. Its normally open power
+  contact is intended to switch +15 V_DRV directly. A linked normally closed
+  contact may be used for feedback, but none is assigned. Omron `G7SA` is an
+  example family only; no model, coil, or suffix has been chosen.
+
+Schematic §4.5 says K2 removes +15 V_DRV but also says its NO contact
+“feeds the LMH6321 enables.” The latter cannot refer to a chip enable pin:
+the LMH6321 has none. This ledger records the clarified intent without
+rewriting the design record.
+
+Before exact CAD mapping, the power/driver owner must establish the actual
+switched DC load, inrush and interrupt duty; reconcile the control and coil
+supply with the BOM's 15 V coil entry; resolve contact allocation and
+feedback; and confirm restart behavior and stop validation.
 
 ### PASS-C host USB: provisional CAD mapping only
 
@@ -217,8 +240,8 @@ above, and **BOM** for the linked SYSTEM-01 BOM sheet. Other sources:
 
 The Schematic §2 adapter-input reservoir (1000 µF / 25 V) is tracked
 under the **row 29 C30–C31 role hold**, not added here. The power ICD's open
-adapter connector and the external K1 panel stop are not assigned to PROT
-by the workbook. K2 remains separately held under row 32.
+adapter connector and the separate K1 panel pushbutton are not assigned to
+PROT by the workbook. K2 remains separately held under row 32.
 
 ### PASS-A — driver and excitation
 
@@ -307,8 +330,10 @@ any physical ADC interconnect could be considered.
   wiring. Do not change the locked power-tree parts here.
 - **Fault and stop:** §4.4/§6 calls for a wired-OR/open-drain fault bus; the
   selected TLV3201 is push-pull. Approve the combining circuit or a reviewed
-  part change. Confirm K1 selection, K2 function and hardwired stop vs FPGA
-  status roles with the driver and follower owners.
+  part change. The [K1/K2 intended roles](#k1k2-intended-roles-and-capture-hold)
+  do not close the hardwired stop design. Resolve the K1 selection, K2
+  capture hold, and hardwired stop versus FPGA status roles with the
+  power, driver, and follower owners.
 - **Reference designators and quantity:** allocate two unlisted OPA192 refs
   (row 22); confirm which of the U40–U45 and U80–U88 labels are spares; U3/U4
   receiver refs collide with the optos. §5.1 says repeat the pen front end for
