@@ -10,9 +10,11 @@ and the [system schematic design record](../../../docs/phase2/system_schematic.m
 References below are from the BOMs or design record, not new schematic annotation.
 
 **Result:** The tables list 8 official symbol/footprint pairings (including
-the JST pen header) and 15 pairings using curated symbols. The ST TVS in the
-partially mapped PROT lot is separate: it pairs an official symbol with a
-curated footprint. There are 2 curated footprints in total (RECOM and ST).
+the JST pen header) and 15 pairings using curated symbols. The partially
+mapped PROT lot has two separate mappings: one additional official pairing
+for the Schurter holder, and an official symbol with a curated footprint for
+the ST TVS. Neither adds a complete BOM row. There are 2 curated footprints
+in total (RECOM and ST).
 
 The tables fully map 23 SYSTEM-01 rows for CAD: 7 from the official table and
 16 from the curated table, since the same `OPA192IDBVR` pairing serves rows 22
@@ -47,12 +49,37 @@ C3. The cable-side `IO-TXLR3-F` is unchanged. JST pin assignment and receiver
 channel population remain open. Measure the assembled total pen link, including
 the internal harness and connector, against the 73 pF limit at 34 kHz (SC-05c).
 
-## Curated from manufacturer sources
+## Partial PROT lot mappings
 
-Curated symbols are in the shared `accubot` library. Order-only variants retain
-their exact MPN in the BOM; the symbol ID can name the common physical part
-(`AD7768-4BSTZ`, `ADA4940-2ACPZ`). The ST TVS uses an official symbol and
-a custom land pattern; the RECOM module uses both a custom symbol and footprint.
+**33 / PROT, F1 (§2): Schurter OGN `0031.8201` holder only.** Use
+`Device:Fuse` and explicitly assign
+`Fuse:Fuseholder_Cylinder-5x20mm_Schurter_0031_8201_Horizontal_Open`.
+The [Schurter OGN datasheet](https://www.schurter.com/en/datasheet/typ_ogn.pdf)
+Variants table identifies the open 5 × 20 mm THT holder with 22.5 mm pin
+pitch, not the 25 mm `0031.8211`. The
+[Schurter THT drilling drawing](https://cdn-reichelt.de/documents/datenblatt/C400/PL%20OGN-225.pdf)
+specifies two Ø1.3 mm (+0.1/−0 mm) terminal holes and a Ø2.7 mm optional
+center mounting hole. KiCad pins 1 and 2 match like-numbered plated pads
+with Ø1.3 mm drills at 22.5 mm pitch; the footprint includes the center
+hole as an unnumbered Ø2.7 mm non-plated hole.
+
+Keep `0031.8201` as the holder MPN, separate from the unselected 3 A
+time-delay cartridge MPN. **Candidates only; neither is approved for
+substitution:**
+
+- Eaton `GMD-3-R`: 3.00 A time-delay, 5 × 20 mm ferrule cartridge. The
+  [Eaton catalog](https://www.eaton.com/content/dam/eaton/products/electrical-circuit-protection/fuses/bussmann-series-catalogs/bus-ele-cat-1007-flc-2018-sec-03-elx.pdf)
+  GMD entry claims 32 VDC (self-certified); [Technical Data 2019](https://www.eaton.com/content/dam/eaton/products/electronic-components/resources/data-sheet/eaton-gmd-time-delay-glass-tube-fuses-data-sheet.pdf)
+  publishes AC interrupt ratings only. The DC voltage claim is not a DC
+  breaking rating.
+- OptiFuse `TSC-3A`: 3 A time-lag, 5 × 20 mm cartridge. The
+  [TSC datasheet](https://www.optifuse.com/optifuse_ecommerce_tools/datasheets/TSC.pdf)
+  lists only AC voltage and interrupt ratings.
+
+Before cartridge selection, the hardware owner must establish the required
+DC breaking rating at the circuit voltage and prospective fault current,
+verify inrush against the fuse time-current behavior, and resolve touch
+protection for the open holder.
 
 **33 / PROT, D1 (§2): STMicroelectronics `SMBJ18A`, unidirectional.** Use
 `Device:D_Zener` with Value `SMBJ18A` and assign
@@ -64,6 +91,13 @@ Fig. 14 specifies 1.62 × 2.07 mm rectangular lands, a 2.60 mm gap and a
 cathode bar. Stock `Diode_SMD:D_SMB` has 2.50 × 2.30 mm rounded lands on
 4.30 mm centers, so the same package name does not guarantee the same land
 pattern. This is a CAD mapping, not surge or clamp-coordination validation.
+
+## Curated from manufacturer sources
+
+Curated symbols are in the shared `accubot` library. Order-only variants retain
+their exact MPN in the BOM; the symbol ID can name the common physical part
+(`AD7768-4BSTZ`, `ADA4940-2ACPZ`). The RECOM module uses both a custom symbol
+and footprint.
 
 | BOM row / refs | `accubot` symbol | Footprint ID | Pin and package evidence |
 |---|---|---|---|
@@ -91,7 +125,7 @@ pattern. This is a CAD mapping, not surge or clamp-coordination validation.
 | 28 / C20–C27 | Hold selection and footprint; see the characterization shortlist below. |
 | 29 / C30–C31 | Hardware-owner hold: SYSTEM-01 describes both as 1000 µF / 25 V mid-rail reservoirs, while the system schematic describes one adapter-input reservoir (§2) and one mid-rail reservoir (§4.2). Reconcile the roles and reference designators before shortlisting or assigning footprints. |
 | 32 / K2 | Select the actual force-guided 15 V relay and approve its contact allocation and E-stop chain. §4.5 mentions both dropping driver power and feeding enables; LMH6321 has no enable pin. Do not infer a relay from coil voltage. |
-| 33 / PROT | D1 CAD mapping is above; select the fuse/holder, CM choke and reverse MOSFET with ratings and footprints. Surge validation stays open. |
+| 33 / PROT | F1 holder and D1 CAD mappings are above. The cartridge, CM choke and reverse MOSFET remain unselected; surge validation remains open. |
 | 34 / PASS-A | Expand the driver passives, filter R/C, headers and test points. LTC1563 uses a single **resistor value** in its unity-gain topology, not a single physical resistor per channel (ADI application schematic has six). |
 | 45 / PASS-C | Expand FPGA passives, 2×7 JTAG header, supervisor/watchdog choice (§4.5 also allows a PL timer), host USB connector and test points. |
 | 60 / PASS-B | Expand the ADC/preamp passives, RC network, ESD parts and remaining connectors; confirm whether the current-sense BNC is still needed. |
