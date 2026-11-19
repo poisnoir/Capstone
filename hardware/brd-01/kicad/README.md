@@ -38,5 +38,11 @@ released fabrication package in [fab](../fab/).
 Setup verification also used a disposable project at the same relative paths
 with only the standard global KiCad tables. All 19 units of the 15 curated
 symbols loaded; removing the project symbol table produced 19 library errors.
-The curated footprint passed DRC on a disposable board with an outline.
-Numbered symbol pins matched numbered pads for all 22 ledger entries.
+Numbered symbol pins matched numbered footprint pads for the 8 official and
+15 curated table pairings, including the JST pen header, and for the separate
+ST TVS mapping. The follow-up ST and JST checks also verified pad geometry.
+
+Two disposable boards with outlines reported zero DRC violations: one with
+`accubot:RECOM_RV-1515D_DIP24`, and one with `accubot:ST_SMBJ_DO-214AA_DS1283`
+and the official JST pen header. These smoke checks verify library use, not
+BRD-01 circuit capture, layout readiness, or pen harness qualification.

@@ -9,13 +9,18 @@ Compared with [SC-05 and the system contract](../../../contract/system_contract.
 and the [system schematic design record](../../../docs/phase2/system_schematic.md).
 References below are from the BOMs or design record, not new schematic annotation.
 
-**Result:** 8 verified official pairings, 15 curated symbols, and one
-official symbol with a curated footprint (ST TVS). There are 2 curated
-footprints in total. This covers 23 complete BRD-01 BOM rows (OPA192
-occurs twice), plus the TVS in the PROT lot and the pen interface's
-PCB header. Eight active BRD-01 rows or lots remain incomplete. These
-counts are not quantities to place or buy. A verified CAD part can still
-be subject to a circuit-level hold.
+**Result:** The tables list 8 official symbol/footprint pairings (including
+the JST pen header) and 15 pairings using curated symbols. The ST TVS in the
+partially mapped PROT lot is separate: it pairs an official symbol with a
+curated footprint. There are 2 curated footprints in total (RECOM and ST).
+
+The tables fully map 23 SYSTEM-01 rows for CAD: 7 from the official table and
+16 from the curated table, since the same `OPA192IDBVR` pairing serves rows 22
+and 54. The JST header is counted once, among the 8 official pairings; its CAD
+mapping does not complete row 63 or qualify the pen harness. The unresolved
+PCB table lists 8 other rows or lots, including PROT. These counts are not
+quantities to place or buy, and verified CAD mappings do not clear
+circuit-level holds.
 
 ## Official KiCad 10.0.8 pairings
 
