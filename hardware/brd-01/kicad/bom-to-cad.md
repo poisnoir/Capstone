@@ -88,13 +88,42 @@ pattern. This is a CAD mapping, not surge or clamp-coordination validation.
 | BOM row / refs | Needed before capture |
 |---|---|
 | 27 / R20–R27 | The searched 1206 options did not verify the BOM's 1 Ω, ±0.1%, 0.5 W combination. [Thin Film Technology TFT-DMS-165-1](https://www.thin-film.com/wp-content/uploads/2023/03/TFT-DMS-165-1.pdf) pp. 1–2 factory-code candidate: `TF2512HQ1R00B-T4`, two-terminal 2512, 1 Ω, ±0.1%, 1 W per the series table. Confirm that exact combination, MOQ, lead time and land pattern with the factory before selection. Footprint open; no availability claim or footprint reservation. |
-| 28 / C20–C27 | Choose the 100 µF / 25 V series, physical size and lead pitch that meet AC coupling, ripple and thermal needs; ensure film is intentional. |
-| 29 / C30–C31 | Choose 1000 µF / 25 V technology, polarity, size, terminals and ripple rating. |
+| 28 / C20–C27 | Hold selection and footprint; see the characterization shortlist below. |
+| 29 / C30–C31 | Hardware-owner hold: SYSTEM-01 describes both as 1000 µF / 25 V mid-rail reservoirs, while the system schematic describes one adapter-input reservoir (§2) and one mid-rail reservoir (§4.2). Reconcile the roles and reference designators before shortlisting or assigning footprints. |
 | 32 / K2 | Select the actual force-guided 15 V relay and approve its contact allocation and E-stop chain. §4.5 mentions both dropping driver power and feeding enables; LMH6321 has no enable pin. Do not infer a relay from coil voltage. |
 | 33 / PROT | D1 CAD mapping is above; select the fuse/holder, CM choke and reverse MOSFET with ratings and footprints. Surge validation stays open. |
 | 34 / PASS-A | Expand the driver passives, filter R/C, headers and test points. LTC1563 uses a single **resistor value** in its unity-gain topology, not a single physical resistor per channel (ADI application schematic has six). |
 | 45 / PASS-C | Expand FPGA passives, 2×7 JTAG header, supervisor/watchdog choice (§4.5 also allows a PL timer), host USB connector and test points. |
 | 60 / PASS-B | Expand the ADC/preamp passives, RC network, ESD parts and remaining connectors; confirm whether the current-sense BNC is still needed. |
+
+### C20–C27 characterization shortlist (no selection)
+
+Decision #8 locks 100 µF series DC blocking. Film and 25 V are unevaluated BOM
+screening assumptions, not selections. For comparison only, a 500 mA peak
+sine is 354 mA RMS; this is not a settled driver waveform specification.
+
+- **Panasonic SU-A bipolar electrolytic:** The [radial catalog](https://industrial.panasonic.com/cdbs/www-data/pdf/RDF0000/ast-ind-152839.pdf)
+  SU-A characteristics list and ripple correction table give `ECEA1VN101U`
+  (35 V, Ø10 × 16 mm, 5 mm lead pitch) 230 mA RMS at 120 Hz and 85 °C;
+  applying the 1.70 factor for 10 kHz and above gives 391 mA RMS. The same
+  calculation gives 306 mA RMS for `ECEA1EN101U` (25 V), below the illustrative
+  sine case.
+  Catalog ripple ratings do not authorize continuous near-zero-bias AC;
+  Panasonic's ripple-current precaution warns that reversal can occur at low
+  DC bias even within the ripple rating. The 35 V part is a characterization
+  and supplier-inquiry candidate only. Do not operate outside published
+  conditions without written manufacturer confirmation for the actual waveform.
+- **KEMET `C1210C107M3PACTU`:** Nonpolar 100 µF / 25 V X5R, per the
+  [X5R series datasheet](https://yageogroup.com/content/datasheet/asset/file/KEM_C1006_X5R_SMD)
+  Benefits and Ordering Information sections. Continuous ripple and thermal
+  performance in this application have not been verified; not qualified.
+- **KEMET `R60DW6100AA50K`:** An unapproved 100 µF film size reference;
+  [KEMET part sheet](https://search.kemet.com/component-documentation/download/specsheet/R60DW6100AA50K),
+  Dimensions: 41.5 × 20 × 40 mm (L × T × H).
+
+Leave the footprint unassigned until the actual capacitor voltage and current
+waveforms, operating temperature, ESR and ripple heating, manufacturer
+conditions, and driver stability and startup behavior are verified.
 
 ## Capture holds and excluded items
 
