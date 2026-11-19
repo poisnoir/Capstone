@@ -1,9 +1,11 @@
 # BRD-01 BOM-to-CAD ledger
 
 **Scope:** [SYSTEM-01](../../bom/BOM_SYSTEM-01.xlsx) Rev 0.05, sheet **BOM**
-(Excel row numbers below); [ADC-01](../../bom/BOM_ADC-01.xlsx) rows 9–11;
-[PEN-ANA-01](../../bom/BOM_PEN-ANA-01.xlsx) rows 9–12 and its
-[connector requirements](../../bom/connector_requirements.xlsx).
+(Excel row numbers below); [ADC-01](../../bom/BOM_ADC-01.xlsx), sheet
+`BOM_ADC-01`, rows 9–11 and note row 13; [PEN-ANA-01](../../bom/BOM_PEN-ANA-01.xlsx),
+sheet `BOM_PEN-ANA-01`, rows 9–12 and note row 15; and the
+[connector requirements](../../bom/connector_requirements.xlsx). The two
+note rows provide context, not orderable parts or CAD approvals.
 Compared with [SC-05 and the system contract](../../../contract/system_contract.md),
 [decisions #5, #7, #8, #10, #17, #19–21 and #25–26](../../../contract/decisions_log.md)
 and the [system schematic design record](../../../docs/phase2/system_schematic.md).
@@ -206,11 +208,11 @@ above, and **BOM** for the linked SYSTEM-01 BOM sheet. Other sources:
 
 | Item / source | CAD state | Owner decision before capture or release |
 |---|---|---|
-| F1 holder, Schurter `0031.8201` (Schematic §2; [verified pairings](#partial-prot-lot-mappings)) | **Ready** | Power owner: settle touch protection. The holder is not a cartridge. |
+| F1 open holder, Schurter `0031.8201` ([verified holder mapping](#partial-prot-lot-mappings); Schematic §2 identifies the F1 fuse function, not the holder part) | **Ready** for that exact open holder only | Power owner: resolve touch protection before release. This mapping neither qualifies a cover or alternate holder nor approves a cartridge. |
 | F1 replaceable 3 A time-delay cartridge (BOM 33; Schematic §2; [candidate evidence and hold](#partial-prot-lot-mappings)) | **Blocked** | Power owner: establish DC breaking rating at prospective fault current, check inrush, and approve a cartridge; no second PCB footprint for it. |
 | D1 `SMBJ18A` TVS (BOM 33; Schematic §2; [verified pairings](#partial-prot-lot-mappings)) | **Ready** | Power owner: verify surge and clamp coordination; the CAD mapping does not close this test. |
 | Input common-mode choke, shown as `L1` (BOM 33; Schematic §2; DRV-2 §3) | **Blocked** | Power owner: set filter requirements and verify the choke winding/pin arrangement before mapping a symbol or footprint. |
-| Other input CLC filter elements (DRV-2 §3; power ICD) | **Blocked** | Power owner: define the filter and identify which capacitor roles are already served by the input reservoir; no additional capacitor or inductor count assigned. |
+| Other input CLC filter elements (DRV-2 §3 specifies CLC filtering, not the discrete parts) | **Blocked** | Power owner: define the filter and identify which capacitor roles are already served by the input reservoir; no additional capacitor or inductor count assigned. |
 | Reverse-polarity protection (BOM 33 says MOSFET; Schematic §2 allows MOSFET or ideal diode) | **Blocked** | Power owner: settle implementation and requirements before any symbol/part mapping. |
 
 The Schematic §2 adapter-input reservoir (1000 µF / 25 V) is tracked
@@ -222,7 +224,7 @@ by the workbook. K2 remains separately held under row 32.
 
 | Item / source | CAD state | Owner decision before capture |
 |---|---|---|
-| LTC1563-2 cutoff-setting resistors per filter channel, 42.67 kΩ (0.1%) design value for 60 kHz (BOM 34; M16 handoff §5; decision #19) | **Symbol only** `Device:R` | Driver owner: confirm the application circuit and physical count. “One resistor” in M16 is one **value**, not one physical component; the [ADI unity-gain application](https://www.analog.com/media/en/technical-documentation/data-sheets/156323fa.pdf) shows six. |
+| LTC1563-2 cutoff-setting resistors per filter channel: 60 kHz from decision #19; 42.67 kΩ (0.1%) design value from M16 handoff §5 (BOM 34 filter R/C) | **Symbol only** `Device:R` | Driver owner: confirm the circuit, physical count and orderable realization of the design value. “One resistor” in M16 is one **value**, not one physical component; the [ADI unity-gain application](https://www.analog.com/media/en/technical-documentation/data-sheets/156323fa.pdf) shows six. |
 | Filter capacitor/support provision (BOM 34 “filter R/C”; Schematic §4.3; M16 handoff §5) | **Blocked** | Driver owner: confirm external capacitor roles, if any, against the filter and supply circuit. The lot wording is not an external pole-capacitor design or a quantity. |
 | Error-loop command-input resistor, 10 kΩ per channel (Schematic §4.2) | **Symbol only** `Device:R` | Driver owner: confirm loop capture and value before part allocation. |
 | Error-loop sense-feedback resistor, 10 kΩ per channel (Schematic §4.2) | **Symbol only** `Device:R` | Driver owner: confirm loop capture and gain before part allocation. |
@@ -234,6 +236,7 @@ by the workbook. K2 remains separately held under row 32.
 | Current-sense summer resistor network, scale 2.0103, component values open (Schematic §4.4; DRV-2 §4) | **Symbol only** `Device:R` | Driver owner: approve the summing network for measured Ch0 gain/phase; do not derive component values from the scale alone. |
 | Comparator threshold/reference network, per-channel trip at 1.2 × maximum current with a 0.6 V shunt-reference source in the design record (Schematic §§4.2, 4.4) | **Blocked** | Driver owner: close threshold and reference distribution; no shunt part, bias network or per-channel reference replication selected. |
 | Comparator fault combining (Schematic §§4.2, 4.4; design gates DRV-07; TLV3201 row 26) | **Blocked** | Driver/power owners: reconcile push-pull output with the wired-OR requirement and approve the fault path before mapping any combining parts. |
+| Per-channel LMH6321 `CL` current-limit input and `EF` error-flag output (row 24; [TI LMH6321](https://www.ti.com/lit/ds/symlink/lmh6321.pdf) §§6.7, 6.9; DRV-2 §2 discusses 300 mA versus short-term 500 mA with the current limit disabled, not a requirement to disable it) | **Blocked** | Driver owner: confirm how current limiting is implemented and whether or how EF is used alongside the TLV3201 comparator path. No support part, footprint, or topology assigned; the buffer itself remains mapped in row 24. |
 | Other driver/DAC supply bypass and decoupling, values open (BOM 34; DRV-2 §8) | **Symbol only** `Device:C` | Driver/power owners: allocate values and counts to the actual supply pins; do not duplicate filter or Vmid entries. |
 | Driver auxiliary headers (BOM 34; decision #25) | **Blocked** | Driver owner: identify remaining connector functions and pin counts on the one-board design; no old inter-board header or second set of FG headers. |
 | DAC-side SPI probe pads (DAC ICD §1; M16 handoff §4.5) | **Symbol only** `Connector:TestPoint` | Driver/FPGA owners: define probe nets and geometry; no pad count assigned. |
@@ -259,9 +262,10 @@ before any extra capacitor is assigned.
 | Other FPGA/configuration passives (BOM 45; Schematic §6.0 QSPI configuration) | **Blocked** | FPGA owner: define the QSPI/boot support circuit; the source does not specify individual pulls, straps or values. |
 | Digital test points (BOM 45) | **Symbol only** `Connector:TestPoint` | FPGA owner: name the bring-up nets and specify access and count; exclude DAC probe pads. |
 
-The six-contact Pico link remains a separate interface hold per the
-[Pico ICD](../../../contract/icd/pico_link.md) §2; the workbook does not
-allocate it to PASS-C. The STOP pull-down in §6 is at the Pico, not BRD-01.
+The [Pico ICD](../../../contract/icd/pico_link.md) §2 defines a six-contact
+link; its BRD-01 connector remains a separate hold not allocated to PASS-C
+by the workbook. Pico ICD §6 places the STOP pull-down at the Pico, not
+BRD-01.
 Do not add internal ADC/DAC cable headers from older interfaces; decisions
 #21/#25 and Schematic §§6.0, 8 make these on-board nets.
 
@@ -284,12 +288,12 @@ not the number of populated front-end assemblies.
 | ADC input series pair, 20 Ω per leg starting value (Schematic §5.1; decision #18; ADC ICD) | **Symbol only** `Device:R` | ADC owner: verify precharge/input settling at ADC-5; establish the Ch0 pseudo-differential implementation rather than copying a pen channel. |
 | ADC input reservoir pair, 470 pF per leg starting value (same sources; FE-4 §6) | **Symbol only** `Device:C` | ADC owner: tune with the differential driver and verify channel phase matching. |
 | ADC input differential capacitor, 100 pF starting value (same sources) | **Symbol only** `Device:C` | ADC owner: confirm differential settling and released network values. No extra copy from the local capacitor labels. |
-| ADC reference decoupling, 10 µF and 100 nF at the ADC in the design record (Schematic §§5.1, 5.3; ADC ICD) | **Symbol only** `Device:C` | ADC/power owners: close reference rail headroom, buffer/distribution and decoupling count across REF inputs; ADR434 and OPA192 stay in rows 51 and 54. |
-| Other receiver/ADC supply decoupling (BOM 60; ADC-01 sheet `BOM_ADC-01` row 13; Schematic §5.3) | **Symbol only** `Device:C` | Receiver/ADC owners: assign rail bypass values and locations separately from reference decoupling. |
+| ADC reference decoupling: 10 µF and 100 nF from Schematic §5.1 only; the ADC ICD leaves reference distribution open | **Symbol only** `Device:C` | ADC/power owners: close reference rail headroom, buffer/distribution and decoupling count across REF inputs; ADR434 and the OPA192 reference/VCM buffers stay in rows 51 and 54. |
+| Other receiver/ADC supply decoupling (BOM 60; Schematic §5.3 identifies rails; ADC-01 note row 13 defers decoupling to schematic and lists no orderable MCLK part) | **Symbol only** `Device:C` | Receiver/ADC owners: assign rail bypass values and locations separately from reference decoupling. |
 | ADC MCLK series resistor, 33 Ω in the 32.768 MHz path (Schematic §5.1) | **Symbol only** `Device:R` | ADC/FPGA owners: verify clock integrity with the actual clock tree. |
-| Buffered clock branch to the FPGA (Schematic §5.1; M16 handoff §2) | **Blocked** | ADC/FPGA owners: confirm clock distribution and whether a discrete buffer is required; the XO is row 59. |
+| Buffered clock branch to the FPGA (Schematic §5.1 only; M16 handoff §2 defines the shared clock, not a discrete buffer) | **Blocked** | ADC/FPGA owners: confirm clock distribution and whether a discrete buffer is required; the XO is row 59. |
 | Remaining sensor-side connections: pen channels and fixed reference (BOM 60; Schematic §5.2; decision #15) | **Blocked** | Receiver/mechanical owners: reconcile connector population and signal assignment; sketch `J1/J2/J4` are not board refs. Reuse the existing row 63 JST/panel evidence where applicable; no duplicate header or new reference-coil connector assumed. |
-| Current-sense BNC provision (PEN-ANA-01 sheet `BOM_PEN-ANA-01` row 15; connector requirements `Locked-CONN` row 7; Schematic §§4.4, 5.2) | **Blocked** | Receiver/driver owners: decide whether the legacy/external BNC is still needed with the on-board Ch0 route. No BNC population, location or footprint assigned. |
+| Possible current-sense BNC: PEN-ANA-01 note row 15 and connector requirements `Locked-CONN` row 7 reference it but exclude it from the pen BOM; Schematic §§4.4, 5.2 show on-board Ch0, not a BNC selection | **Blocked** | Receiver/driver owners: decide whether an external BNC is still needed. No BNC population, location or footprint assigned. |
 
 The 2×8/custom connector in the ADC ICD is not counted or placed here;
 owner reconciliation with the single-board decision is required before
