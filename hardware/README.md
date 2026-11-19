@@ -11,6 +11,7 @@ items, not suggestions.
 | `brd-01/` | One 4-layer board: power/E-stop, FPGA + clock, DAC/filter/current loops, receiver/ADC, connectors; [KiCad scaffold](brd-01/kicad/README.md) |
 | `brd-01/driver/` | Pointer to the vendor AC current-driver reference + new driver work |
 | `brd-01/frontend/` | Pointer to the vendor sensor-amplifier reference + new INA163/ADA4940 chain |
+| [kicad/lib/](kicad/lib/) | Shared curated KiCad assets; each project keeps its own library tables |
 | `fg-01/` | 8-coil planar field-generator PCB (separate passive board) |
 | `pen/` | Passive 5-DOF pen coil and shell |
 | `mechanical/` | Enclosure, non-metal ICNIRP guard, mounts, camera bracket |

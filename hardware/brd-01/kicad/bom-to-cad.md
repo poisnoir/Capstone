@@ -1,12 +1,12 @@
 # BRD-01 BOM-to-CAD ledger
 
-**Scope:** [SYSTEM-01](hardware/bom/BOM_SYSTEM-01.xlsx) Rev 0.05, sheet **BOM**
-(Excel row numbers below); [ADC-01](hardware/bom/BOM_ADC-01.xlsx) rows 9–11;
-[PEN-ANA-01](hardware/bom/BOM_PEN-ANA-01.xlsx) rows 9–12 and its
-[connector requirements](hardware/bom/connector_requirements.xlsx).
-Compared with [SC-05 and the system contract](contract/system_contract.md),
-[decisions #5, #7, #8, #10, #17, #19–21 and #25–26](contract/decisions_log.md)
-and the [system schematic design record](docs/phase2/system_schematic.md).
+**Scope:** [SYSTEM-01](../../bom/BOM_SYSTEM-01.xlsx) Rev 0.05, sheet **BOM**
+(Excel row numbers below); [ADC-01](../../bom/BOM_ADC-01.xlsx) rows 9–11;
+[PEN-ANA-01](../../bom/BOM_PEN-ANA-01.xlsx) rows 9–12 and its
+[connector requirements](../../bom/connector_requirements.xlsx).
+Compared with [SC-05 and the system contract](../../../contract/system_contract.md),
+[decisions #5, #7, #8, #10, #17, #19–21 and #25–26](../../../contract/decisions_log.md)
+and the [system schematic design record](../../../docs/phase2/system_schematic.md).
 References below are the BOM labels, not proposed schematic annotation.
 
 **Result:** 7 verified official symbol/footprint pairings and 15 curated
@@ -42,11 +42,11 @@ their exact MPN in the BOM; the symbol ID can name the common physical part
 | 21 / U10 | `DAC80508MRTET` | `Package_DFN_QFN:Texas_RTE0016D_WQFN-16-1EP_3x3mm_P0.5mm_EP0.8x0.8mm` | [TI DAC80508](https://www.ti.com/lit/ds/symlink/dac80508.pdf) §6, RTE0016D: 1 REF, 6 GND, 7 VDD, 12–16 CS/SCLK/SDI/SDO-ALARM/VIO, 17 EP to GND. MRTET is midscale and has SDO, not CLR or LDAC. |
 | 22, 54 / U30–U37; U5B–U8B | `OPA192IDBVR` | `Package_TO_SOT_SMD:SOT-23-5` | [TI OPAx192](https://www.ti.com/lit/ds/symlink/opa192.pdf) §5 DBV: 1 OUT, 2 V−, 3 IN+, 4 IN−, 5 V+. Row 22 lists only eight refs for ten parts. |
 | 23 / U40–U45 | `OPA2192IDR` | `Package_SO:SOIC-8_3.9x4.9mm_P1.27mm` | [TI OPAx192](https://www.ti.com/lit/ds/symlink/opa192.pdf) §5 D: 1–3 amplifier A, 5–7 amplifier B, 4/8 V−/V+. Four active duals; two ordered spares. |
-| 24 / U20–U27 | `LMH6321MR-NOPB` | `Package_SO:SOIC-8-1EP_3.9x4.9mm_P1.27mm_EP2.95x4.9mm_Mask2.71x3.4mm` | [TI LMH6321](https://www.ti.com/lit/ds/symlink/lmh6321.pdf) Fig. 3-1 and DDA0008B land pattern: 1 EF, 2 CL, 3 VIN, 4 V−, 5 GND, 6 OUT, 7 V+, 8 NC, 9 exposed V−. Not plain SOIC or DDPAK; thermal via placement and copper are layout work. |
+| 24 / U20–U27 | `LMH6321MR-NOPB` | `Package_SO:SOIC-8-1EP_3.9x4.9mm_P1.27mm_EP2.95x4.9mm_Mask2.71x3.4mm` | Orderable MPN and symbol Value: `LMH6321MR/NOPB`. [TI LMH6321](https://www.ti.com/lit/ds/symlink/lmh6321.pdf) Fig. 3-1 and DDA0008B land pattern: 1 EF, 2 CL, 3 VIN, 4 V−, 5 GND, 6 OUT, 7 V+, 8 NC, 9 exposed V−. Not plain SOIC or DDPAK; thermal via placement and copper are layout work. |
 | 26 / U60–U67 | `TLV3201AIDBVR` | `Package_TO_SOT_SMD:SOT-23-5` | [TI TLV3201](https://www.ti.com/lit/ds/symlink/tlv3201.pdf) §5 DBV: 1 OUT, 2 GND, 3 IN+, 4 IN−, 5 VCC. OUT is push-pull, not open drain; capture hold below. |
 | 36 / U80–U88 | `LTC1563-2IGN#PBF` | `Package_SO:SSOP-16_3.9x4.9mm_P0.635mm` | [ADI 156323fa](https://www.analog.com/media/en/technical-documentation/data-sheets/156323fa.pdf) pp. 2, 7–8, 19: GN package, 0.635 mm pitch, 16 V+, 8 V−, 9 active-low EN; NC 3/5/10/12/14 should go to system ground (passive pins, not ERC no-connect). Eight active filters, one spare. |
 | 42 / U1Q | `W25Q64JVSSIQ` | `Package_SO:SOIC-8_5.3x5.3mm_P1.27mm` | [Winbond W25Q64JV Rev. J](https://www.mouser.com/datasheet/2/949/w25q64jv_revj_03272018_plus-1489671.pdf) §3.1, §3.3, ordering and SS outline: 208 mil SOIC, 1 CS#, 2 IO1, 3 IO2, 4 GND, 5 IO0, 6 CLK, 7 IO3, 8 VCC. `IQ` ships with quad enabled; do not substitute a different density or 150 mil body. |
-| 50 / U1; ADC-01 row 9 | `AD7768-4BSTZ` | `Package_QFP:LQFP-64_10x10mm_P0.5mm` | [ADI Rev. D](https://www.analog.com/media/en/technical-documentation/data-sheets/ad7768-ad7768-4.pdf) Fig. 11, Table 10, p. 108 and [ST-64-2](https://mds.analog.com/api/public/content/st_64_2.pdf): 64 pins, 10 mm body, 0.5 mm pitch, no EP. Pin 20 is mode-dependent, not a hard NC; pins 22–23 are DNC. SC-05 locks `-RL7`; tray/RL/RL7 are the same CAD package. Do not use the separate eight-channel AD7768 pinout. |
+| 50 / U1; ADC-01 row 9 | `AD7768-4BSTZ` | `Package_QFP:LQFP-64_10x10mm_P0.5mm` | [ADI Rev. D](https://www.analog.com/media/en/technical-documentation/data-sheets/ad7768-ad7768-4.pdf) Fig. 11, Tables 10 and 34, p. 108 and [ST-64-2](https://mds.analog.com/api/public/content/st_64_2.pdf): 64 pins, 10 mm body, 0.5 mm pitch, no EP. Pin 20: leave floating when FORMAT0 is low (four DOUT lanes, as locked in the [ADC ↔ FPGA ICD](../../../contract/icd/adc_fpga.md)); connect to DGND through a pull-down resistor when FORMAT0 is high (DOUT0 only). Pins 22–23 are always DNC. SC-05 locks `-RL7`; tray/RL/RL7 are the same CAD package. Do not use the separate eight-channel AD7768 pinout. |
 | 51 / U2; ADC-01 row 11 | `ADR434BRZ` | `Package_SO:SOIC-8_3.9x4.9mm_P1.27mm` | [ADI Rev. N](https://www.analog.com/media/en/technical-documentation/data-sheets/adr430_431_433_434_435.pdf) Figs. 2 and 47: R-8; VIN 2, GND 4, TRIM 5, VOUT 6, COMP 7, DNC 1/8, NIC 3. VIN ≥6.1 V; capture hold below. |
 | 52 / U3 | `INA163UA` | `Package_SO:SOIC-14_3.9x8.7mm_P1.27mm` | [TI INA163](https://www.ti.com/lit/ds/symlink/ina163.pdf) p. 2 and package D: gain-set 3/12, inverting 4/noninverting 5, sense 8, output 9, REF 10, V− 6/V+ 11. |
 | 53 / U4 | `ADA4940-2ACPZ` | `Package_CSP:LFCSP-24-1EP_4x4mm_P0.5mm_EP2.5x2.5mm` | [ADI Rev. E](https://www.analog.com/media/en/technical-documentation/data-sheets/ADA4940-1_4940-2.pdf) Fig. 6, Table 13, Fig. 79: CP-24-7, EP 25 to −VS or ground. Stock symbol mislabels supply pads 3/4, 9/10, 15/16, 21/22 as feedback; curated symbol follows Table 13. SYSTEM says LFCSP-16; that is not this locked dual part. Confirm the order suffix without changing the part family. |
@@ -85,7 +85,7 @@ their exact MPN in the BOM; the symbol ID can name the common physical part
   the reference channel, while row 52 budgets one installed INA163. Resolve
   receiver channel population before BOM freeze.
 - **Interface and layout:** select the Pico connector against the
-  [Pico ICD](contract/icd/pico_link.md); pin-to-pad verification does not
+  [Pico ICD](../../../contract/icd/pico_link.md); pin-to-pad verification does not
   assign FPGA nets, validate HR-bank use, or certify 35T→50T interchange.
   The selected Mini-Fit header is not a selected mating cable housing or
   contact. Confirm mating hardware and keep metal outside the locked volume.

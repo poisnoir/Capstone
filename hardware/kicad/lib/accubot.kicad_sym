@@ -618,7 +618,7 @@
 		(in_bom yes)
 		(on_board yes)
 		(property "Reference" "U" (at -6.35 11.43 0) (effects (font (size 1.27 1.27)) (justify left)))
-		(property "Value" "LMH6321MR-NOPB" (at -6.35 8.89 0) (effects (font (size 1.27 1.27)) (justify left)))
+		(property "Value" "LMH6321MR/NOPB" (at -6.35 8.89 0) (effects (font (size 1.27 1.27)) (justify left)))
 		(property "Footprint" "Package_SO:SOIC-8-1EP_3.9x4.9mm_P1.27mm_EP2.95x4.9mm_Mask2.71x3.4mm" (at 0 0 0) (effects (font (size 1.27 1.27)) (hide yes)))
 		(property "Datasheet" "https://www.ti.com/lit/ds/symlink/lmh6321.pdf" (at 0 0 0) (effects (font (size 1.27 1.27)) (hide yes)))
 		(property "Description" "300 mA buffer, DDA SOIC PowerPAD; exposed pad is V-" (at 0 0 0) (effects (font (size 1.27 1.27)) (hide yes)))
