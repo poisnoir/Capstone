@@ -7,13 +7,15 @@
 Compared with [SC-05 and the system contract](../../../contract/system_contract.md),
 [decisions #5, #7, #8, #10, #17, #19–21 and #25–26](../../../contract/decisions_log.md)
 and the [system schematic design record](../../../docs/phase2/system_schematic.md).
-References below are the BOM labels, not proposed schematic annotation.
+References below are from the BOMs or design record, not new schematic annotation.
 
-**Result:** 7 verified official symbol/footprint pairings and 15 curated
-symbols (one also needs a curated footprint), covering 23 system BOM rows:
-OPA192 occurs twice. Eight active BRD-01 rows and one relevant pen-interface
-row lack a complete PCB mapping. These counts are not quantities to place
-or buy. A verified CAD part can still be subject to a circuit-level hold.
+**Result:** 8 verified official pairings, 15 curated symbols, and one
+official symbol with a curated footprint (ST TVS). There are 2 curated
+footprints in total. This covers 23 complete BRD-01 BOM rows (OPA192
+occurs twice), plus the TVS in the PROT lot and the pen interface's
+PCB header. Eight active BRD-01 rows or lots remain incomplete. These
+counts are not quantities to place or buy. A verified CAD part can still
+be subject to a circuit-level hold.
 
 ## Official KiCad 10.0.8 pairings
 
@@ -29,13 +31,34 @@ The pitch in a footprint ID can refer to mating pitch, not PCB row spacing.
 | 44 / U3–U4 | TLP291(GB) | `Isolator:TLP291` | `Package_SO:SOIC-4_4.55x2.6mm_P1.27mm` | [Toshiba TLP291](https://toshiba.semicon-storage.com/info/docget.jsp?did=12884&prodName=TLP291) pp. 1–2, SO4 drawing 11-3C1; 1 anode, 2 cathode, 3 emitter, 4 collector. GB is CTR rank, not a package change. |
 | 47 / U5–U6 | TPS62130ARGTR | `Regulator_Switching:TPS62130A` | `Package_DFN_QFN:VQFN-16-1EP_3x3mm_P0.5mm_EP1.68x1.68mm_ThermalVias` | [TI TPS62130A](https://www.ti.com/lit/ds/symlink/tps62130a.pdf) Table 6-1, RGT0016C: SW 1–3, GND 6/15/16/17 (EP), AVIN 10/PVIN 11–12 (symbol `VIN`), VOS 14. Rail voltages depend on external circuitry, not different regulator MPNs. |
 | 58 / U13 | TPS7A2033PDBVR | `Regulator_Linear:TPS7A20xxxDBV` | `Package_TO_SOT_SMD:SOT-23-5` | [TI TPS7A20](https://www.ti.com/lit/ds/symlink/tps7a20.pdf), DBV Figure 4-4 and Pin Functions: 1 IN, 2 GND, 3 EN, 4 NC, 5 OUT. Keep selected 3.3 V `PDBVR` order code in the part value. |
+| 63 / J1P,J2P are panel refs; PCB header refdes open | JST `B2B-PH-K-S` | `Connector_Generic:Conn_01x02` | `Connector_JST:JST_PH_B2B-PH-K_1x02_P2.00mm_Vertical` | [JST PH catalog](https://www.jst-mfg.com/product/pdf/eng/ePH.pdf) pp. 1–3: keyed/shrouded top-entry THT, 5.9 × 4.5 mm body, circuit-1 mark and 2.00 ± 0.05 mm hole pitch. KiCad's Ø0.75 mm holes are within JST's Ø0.70–0.80 mm range; pins 1 and 2 map to like-numbered pads, not to assigned signals. Mates with JST `PHR-2` housing and `SPH-002T-P0.5S` crimp contacts. |
+
+The pen connector remains a rear-panel male solder-cup **IO Audio
+`IO-TXLR3-M-PS-1`** ([manufacturer datasheet](https://assets.testequity.com/te1/Documents/pdf/io-audio/IO-Audio-Technologies_IO-TXLR3-M-PS-1_3-Pin-Male-Mini-XLR-Panel-Mount-Connector_Datasheet_1024.pdf)),
+as identified by PEN-ANA-01 row 9 and Locked-CONN, despite SYSTEM row 63's
+abbreviated MPN and Amphenol entry. It has no PCB footprint. The JST harness
+carries only SIG+/SIG−; panel pin 1 and shell go to chassis star per Locked-CAB
+C3. The cable-side `IO-TXLR3-F` is unchanged. JST pin assignment and receiver
+channel population remain open. Measure the assembled total pen link, including
+the internal harness and connector, against the 73 pF limit at 34 kHz (SC-05c).
 
 ## Curated from manufacturer sources
 
-Symbols are in the project-local `accubot` library. Order-only variants retain
+Curated symbols are in the shared `accubot` library. Order-only variants retain
 their exact MPN in the BOM; the symbol ID can name the common physical part
-(`AD7768-4BSTZ`, `ADA4940-2ACPZ`). Stock footprints below are official KiCad
-10.0.8; the only custom land pattern is RECOM RV-1515D.
+(`AD7768-4BSTZ`, `ADA4940-2ACPZ`). The ST TVS uses an official symbol and
+a custom land pattern; the RECOM module uses both a custom symbol and footprint.
+
+**33 / PROT, D1 (§2): STMicroelectronics `SMBJ18A`, unidirectional.** Use
+`Device:D_Zener` with Value `SMBJ18A` and assign
+`accubot:ST_SMBJ_DO-214AA_DS1283`. Pin 1 (K) maps to the marked cathode pad;
+pin 2 (A) maps to the anode pad. `Device:D_TVS` is bidirectional.
+[ST DS1283 Rev. 14](https://www.st.com/resource/en/datasheet/smbj18a.pdf)
+Fig. 14 specifies 1.62 × 2.07 mm rectangular lands, a 2.60 mm gap and a
+5.84 mm outer span (4.22 mm center-to-center); Fig. 15 identifies the
+cathode bar. Stock `Diode_SMD:D_SMB` has 2.50 × 2.30 mm rounded lands on
+4.30 mm centers, so the same package name does not guarantee the same land
+pattern. This is a CAD mapping, not surge or clamp-coordination validation.
 
 | BOM row / refs | `accubot` symbol | Footprint ID | Pin and package evidence |
 |---|---|---|---|
@@ -59,15 +82,14 @@ their exact MPN in the BOM; the symbol ID can name the common physical part
 
 | BOM row / refs | Needed before capture |
 |---|---|
-| 27 / R20–R27 | Confirm exact 1 Ω, 0.1%, 0.5 W Vishay part and its 1206 land pattern / derating. The BOM is not an orderable MPN. |
+| 27 / R20–R27 | The searched 1206 options did not verify the BOM's 1 Ω, ±0.1%, 0.5 W combination. [Thin Film Technology TFT-DMS-165-1](https://www.thin-film.com/wp-content/uploads/2023/03/TFT-DMS-165-1.pdf) pp. 1–2 factory-code candidate: `TF2512HQ1R00B-T4`, two-terminal 2512, 1 Ω, ±0.1%, 1 W per the series table. Confirm that exact combination, MOQ, lead time and land pattern with the factory before selection. Footprint open; no availability claim or footprint reservation. |
 | 28 / C20–C27 | Choose the 100 µF / 25 V series, physical size and lead pitch that meet AC coupling, ripple and thermal needs; ensure film is intentional. |
 | 29 / C30–C31 | Choose 1000 µF / 25 V technology, polarity, size, terminals and ripple rating. |
 | 32 / K2 | Select the actual force-guided 15 V relay and approve its contact allocation and E-stop chain. §4.5 mentions both dropping driver power and feeding enables; LMH6321 has no enable pin. Do not infer a relay from coil voltage. |
-| 33 / PROT | Expand the lot: fuse/holder, SMBJ18A manufacturer/package, CM choke and reverse MOSFET with ratings and footprints. |
+| 33 / PROT | D1 CAD mapping is above; select the fuse/holder, CM choke and reverse MOSFET with ratings and footprints. Surge validation stays open. |
 | 34 / PASS-A | Expand the driver passives, filter R/C, headers and test points. LTC1563 uses a single **resistor value** in its unity-gain topology, not a single physical resistor per channel (ADI application schematic has six). |
 | 45 / PASS-C | Expand FPGA passives, 2×7 JTAG header, supervisor/watchdog choice (§4.5 also allows a PL timer), host USB connector and test points. |
-| 60 / PASS-B | Expand the ADC/preamp passives, RC network, ESD parts and connectors; confirm the panel-to-PCB termination and current-sense BNC if it is still needed. |
-| 63 / J1P,J2P; PEN-ANA-01 row 9 | SYSTEM has an Amphenol/abbreviated MPN entry; supplier ID, PEN-ANA-01 and Locked-CONN identify **IO Audio IO-TXLR3-M-PS-1** (panel, male, solder cup). Not a PCB footprint. Confirm whether the locked panel pair feeds BRD-01 via a separately selected header/harness or the owner intends a different mount under decision #25. Keep cable female `IO-TXLR3-F` (PEN-ANA-01 row 10) and shield termination per Locked-CAB C3. |
+| 60 / PASS-B | Expand the ADC/preamp passives, RC network, ESD parts and remaining connectors; confirm whether the current-sense BNC is still needed. |
 
 ## Capture holds and excluded items
 
