@@ -276,7 +276,7 @@ before any extra capacitor is assigned.
 
 | Item / source | CAD state | Owner decision before capture |
 |---|---|---|
-| 2×7 JTAG header (BOM 45) | **Symbol only** `Connector_Generic:Conn_02x07_Odd_Even` | FPGA owner: approve programmer pinout, keying and physical connector. The symbol only represents the contact count. |
+| 2×7 JTAG header (BOM 45; [programmer and footprint hold](#jtag-programmer-and-footprint-hold)) | **Symbol only** `Connector_Generic:Conn_02x07_Odd_Even` | FPGA and PCB owners: verify exact footprint and pin orientation, and resolve Artix-7 VREF for the target bank and programmer. No footprint or signals assigned. |
 | Supervisor/watchdog (BOM 45; Schematic §4.5; M16 handoff §10) | **Blocked** | FPGA/power/follower owners: reconcile a discrete supervisor (TPS3823 mentioned, not selected) versus PL timer, and settle STOP/heartbeat responsibility without changing the independent hardware E-stop. |
 | Host USB receptacle ([provisional GCT mapping](#pass-c-host-usb-provisional-cad-mapping-only)) | **Provisional** | FPGA/host and mechanical owners: close the interface and footprint-variant holds listed in the mapping. |
 | Host USB support: CC, VBUS sense/backfeed, ESD and shield termination ([USB mapping hold](#pass-c-host-usb-provisional-cad-mapping-only); Schematic §6.0) | **Blocked** | Host-interface owner: approve the circuit and routing before allocating passives or protection parts; FT231XQ stays in row 43. |
@@ -291,6 +291,26 @@ by the workbook. Pico ICD §6 places the STOP pull-down at the Pico, not
 BRD-01.
 Do not add internal ADC/DAC cable headers from older interfaces; decisions
 #21/#25 and Schematic §§6.0, 8 make these on-board nets.
+
+#### JTAG programmer and footprint hold
+
+The target uses the standard 14-position, 2 mm-pitch ribbon for AMD/Xilinx
+Platform Cable USB II. [AMD DS593 v1.5.1](https://docs.amd.com/api/khub/documents/TI9ts12CeuAeBtQpR7HWBw/content),
+Figure 14 and Table 5, show the target connector pitch and list the
+preferred vertical through-hole Molex `87831-1420` as a mating candidate.
+The [Molex part sheet](https://www.molex.com/en-us/products/part-detail/878311420)
+lists 1.60 mm as the recommended **PCB thickness**, not a hole diameter.
+
+Footprint dimensions remain unapproved. Before assigning a footprint,
+inspect a viewable released [Molex SD-87831-0001](https://www.molex.com/content/dam/molex/molex-dot-com/products/automated/en-us/salesdrawingpdf/878/87831/878311420_sd.pdf)
+for the exact variant: distinguish terminal holes from optional locator
+holes, verify circuit 1 relative to the mating notch, and confirm the
+maximum body outline. Obtain the chosen fab's finished plated-hole
+tolerance and minimum annular-ring rules before fixing drill or pad
+dimensions. Only the [fabrication README](../fab/README.md) is tracked
+under `hardware/brd-01/fab/`; it provides no approved fab rules.
+Cable/enclosure fit, board stackup, and Artix-7 VREF for the actual target
+bank and programmer remain open.
 
 ### PASS-B — receiver and ADC
 
