@@ -329,8 +329,8 @@ not the number of populated front-end assemblies.
 | ADA4940-2 gain-setting resistors for 2× stage, resistor values open (Schematic §5.1; decision #17) | **Symbol only** `Device:R` | Receiver owner: close the driver gain network and phase matching with the ADC load. |
 | ADC VCM-to-FDA common-mode network, 2.5 V function from the AD7768 (Schematic §5.1; FE-4 §6; BOM 54) | **Blocked** | Receiver owner: settle VCM distribution, bias network and allocation of the already-mapped row 54 buffers. |
 | ADC input series pair, 20 Ω per leg starting value (Schematic §5.1; decision #18; ADC ICD) | **Symbol only** `Device:R` | ADC owner: verify precharge/input settling at ADC-5; establish the Ch0 pseudo-differential implementation rather than copying a pen channel. |
-| ADC input reservoir pair, 470 pF per leg starting value (same sources; FE-4 §6) | **Symbol only** `Device:C` | ADC owner: tune with the differential driver and verify channel phase matching. |
-| ADC input differential capacitor, 100 pF starting value (same sources) | **Symbol only** `Device:C` | ADC owner: confirm differential settling and released network values. No extra copy from the local capacitor labels. |
+| ADC input reservoir pair, 470 pF per leg starting value (same sources; FE-4 §6) | **Symbol only** `Device:C`; [footprint hold](#adc-input-capacitor-footprint-hold) | ADC owner: tune with the differential driver and verify channel phase matching. |
+| ADC input differential capacitor, 100 pF starting value (same sources) | **Symbol only** `Device:C`; [footprint hold](#adc-input-capacitor-footprint-hold) | ADC owner: confirm differential settling and released network values. No extra copy from the local capacitor labels. |
 | ADC reference decoupling: 10 µF and 100 nF from Schematic §5.1 only; the ADC ICD leaves reference distribution open | **Symbol only** `Device:C` | ADC/power owners: close reference rail headroom, buffer/distribution and decoupling count across REF inputs; ADR434 and the OPA192 reference/VCM buffers stay in rows 51 and 54. |
 | Other receiver/ADC supply decoupling (BOM 60; Schematic §5.3 identifies rails; ADC-01 note row 13 defers decoupling to schematic and lists no orderable MCLK part) | **Symbol only** `Device:C` | Receiver/ADC owners: assign rail bypass values and locations separately from reference decoupling. |
 | ADC MCLK series resistor, 33 Ω in the 32.768 MHz path (Schematic §5.1) | **Symbol only** `Device:R` | ADC/FPGA owners: verify clock integrity with the actual clock tree. |
@@ -341,6 +341,32 @@ not the number of populated front-end assemblies.
 The 2×8/custom connector in the ADC ICD is not counted or placed here;
 owner reconciliation with the single-board decision is required before
 any physical ADC interconnect could be considered.
+
+#### ADC input capacitor footprint hold
+
+Only KYOCERA AVX `KGM15ACG1H471GT` (470 pF reservoir) and
+`KGM15ACG1H101GT` (100 pF differential) are candidates for one shared,
+provisional land pattern. The [KGM C0G datasheet](https://datasheets.kyocera-avx.com/C0GNP0-KGM.pdf)
+(TDS-SMDMLCC-0036 Rev 7, “How to Order” and “Capacitance Range”) identifies
+the KGM15 0603 case and permits reflow, but gives no PCB land drawing.
+
+The [KYOCERA AVX Surface Mounting Guide](https://datasheets.kyocera-avx.com/SurfaceMountGuide.pdf)
+(TDS-SMDMLCC-0055 Rev 0, p. 1, reflow drawing) shows two rectangular pads:
+D2 and D4 are the individual pad lengths (0.80 mm each), D5 is pad width
+(0.75 mm), D3 is the inner gap (0.70 mm), and D1 is the outer span
+(2.30 mm). The guide gives generic MLCC pad dimensions, not a solder mask
+or stencil drawing. The separate [KYOCERA MLCC handling guide](https://ele.kyocera.com/en/product/capacitor/ceramic/mlcc-handling/mounting-01/)
+lists a 0.80–1.00 mm gap and 0.80–1.10 mm land width for its 1608/0603
+row with ±0.15 mm body tolerances; its figure distinguishes land from solder
+resist. Neither guide explicitly identifies which pattern applies to these
+two exact order codes.
+
+Before assigning a footprint, obtain a released drawing or written
+manufacturer confirmation identifying the reflow copper pattern for both
+codes, and confirm the mask, stencil and assembly requirements with the PCB
+owner. No footprint, circuit, population or BOM approval follows from this
+check. The 20 Ω resistor stays symbol-only; Ch0 topology, ADC-5 bench tuning,
+settling and channel phase matching remain open.
 
 ## Capture holds and excluded items
 
