@@ -161,7 +161,7 @@ feedback; and confirm restart behavior and stop validation.
 **45 / PASS-C: GCT `USB4105-GF-A` candidate.** Pair
 `Connector:USB_C_Receptacle_USB2.0_16P` with
 `Connector_USB:USB_C_Receptacle_GCT_USB4105-xx-A_16P_TopMnt_Horizontal`.
-The [GCT USB4105 drawing](https://gct.co/files/drawings/usb4105.pdf), Rev B
+The [GCT USB4105 drawing](https://gct.co/files/drawings/usb4105.pdf), Rev B4
 (18 Dec 2023), sheet 1, is the comparison basis:
 
 - All 17 distinct pin and pad identifiers match, including `SH`. The 16
@@ -172,11 +172,44 @@ The [GCT USB4105 drawing](https://gct.co/files/drawings/usb4105.pdf), Rev B
   shell slots, two Ø0.65 mm non-plated holes, and 7.35 mm from the board
   edge to the signal land centers (to drawing precision).
 
-The drawing's blank stake-length suffix denotes 0.95 mm. Do not lock the
-orderable suffix or assume a board thickness: enclosure fit and
-manufacturability remain open. CC, VBUS power sense and backfeed prevention,
-ESD, shield termination, and routing are on design hold. This mapping does
-not complete PASS-C.
+**Board thickness for this comparison:** BRD-01 is approved at 1.6 mm nominal,
+standard JLCPCB fabrication. [JLCPCB PCB capabilities](https://jlcpcb.com/capabilities/)
+specifies ±10% for thickness ≥1.0 mm and gives 1.44–1.76 mm finished for 1.6 mm
+(1.60 ± 0.16 mm).
+
+The GCT side view dimensions `S ± 0.15 mm` from the seating plane at the
+underside of the SMT solder tails to the shell stake tip. `S` is not the
+signal-tail length; the rear-view 0.60 mm callout is for the locating peg,
+not the `060` stake suffix. The ordering grid supplies the three nominal `S`
+values. Assuming the seating plane is flush with the component-side surface
+at the slot and neglecting local standoff, the depth remaining below the
+tip is finished board thickness minus `S`. The extremes pair the thinnest
+board with the longest stake, and the thickest board with the shortest stake.
+
+| Stake suffix | Nominal `S` (mm) | Min–max `S` (mm) | Tip recess at 1.60 mm (mm) | Min–max tip recess (mm) |
+|---|---:|---:|---:|---:|
+| Blank | 0.95 | 0.80–1.10 | 0.65 | 0.34–0.96 |
+| `060` | 0.60 | 0.45–0.75 | 1.00 | 0.69–1.31 |
+| `120` | 1.20 | 1.05–1.35 | 0.40 | 0.09–0.71 |
+
+All three tips stay inside the plated slots under those assumptions. That
+is a geometric result, not a solder-fill prediction or an incompatibility
+finding. [GCT's USB4105 pin-in-paste guidance](https://gct.co/news/pin-in-paste)
+describes through-hole shell stakes, paste volume and possible overprinting
+on thicker boards. Neither it nor the drawing or
+[GCT product spec A3](https://gct.co/download?type=PDFSpecification&name=usb4105-spec.pdf)
+explicitly permits or forbids partial insertion or requires protrusion for
+this build. The [JLCPCB pin-in-paste guide](https://jlcpcb.com/blog/pin-in-paste-through-hole-reflow-stencil-guide)
+gives typical lead protrusion and discusses barrel fill, not acceptance for
+these slots.
+
+Keep the suffix, assembly fit and enclosure fit provisional. Before choosing
+a suffix, obtain GCT's written allowable board-thickness range or minimum
+stake engagement/protrusion for that variant, and the assembler's written
+acceptance of the actual plated slots across the thickness range, including
+soldering process, fill/wetting criteria and first-article inspection. CC,
+VBUS power sense and backfeed prevention, ESD, shield termination, and routing
+remain on design hold. This mapping does not complete PASS-C.
 
 ### C20–C27 characterization shortlist (no selection)
 
