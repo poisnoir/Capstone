@@ -13,16 +13,17 @@ References below are from the BOMs or design record, not new schematic annotatio
 the JST pen header) and 15 pairings using curated symbols. The partially
 mapped PROT lot has two separate mappings: one additional official pairing
 for the Schurter holder, and an official symbol with a curated footprint for
-the ST TVS. Neither adds a complete BOM row. There are 2 curated footprints
-in total (RECOM and ST).
+the ST TVS. The provisional host USB pairing is tracked separately under
+PASS-C. None of these adds a complete BOM row. There are 2 curated
+footprints in total (RECOM and ST).
 
 The tables fully map 23 SYSTEM-01 rows for CAD: 7 from the official table and
 16 from the curated table, since the same `OPA192IDBVR` pairing serves rows 22
 and 54. The JST header is counted once, among the 8 official pairings; its CAD
 mapping does not complete row 63 or qualify the pen harness. The unresolved
-PCB table lists 8 other rows or lots, including PROT. These counts are not
-quantities to place or buy, and verified CAD mappings do not clear
-circuit-level holds.
+PCB table lists 8 other rows or lots, including PROT and PASS-C. These
+counts are not quantities to place or buy, and verified CAD mappings do
+not clear circuit-level holds.
 
 ## Official KiCad 10.0.8 pairings
 
@@ -127,8 +128,30 @@ and footprint.
 | 32 / K2 | Select the actual force-guided 15 V relay and approve its contact allocation and E-stop chain. §4.5 mentions both dropping driver power and feeding enables; LMH6321 has no enable pin. Do not infer a relay from coil voltage. |
 | 33 / PROT | F1 holder and D1 CAD mappings are above. The cartridge, CM choke and reverse MOSFET remain unselected; surge validation remains open. |
 | 34 / PASS-A | Expand the driver passives, filter R/C, headers and test points. LTC1563 uses a single **resistor value** in its unity-gain topology, not a single physical resistor per channel (ADI application schematic has six). |
-| 45 / PASS-C | Expand FPGA passives, 2×7 JTAG header, supervisor/watchdog choice (§4.5 also allows a PL timer), host USB connector and test points. |
+| 45 / PASS-C | Host USB has a provisional CAD mapping below; its circuit design remains open. Expand FPGA passives, 2×7 JTAG header, supervisor/watchdog choice (§4.5 also allows a PL timer), and test points. |
 | 60 / PASS-B | Expand the ADC/preamp passives, RC network, ESD parts and remaining connectors; confirm whether the current-sense BNC is still needed. |
+
+### PASS-C host USB: provisional CAD mapping only
+
+**45 / PASS-C: GCT `USB4105-GF-A` candidate.** Pair
+`Connector:USB_C_Receptacle_USB2.0_16P` with
+`Connector_USB:USB_C_Receptacle_GCT_USB4105-xx-A_16P_TopMnt_Horizontal`.
+The [GCT USB4105 drawing](https://gct.co/files/drawings/usb4105.pdf), Rev B
+(18 Dec 2023), sheet 1, is the comparison basis:
+
+- All 17 distinct pin and pad identifiers match, including `SH`. The 16
+  contact identifiers use 12 physical lands: eight 0.30 × 1.15 mm and four
+  0.60 × 1.15 mm. The shared lands pair only same-function contacts; this
+  does not approve circuit wiring.
+- The footprint matches two 0.60 × 1.70 mm and two 0.60 × 1.40 mm plated
+  shell slots, two Ø0.65 mm non-plated holes, and 7.35 mm from the board
+  edge to the signal land centers (to drawing precision).
+
+The drawing's blank stake-length suffix denotes 0.95 mm. Do not lock the
+orderable suffix or assume a board thickness: enclosure fit and
+manufacturability remain open. CC, VBUS power sense and backfeed prevention,
+ESD, shield termination, and routing are on design hold. This mapping does
+not complete PASS-C.
 
 ### C20–C27 characterization shortlist (no selection)
 
