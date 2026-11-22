@@ -8,11 +8,11 @@ items, not suggestions.
 
 | Path | Contents |
 |---|---|
-| `brd-01/` | One 4-layer board: power/E-stop, FPGA + clock, DAC/filter/current loops, receiver/ADC, connectors; [KiCad scaffold](brd-01/kicad/README.md) |
+| `brd-01/` | One 4-layer board for power/E-stop, FPGA + clock, excitation, receiver/ADC, and connectors. Open the [BRD-01 KiCad project](brd-01/kicad/brd-01.kicad_pro). |
 | `brd-01/driver/` | Pointer to the vendor AC current-driver reference + new driver work |
 | `brd-01/frontend/` | Pointer to the vendor sensor-amplifier reference + new INA163/ADA4940 chain |
-| [kicad/lib/](kicad/lib/) | Shared curated KiCad assets; each project keeps its own library tables |
-| `fg-01/` | 8-coil planar field-generator PCB (separate passive board) |
+| [`kicad/lib/`](kicad/lib/) | Shared KiCad symbols and footprints. Open board projects from their board folders. |
+| [`fg-01/`](fg-01/README.md) | Passive eight-coil field-generator assembly. Follow its DesignSpark source and fabrication notes. |
 | `pen/` | Passive 5-DOF pen coil and shell |
 | `mechanical/` | Enclosure, non-metal ICNIRP guard, mounts, camera bracket |
 | `bom/` | System and board BOMs, connector requirements |
@@ -31,8 +31,9 @@ items, not suggestions.
 
 ## EDA
 
-KiCad is the planned tool (`docs/phase2/system_schematic.md` §8). Commit the
-project files, not `*-backups/`, `fp-info-cache` or `*.kicad_prl` (gitignored).
+For BRD-01, open the project from `brd-01/kicad/` in your Git checkout.
+Its tables find the shared library through relative paths. Commit KiCad
+project files and leave `*-backups/`, `fp-info-cache` and `*.kicad_prl` local.
 If the team changes to Altium/Fusion, revisit `.gitattributes` and LFS before
 adding binary board files.
 
