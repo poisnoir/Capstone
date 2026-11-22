@@ -13,8 +13,8 @@ References below are from the BOMs or design record, not new schematic annotatio
 
 **Result:** The tables list 8 official symbol/footprint pairings (including
 the JST pen header) and 15 pairings using curated symbols. The partially
-mapped PROT lot has two separate mappings: one additional official pairing
-for the Schurter holder, and an official symbol with a curated footprint for
+mapped PROT lot has two separate mappings: a curated symbol with a stock
+footprint for the Schurter holder and a curated symbol and footprint for
 the ST TVS. The provisional host USB pairing is tracked separately under
 PASS-C, alongside a schematic-only JTAG symbol. The library also has the
 off-board panel mini-XLR and three draft interface/control symbols. These
@@ -58,8 +58,8 @@ the internal harness and connector, against the 73 pF limit at 34 kHz (SC-05c).
 
 ## Partial PROT lot mappings
 
-**33 / PROT, F1 (§2): Schurter OGN `0031.8201` holder only.** Use
-`Device:Fuse` and explicitly assign
+**33 / PROT, F1 (§2): Schurter OGN `0031.8201` holder only.** Place
+`accubot:Fuse_Schurter_0031.8201`, which defaults to
 `Fuse:Fuseholder_Cylinder-5x20mm_Schurter_0031_8201_Horizontal_Open`.
 The [Schurter OGN datasheet](https://www.schurter.com/en/datasheet/typ_ogn.pdf)
 Variants table identifies the open 5 × 20 mm THT holder with 22.5 mm pin
