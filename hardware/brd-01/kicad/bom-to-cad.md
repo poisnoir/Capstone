@@ -123,6 +123,19 @@ and footprint.
 | 57 / U12 | `TPS7A3301RGWR` | `Package_DFN_QFN:Texas_RGW0020A_VQFN-20-1EP_5x5mm_P0.65mm_EP3.15x3.15mm_ThermalVias` | [TI TPS7A33](https://www.ti.com/lit/ds/symlink/tps7a33.pdf) §5 Pin Functions, RGW0020A: IN 15/16, OUT 1/20, GND 7/21 EP. Stock symbol omits optionally tieable pads 2/4–6/8–12/17–19. This symbol exposes all pads. |
 | 59 / Y1 | `CSX750FBC32.768M-UT` | `Oscillator:Oscillator_SMD_SeikoEpson_SG8002CA-4Pin_7.0x5.0mm` | [Citizen CSX-750F solder pad layout](https://media.digikey.com/pdf/Data%20Sheets/Citizen%20PDFs/CSX-750FC,FB,FJ.pdf): 7×5 mm, 1 OE, 2 GND, 3 OUT, 4 VDD. The Epson footprint has matching 1.8×2.0 mm pad extents, 5.08×4.20 mm centers and pin-1 orientation; KiCad rounds pad corners. No Epson part substitution. |
 
+### Prototype alternate for U9
+
+`accubot:MGJ2D151515SC` defaults to the stock KiCad footprint
+`Converter_DCDC:Converter_DCDC_Murata_MGJ2DxxxxxxSC_THT`. The
+[Murata MGJ2 datasheet](https://www.mouser.com/datasheet/2/281/1/kdc_mgj2-2941063.pdf)
+specifies 13.5–16.5 V input, dual ±15 V at up to 67 mA per rail, and
+pins 1 +VIN, 2 −VIN, 5 −VOUT, 6 COM and 7 +VOUT. The pads are numbered
+the same as the pins and match the stock MGJ2D footprint at 2.54 mm pitch.
+The [distributor listing](https://www.digikey.ca/en/products/detail/murata-power-solutions-inc/MGJ2D151515SC/5825461)
+marks the part obsolete. CAD is available for prototype evaluation.
+Replacing BOM row 55's RV-1515D requires approval under
+[decision #20](../../../contract/decisions_log.md).
+
 ## Unresolved PCB rows
 
 | BOM row / refs | Needed before capture |
