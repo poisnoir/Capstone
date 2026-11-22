@@ -16,8 +16,10 @@ the JST pen header) and 15 pairings using curated symbols. The partially
 mapped PROT lot has two separate mappings: one additional official pairing
 for the Schurter holder, and an official symbol with a curated footprint for
 the ST TVS. The provisional host USB pairing is tracked separately under
-PASS-C. None of these adds a complete BOM row. There are 2 curated
-footprints in total (RECOM and ST).
+PASS-C, alongside a schematic-only JTAG symbol. The library also has the
+off-board panel mini-XLR and three draft interface/control symbols. These
+partial mappings leave their BOM rows open. There are 2 curated footprints
+(RECOM and ST).
 
 The tables fully map 23 SYSTEM-01 rows for CAD: 7 from the official table and
 16 from the curated table, since the same `OPA192IDBVR` pairing serves rows 22
@@ -43,12 +45,14 @@ The pitch in a footprint ID can refer to mating pitch, not PCB row spacing.
 | 58 / U13 | TPS7A2033PDBVR | `Regulator_Linear:TPS7A20xxxDBV` | `Package_TO_SOT_SMD:SOT-23-5` | [TI TPS7A20](https://www.ti.com/lit/ds/symlink/tps7a20.pdf), DBV Figure 4-4 and Pin Functions: 1 IN, 2 GND, 3 EN, 4 NC, 5 OUT. Keep selected 3.3 V `PDBVR` order code in the part value. |
 | 63 / J1P,J2P are panel refs; PCB header refdes open | JST `B2B-PH-K-S` | `Connector_Generic:Conn_01x02` | `Connector_JST:JST_PH_B2B-PH-K_1x02_P2.00mm_Vertical` | [JST PH catalog](https://www.jst-mfg.com/product/pdf/eng/ePH.pdf) pp. 1–3: keyed/shrouded top-entry THT, 5.9 × 4.5 mm body, circuit-1 mark and 2.00 ± 0.05 mm hole pitch. KiCad's Ø0.75 mm holes are within JST's Ø0.70–0.80 mm range; pins 1 and 2 map to like-numbered pads, not to assigned signals. Mates with JST `PHR-2` housing and `SPH-002T-P0.5S` crimp contacts. |
 
-The pen connector remains a rear-panel male solder-cup **IO Audio
-`IO-TXLR3-M-PS-1`** ([manufacturer datasheet](https://assets.testequity.com/te1/Documents/pdf/io-audio/IO-Audio-Technologies_IO-TXLR3-M-PS-1_3-Pin-Male-Mini-XLR-Panel-Mount-Connector_Datasheet_1024.pdf)),
+Use `accubot:IO-TXLR3-M-PS-1` for the rear-panel male solder-cup **IO Audio
+`IO-TXLR3-M-PS-1`** ([manufacturer datasheet](https://ioaudiotech.com/datasheet/IO-TXLR3-M-PS-1.pdf)),
 as identified by PEN-ANA-01 row 9 and Locked-CONN, despite SYSTEM row 63's
 abbreviated MPN and Amphenol entry. It has no PCB footprint. The JST harness
-carries only SIG+/SIG−; panel pin 1 and shell go to chassis star per Locked-CAB
-C3. The cable-side `IO-TXLR3-F` is unchanged. JST pin assignment and receiver
+carries only SIG+/SIG−; panel pin 1 and the separate shell node go to chassis
+star per Locked-CAB C3. Physical contacts 2 and 3 are shown by number, with
+signal polarity left for the cable schedule. The cable-side `IO-TXLR3-F` is
+unchanged. JST pin assignment and receiver
 channel population remain open. Measure the assembled total pen link, including
 the internal harness and connector, against the 73 pF limit at 34 kHz (SC-05c).
 
@@ -124,10 +128,10 @@ and footprint.
 
 | BOM row / refs | Needed before capture |
 |---|---|
-| 27 / R20–R27 | The searched 1206 options did not verify the BOM's 1 Ω, ±0.1%, 0.5 W combination. [Thin Film Technology TFT-DMS-165-1](https://www.thin-film.com/wp-content/uploads/2023/03/TFT-DMS-165-1.pdf) pp. 1–2 factory-code candidate: `TF2512HQ1R00B-T4`, two-terminal 2512, 1 Ω, ±0.1%, 1 W per the series table. Confirm that exact combination, MOQ, lead time and land pattern with the factory before selection. Footprint open; no availability claim or footprint reservation. |
-| 28 / C20–C27 | Hold selection and footprint; see the characterization shortlist below. |
-| 29 / C30–C31 | Hardware-owner hold: SYSTEM-01 describes both as 1000 µF / 25 V mid-rail reservoirs, while the system schematic describes one adapter-input reservoir (§2) and one mid-rail reservoir (§4.2). Reconcile the roles and reference designators before shortlisting or assigning footprints. |
-| 32 / K2 | Force-guided electromechanical relay; its NO power contact is intended to switch +15 V_DRV directly. Exact CAD mapping is blocked pending the [K1/K2 owner review](#k1k2-intended-roles-and-capture-hold). The BOM's 15 V coil entry is not a relay selection. |
+| 27 / R20–R27 | For schematic capture use `Device:R`, 1 Ω, ±0.1%, ≥0.5 W. The searched 1206 options did not verify that combination. [Thin Film Technology TFT-DMS-165-1](https://www.thin-film.com/wp-content/uploads/2023/03/TFT-DMS-165-1.pdf) pp. 1–2 factory-code candidate: `TF2512HQ1R00B-T4`, two-terminal 2512, 1 Ω, ±0.1%, 1 W per the series table. Confirm that exact combination, MOQ, lead time and land pattern with the factory before assigning a footprint. |
+| 28 / C20–C27 | For schematic capture use `Device:C`, 100 µF series DC blocking per decision #8. Dielectric, rating, exact part and footprint remain on hold. See the characterization shortlist below. |
+| 29 / C30–C31 | Use `Device:C` for draft reservoir functions at 1000 µF / 25 V. SYSTEM-01 calls both mid-rail reservoirs; the system schematic describes one at the adapter input (§2) and one at mid-rail (§4.2). The hardware owner must reconcile their roles and refdes before part selection. |
+| 32 / K2 | For a draft, use `accubot:Draft_EStop_Relay_NO` for the coil and NO power contact intended to switch +15 V_DRV. The [K1/K2 owner review](#k1k2-intended-roles-and-capture-hold) still gates the exact relay and pinout. |
 | 33 / PROT | [Protection inventory](#prot--input-protection): holder and TVS mapped; cartridge, input filtering and reverse protection open. |
 | 34 / PASS-A | [Driver inventory](#pass-a--driver-and-excitation): loop, filter, mid-rail, current-sense and access parts not fully mapped. |
 | 45 / PASS-C | [Digital inventory](#pass-c--fpga-and-host): host USB provisional; digital passives, JTAG, watchdog and test access open. |
@@ -146,6 +150,12 @@ of the safety design, a part selection, or a contract change.
   contact may be used for feedback, but none is assigned. Omron `G7SA` is an
   example family only; no model, coil, or suffix has been chosen.
 
+Use `accubot:Draft_EStop_Mushroom_NC` for the intended K1 contact and
+`accubot:Draft_EStop_Relay_NO` for the intended K2 coil and NO contact.
+Both use functional terminal IDs and are excluded from the BOM and PCB.
+An exact part symbol will carry the selected terminal numbering and any
+additional contacts.
+
 Schematic §4.5 says K2 removes +15 V_DRV but also says its NO contact
 “feeds the LMH6321 enables.” The latter cannot refer to a chip enable pin:
 the LMH6321 has none. This ledger records the clarified intent without
@@ -158,7 +168,24 @@ feedback; and confirm restart behavior and stop validation.
 
 ### PASS-C host USB: provisional CAD mapping only
 
-**45 / PASS-C: GCT `USB4105-GF-A` candidate.** Pair
+**45 / PASS-C: GCT `USB4110-GF-A`, preferred provisional mapping.** Pair
+`Connector:USB_C_Receptacle_USB2.0_16P` with
+`Connector_USB:USB_C_Receptacle_GCT_USB4110`. The [GCT USB4110 drawing](https://gct.co/files/drawings/usb4110.pdf),
+Rev B4, sheet 1, matches the stock footprint's 17 distinct identifiers
+(16 contacts plus `SH`), 12 physical signal lands, four SMT shell lands and
+two Ø0.65 mm locating holes. Only contacts with the same function share a
+land, including A1/B12, A12/B1, A4/B9 and A9/B4.
+
+The smallest nominal clearance from a locating-hole edge to the rounded
+A1 or A12 copper land is 0.1944 mm. [JLCPCB's rigid PCB capabilities](https://jlcpcb.com/capabilities/)
+list 0.20 mm for NPTH-to-track clearance. Confirm how JLCPCB applies the
+rule to these land corners before using the stock geometry for layout.
+Confirm the board-edge datum (inferred from the drawing's front face),
+panel fit and shell load support. The stock footprint references a STEP
+model that is absent from the local KiCad installation. CC, VBUS
+sense/backfeed, ESD, shield termination and routing remain open.
+
+**Fallback only: GCT `USB4105-GF-A`.** Pair
 `Connector:USB_C_Receptacle_USB2.0_16P` with
 `Connector_USB:USB_C_Receptacle_GCT_USB4105-xx-A_16P_TopMnt_Horizontal`.
 The [GCT USB4105 drawing](https://gct.co/files/drawings/usb4105.pdf), Rev B4
@@ -267,7 +294,7 @@ above, and **BOM** for the linked SYSTEM-01 BOM sheet. Other sources:
 | F1 open holder, Schurter `0031.8201` ([verified holder mapping](#partial-prot-lot-mappings); Schematic §2 identifies the F1 fuse function, not the holder part) | **Ready** for that exact open holder only | Power owner: resolve touch protection before release. This mapping neither qualifies a cover or alternate holder nor approves a cartridge. |
 | F1 replaceable 3 A time-delay cartridge (BOM 33; Schematic §2; [candidate evidence and hold](#partial-prot-lot-mappings)) | **Blocked** | Power owner: establish DC breaking rating at prospective fault current, check inrush, and approve a cartridge; no second PCB footprint for it. |
 | D1 `SMBJ18A` TVS (BOM 33; Schematic §2; [verified pairings](#partial-prot-lot-mappings)) | **Ready** | Power owner: verify surge and clamp coordination; the CAD mapping does not close this test. |
-| Input common-mode choke, shown as `L1` (BOM 33; Schematic §2; DRV-2 §3) | **Blocked** | Power owner: set filter requirements and verify the choke winding/pin arrangement before mapping a symbol or footprint. |
+| Input common-mode choke, shown as `L1` (BOM 33; Schematic §2; DRV-2 §3) | **Symbol only** `Filter:Choke_CommonMode_FerriteCore_1234` as a draft diagram of the coupled windings | Power owner: set filter requirements, then match the actual choke terminals and winding orientation before assigning a part or footprint. The draft symbol's numbers do not establish terminal numbering for the selected part. |
 | Other input CLC filter elements (DRV-2 §3 specifies CLC filtering, not the discrete parts) | **Blocked** | Power owner: define the filter and identify which capacitor roles are already served by the input reservoir; no additional capacitor or inductor count assigned. |
 | Reverse-polarity protection (BOM 33 says MOSFET; Schematic §2 allows MOSFET or ideal diode) | **Blocked** | Power owner: settle implementation and requirements before any symbol/part mapping. |
 
@@ -309,7 +336,7 @@ before any extra capacitor is assigned.
 
 | Item / source | CAD state | Owner decision before capture |
 |---|---|---|
-| 2×7 JTAG header (BOM 45; [programmer and footprint hold](#jtag-programmer-and-footprint-hold)) | **Symbol only** `Connector_Generic:Conn_02x07_Odd_Even` | FPGA and PCB owners: verify exact footprint and pin orientation, and resolve Artix-7 VREF for the target bank and programmer. No footprint or signals assigned. |
+| 2×7 JTAG header (BOM 45; [programmer and footprint hold](#jtag-programmer-and-footprint-hold)) | **Symbol only** `accubot:AMD_Platform_Cable_USB_II_JTAG` | FPGA and PCB owners: verify exact footprint and physical pin orientation, and resolve Artix-7 VREF for the target bank and programmer. |
 | Supervisor/watchdog (BOM 45; Schematic §4.5; M16 handoff §10) | **Blocked** | FPGA/power/follower owners: reconcile a discrete supervisor (TPS3823 mentioned, not selected) versus PL timer, and settle STOP/heartbeat responsibility without changing the independent hardware E-stop. |
 | Host USB receptacle ([provisional GCT mapping](#pass-c-host-usb-provisional-cad-mapping-only)) | **Provisional** | FPGA/host and mechanical owners: close the interface and footprint-variant holds listed in the mapping. |
 | Host USB support: CC, VBUS sense/backfeed, ESD and shield termination ([USB mapping hold](#pass-c-host-usb-provisional-cad-mapping-only); Schematic §6.0) | **Blocked** | Host-interface owner: approve the circuit and routing before allocating passives or protection parts; FT231XQ stays in row 43. |
@@ -318,10 +345,12 @@ before any extra capacitor is assigned.
 | Other FPGA/configuration passives (BOM 45; Schematic §6.0 QSPI configuration) | **Blocked** | FPGA owner: define the QSPI/boot support circuit; the source does not specify individual pulls, straps or values. |
 | Digital test points (BOM 45) | **Symbol only** `Connector:TestPoint` | FPGA owner: name the bring-up nets and specify access and count; exclude DAC probe pads. |
 
-The [Pico ICD](../../../contract/icd/pico_link.md) §2 defines a six-contact
-link; its BRD-01 connector remains a separate hold not allocated to PASS-C
-by the workbook. Pico ICD §6 places the STOP pull-down at the Pico, not
-BRD-01.
+Use `accubot:Draft_Pico_Link` to capture the six signals in the
+[Pico ICD](../../../contract/icd/pico_link.md) §2. It uses signal names in
+place of physical pin numbers and is excluded from the BOM and PCB until an
+actual connector replaces it. TX and RX are named from BRD-01's perspective.
+The workbook does not allocate the connector to PASS-C. Pico ICD §6
+places the STOP pull-down at the Pico.
 Do not add internal ADC/DAC cable headers from older interfaces; decisions
 #21/#25 and Schematic §§6.0, 8 make these on-board nets.
 
@@ -334,16 +363,22 @@ preferred vertical through-hole Molex `87831-1420` as a mating candidate.
 The [Molex part sheet](https://www.molex.com/en-us/products/part-detail/878311420)
 lists 1.60 mm as the recommended **PCB thickness**, not a hole diameter.
 
-Footprint dimensions remain unapproved. Before assigning a footprint,
-inspect a viewable released [Molex SD-87831-0001](https://www.molex.com/content/dam/molex/molex-dot-com/products/automated/en-us/salesdrawingpdf/878/87831/878311420_sd.pdf)
-for the exact variant: distinguish terminal holes from optional locator
-holes, verify circuit 1 relative to the mating notch, and confirm the
-maximum body outline. Obtain the chosen fab's finished plated-hole
-tolerance and minimum annular-ring rules before fixing drill or pad
-dimensions. Only the [fabrication README](../fab/README.md) is tracked
-under `hardware/brd-01/fab/`; it provides no approved fab rules.
-Cable/enclosure fit, board stackup, and Artix-7 VREF for the actual target
-bank and programmer remain open.
+The curated symbol follows DS593 Table 6 in JTAG mode. Pins 1 and 12 have
+no cable connection. Pins 3, 5, 7, 9 and 11 are digital ground. Pin 13
+(`PGND`) and pin 14 (`HALT`) are optional cable signals. Pin 2 (`VREF`)
+needs a regulated target reference from the approved JTAG supply.
+
+Footprint dimensions remain on hold. The released
+[Molex SD-87831-0001](https://www.molex.com/content/dam/molex/molex-dot-com/products/automated/en-us/salesdrawingpdf/878/87831/878311420_sd.pdf)
+Rev A25 lists `87831-1420` on sheet 10 and shows the PCB layout on sheet 9.
+Visually confirm the plated terminal-hole callout, the variant's locator
+features, circuit 1 relative to the mating notch, and the maximum body
+outline before drawing the footprint. [JLCPCB's rigid PCB capabilities](https://jlcpcb.com/capabilities/pcb-ca-)
+publish +0.13/−0.08 mm for finished PTH size and a 0.20 mm recommended
+annular ring (0.15 mm minimum) for multilayer 1 oz boards. The finished-hole
+range for an order must fit the Molex callout or have written acceptance
+from the manufacturer and fabricator. Cable/enclosure fit, board stackup
+and the Artix-7 VREF rail remain open.
 
 ### PASS-B — receiver and ADC
 
