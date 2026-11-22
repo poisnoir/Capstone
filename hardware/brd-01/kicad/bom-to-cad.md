@@ -88,10 +88,9 @@ DC breaking rating at the circuit voltage and prospective fault current,
 verify inrush against the fuse time-current behavior, and resolve touch
 protection for the open holder.
 
-**33 / PROT, D1 (§2): STMicroelectronics `SMBJ18A`, unidirectional.** Use
-`Device:D_Zener` with Value `SMBJ18A` and assign
-`accubot:ST_SMBJ_DO-214AA_DS1283`. Pin 1 (K) maps to the marked cathode pad;
-pin 2 (A) maps to the anode pad. `Device:D_TVS` is bidirectional.
+**33 / PROT, D1 (§2): STMicroelectronics `SMBJ18A`, unidirectional.** Place
+`accubot:SMBJ18A`; it defaults to `accubot:ST_SMBJ_DO-214AA_DS1283`.
+Pin 1 (K) maps to the marked cathode pad and pin 2 (A) to the anode pad.
 [ST DS1283 Rev. 14](https://www.st.com/resource/en/datasheet/smbj18a.pdf)
 Fig. 14 specifies 1.62 × 2.07 mm rectangular lands, a 2.60 mm gap and a
 5.84 mm outer span (4.22 mm center-to-center); Fig. 15 identifies the
