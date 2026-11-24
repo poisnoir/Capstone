@@ -4,9 +4,62 @@
 	(generator_version "10.0")
 	(uuid "bcf11a9e-584a-4da7-9f85-9c74b718d606")
 	(paper "A4")
+	(title_block
+		(title "BRD-01 EM AccuBot")
+		(date "2026-11-23")
+		(rev "0.1")
+		(company "Team 25 | ELEC/COEN 490 | Concordia University")
+		(comment 1 "Engineering draft. Contract v1.0.0.")
+		(comment 2 "Analog power: MGJ2D151515SC / LT3045EDD-1 / LT3093EMSE, user-approved.")
+		(comment 3 "Root sheet. Five populated sheets, global labels between them.")
+	)
 	(lib_symbols)
+	(text "Cross-sheet nets use global labels. See the KiCad project README for the remaining capture decisions."
+		(exclude_from_sim no)
+		(at 31 163 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "034094dc-f372-490d-8d5a-d6e37424f31f")
+	)
+	(text "Engineering draft | Open hold: E-stop relay selection. See the project README."
+		(exclude_from_sim no)
+		(at 32 49 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "aa53bd3c-50e0-48d8-81ef-65574fa3c7a5")
+	)
+	(text "BRD-01 | EM AccuBot"
+		(exclude_from_sim no)
+		(at 32 26 0)
+		(effects
+			(font
+				(size 3 3)
+			)
+			(justify left)
+		)
+		(uuid "d01634f9-f621-4e46-b1f2-fa06b4023da7")
+	)
+	(text "Integrated field excitation, four-channel acquisition and Artix-7 controller"
+		(exclude_from_sim no)
+		(at 32 37 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "fbe62a26-a845-4eb6-9a35-03093381e153")
+	)
 	(sheet
-		(at 123.19 33.02)
+		(at 138.37 80)
 		(size 20.32 21.59)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -22,7 +75,7 @@
 		)
 		(uuid "0fb3cf57-3d6d-4e45-b58e-c90ee5551265")
 		(property "Sheetname" "receiver"
-			(at 123.19 32.3084 0)
+			(at 138.37 79.2884 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -33,7 +86,7 @@
 			)
 		)
 		(property "Sheetfile" "receiver.kicad_sch"
-			(at 123.19 55.1946 0)
+			(at 138.37 102.1746 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -46,13 +99,13 @@
 		(instances
 			(project "brd-01"
 				(path "/bcf11a9e-584a-4da7-9f85-9c74b718d606"
-					(page "5")
+					(page "4")
 				)
 			)
 		)
 	)
 	(sheet
-		(at 120.65 124.46)
+		(at 208.09 80)
 		(size 26.67 24.13)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -68,7 +121,7 @@
 		)
 		(uuid "1e7ea821-dced-4e77-a47d-753913008d55")
 		(property "Sheetname" "connectors"
-			(at 120.65 123.7484 0)
+			(at 208.09 79.2884 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -79,7 +132,7 @@
 			)
 		)
 		(property "Sheetfile" "connectors.kicad_sch"
-			(at 120.65 149.1746 0)
+			(at 208.09 104.7146 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -98,7 +151,7 @@
 		)
 	)
 	(sheet
-		(at 72.39 72.39)
+		(at 62.3 80)
 		(size 22.86 26.67)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -114,8 +167,8 @@
 		)
 		(uuid "37c7b2d0-10ea-4407-950d-ab058ee3e191")
 		(property "Sheetname" "power"
-			(at 72.39 71.6784 0)
-			(show_name yes)
+			(at 62.3 79.2884 0)
+			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
@@ -125,7 +178,7 @@
 			)
 		)
 		(property "Sheetfile" "power.kicad_sch"
-			(at 72.39 99.6446 0)
+			(at 62.3 107.2546 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -144,8 +197,8 @@
 		)
 	)
 	(sheet
-		(at 123.19 72.39)
-		(size 22.86 24.13)
+		(at 170.69 80)
+		(size 25.4 26.67)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
@@ -160,8 +213,8 @@
 		)
 		(uuid "614162cc-0cd7-4442-a94b-a0cb48a1e83e")
 		(property "Sheetname" "fpga"
-			(at 123.19 71.6784 0)
-			(show_name yes)
+			(at 170.69 79.2884 0)
+			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
@@ -171,7 +224,7 @@
 			)
 		)
 		(property "Sheetfile" "fpga.kicad_sch"
-			(at 123.19 97.1046 0)
+			(at 170.69 107.2546 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -184,13 +237,13 @@
 		(instances
 			(project "brd-01"
 				(path "/bcf11a9e-584a-4da7-9f85-9c74b718d606"
-					(page "3")
+					(page "5")
 				)
 			)
 		)
 	)
 	(sheet
-		(at 165.1 72.39)
+		(at 97.16 80)
 		(size 29.21 25.4)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -206,7 +259,7 @@
 		)
 		(uuid "963d0b44-04aa-4871-9468-a88682a422be")
 		(property "Sheetname" "driver"
-			(at 165.1 71.6784 0)
+			(at 97.16 79.2884 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -217,7 +270,7 @@
 			)
 		)
 		(property "Sheetfile" "driver.kicad_sch"
-			(at 165.1 98.3746 0)
+			(at 97.16 105.9846 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -230,7 +283,7 @@
 		(instances
 			(project "brd-01"
 				(path "/bcf11a9e-584a-4da7-9f85-9c74b718d606"
-					(page "4")
+					(page "3")
 				)
 			)
 		)

@@ -243,7 +243,7 @@
       "internal_id": "",
       "mfg": "",
       "mpn": "",
-      "sch_revision": ""
+      "sch_revision": "0.1"
     },
     "layer_pairs": [],
     "layer_presets": [],
@@ -687,16 +687,16 @@
       "power"
     ],
     [
-      "614162cc-0cd7-4442-a94b-a0cb48a1e83e",
-      "fpga"
-    ],
-    [
       "963d0b44-04aa-4871-9468-a88682a422be",
       "driver"
     ],
     [
       "0fb3cf57-3d6d-4e45-b58e-c90ee5551265",
       "receiver"
+    ],
+    [
+      "614162cc-0cd7-4442-a94b-a0cb48a1e83e",
+      "fpga"
     ],
     [
       "1e7ea821-dced-4e77-a47d-753913008d55",

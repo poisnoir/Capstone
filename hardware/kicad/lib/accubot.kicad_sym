@@ -881,8 +881,8 @@
 				(name "V-" (effects (font (size 1.016 1.016))))
 				(number "4" (effects (font (size 1.016 1.016))))
 			)
-			(pin power_in line (at -8.89 -3.81 0) (length 2.54)
-				(name "GND" (effects (font (size 1.016 1.016))))
+			(pin input line (at -8.89 -3.81 0) (length 2.54)
+				(name "BIAS_REF" (effects (font (size 1.016 1.016))))
 				(number "5" (effects (font (size 1.016 1.016))))
 			)
 			(pin passive line (at -8.89 -6.35 0) (length 2.54)
@@ -1438,5 +1438,412 @@
 				(number "7" (effects (font (size 1.016 1.016))))
 			)
 		)
+	)
+	(symbol "LT3045EDD-1#TRPBF"
+		(pin_names (offset 0.508))
+		(in_bom yes)
+		(on_board yes)
+		(property "Reference" "U" (at -7.62 12.7 0) (effects (font (size 1.27 1.27)) (justify left)))
+		(property "Value" "LT3045EDD-1#TRPBF" (at -7.62 10.16 0) (effects (font (size 1.27 1.27)) (justify left)))
+		(property "Footprint" "Package_DFN_QFN:DFN-12-1EP_3x3mm_P0.45mm_EP1.65x2.38mm" (at 0 0 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "Datasheet" "https://www.analog.com/media/en/technical-documentation/data-sheets/30451fa.pdf" (at 0 0 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "Description" "20 V, 500 mA adjustable ultralow-noise LDO with VIOC, DFN-12 with grounded exposed pad" (at 0 0 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(symbol "LT3045EDD-1#TRPBF_1_1"
+			(rectangle (start -7.62 8.89) (end 7.62 -8.89) (stroke (width 0.254) (type default)) (fill (type background)))
+			(pin power_in line (at -10.16 7.62 0) (length 2.54)
+				(name "IN" (effects (font (size 1.016 1.016))))
+				(number "1" (effects (font (size 1.016 1.016))))
+			)
+			(pin power_in line (at -10.16 5.08 0) (length 2.54)
+				(name "IN" (effects (font (size 1.016 1.016))))
+				(number "2" (effects (font (size 1.016 1.016))))
+			)
+			(pin output line (at 10.16 -2.54 180) (length 2.54)
+				(name "VIOC" (effects (font (size 1.016 1.016))))
+				(number "3" (effects (font (size 1.016 1.016))))
+			)
+			(pin input line (at -10.16 2.54 0) (length 2.54)
+				(name "EN/UV" (effects (font (size 1.016 1.016))))
+				(number "4" (effects (font (size 1.016 1.016))))
+			)
+			(pin open_collector line (at 10.16 0 180) (length 2.54)
+				(name "PG" (effects (font (size 1.016 1.016))))
+				(number "5" (effects (font (size 1.016 1.016))))
+			)
+			(pin passive line (at -10.16 -5.08 0) (length 2.54)
+				(name "ILIM" (effects (font (size 1.016 1.016))))
+				(number "6" (effects (font (size 1.016 1.016))))
+			)
+			(pin input line (at -10.16 0 0) (length 2.54)
+				(name "PGFB" (effects (font (size 1.016 1.016))))
+				(number "7" (effects (font (size 1.016 1.016))))
+			)
+			(pin passive line (at -10.16 -2.54 0) (length 2.54)
+				(name "SET" (effects (font (size 1.016 1.016))))
+				(number "8" (effects (font (size 1.016 1.016))))
+			)
+			(pin power_in line (at -2.54 -11.43 90) (length 2.54)
+				(name "GND" (effects (font (size 1.016 1.016))))
+				(number "9" (effects (font (size 1.016 1.016))))
+			)
+			(pin input line (at 10.16 2.54 180) (length 2.54)
+				(name "OUTS" (effects (font (size 1.016 1.016))))
+				(number "10" (effects (font (size 1.016 1.016))))
+			)
+			(pin passive line (at 10.16 5.08 180) (length 2.54)
+				(name "OUT" (effects (font (size 1.016 1.016))))
+				(number "11" (effects (font (size 1.016 1.016))))
+			)
+			(pin power_out line (at 10.16 7.62 180) (length 2.54)
+				(name "OUT" (effects (font (size 1.016 1.016))))
+				(number "12" (effects (font (size 1.016 1.016))))
+			)
+			(pin passive line (at 2.54 -11.43 90) (length 2.54)
+				(name "GND (EP)" (effects (font (size 1.016 1.016))))
+				(number "13" (effects (font (size 1.016 1.016))))
+			)
+		)
+	)
+	(symbol "LT3093EMSE#TRPBF"
+		(pin_names (offset 0.508))
+		(in_bom yes)
+		(on_board yes)
+		(property "Reference" "U" (at -7.62 12.7 0) (effects (font (size 1.27 1.27)) (justify left)))
+		(property "Value" "LT3093EMSE#TRPBF" (at -7.62 10.16 0) (effects (font (size 1.27 1.27)) (justify left)))
+		(property "Footprint" "Package_SO:MSOP-12-1EP_3x4.039mm_P0.65mm_EP1.651x2.845mm" (at 0 0 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "Datasheet" "https://www.analog.com/media/en/technical-documentation/data-sheets/lt3093.pdf" (at 0 0 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "Description" "Negative 20 V, 200 mA adjustable ultralow-noise LDO with VIOC, MSOP-12 with exposed pad tied to IN" (at 0 0 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(symbol "LT3093EMSE#TRPBF_1_1"
+			(rectangle (start -7.62 8.89) (end 7.62 -8.89) (stroke (width 0.254) (type default)) (fill (type background)))
+			(pin power_in line (at -10.16 7.62 0) (length 2.54)
+				(name "IN" (effects (font (size 1.016 1.016))))
+				(number "1" (effects (font (size 1.016 1.016))))
+			)
+			(pin power_in line (at -10.16 5.08 0) (length 2.54)
+				(name "IN" (effects (font (size 1.016 1.016))))
+				(number "2" (effects (font (size 1.016 1.016))))
+			)
+			(pin output line (at 10.16 -2.54 180) (length 2.54)
+				(name "VIOC" (effects (font (size 1.016 1.016))))
+				(number "7" (effects (font (size 1.016 1.016))))
+			)
+			(pin input line (at -10.16 2.54 0) (length 2.54)
+				(name "EN/UV" (effects (font (size 1.016 1.016))))
+				(number "3" (effects (font (size 1.016 1.016))))
+			)
+			(pin open_collector line (at 10.16 0 180) (length 2.54)
+				(name "PG" (effects (font (size 1.016 1.016))))
+				(number "4" (effects (font (size 1.016 1.016))))
+			)
+			(pin passive line (at -10.16 -5.08 0) (length 2.54)
+				(name "ILIM" (effects (font (size 1.016 1.016))))
+				(number "6" (effects (font (size 1.016 1.016))))
+			)
+			(pin input line (at -10.16 0 0) (length 2.54)
+				(name "PGFB" (effects (font (size 1.016 1.016))))
+				(number "5" (effects (font (size 1.016 1.016))))
+			)
+			(pin passive line (at -10.16 -2.54 0) (length 2.54)
+				(name "SET" (effects (font (size 1.016 1.016))))
+				(number "8" (effects (font (size 1.016 1.016))))
+			)
+			(pin power_in line (at -2.54 -11.43 90) (length 2.54)
+				(name "GND" (effects (font (size 1.016 1.016))))
+				(number "9" (effects (font (size 1.016 1.016))))
+			)
+			(pin input line (at 10.16 2.54 180) (length 2.54)
+				(name "OUTS" (effects (font (size 1.016 1.016))))
+				(number "10" (effects (font (size 1.016 1.016))))
+			)
+			(pin passive line (at 10.16 5.08 180) (length 2.54)
+				(name "OUT" (effects (font (size 1.016 1.016))))
+				(number "11" (effects (font (size 1.016 1.016))))
+			)
+			(pin power_out line (at 10.16 7.62 180) (length 2.54)
+				(name "OUT" (effects (font (size 1.016 1.016))))
+				(number "12" (effects (font (size 1.016 1.016))))
+			)
+			(pin passive line (at 2.54 -11.43 90) (length 2.54)
+				(name "IN (EP)" (effects (font (size 1.016 1.016))))
+				(number "13" (effects (font (size 1.016 1.016))))
+			)
+		)
+	)
+	(symbol "PJ-079BH"
+		(pin_names
+			(hide yes)
+		)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(duplicate_pin_numbers_are_jumpers no)
+		(property "Reference" "J"
+			(at 0 5.334 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "PJ-079BH"
+			(at 1.27 -6.35 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Connector_BarrelJack:BarrelJack_CUI_PJ-079BH_Horizontal"
+			(at 1.27 -1.016 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" "https://www.sameskydevices.com/product/resource/pj-079bh.pdf"
+			(at 1.27 -1.016 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Same Sky 2.5 mm center pin, switched and shielded, 5 A DC jack"
+			(at 0 0 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "ki_keywords" "DC power barrel jack connector"
+			(at 0 0 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "ki_fp_filters" "BarrelJack*"
+			(at 0 0 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(symbol "PJ-079BH_0_1"
+			(rectangle
+				(start -5.08 3.81)
+				(end 5.08 -3.81)
+				(stroke
+					(width 0.254)
+					(type default)
+				)
+				(fill
+					(type background)
+				)
+			)
+			(polyline
+				(pts
+					(xy -3.81 -2.54) (xy -2.54 -2.54) (xy -1.27 -1.27) (xy 0 -2.54) (xy 2.54 -2.54) (xy 5.08 -2.54)
+				)
+				(stroke
+					(width 0.254)
+					(type default)
+				)
+				(fill
+					(type none)
+				)
+			)
+			(arc
+				(start -3.302 1.905)
+				(mid -3.9343 2.54)
+				(end -3.302 3.175)
+				(stroke
+					(width 0.254)
+					(type default)
+				)
+				(fill
+					(type none)
+				)
+			)
+			(arc
+				(start -3.302 1.905)
+				(mid -3.9343 2.54)
+				(end -3.302 3.175)
+				(stroke
+					(width 0.254)
+					(type default)
+				)
+				(fill
+					(type outline)
+				)
+			)
+			(polyline
+				(pts
+					(xy 1.27 -2.286) (xy 1.905 -1.651)
+				)
+				(stroke
+					(width 0.254)
+					(type default)
+				)
+				(fill
+					(type none)
+				)
+			)
+			(rectangle
+				(start 3.683 3.175)
+				(end -3.302 1.905)
+				(stroke
+					(width 0.254)
+					(type default)
+				)
+				(fill
+					(type outline)
+				)
+			)
+			(polyline
+				(pts
+					(xy 5.08 2.54) (xy 3.81 2.54)
+				)
+				(stroke
+					(width 0.254)
+					(type default)
+				)
+				(fill
+					(type none)
+				)
+			)
+			(polyline
+				(pts
+					(xy 5.08 0) (xy 1.27 0) (xy 1.27 -2.286) (xy 0.635 -1.651)
+				)
+				(stroke
+					(width 0.254)
+					(type default)
+				)
+				(fill
+					(type none)
+				)
+			)
+		)
+		(symbol "PJ-079BH_1_1"
+			(polyline
+				(pts
+					(xy -1.016 -4.572) (xy 1.016 -4.572)
+				)
+				(stroke
+					(width 0.1524)
+					(type default)
+				)
+				(fill
+					(type none)
+				)
+			)
+			(text "Mounting"
+				(at 0 -4.191 0)
+				(effects
+					(font
+						(size 0.381 0.381)
+					)
+				)
+			)
+			(pin passive line
+				(at 7.62 2.54 180)
+				(length 2.54)
+				(name ""
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(number "1"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+			)
+			(pin passive line
+				(at 7.62 -2.54 180)
+				(length 2.54)
+				(name ""
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(number "2"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+			)
+			(pin passive line
+				(at 7.62 0 180)
+				(length 2.54)
+				(name ""
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(number "3"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+			)
+			(pin passive line
+				(at 0 -7.62 90)
+				(length 3.048)
+				(name "Shield"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(number "SH"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+			)
+		)
+		(embedded_fonts no)
 	)
 )

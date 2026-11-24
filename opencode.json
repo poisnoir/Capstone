@@ -1,0 +1,18 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "mcp": {
+    "servers": {
+      "konnect": {
+        "type": "local",
+        "command": [
+          "/home/mallam/.local/bin/konnect"
+        ],
+        "cwd": "/home/mallam/Documents/CAPSTONE",
+        "pool": true,
+        "environment": {
+          "KICAD_API_SOCKET": "/tmp/kicad/api.sock"
+        }
+      }
+    }
+  }
+}

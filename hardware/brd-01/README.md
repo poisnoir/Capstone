@@ -13,7 +13,7 @@ electronics chain on one 4-layer board. Zones:
 
 Subfolders:
 
-- [KiCad project and BOM-to-CAD mapping](kicad/README.md) — five-sheet capture scaffold and verified library mappings.
+- [KiCad project and BOM-to-CAD mapping](kicad/README.md) — five populated draft sheets, release holds and verified library mappings.
 - `driver/` — vendor AC current-driver reference (Rev_A) + new driver work.
 - `frontend/` — vendor sensor-amplifier reference (Eagle E301) + new receiver.
 
@@ -22,6 +22,7 @@ Design record: `docs/phase2/system_schematic.md` (zones, pin assignment),
 `docs/phase2/frontend_requirements.md`,
 `docs/phase2/adc_interface_closure.md`.
 
-Open before layout: capture, BOM-to-CAD blockers, 35T→50T pin compatibility,
-HR-bank coverage, shield-can footprint, connector placement and thermal path.
-The schematic is not frozen until the part checks in the decisions log are closed.
+Open before layout: E-stop relay selection, the BOM-to-CAD release checks,
+35T→50T pin compatibility, HR-bank coverage, shield-can footprint, connector
+placement and thermal path. Schematic rev 0.1 is fully captured with zero ERC
+violations; it is not frozen until the decisions-log part checks are closed.
