@@ -8,6 +8,7 @@
 /reference-cache/
 /docs/extracts/*.pdf
 /docs/ad7768-ad7768-4.pdf
+/docs/reference/*.pdf
 /docs/Materials procurement.pdf
 
 # --- Generated simulation output (regenerable from .cir) ---

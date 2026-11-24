@@ -4,7 +4,7 @@ These files are **not in the repository** (copyright, size, or both). Each row s
 
 `python3 tools/check_references.py` verifies that every external file referenced in a doc has a row here. The repo is public; run the **public-repo checklist** at the bottom before a release.
 
-Manifest version: 1 · updated 2026-10-29
+Manifest version: 1 · updated 2026-11-24
 
 | ID | File | Size | Needed for | How to obtain | Publish? |
 |---|---|---|---|---|---|
@@ -21,6 +21,7 @@ Manifest version: 1 · updated 2026-10-29
 | REF-11 | `docs/phase1/Phase 1 Report - Team 25 (ELEC-COEN 490).docx` | 228 KB | Phase 1 specs #1–25 and the frozen baseline; docs/phase2/README.md | Team file; local-only, not in the repo (contains student IDs) | no |
 | REF-12 | `docs/extracts/Jaeger2018_filament-sensor-model_Ch3_extract.txt` | 22 KB | AGENTS.md reference model; fpga/ solver port | Generated from REF-01; local-only, not in the repo (thesis copyright) | no |
 | REF-13 | `docs/extracts/Jaeger2018_bespoke-sensor_Ch7_extract.txt` | 33 KB | AGENTS.md coil design (Table 7.1); hardware/pen/ | Generated from REF-01; local-only, not in the repo (thesis copyright) | no |
+| REF-14 | `docs/reference/*.pdf` | 9.4 MB | docs/phase2/power_tree_v2.md; hardware/brd-01/ power sheet values | Each manufacturer by part number: TI TPSM63604 (SLVSGJ5, saved as DOC056603261.pdf), ADI LTC1563-2 (156323fa.pdf), ADI ADA4940-1/ADA4940-2, FTDI DS_FT231X v1.4, Murata kdc_mgj2.pdf; ad7768-ad7768-4.pdf is a copy of REF-07 — https://www.ti.com/lit/ds/symlink/tpsm63604.pdf | no |
 
 ## Acquisition details
 
@@ -161,6 +162,18 @@ Manifest version: 1 · updated 2026-10-29
 - **Publish:** False
 - **SHA-256:** `generated; see tools/extract_jaeger.sh`
 - **Regenerate:** tools/extract_jaeger.sh (needs REF-01)
+
+### REF-14 — Power-tree v2 datasheets (TPSM63604, LTC1563-2, ADA4940-2, FT231X, MGJ2, AD7768-4 copy)
+
+- **File:** `docs/reference/*.pdf`
+- **Size:** 9.4 MB
+- **Needed for:** docs/phase2/power_tree_v2.md; hardware/brd-01/ power sheet values
+- **How to obtain:** Each manufacturer by part number: TI TPSM63604 (SLVSGJ5, saved as DOC056603261.pdf), ADI LTC1563-2 (156323fa.pdf), ADI ADA4940-1/ADA4940-2, FTDI DS_FT231X v1.4, Murata kdc_mgj2.pdf; ad7768-ad7768-4.pdf is a copy of REF-07
+- **URL:** https://www.ti.com/lit/ds/symlink/tpsm63604.pdf
+- **Local path:** `<local>/CAPSTONE/docs/reference/`
+- **Publish:** False
+- **SHA-256:** `see power_tree_v2.md §8; per-file hashes not pinned`
+- **Regenerate:** download from each vendor; keep the filename
 
 ## Regenerating the thesis extracts
 

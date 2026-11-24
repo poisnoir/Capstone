@@ -61,7 +61,8 @@ transient response against the implemented FPGA rail loads.
 
 Capture is complete: every on-board symbol carries a value and a footprint.
 The [BOM-to-CAD ledger](bom-to-cad.md) records the part evidence and the
-release verification left on each lot.
+release verification left on each lot. The [power tree](power-tree.md)
+documents every rail, the E-stop latch and every net that crosses sheets.
 
 | Page | Sheet | Contents |
 |---|---|---|

@@ -6,7 +6,7 @@
 # do not redistribute the file. Local-only files are gitignored.
 
 version: 1
-updated: "2026-10-29"
+updated: "2026-11-24"
 
 entries:
   - id: REF-01
@@ -203,3 +203,18 @@ entries:
     publish: no
     sha256: "generated; see tools/extract_jaeger.sh"
     regenerate: "tools/extract_jaeger.sh (needs REF-01)"
+
+  - id: REF-14
+    file: "docs/reference/*.pdf"
+    title: "Power-tree v2 datasheets (TPSM63604, LTC1563-2, ADA4940-2, FT231X, MGJ2, AD7768-4 copy)"
+    size: "9.4 MB"
+    needed_for:
+      - "docs/phase2/power_tree_v2.md"
+      - "hardware/brd-01/ power sheet values"
+    obtain:
+      method: "Each manufacturer by part number: TI TPSM63604 (SLVSGJ5, saved as DOC056603261.pdf), ADI LTC1563-2 (156323fa.pdf), ADI ADA4940-1/ADA4940-2, FTDI DS_FT231X v1.4, Murata kdc_mgj2.pdf; ad7768-ad7768-4.pdf is a copy of REF-07"
+      url: "https://www.ti.com/lit/ds/symlink/tpsm63604.pdf"
+      local: "<local>/CAPSTONE/docs/reference/"
+    publish: false
+    sha256: "see power_tree_v2.md §8; per-file hashes not pinned"
+    regenerate: "download from each vendor; keep the filename"
