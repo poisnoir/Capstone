@@ -210,21 +210,21 @@ lock on the bench.
 The existing U144/U145 parts already follow TI's typical application
 (Table 9-1). Only their input rail, EN source and pull-up rail change.
 
-| Function | U144 +1V0_FPGA | U145 +1V8_FPGA | U148 +3.3V (new) | Source |
-|---|---|---|---|---|
-| PVIN, AVIN | +6V | +6V | +6V | |
-| PVIN cap | C180 10 µF → **specify 25 V X7R 1206** | C184 → same | 10 µF 25 V X7R 1206 | [DS] §9.2.2.2.2.2; value field today is only "10u" |
-| AVIN cap | C183 100 nF | C187 100 nF | 100 nF | required [DS] |
-| Inductor | L140 XFL4020-222 | L141 XFL4020-222 | XFL4020-222 | [DS] Table 9-1 |
-| Output cap | C182 22 µF | C186 22 µF | 22 µF X7R | recommended 22 µF [DS] |
-| FB divider (VFB 0.8 V) | R190 49.9k / R191 200k → **1.000 V** | R193 249k / R194 200k → **1.796 V** | **619k / 200k → 3.276 V** | R1 = R2 (VOUT/0.8 − 1), R2 ≤ 400 kΩ [DS] Eq. 6 |
-| Output range (VFB 785.6–814.4 mV) | 0.982–1.018 V | 1.764–1.829 V | 3.217–3.335 V | [calc] |
-| Artix-7 limit | 0.95–1.05 V ✓ | 1.71–1.89 V ✓ | VCCO 3.3 V ±5%: 3.135–3.465 V ✓ | [DS] DS181 Table 2 |
-| Soft start | C181 3.3 nF → 1.65 ms | C185 3.3 nF → 1.65 ms | 3.3 nF → 1.65 ms | tSS = C × 1.25 V / 2.5 µA [DS] Eq. 10 |
-| EN | `PG_6V` | `PG_1V0` | `PG_1V8` | |
-| PG pull-up | R192 100k to **+6V** | R195 100k to **+6V** | none: tie PG to GND or leave open | PG < 7 V [DS] |
-| FSW | **to its own PG (`PG_1V0`) → 1.25 MHz** | GND → 2.5 MHz | GND → 2.5 MHz | see below |
-| DEF | GND | GND | GND | |
+| Function                          | U144 +1V0_FPGA                          | U145 +1V8_FPGA                      | U148 +3.3V (new)                  | Source                                             |
+| --------------------------------- | --------------------------------------- | ----------------------------------- | --------------------------------- | -------------------------------------------------- |
+| PVIN, AVIN                        | +6V                                     | +6V                                 | +6V                               |                                                    |
+| PVIN cap                          | C180 10 µF → **specify 25 V X7R 1206**  | C184 → same                         | 10 µF 25 V X7R 1206               | [DS] §9.2.2.2.2.2; value field today is only "10u" |
+| AVIN cap                          | C183 100 nF                             | C187 100 nF                         | 100 nF                            | required [DS]                                      |
+| Inductor                          | L140 XFL4020-222                        | L141 XFL4020-222                    | XFL4020-222                       | [DS] Table 9-1                                     |
+| Output cap                        | C182 22 µF                              | C186 22 µF                          | 22 µF X7R                         | recommended 22 µF [DS]                             |
+| FB divider (VFB 0.8 V)            | R190 49.9k / R191 200k → **1.000 V**    | R193 249k / R194 200k → **1.796 V** | **619k / 200k → 3.276 V**         | R1 = R2 (VOUT/0.8 − 1), R2 ≤ 400 kΩ [DS] Eq. 6     |
+| Output range (VFB 785.6–814.4 mV) | 0.982–1.018 V                           | 1.764–1.829 V                       | 3.217–3.335 V                     | [calc]                                             |
+| Artix-7 limit                     | 0.95–1.05 V ✓                           | 1.71–1.89 V ✓                       | VCCO 3.3 V ±5%: 3.135–3.465 V ✓   | [DS] DS181 Table 2                                 |
+| Soft start                        | C181 3.3 nF → 1.65 ms                   | C185 3.3 nF → 1.65 ms               | 3.3 nF → 1.65 ms                  | tSS = C × 1.25 V / 2.5 µA [DS] Eq. 10              |
+| EN                                | `PG_6V`                                 | `PG_1V0`                            | `PG_1V8`                          |                                                    |
+| PG pull-up                        | R192 100k to **+6V**                    | R195 100k to **+6V**                | none: tie PG to GND or leave open | PG < 7 V [DS]                                      |
+| FSW                               | **to its own PG (`PG_1V0`) → 1.25 MHz** | GND → 2.5 MHz                       | GND → 2.5 MHz                     | see below                                          |
+| DEF                               | GND                                     | GND                                 | GND                               |                                                    |
 
 **U144 FSW change.** At 2.5 MHz the on-time is VOUT/VIN × 400 ns
 [DS] Eq. 1: 1.0/6 × 400 = 67 ns, under the 80 ns minimum on-time [DS]. The
