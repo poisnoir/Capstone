@@ -440,3 +440,29 @@ contract change) or the bench.
 | MGJ2D151515SC | Murata KDC_MGJ2 |
 | OKI-78SR | Murata |
 | Artix-7 | AMD DS181 v1.27.1, July 2024 |
+
+## 9. Schematic implementation (power sheet, 2026-11-24)
+
+The power sheet is captured and wired. The driver, fpga, receiver and
+connectors sheet changes in §7 are **not done yet**. ERC on the full
+hierarchy reports two items, and both wait on those sheets:
+
+- `BUCK_SYNC` has no FPGA end yet (ball R3).
+- The driver's `+5V` labels still need to become `+5V_EXC` (U10 VDD shows
+  as undriven).
+
+Reference designators as captured (they differ from the proposals in §2–§4):
+
+| Function | Captured refs |
+|---|---|
+| 6 V module | U147; C800–C804 input; R803/R804 UVLO; C809 sync; R802 RT; R800/R801/C805 feedback; C806–C808, C810 output; R805 PG pull-up |
+| 3.3 V buck (the "U148" in §4) | **U7**; C811/C812 input; C814 soft start; L800; R806/R807 feedback; C813 output |
+| +5V_EXC LDO | U149; FL1 = L801, C817, R808 + C818; C815 NR; C816 output |
+| +5VA input filter | FL2 = L802, C188 (moved, now 2.2 µF), R809 + C820 → U146 |
+| Removed | U3 (OKI-78SR), U8, U9, U1 (removed earlier) |
+
+Joins into the older label-based FPGA buck area use labels: `PG_6V` (U144
+EN), `PG_1V0` (U144 FSW, now 1.25 MHz after start-up), `PG_1V8` (U7 EN), and
+the former `+5V` global labels there renamed to `+6V`. Generated CAD that
+still needs validation is listed in
+[bom-to-cad.md](../../hardware/brd-01/kicad/bom-to-cad.md#power-tree-v2-generated-cad-to-validate-2026-11-24).
