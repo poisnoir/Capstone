@@ -17,6 +17,7 @@ Write (needs --apply):
     kicad_sch_helper.py textpos SHEET --ref REF --prop Reference|Value --at X,Y [--justify left|center] [--apply]
     kicad_sch_helper.py list  SHEET --bbox x1,y1,x2,y2
     kicad_sch_helper.py box   SHEET --from X,Y --to X,Y --title T [--apply]
+    kicad_sch_helper.py textmove SHEET --from X,Y --to X,Y [--apply]
     kicad_sch_helper.py labelkind SHEET --uuids U --kind hierarchical_label|label [--apply]
     kicad_sch_helper.py label SHEET --text NAME --at X,Y [--angle A] [--apply]
     kicad_sch_helper.py sheetpin SHEET --sheet UUID --name N --at X,Y --angle A --shape S [--apply]
@@ -259,7 +260,7 @@ def block_span(text, uuid):
     at = text.find(f'(uuid "{uuid}")')
     if at < 0:
         sys.exit(f"uuid not found: {uuid}")
-    start = text.rfind('\n\t(', 0, at)
+    start = max(text.rfind('\n\t(', 0, at), text.rfind('\n(', 0, at))
     if start < 0:
         start = text.rfind('(', 0, at)
     depth, i = 0, start
@@ -624,11 +625,12 @@ def pair(s):
 
 
 
-def cmd_move(path, ref, to, apply_):
-    """Move a symbol. Property texts are placed separately with textpos."""
+def cmd_move(path, ref, to, apply_, uuid=None):
+    """Move a symbol. Property texts are placed separately with textpos.
+    `--uuid` selects one unit of a multi-unit symbol (shared reference)."""
     t = Path(path).read_text()
     for inst in instances(parse(t)):
-        if inst['ref'] != ref:
+        if inst['ref'] != ref or (uuid and inst['uuid'] != uuid):
             continue
         start, stop = block_span(t, inst['uuid'])
         blk = t[start:stop]
@@ -641,11 +643,11 @@ def cmd_move(path, ref, to, apply_):
     sys.exit(f"ref not found: {ref}")
 
 
-def cmd_textpos(path, ref, prop, at, justify, apply_, angle=0):
+def cmd_textpos(path, ref, prop, at, justify, apply_, angle=0, uuid=None):
     """Place one property text of a symbol, with reliable justification."""
     t = Path(path).read_text()
     for inst in instances(parse(t)):
-        if inst['ref'] != ref:
+        if inst['ref'] != ref or (uuid and inst['uuid'] != uuid):
             continue
         start, stop = block_span(t, inst['uuid'])
         blk = t[start:stop]
@@ -699,6 +701,22 @@ def cmd_list(path, bbox):
     for j in points(root, 'junction'):
         if inb(j):
             print(f"JUNC {j}")
+
+
+def cmd_textmove(path, old, new, apply_):
+    """Move a standalone (text "...") note; grid-checked."""
+    t = Path(path).read_text()
+    if not all(grade(v) for v in new):
+        sys.exit(f'refusing off-grid note {new}')
+    for start, end, _name in top_blocks(t, 'text'):
+        blk = t[start:end]
+        m = re.search(r'\(at ([\d.-]+) ([\d.-]+)', blk)
+        if m and abs(float(m.group(1)) - old[0]) < 0.6 \
+                and abs(float(m.group(2)) - old[1]) < 0.6:
+            blk = blk[:m.start()] + f'(at {fmt(new[0])} {fmt(new[1])}' + blk[m.end():]
+            save(path, t[:start] + blk + t[end:], apply_)
+            return
+    sys.exit(f'note not found at {old}')
 
 
 def cmd_box(path, a, b, title, apply_):
@@ -773,7 +791,8 @@ def main(argv):
                        int(rest[rest.index('--rot') + 1]), apply_)
         elif cmd == 'move':
             cmd_move(path, rest[rest.index('--ref') + 1],
-                     pair(rest[rest.index('--to') + 1]), apply_)
+                     pair(rest[rest.index('--to') + 1]), apply_,
+                     rest[rest.index('--uuid') + 1] if '--uuid' in rest else None)
         elif cmd == 'textpos':
             cmd_textpos(path, rest[rest.index('--ref') + 1],
                         rest[rest.index('--prop') + 1],
@@ -781,10 +800,14 @@ def main(argv):
                         rest[rest.index('--justify') + 1]
                         if '--justify' in rest else 'center', apply_,
                         int(rest[rest.index('--angle') + 1])
-                        if '--angle' in rest else 0)
+                        if '--angle' in rest else 0,
+                        rest[rest.index('--uuid') + 1] if '--uuid' in rest else None)
         elif cmd == 'list':
             cmd_list(path, [float(v) for v in
                             rest[rest.index('--bbox') + 1].split(',')])
+        elif cmd == 'textmove':
+            cmd_textmove(path, pair(rest[rest.index('--from') + 1]),
+                         pair(rest[rest.index('--to') + 1]), apply_)
         elif cmd == 'box':
             cmd_box(path, pair(rest[rest.index('--from') + 1]),
                     pair(rest[rest.index('--to') + 1]),
