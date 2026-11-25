@@ -4,20 +4,24 @@
 > `contract-change` issue; the interface owner + integrator approval flow is owned by the
 > Orchestrator. Stage 1: no electrical change is made.
 
-**Title:** `contract-change`: delete the physical E-stop from BRD-01; arm stop is software-only
-(host → FPGA → Pico STOP); tracker keeps field and pose
+**Title:** `contract-change`: delete the physical E-stop from BRD-01; arm STOP is host request
+plus hardware latch (AND gate); tracker keeps field and pose
 
 ## 1. What changes and why
+
+> The complete set of conditions that assert `PICO_STOP_N` low is: a host/software stop request; power-up or a +3.3 V brownout; an overcurrent trip on `/DRIVER_FAULT_N`; and an unconfigured FPGA (R754 pulls the request line low). None of them touches `+15V_DRV`: no condition stops the field.
 
 The user has decided that the emergency stop is **for the manipulator only**: *"remove the
 emergency stop from the tracker ... it will track regardless of what happens, a person can press
 the estop to stop the arm from moving and that's that."* After first saying the stop would come
 *from the computer or a dedicated button*, the user gave the final decision: *"remove the button,
 there will be no mushroom button K1 or K2."* The physical stop is deleted from BRD-01 entirely;
-the **only remaining stop origin** is software — host → FPGA → the existing active-low `STOP`
-line at the Pico (`contract/icd/pico_link.md`). This **removes the last hardware-independent stop
-path on the board**: the arm stop now depends on the host link, the FPGA, the cable and the Pico
-firmware, and the "independent of both processors" claim in `pico_link.md` §6 becomes false. The
+the **board has no panel E-stop**. Arm STOP is now raised by a host/software request through the
+FPGA or by the hardware latch on power-up/brownout, overcurrent and pre-configuration. During a
+stop the host link, FPGA, cable and Pico firmware are still involved, and the previous
+"hardware E-stop independent of both processors" claim in `pico_link.md` §6 is gone: **the last
+hardware-independent stop path on the board has been removed**. The reviewer must accept that
+loss explicitly. The
 reviewer must accept that loss explicitly; it is the single most important consequence of this
 change and is not softened here. `+15V_DRV` stays powered, the DDS/DAC and coil loops keep
 running, and pose solutions keep flowing during a stop. The ≤100 ms requirement is re-scoped to
@@ -44,16 +48,16 @@ only.
 
 | Item | Before (from netlist / ICD) | After (policy; wiring per §6) |
 |---|---|---|
-| `+15V_DRV` | `K2.NO1` bridges `+15V_FUSED` → `+15V_DRV`; feeds `U20.7`…`U27.7` (all LMH6321) and `U39.5` | Direct from `+15V_FUSED` (fuse/protection/decoupling retained); **never** interrupted by an arm stop |
-| K1 / K2 | K1 NC (`K1.NC1` on `+15V_FUSED`, `K1.NC2` on `ESTOP_NC_15V`) drops K2; `K2.NO2` self-latches the coil feed; `K2.NO1` removes the driver rail | Deleted (no button, no relay); `+15V_DRV` bridged directly to `+15V_FUSED`; held pending the latch decision in §6 |
+| `+15V_DRV` | `K2.NO1` bridges `+15V_FUSED` → `+15V_DRV`; feeds `U20.7`…`U27.7` (all LMH6321) and `U39.5` | Name deleted; every driver-sheet label is now `+15V_FUSED` (label rename, connectivity unchanged). The node is unswitched and **never** interrupted by a stop |
+| K1 / K2 | K1 NC (`K1.NC1` on `+15V_FUSED`, `K1.NC2` on `ESTOP_NC_15V`) drops K2; `K2.NO2` self-latches the coil feed; `K2.NO1` removes the driver rail | Deleted; no panel E-stop on BRD-01. `+15V_FUSED` is bridged straight to the driver rail |
 | `/power/ESTOP_NC_15V` | `K1.NC2`, `K2.COIL2`, `J750.2`, `D140.1`, `R185.1` | Removed with K1/K2, J750, D140 and R185 |
-| `/ESTOP_ASSERTED` (docs call it `ESTOP_STATUS`, pin 37) | `U143.4` opto collector, `R186.2` pull-up, `U750.2`, `U4.R2`; root pins power-out → fpga-in; no RTL consumer | **Deleted** with the button/opto; no dangling label or root pin may remain |
-| `U750`/`U751`/`U752`/`U753`/`U754`, `Q750`, `SW750`, `R750`–`R754`, `C755`, `D140` | `U750` inverts E-stop → `U751.~MR`; `U752` ANDs supervisor reset with `/DRIVER_FAULT_N`; `U753.Q` → `ARM_GATE` → `Q750` drain → `K2_COIL_LOW`; output is a **tracker kill** and the board-level overcurrent / power-on lockout | Must be disconnected from `+15V_DRV`. Whether the whole latch is deleted or retargeted to STOP is a **separate open safety decision** (analysis §E); `/DRIVER_FAULT_N` must still reach `U4.R1` |
-| `PICO_STOP_N` | `U4.P4` → `J123.5`; active-low level, pull-down at Pico (ICD §6) | Unchanged as the **computer-origin** path (host → FPGA → STOP). `J123.1` pin-1 mismatch must be resolved before reuse |
+| `/ESTOP_ASSERTED` (docs call it `ESTOP_STATUS`, pin 37) | `U143.4` opto collector, `R186.2` pull-up, `U750.2`, `U4.R2`; root pins power-out → fpga-in; no RTL consumer | Deleted with the button/opto; root sheet pins and fpga landing removed. **`U4.R2` is freed and marked no-connect: the FPGA loses this input and the RTL team must be told.** |
+| `U750`/`U751`/`U752`/`U753`/`U754`, `Q750`, `SW750`, `R750`–`R754`, `C755`, `D140` | `U750` inverts E-stop → `U751.~MR`; `U752` ANDs supervisor reset with `/DRIVER_FAULT_N`; `U753.Q` → `ARM_GATE` → `Q750` → K2 coil → `+15V_DRV` | Latch survives and is retargeted: `U753.~Q` (pin 3) drives new AND gate `U755.B`; `U753.Q` (pin 5) is an explicit NC. `U751.~MR` tied high; `/DRIVER_FAULT_N` still reaches `U752.2` and `U4.R1` |
+| `PICO_STOP_N` / `PICO_STOP_REQ_N` | `U4.P4` → `J123.5` on one net | Split: `PICO_STOP_REQ_N` = `U4.P4` + `R754.1` (pull-down for unconfigured FPGA) + `U755.A`; `PICO_STOP_N` = `U755.Y` → `J123.5`. U755 (74LVC1G08) ANDs request with `U753.~Q`; a resistor-only fix was rejected because it cannot assert low against a push-pull high |
 | `PICO_HEARTBEAT` | `U4.P3` → `J123.6`; missing 100 ms → Pico stops | Unchanged |
-| `/DRIVER_FAULT_N` | comparator bus `U600`–`U603`, `R712.2`, `U752.2`, `U4.R1` | Survives to `U4.R1` as the genuine fault path; whether it also still reaches `U752.2` depends on the latch decision |
+| `/DRIVER_FAULT_N` | comparator bus `U600`–`U603`, `R712.2`, `U752.2`, `U4.R1` | Unchanged: reaches both `U752.2` (clears latch → `~Q=1` → STOP) and `U4.R1` |
 | DAC safe state (`dac_fpga.md` §3 item 4) | "On fault/E-stop: stop the DDS, write zero-scale to all 8 channels, then one TRIGGER" | Split: **genuine fault** → DDS off / zero-scale / one TRIGGER (survives); **software arm stop** → no DDS/DAC/coil effect |
-| Stop timing | E-stop <1 ms hardware cut of driver enable; follower stop ≤100 ms | Arm motion ≤100 ms from the single software origin; tracker latency/pose unchanged; ICNIRP field sum unchanged (field stays on, same as normal operation) |
+| Stop timing | E-stop <1 ms hardware cut of driver enable; follower stop ≤100 ms | Arm motion ≤100 ms from host request, power-up/brownout, overcurrent or unconfigured FPGA; field and pose unchanged; ICNIRP field sum unchanged |
 
 ## 4. Reproduction commands and current gates
 
@@ -97,27 +101,31 @@ No schematic or contract file was edited; the netlist above is evidence only.
 6. Re-run the three gates above plus ERC and a single-origin bench test (host stop → arm stops
    ≤100 ms while field and pose continue) before closing the issue.
 
-## 6. Still open
+## 6. Formal contract change required
 
-1. **The one remaining blocking question — the arm/disarm latch.** The final decision removes
-   K1/K2 and the button, but `U750`–`U754` + `Q750` + `SW750` + passives are not merely dead
-   code: they are the only board-level path that turns `/DRIVER_FAULT_N` into a field disconnect
-   and the only thing that holds the field disarmed at power-up/brownout. Two outcomes remain:
-   **(i)** delete the whole latch and accept those safety changes, or **(ii)** retarget it to
-   assert the Pico STOP level (needs arbitration with `U4.P4` and a decision on fault/power-up
-   semantics). Netlist evidence is in `docs/phase2/estop_scope_change.md` §E. Nothing is deleted
-   until this is answered.
-2. The branch is now rebased onto `fcfe46f`; on that base `Net-(U753-C)` = `U753.1`+`U754.4`
-   and `Net-(U753-~{CLR})` = `U752.4`+`U753.6` are separate, `~PRE` is tied high and `R752`
-   connects `SW750` to the latch. Any latch edit must use these memberships, not the rejected
-   `8825dcc` redraw.
-3. `J123.1` is NC in the netlist but `pico_link.md` §2 calls pin 1 3V3 (D4 records "no_connect");
-   a pre-existing mismatch, relevant only if a new discrete is ever added.
-4. K1/K2 are draft symbols excluded from BOM/PCB; deletion removes them and `J750`, `D140`,
-   `R185`, `U143`, `R186` from the BRD-01 BOM. No replacement button is specified.
-5. Host-stop command encoding/framing stays a free implementation choice under `pico_link.md`
-   §5; the arm team must accept a host stop as the sole origin, with no new ICD electrical path.
-6. **Safety acceptance of the hardware stop removal must be explicit:** this change removes the
-   last hardware-independent stop path on the board, so the "independent of both processors"
-   claim in `pico_link.md` §6 cannot survive. The only stop is host → FPGA → Pico; an FPGA hang,
-   a broken cable or a lost host link removes the ability to stop the arm.
+File the issue and PR for exactly these items; do not edit `contract/` from this stream:
+
+- `contract/decisions_log.md` **#10** (hardware NC mushroom E-stop in driver enable chain;
+  follower stop ≤100 ms) and **#22** (NC mushroom part lock); also **#21** and **#25** for the
+  board-net/zone wording.
+- `contract/icd/power.md` lines ~15 and ~19 (E-stop in the driver enable chain; hardware
+  E-stop is the safety path) — now: no panel E-stop, unswitched `+15V_FUSED`, STOP via AND gate.
+- `contract/icd/pico_link.md` §6 (hardware E-stop drops driver enable independently of both
+  processors) — now: STOP is active low from U755; board loses the last hardware-independent
+  stop path; document `PICO_STOP_N` vs `PICO_STOP_REQ_N`.
+- `contract/icd/dac_fpga.md` §3 item 4 (on fault/E-stop stop the DDS) — keep the genuine fault
+  safe state, remove the E-stop clause.
+- `contract/system_contract.md` SC-08 — "stop <100 ms" means arm motion; tracking continues.
+
+## 7. Still open
+
+1. The **lost `U4.R2` input** is marked NC on the FPGA sheet; the RTL team must be told that
+   `ESTOP_ASSERTED` no longer exists.
+2. The rail is now named `+15V_FUSED` everywhere (`+15V_DRV` deleted as a name); tools, logs and
+   test scripts that key on `+15V_DRV` must be updated.
+3. A **series resistor** on `PICO_STOP_N` was rejected: it cannot assert a low against a
+   push-pull FPGA high. The AND gate U755 is the adopted arbitration.
+4. The board has **no panel E-stop**; the removal of the last hardware-independent stop path
+   must be accepted by the interface owner and integrator.
+5. `J123.1` is NC in the netlist but `pico_link.md` §2 calls pin 1 3V3 (D4 records no_connect);
+   a pre-existing mismatch, untouched by this change.

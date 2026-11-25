@@ -10,6 +10,8 @@ stop the arm from moving and that's that."*
 **User's answers:** *"it will be from the computer or a dedicated button."* then, final:
 *"remove the button, there will be no mushroom button K1 or K2."*
 
+> The complete set of conditions that assert `PICO_STOP_N` low is: a host/software stop request; power-up or a +3.3 V brownout; an overcurrent trip on `/DRIVER_FAULT_N`; and an unconfigured FPGA (R754 pulls the request line low). None of them touches `+15V_DRV`: no condition stops the field.
+
 **Decision applied:** the physical stop is deleted from BRD-01 entirely. K1 and K2 do not exist.
 The **only** remaining stop origin is software: host → FPGA → the existing active-low `STOP`
 line at the Pico (verified in §A.4). **This removes the last hardware-independent stop path on
@@ -338,19 +340,15 @@ arbitration with `U4.P4` on `PICO_STOP_N` (currently FPGA-driven) and an explici
 whether power-up/fault should stop the arm. **I have stopped before deleting any of it** — that
 choice is the next question.
 
-**Ruling received:** do **not** delete `U750`, `U751`, `U752`, `U753`, `U754`, `SW750`,
-`R750`–`R753`, `C755`, or `/DRIVER_FAULT_N`'s route to `U752.2` until the user chooses outcome
-(i) or (ii). `U143`, `R185`, `R186`, `/power/ESTOP_LED` and `/ESTOP_ASSERTED` are likewise held:
-they are entangled with the latch decision through `U750.2`.
+**Ruling executed (stage 2):** the latch survives and is retargeted. `U753.~Q` (pin 3) drives
+`U755.B`; `U753.Q` (pin 5) is an explicit no-connect. `U755` is a 74LVC1G08 AND gate with
+`U755.A = PICO_STOP_REQ_N` (`U4.P4` + reused `R754` pull-down) and `U755.Y = PICO_STOP_N`
+(→ `J123.5`). A series resistor was rejected because it cannot assert low against a push-pull
+FPGA high. `U751.~MR` is tied high; `/DRIVER_FAULT_N` still reaches `U752.2` and `U4.R1`.
+`+15V_DRV` is deleted as a name and every driver-sheet label is now `+15V_FUSED`. Net parts
+645 → 637 (nine removals, one addition). `U4.R2` is freed and marked no-connect.
 
-**Separability finding:** the K1/K2 removal is **not separable from Q750**. `K2.COIL1` is
-Q750's only drain load on `/power/K2_COIL_LOW`; with K2 and D140 gone, Q750's drain has no load
-and `U753.Q → R753 → Q750 gate` has no output. Deleting Q750 would sever the deferred latch's
-load; keeping it as an unpopulated placeholder would leave a dangling drain and still no load.
-Per the ruling, **no schematic edit was made this round**; the `+15V_FUSED` → `+15V_DRV` bridge
-and K1/K2 removal are folded into the latch decision.
-
-### Stage 2 plan (blocked on §E)
+### Stage 2 plan (executed)
 
 0. **Stop condition:** the §E latch decision must be answered before any latch part is deleted.
    The `+15V_DRV` bridge and the button/opto removal are mechanically settled; the latch is not.
