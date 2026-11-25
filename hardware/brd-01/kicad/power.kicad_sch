@@ -9050,7 +9050,7 @@
 		)
 		(uuid "a949d4fd-f8c6-476f-95d6-768489a6d300")
 	)
-	(text "Power-up, manual stop and overcurrent clear the arm latch"
+	(text "Power-up/brownout and DRIVER_FAULT_N clear the arm latch; SW750 arms it."
 		(exclude_from_sim no)
 		(at 54.48 417.79 0)
 		(effects
@@ -11958,16 +11958,7 @@
 		)
 		(uuid "7600d011-2a16-43cb-9790-6735345bba29")
 	)
-	(label "PG_1V0"
-		(at 287.02 208.28 180)
-		(effects
-			(font
-				(size 1 1)
-			)
-			(justify right)
-		)
-		(uuid "874a1b78-c04a-4c72-910e-68a6512e5c44")
-	)
+
 
 	(label "PG_1V0"
 		(at 320.04 208.28 0)
@@ -29508,10 +29499,7 @@
 		)
 	)
 
-	(no_connect
-		(at 256.54 523.24)
-		(uuid "18a75b58-d74a-4219-b403-97f0bb2618d3")
-	)
+
 
 	(symbol
 		(lib_id "power:+3.3V")
@@ -29863,7 +29851,7 @@
 	)
 	(wire
 		(pts
-			(xy 232.41 513.08) (xy 256.54 513.08)
+			(xy 232.41 513.08) (xy 250.19 513.08)
 		)
 		(stroke
 			(width 0)
@@ -29873,7 +29861,7 @@
 	)
 
 
-	(label "ARM_Q_N"
+	(label "ARM_Q"
 		(at 243.84 513.08 0)
 		(effects
 			(font
@@ -29958,5 +29946,39 @@
 				)
 			)
 		)
+	)
+	(wire
+		(pts
+			(xy 250.19 513.08) (xy 250.19 523.24)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "f8640590-1198-4079-96b4-d2eed17ac4a7")
+	)
+	(wire
+		(pts
+			(xy 250.19 523.24) (xy 256.54 523.24)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "a77055ea-befd-4611-b4eb-28b408417361")
+	)
+	(no_connect
+		(at 256.54 513.08)
+		(uuid "5c0675bd-92dd-45e5-82bc-5d7ee70aee99")
+	)
+	(wire
+		(pts
+			(xy 294.64 208.28) (xy 314.96 208.28)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "535720a4-1bb6-4130-b273-cca7f4d50d39")
 	)
 )
