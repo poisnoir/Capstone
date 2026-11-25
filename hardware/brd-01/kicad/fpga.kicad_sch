@@ -5435,7 +5435,7 @@
 						)
 					)
 				)
-				(pin power_out line
+				(pin passive line
 					(at -17.78 15.24 0)
 					(length 3.81)
 					(name "3V3OUT"
@@ -6712,10 +6712,6 @@
 	(no_connect
 		(at 25.4 138.43)
 		(uuid "5e1de198-5fe0-449f-8d37-6d05f4c8d582")
-	)
-	(no_connect
-		(at 160.02 90.17)
-		(uuid "5fe0169f-8f83-468f-b5aa-a3485993f7c8")
 	)
 	(no_connect
 		(at 261.62 118.11)
@@ -10031,16 +10027,6 @@
 		)
 		(uuid "577d5734-05f2-4c19-9dc9-e9bbb4071b40")
 	)
-	(label "FT_3V3"
-		(at 379.73 245.11 180)
-		(effects
-			(font
-				(size 1 1)
-			)
-			(justify right bottom)
-		)
-		(uuid "57e1c356-2ae1-4cd1-b5df-8177f44dc0f7")
-	)
 	(label "CFGBVS"
 		(at 381 218.44 0)
 		(effects
@@ -10120,16 +10106,6 @@
 			(justify right bottom)
 		)
 		(uuid "7aa82ec9-74ad-44a6-9591-160fec4327c8")
-	)
-	(label "FT_3V3"
-		(at 289.56 264.16 180)
-		(effects
-			(font
-				(size 1 1)
-			)
-			(justify right bottom)
-		)
-		(uuid "7f6eaaf8-21c0-443a-86c3-2a816fe5d99e")
 	)
 	(label "JTAG_TDO"
 		(at 424.18 102.87 0)
@@ -10603,7 +10579,7 @@
 			)
 		)
 	)
-	(global_label "+5V"
+	(global_label "+3.3V"
 		(shape passive)
 		(at 379.73 289.56 180)
 		(effects
@@ -11219,7 +11195,7 @@
 			)
 		)
 	)
-	(global_label "+5V"
+	(global_label "+3.3V"
 		(shape passive)
 		(at 289.56 279.4 180)
 		(effects
@@ -11373,7 +11349,7 @@
 			)
 		)
 	)
-	(global_label "+5V"
+	(global_label "+3.3V"
 		(shape passive)
 		(at 379.73 275.59 180)
 		(effects
@@ -12802,9 +12778,8 @@
 				)
 			)
 		)
-	)
-	(global_label "ESTOP_ASSERTED"
-		(shape passive)
+	)	(hierarchical_label "ESTOP_ASSERTED"
+		(shape input)
 		(at 154.94 85.09 180)
 		(effects
 			(font
@@ -12812,18 +12787,7 @@
 			)
 			(justify right)
 		)
-		(uuid "772e6c4f-7220-4f76-b0a6-8e57cbcbaded")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 154.94 85.09 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
+		(uuid "37984ca6-b292-46e7-b479-93a76be9a046")
 	)
 	(global_label "GND"
 		(shape passive)
@@ -14210,9 +14174,8 @@
 				)
 			)
 		)
-	)
-	(global_label "DRIVER_FAULT_N"
-		(shape passive)
+	)	(hierarchical_label "DRIVER_FAULT_N"
+		(shape input)
 		(at 154.94 87.63 180)
 		(effects
 			(font
@@ -14220,18 +14183,7 @@
 			)
 			(justify right)
 		)
-		(uuid "db1605ab-56da-4439-917a-8110e975e6d7")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 154.94 87.63 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
+		(uuid "bb36019f-b9aa-4a96-ab51-cb01e95771ca")
 	)
 	(global_label "GND"
 		(shape passive)
@@ -14607,7 +14559,7 @@
 			)
 		)
 	)
-	(global_label "+5V"
+	(global_label "+3.3V"
 		(shape passive)
 		(at 309.88 251.46 90)
 		(effects
@@ -23580,5 +23532,69 @@
 				)
 			)
 		)
+	)
+	(global_label "+3.3V"
+		(shape passive)
+		(at 379.73 245.11 0)
+		(effects
+			(font
+				(size 1 1)
+			)
+			(justify left)
+		)
+		(uuid "5275febc-86a6-4d34-b450-d9e67c75d645")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 379.73 245.11 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(global_label "+3.3V"
+		(shape passive)
+		(at 289.56 264.16 0)
+		(effects
+			(font
+				(size 1 1)
+			)
+			(justify left)
+		)
+		(uuid "a62dadb3-9dad-438b-b268-93d74c1c1639")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 289.56 264.16 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 160.02 90.17) (xy 154.94 90.17)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "ea647f5d-1569-4448-9da8-38a7c62fe767")
+	)	(hierarchical_label "BUCK_SYNC"
+		(shape output)
+		(at 154.94 90.17 180)
+		(effects
+			(font
+				(size 1 1)
+			)
+			(justify right)
+		)
+		(uuid "6b56a8e5-2e17-40f0-a290-f54286ef68ae")
 	)
 )

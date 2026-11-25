@@ -11,10 +11,10 @@
 		(company "Team 25 | ELEC/COEN 490 | Concordia University")
 		(comment 1 "Engineering draft. Contract v1.0.0.")
 		(comment 2 "Analog power: MGJ2D151515SC / LT3045EDD-1 / LT3093EMSE, user-approved.")
-		(comment 3 "Root sheet. Five populated sheets, global labels between them.")
+		(comment 3 "Root sheet. Five populated sheets, hierarchical pins for signals, power symbols for rails.")
 	)
 	(lib_symbols)
-	(text "Cross-sheet nets use global labels. See the KiCad project README for the remaining capture decisions."
+	(text "Cross-sheet signals use hierarchical labels and sheet pins; power rails use power symbols."
 		(exclude_from_sim no)
 		(at 31 163 0)
 		(effects
@@ -59,7 +59,7 @@
 		(uuid "fbe62a26-a845-4eb6-9a35-03093381e153")
 	)
 	(sheet
-		(at 138.37 80)
+		(at 138.37 80.01)
 		(size 20.32 21.59)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -105,7 +105,7 @@
 		)
 	)
 	(sheet
-		(at 208.09 80)
+		(at 208.09 80.01)
 		(size 26.67 24.13)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -151,7 +151,7 @@
 		)
 	)
 	(sheet
-		(at 62.3 80)
+		(at 62.3 80.01)
 		(size 22.86 26.67)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -188,6 +188,36 @@
 				(justify left top)
 			)
 		)
+		(pin "ESTOP_ASSERTED" output
+			(at 71.12 80.01 90)
+			(uuid "d69f7813-9ada-43b6-a159-ceb8d964d27c")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(pin "DRIVER_FAULT_N" input
+			(at 76.2 80.01 90)
+			(uuid "bb61604c-852e-400d-8ef5-6f7a7629bb06")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(pin "BUCK_SYNC" input
+			(at 81.28 80.01 90)
+			(uuid "124fb4a7-1ee4-4478-87e1-95174d112b56")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
 		(instances
 			(project "brd-01"
 				(path "/bcf11a9e-584a-4da7-9f85-9c74b718d606"
@@ -197,7 +227,7 @@
 		)
 	)
 	(sheet
-		(at 170.69 80)
+		(at 170.69 80.01)
 		(size 25.4 26.67)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -234,6 +264,36 @@
 				(justify left top)
 			)
 		)
+		(pin "ESTOP_ASSERTED" input
+			(at 180.34 80.01 90)
+			(uuid "c6d9cfe6-15d2-4868-98e8-a28ec1aa694f")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(pin "DRIVER_FAULT_N" input
+			(at 185.42 80.01 90)
+			(uuid "84a57999-cf52-486d-b386-320367e032bd")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(pin "BUCK_SYNC" output
+			(at 190.5 80.01 90)
+			(uuid "04cfd47e-1e90-43ec-b680-6af7f5f55d0c")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
 		(instances
 			(project "brd-01"
 				(path "/bcf11a9e-584a-4da7-9f85-9c74b718d606"
@@ -243,7 +303,7 @@
 		)
 	)
 	(sheet
-		(at 97.16 80)
+		(at 97.16 80.01)
 		(size 29.21 25.4)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -280,6 +340,16 @@
 				(justify left top)
 			)
 		)
+		(pin "DRIVER_FAULT_N" output
+			(at 110.49 80.01 90)
+			(uuid "e9096b1e-d97e-430b-84f2-04dc41e24d3c")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
 		(instances
 			(project "brd-01"
 				(path "/bcf11a9e-584a-4da7-9f85-9c74b718d606"
@@ -294,4 +364,144 @@
 		)
 	)
 	(embedded_fonts no)
+	(wire
+		(pts
+			(xy 71.12 80.01) (xy 71.12 74.93)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "05d5fd98-3461-42d9-a397-8b9f84cf88b4")
+	)
+	(label "ESTOP_ASSERTED"
+		(at 71.12 74.93 0)
+		(effects
+			(font
+				(size 1 1)
+			)
+			(justify left)
+		)
+		(uuid "073a870f-ebb9-4e6b-82df-b8d08fc7ea40")
+	)
+	(wire
+		(pts
+			(xy 76.2 80.01) (xy 76.2 69.85)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "a95ec983-25af-4c85-b9d0-0711cdcc937f")
+	)
+	(label "DRIVER_FAULT_N"
+		(at 76.2 69.85 0)
+		(effects
+			(font
+				(size 1 1)
+			)
+			(justify left)
+		)
+		(uuid "fc03507f-388a-4114-8419-ae4e0d381c71")
+	)
+	(wire
+		(pts
+			(xy 81.28 80.01) (xy 81.28 64.77)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "a08915cd-bc89-4ca0-9171-05704ae468d8")
+	)
+	(label "BUCK_SYNC"
+		(at 81.28 64.77 0)
+		(effects
+			(font
+				(size 1 1)
+			)
+			(justify left)
+		)
+		(uuid "386525a7-e8c0-4429-9b63-379f003bf74c")
+	)
+	(wire
+		(pts
+			(xy 110.49 80.01) (xy 110.49 69.85)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "92c5bc00-e424-41fd-9f07-4798a4e14895")
+	)
+	(label "DRIVER_FAULT_N"
+		(at 110.49 69.85 0)
+		(effects
+			(font
+				(size 1 1)
+			)
+			(justify left)
+		)
+		(uuid "69c17a17-e680-4761-8538-18413f647feb")
+	)
+	(wire
+		(pts
+			(xy 180.34 80.01) (xy 180.34 74.93)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "7b14f585-4f4c-41d1-a5fe-e04f7d520d01")
+	)
+	(label "ESTOP_ASSERTED"
+		(at 180.34 74.93 0)
+		(effects
+			(font
+				(size 1 1)
+			)
+			(justify left)
+		)
+		(uuid "7a655c1a-5468-40ba-8574-d17e4dff5bff")
+	)
+	(wire
+		(pts
+			(xy 185.42 80.01) (xy 185.42 69.85)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "fe22027a-6c4e-4d7a-a61e-d7ea5c81c785")
+	)
+	(label "DRIVER_FAULT_N"
+		(at 185.42 69.85 0)
+		(effects
+			(font
+				(size 1 1)
+			)
+			(justify left)
+		)
+		(uuid "71955db3-5b98-4820-bb30-8fd06bd77f2c")
+	)
+	(wire
+		(pts
+			(xy 190.5 80.01) (xy 190.5 64.77)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "7e9576e9-0017-44f2-b633-c9723e7d19ae")
+	)
+	(label "BUCK_SYNC"
+		(at 190.5 64.77 0)
+		(effects
+			(font
+				(size 1 1)
+			)
+			(justify left)
+		)
+		(uuid "8be1fccc-fb6a-4304-9e5e-07ef83375028")
+	)
 )

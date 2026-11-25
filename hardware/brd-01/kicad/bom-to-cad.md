@@ -171,6 +171,22 @@ populated, and check regulation with the resulting asymmetric loads.
 [ADI LT3093](https://www.analog.com/en/products/lt3093.html) ·
 [ADI ADR434](https://www.analog.com/en/products/ADR434.html)
 
+### Power tree v2: generated CAD to validate (2026-11-24)
+
+The power-tree v2 capture ([power_tree_v2.md](../../../docs/phase2/power_tree_v2.md))
+added parts whose symbol or footprint was **generated or assigned without a
+vendor or official KiCad model**. Validate each row against the vendor CAD
+(TI provides TPSM63604 models through its product page) or replace it with an
+existing library part before layout.
+
+| Item | Status | Source used | Validate |
+|---|---|---|---|
+| `accubot:TPSM63604RDLR` symbol (U147) | **Generated** | Pin numbers and names from TI SLVSGJ5 Table 6-1 (1 VIN1, 2 SW, 3 CBOOT, 4 RBOOT, 5 VLDOIN, 6/11 AGND, 7 VCC, 8/9 VOUT, 10 FB, 12 RT, 13 PG, 14 EN/SYNC, 15 NC, 16 VIN2, 17–20 PGND) | Pin numbers against the datasheet or TI's symbol; electrical types |
+| `accubot:TI_RDL0020A_B3QFN-20_5x5.5mm` footprint (U147) | **Generated** | SLVSGJ5 pp. 38–40 (RDL0020A, 4226416/B): corner pads 1.4 × 0.5 mm at x ±2.0, y ±2.15; signal pads 0.9 × 0.25 mm at x ±2.25, rows −1.225 … +1.275 mm (0.5 mm pitch, 25 µm off center as drawn); thermal pads 17–20, 1.58 × 0.875 mm at y ±0.5375/±1.6125; paste −0.025 mm per the stencil drawing | Pad positions and pin-1 orientation against TI's footprint; no 3D model; the optional Ø0.2 mm thermal vias are not placed |
+| L801, L802 `XFL4020-102MEC` (1 µH) | Footprint **assumed** | Copied from L140 (`XFL4020-222MEC`), same Coilcraft XFL4020 family | Confirm the 1 µH part uses the same land pattern and current rating |
+| C804 `EEU-FR1V680` (68 µF / 35 V) | Footprint **assumed** | `Capacitor_THT:CP_Radial_D6.3mm_P2.50mm` | Confirm the Panasonic FR case size (diameter and pitch) for 68 µF / 35 V |
+| C800–C820, R800–R809 | Generic packages | 0603 / 0805 / 1206 / 1210 by value and voltage | Pick orderable parts; check DC-bias derating on the 10 µF and 22 µF parts |
+
 ## Unresolved PCB rows
 
 | BOM row / refs | Rev 0.1 state |
