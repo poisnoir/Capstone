@@ -43,12 +43,12 @@ H8,/fpga/XADC_VP,signal,E-stop/status,analog in,analog XADC input; no digital I/
 J7,/fpga/XADC_VN,signal,E-stop/status,analog in,analog XADC input; no digital I/O standard,R152.1 (fpga),fpga,XADC analog negative input via R152 0 ohm; no source/sensor stated in the repo,yes
 J8,/fpga/XADC_VPREF,signal,E-stop/status,analog in,analog XADC input; no digital I/O standard,R153.1 (fpga),fpga,XADC positive reference via R153 0 ohm; no source stated in the repo,yes
 R1,/DRIVER_FAULT_N,signal,E-stop/status,in,3.3 V LVCMOS (HR bank; VCCO=3.3 V); no per-pin IOSTANDARD in schematic,R712.2 (driver); U600.4 (driver); U600.6 (driver); U601.4 (driver); U601.6 (driver); U602.4 (driver); U602.6 (driver); U603.4 (driver); U603.6 (driver); U752.2 (power),"driver, power","active-low wired-OR coil overcurrent bus from open-drain U600-U603, also clears the K2 arm latch at U752.2",yes
-R2,/ESTOP_ASSERTED,signal,E-stop/status,in,3.3 V LVCMOS (HR bank; VCCO=3.3 V); no per-pin IOSTANDARD in schematic,R186.2 (power); U143.4 (power); U750.2 (power),power,"opto-isolated panel E-stop status U143.4; R186 10 kohm pull-up, high = pressed",yes
+R2,unconnected-(U4B-IO_L7P_T1_34-PadR2),no_connect,no_connect,nc,nc,,,"no_connect marker: Bank 34 spare; ESTOP_ASSERTED removed by the E-stop scope change; U4 no longer monitors the panel E-stop",no
 R3,/BUCK_SYNC,signal,power-good/sync,out,3.3 V LVCMOS (HR bank; VCCO=3.3 V); no per-pin IOSTANDARD in schematic,C809.1 (power),power,1.024 MHz sync (32.768/32) via C809 1 nF to U147 TPSM63604 EN/SYNC; no power-good net reaches U4,yes
 N2,PICO_TX,signal,Pico link,out,3.3 V LVCMOS (HR bank; VCCO=3.3 V); no per-pin IOSTANDARD in schematic,J123.3 (connectors),connectors,UART TX to Pico follower header J123.3,yes
 N3,PICO_RX,signal,Pico link,in,3.3 V LVCMOS (HR bank; VCCO=3.3 V); no per-pin IOSTANDARD in schematic,J123.4 (connectors),connectors,UART RX from Pico follower header J123.4,yes
 P3,PICO_HEARTBEAT,signal,Pico link,out,3.3 V LVCMOS (HR bank; VCCO=3.3 V); no per-pin IOSTANDARD in schematic,J123.6 (connectors),connectors,100 Hz heartbeat toggle to Pico header J123.6,yes
-P4,PICO_STOP_N,signal,Pico link,out,3.3 V LVCMOS (HR bank; VCCO=3.3 V); no per-pin IOSTANDARD in schematic,J123.5 (connectors),connectors,active-low hardware STOP level to Pico header J123.5,yes
+P4,PICO_STOP_REQ_N,signal,Pico link,out,3.3 V LVCMOS (HR bank; VCCO=3.3 V); no per-pin IOSTANDARD in schematic,U755.1 (power); R754.1 (power),power,"active-low STOP request to U755.1 (74LVC1G08); R754 100 kohm pull-down holds the request low while the FPGA is unconfigured; U755.4 drives PICO_STOP_N to J123.5",yes
 A1,GND,ground,power,power,power,GND (all sheets),all,ground / VCCBATT tied to ground,no
 A11,GND,ground,power,power,power,GND (all sheets),all,ground / VCCBATT tied to ground,no
 B8,GND,ground,power,power,power,GND (all sheets),all,ground / VCCBATT tied to ground,no
