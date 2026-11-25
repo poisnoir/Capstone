@@ -18502,9 +18502,7 @@
 				)
 			)
 		)
-	)
-	(global_label "DRIVER_FAULT_N"
-		(shape passive)
+	)	(label "DRIVER_FAULT_N"
 		(at 524.51 1177.29 0)
 		(effects
 			(font
@@ -18512,18 +18510,7 @@
 			)
 			(justify left)
 		)
-		(uuid "1c0458c4-0608-47f3-92aa-3a64baf76f5a")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 524.51 1177.29 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
+		(uuid "efd05f87-34cc-47d5-a7f3-a8b7adf53131")
 	)
 	(global_label "GND"
 		(shape passive)
@@ -18546,9 +18533,8 @@
 				)
 			)
 		)
-	)
-	(global_label "DRIVER_FAULT_N"
-		(shape passive)
+	)	(hierarchical_label "DRIVER_FAULT_N"
+		(shape output)
 		(at 560.07 1059.18 0)
 		(effects
 			(font
@@ -18556,18 +18542,7 @@
 			)
 			(justify left)
 		)
-		(uuid "1df17b7e-393e-429f-a5ca-2ad2690c1ff9")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 560.07 1059.18 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
+		(uuid "bee01fb0-1283-4bfb-b89c-721bd81b9d51")
 	)
 	(global_label "GND"
 		(shape passive)
@@ -18656,9 +18631,7 @@
 				)
 			)
 		)
-	)
-	(global_label "DRIVER_FAULT_N"
-		(shape passive)
+	)	(label "DRIVER_FAULT_N"
 		(at 524.51 1196.34 0)
 		(effects
 			(font
@@ -18666,18 +18639,7 @@
 			)
 			(justify left)
 		)
-		(uuid "2006fc1b-43e7-4d7b-b79f-a11217bec802")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 524.51 1196.34 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
+		(uuid "7167197b-f6ab-478e-95a7-cb988ec6f821")
 	)
 	(global_label "+3.3V"
 		(shape passive)
@@ -20130,9 +20092,7 @@
 				)
 			)
 		)
-	)
-	(global_label "DRIVER_FAULT_N"
-		(shape passive)
+	)	(label "DRIVER_FAULT_N"
 		(at 627.38 1177.29 0)
 		(effects
 			(font
@@ -20140,18 +20100,7 @@
 			)
 			(justify left)
 		)
-		(uuid "49dedbe9-3288-43c9-927c-6a0c4cd6da23")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 627.38 1177.29 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
+		(uuid "607a671e-bcd6-4a6a-bb36-5f86251db877")
 	)
 	(global_label "+3.3V"
 		(shape passive)
@@ -22814,9 +22763,7 @@
 				)
 			)
 		)
-	)
-	(global_label "DRIVER_FAULT_N"
-		(shape passive)
+	)	(label "DRIVER_FAULT_N"
 		(at 730.25 1177.29 0)
 		(effects
 			(font
@@ -22824,18 +22771,7 @@
 			)
 			(justify left)
 		)
-		(uuid "9eab87f5-08d6-4efe-af9b-c59d88a90a30")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 730.25 1177.29 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
+		(uuid "67cb3c10-e2f0-4ce8-9067-d02c5f8724be")
 	)
 	(global_label "-12VA"
 		(shape passive)
@@ -23474,9 +23410,7 @@
 				)
 			)
 		)
-	)
-	(global_label "DRIVER_FAULT_N"
-		(shape passive)
+	)	(label "DRIVER_FAULT_N"
 		(at 421.64 1196.34 0)
 		(effects
 			(font
@@ -23484,18 +23418,7 @@
 			)
 			(justify left)
 		)
-		(uuid "b6446f82-81b3-44e3-b185-dee830576740")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 421.64 1196.34 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
+		(uuid "5212e4b5-0649-4cc2-931a-cdd6e9b76402")
 	)
 	(global_label "+3.3V"
 		(shape passive)
@@ -23826,9 +23749,7 @@
 				)
 			)
 		)
-	)
-	(global_label "DRIVER_FAULT_N"
-		(shape passive)
+	)	(label "DRIVER_FAULT_N"
 		(at 627.38 1196.34 0)
 		(effects
 			(font
@@ -23836,18 +23757,7 @@
 			)
 			(justify left)
 		)
-		(uuid "c406946f-59af-4fc4-b317-21b1fb71817d")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 627.38 1196.34 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
+		(uuid "66c66479-e5bd-41a8-95d7-5c399f38ad23")
 	)
 	(global_label "-12VA"
 		(shape passive)
@@ -25432,9 +25342,7 @@
 				)
 			)
 		)
-	)
-	(global_label "DRIVER_FAULT_N"
-		(shape passive)
+	)	(label "DRIVER_FAULT_N"
 		(at 421.64 1177.29 0)
 		(effects
 			(font
@@ -25442,18 +25350,7 @@
 			)
 			(justify left)
 		)
-		(uuid "f6aa74fb-b13d-4304-9a4c-462bfbc33715")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 421.64 1177.29 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
+		(uuid "e815e77b-40bc-4dc7-802b-b54d49227ac0")
 	)
 	(global_label "+3.3V"
 		(shape passive)
@@ -25498,9 +25395,7 @@
 				)
 			)
 		)
-	)
-	(global_label "DRIVER_FAULT_N"
-		(shape passive)
+	)	(label "DRIVER_FAULT_N"
 		(at 730.25 1196.34 0)
 		(effects
 			(font
@@ -25508,18 +25403,7 @@
 			)
 			(justify left)
 		)
-		(uuid "f908035a-f0c4-4668-9ae4-3bf6a085bed9")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 730.25 1196.34 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
+		(uuid "38199b1b-bcec-4a03-a008-8c4f26b5c173")
 	)
 	(global_label "+5V_EXC"
 		(shape passive)

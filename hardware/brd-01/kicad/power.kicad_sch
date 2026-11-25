@@ -3,7 +3,7 @@
 	(generator "eeschema")
 	(generator_version "10.0")
 	(uuid "a52b68b8-e154-452a-90a0-9df5f771c4e4")
-	(paper "User" 775.5999982 1168.000001)
+	(paper "A1" portrait)
 	(title_block
 		(title "BRD-01 EM AccuBot")
 		(date "2026-11-23")
@@ -13739,9 +13739,7 @@
 				)
 			)
 		)
-	)
-	(global_label "ESTOP_ASSERTED"
-		(shape passive)
+	)	(label "ESTOP_ASSERTED"
 		(at 205.74 46.99 0)
 		(effects
 			(font
@@ -13749,18 +13747,7 @@
 			)
 			(justify left)
 		)
-		(uuid "1e892bdb-e1d4-4477-a407-dae9f0e06969")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 205.74 46.99 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
+		(uuid "7065fe09-fbef-43b4-97a8-f8f6f699f34c")
 	)
 	(global_label "GND"
 		(shape passive)
@@ -14509,9 +14496,7 @@
 				)
 			)
 		)
-	)
-	(global_label "ESTOP_ASSERTED"
-		(shape passive)
+	)	(label "ESTOP_ASSERTED"
 		(at 477.52 314.96 0)
 		(effects
 			(font
@@ -14519,18 +14504,7 @@
 			)
 			(justify left)
 		)
-		(uuid "7142f6a1-3ae6-4992-a692-c69d66b31d6c")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 477.52 314.96 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
+		(uuid "dc0101d4-359e-451f-9bac-8998aa27edff")
 	)
 	(global_label "+6V"
 		(shape passive)
@@ -14993,9 +14967,8 @@
 				)
 			)
 		)
-	)
-	(global_label "ESTOP_ASSERTED"
-		(shape passive)
+	)	(hierarchical_label "ESTOP_ASSERTED"
+		(shape output)
 		(at 109.22 464.82 180)
 		(effects
 			(font
@@ -15003,18 +14976,7 @@
 			)
 			(justify right)
 		)
-		(uuid "a8d84cbf-2f9c-4414-b08e-61aed5571b4a")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 109.22 464.82 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
+		(uuid "0abbdcfb-cf0f-4a80-ad1d-40a135ad5f26")
 	)
 	(global_label "+1V8_FPGA"
 		(shape passive)
@@ -15301,8 +15263,7 @@
 				)
 			)
 		)
-	)
-	(global_label "BUCK_SYNC"
+	)	(hierarchical_label "BUCK_SYNC"
 		(shape input)
 		(at 53.34 157.48 180)
 		(effects
@@ -15311,18 +15272,7 @@
 			)
 			(justify right)
 		)
-		(uuid "d1a7f36a-f277-4fdb-90c3-cfc984482d87")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 53.34 157.48 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
+		(uuid "244167e6-6be0-447e-a8c9-2c3605e44ae0")
 	)
 	(global_label "GND"
 		(shape passive)
@@ -15477,9 +15427,8 @@
 				)
 			)
 		)
-	)
-	(global_label "DRIVER_FAULT_N"
-		(shape passive)
+	)	(hierarchical_label "DRIVER_FAULT_N"
+		(shape input)
 		(at 214.63 472.44 180)
 		(effects
 			(font
@@ -15487,18 +15436,7 @@
 			)
 			(justify right)
 		)
-		(uuid "df0e9d54-8b14-4ae7-a72b-377fbb7a9f5e")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 214.63 472.44 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
+		(uuid "00ca473a-7ad5-4fb1-924a-7378f1f70c91")
 	)
 	(global_label "+6V"
 		(shape passive)

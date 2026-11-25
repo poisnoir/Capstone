@@ -12778,9 +12778,8 @@
 				)
 			)
 		)
-	)
-	(global_label "ESTOP_ASSERTED"
-		(shape passive)
+	)	(hierarchical_label "ESTOP_ASSERTED"
+		(shape input)
 		(at 154.94 85.09 180)
 		(effects
 			(font
@@ -12788,18 +12787,7 @@
 			)
 			(justify right)
 		)
-		(uuid "772e6c4f-7220-4f76-b0a6-8e57cbcbaded")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 154.94 85.09 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
+		(uuid "37984ca6-b292-46e7-b479-93a76be9a046")
 	)
 	(global_label "GND"
 		(shape passive)
@@ -14186,9 +14174,8 @@
 				)
 			)
 		)
-	)
-	(global_label "DRIVER_FAULT_N"
-		(shape passive)
+	)	(hierarchical_label "DRIVER_FAULT_N"
+		(shape input)
 		(at 154.94 87.63 180)
 		(effects
 			(font
@@ -14196,18 +14183,7 @@
 			)
 			(justify right)
 		)
-		(uuid "db1605ab-56da-4439-917a-8110e975e6d7")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 154.94 87.63 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
+		(uuid "bb36019f-b9aa-4a96-ab51-cb01e95771ca")
 	)
 	(global_label "GND"
 		(shape passive)
@@ -23610,9 +23586,8 @@
 			(type default)
 		)
 		(uuid "ea647f5d-1569-4448-9da8-38a7c62fe767")
-	)
-	(global_label "BUCK_SYNC"
-		(shape passive)
+	)	(hierarchical_label "BUCK_SYNC"
+		(shape output)
 		(at 154.94 90.17 180)
 		(effects
 			(font
@@ -23620,17 +23595,6 @@
 			)
 			(justify right)
 		)
-		(uuid "6728b4e0-6bd9-4bbc-8f6f-417ce247b911")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 154.94 90.17 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
+		(uuid "6b56a8e5-2e17-40f0-a290-f54286ef68ae")
 	)
 )

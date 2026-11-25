@@ -11,6 +11,9 @@ Write (needs --apply):
     kicad_sch_helper.py del   SHEET --uuids UUID[,UUID] [--apply]
     kicad_sch_helper.py nc    SHEET --at X,Y [--apply]
     kicad_sch_helper.py junction SHEET --at X,Y [--apply]
+    kicad_sch_helper.py labelkind SHEET --uuids U --kind hierarchical_label|label [--apply]
+    kicad_sch_helper.py label SHEET --text NAME --at X,Y [--angle A] [--apply]
+    kicad_sch_helper.py sheetpin SHEET --sheet UUID --name N --at X,Y --angle A --shape S [--apply]
     kicad_sch_helper.py power SHEET --lib power:GND --at X,Y --ref '#PWR9xx' [--rot A] [--apply]
     kicad_sch_helper.py glabel SHEET --text NAME --at X,Y [--angle A] [--apply]
     kicad_sch_helper.py setrot SHEET --ref REF --rot 0|90|180|270 [--apply]
@@ -356,6 +359,79 @@ def cmd_setrot(path, ref, rot, apply_):
     sys.exit(f"ref not found: {ref}")
 
 
+def _label_block(kind, text, at, angle, shape):
+    just = 'right' if angle in (180, 270) else 'left'
+    out = [f'\t({kind} "{text}"']
+    if kind != 'label':
+        out.append(f'\t\t(shape {shape})')
+    out += [f'\t\t(at {fmt(at[0])} {fmt(at[1])} {angle})',
+            '\t\t(effects', '\t\t\t(font', '\t\t\t\t(size 1 1)',
+            '\t\t\t)', f'\t\t\t(justify {just})', '\t\t)']
+    return '\n'.join(out)
+
+
+def cmd_labelkind(path, uuids, kind, apply_, shape_override=None):
+    """Rewrite labels in place: global_label -> hierarchical_label or label.
+
+    A hierarchical label also names the net inside its own sheet, so the rest
+    of that sheet keeps connecting by name with plain local labels.
+    """
+    t = Path(path).read_text()
+    root = parse(t)
+    found = {}
+    for k in ('global_label', 'label', 'hierarchical_label'):
+        for lab in labels(root, k):
+            found[lab['uuid']] = (k, lab['text'], lab['p'])
+    for u in uuids:
+        if u not in found:
+            sys.exit(f"label uuid not found: {u}")
+        kind_old, text, pt = found[u]
+        start, stop = block_span(t, u)
+        blk = t[start:stop]
+        ang = int(float(re.search(r'\(at [\d.-]+ [\d.-]+ ([\d.-]+)\)', blk).group(1)))
+        shape = shape_override or 'passive'
+        m = re.search(r'\(shape (\w+)\)', blk)
+        if m and not shape_override:
+            shape = m.group(1)
+        import uuid as _u
+        new = _label_block(kind, text, pt, ang, shape)
+        new += f'\n\t\t(uuid "{_u.uuid4()}")\n\t)'
+        t = t[:start] + new + t[stop:]
+        print(f"  {text:18s} {kind_old} -> {kind} at {pt} angle {ang} shape {shape}")
+    save(path, t, apply_)
+
+
+def cmd_label(path, text, at, angle, apply_):
+    t = Path(path).read_text()
+    if not all(grade(v) for v in at):
+        sys.exit(f"refusing off-grid label {at}")
+    import uuid as _u
+    new = _label_block('label', text, at, angle, 'passive')
+    new += f'\n\t\t(uuid "{_u.uuid4()}")\n\t)\n'
+    idx = t.rstrip().rfind(')')
+    save(path, t[:idx] + new + t[idx:], apply_)
+
+
+def cmd_sheetpin(path, sheet_uuid, name, at, angle, shape, apply_):
+    t = Path(path).read_text()
+    # no grid assert: a sheet pin has to sit on the sheet border, and borders
+    # are drawn on whole millimetres, not on the 1.27 mm grid
+    start, stop = block_span(t, sheet_uuid)
+    blk = t[start:stop]
+    import uuid as _u
+    just = 'right' if angle in (180, 90) else 'left'
+    pin = (f'\t\t(pin "{name}" {shape}\n'
+           f'\t\t\t(at {fmt(at[0])} {fmt(at[1])} {angle})\n'
+           f'\t\t\t(uuid "{_u.uuid4()}")\n'
+           f'\t\t\t(effects\n\t\t\t\t(font\n\t\t\t\t\t(size 1.27 1.27)\n'
+           f'\t\t\t\t)\n\t\t\t\t(justify {just})\n\t\t\t)\n\t\t)\n')
+    at_inst = blk.find('\t\t(instances')
+    if at_inst < 0:
+        sys.exit("sheet has no (instances) block")
+    blk = blk[:at_inst] + pin + blk[at_inst:]
+    save(path, t[:start] + blk + t[stop:], apply_)
+
+
 def cmd_power(path, lib, at, rot, ref, apply_):
     """Place a power symbol with its pin exactly on `at`."""
     t = Path(path).read_text()
@@ -471,6 +547,23 @@ def main(argv):
         elif cmd == 'setrot':
             cmd_setrot(path, rest[rest.index('--ref') + 1],
                        int(rest[rest.index('--rot') + 1]), apply_)
+        elif cmd == 'labelkind':
+            cmd_labelkind(path, rest[rest.index('--uuids') + 1].split(','),
+                          rest[rest.index('--kind') + 1], apply_,
+                          rest[rest.index('--shape') + 1]
+                          if '--shape' in rest else None)
+        elif cmd == 'label':
+            cmd_label(path, rest[rest.index('--text') + 1],
+                      pair(rest[rest.index('--at') + 1]),
+                      int(rest[rest.index('--angle') + 1]) if '--angle' in rest else 0,
+                      apply_)
+        elif cmd == 'sheetpin':
+            cmd_sheetpin(path, rest[rest.index('--sheet') + 1],
+                         rest[rest.index('--name') + 1],
+                         pair(rest[rest.index('--at') + 1]),
+                         int(rest[rest.index('--angle') + 1]),
+                         rest[rest.index('--shape') + 1] if '--shape' in rest
+                         else 'passive', apply_)
         elif cmd == 'power':
             cmd_power(path, rest[rest.index('--lib') + 1],
                       pair(rest[rest.index('--at') + 1]),
