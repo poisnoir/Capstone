@@ -2730,28 +2730,7 @@
 		)
 	)
 
-	(global_label "USB_DP"
-		(shape passive)
-		(at 251.46 184.15 0)
-		(effects
-			(font
-				(size 1 1)
-			)
-			(justify left)
-		)
-		(uuid "603381e1-ce8f-4482-bf32-9fdbdb9c4410")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 251.46 184.15 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-	)
+
 	(global_label "FG3_RETURN"
 		(shape passive)
 		(at 246.38 41.91 180)
@@ -2930,28 +2909,7 @@
 			)
 		)
 	)
-	(global_label "USB_DM"
-		(shape passive)
-		(at 251.46 179.07 0)
-		(effects
-			(font
-				(size 1 1)
-			)
-			(justify left)
-		)
-		(uuid "aca9ee84-e6bc-4dac-875b-b0ea13762502")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 251.46 179.07 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-	)
+
 	(global_label "FG6_OUT"
 		(shape passive)
 		(at 182.88 63.5 180)
@@ -4061,7 +4019,7 @@
 		(dnp no)
 		(uuid "79cb0c13-ad89-4f19-935c-a9d99ebc31a3")
 		(property "Reference" "R183"
-			(at 266.7 180.42 0)
+			(at 266.7 180.34 270)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -4071,7 +4029,7 @@
 			)
 		)
 		(property "Value" "5.1k"
-			(at 266.7 182.42 0)
+			(at 266.7 182.88 270)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -4304,7 +4262,7 @@
 		(dnp no)
 		(uuid "9881a3d6-7db9-43e6-8f51-d910c0a59055")
 		(property "Reference" "R182"
-			(at 266.7 158.83 0)
+			(at 266.7 161.29 270)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -4314,7 +4272,7 @@
 			)
 		)
 		(property "Value" "5.1k"
-			(at 266.7 160.83 0)
+			(at 266.7 163.83 270)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -5240,5 +5198,25 @@
 				)
 			)
 		)
+	)
+	(wire
+		(pts
+			(xy 251.46 181.61) (xy 251.46 184.15)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "65d9e397-de92-4fc3-b098-ecce94a13b33")
+	)
+	(wire
+		(pts
+			(xy 251.46 176.53) (xy 251.46 179.07)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "2bcd1144-3ae9-4530-88dc-998aa5cd0a54")
 	)
 )
