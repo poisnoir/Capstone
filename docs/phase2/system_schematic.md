@@ -122,16 +122,22 @@ returns.
 
 ### 4.1 Channel map
 
-| Channel | DAC | LMH6321 | \(R_{store}\) | FG connector | Tone |
-|---|---|---|---|---|---|
-| 0 | U10 | U20 | R20 1.00 Ω | J1 | 20 kHz |
-| 1 | U11 | U21 | R21 1.00 Ω | J2 | 22 kHz |
-| 2 | U12 | U22 | R22 1.00 Ω | J3 | 24 kHz |
-| 3 | U13 | U23 | R23 1.00 Ω | J4 | 26 kHz |
-| 4 | U14 | U24 | R24 1.00 Ω | J5 | 28 kHz |
-| 5 | U15 | U25 | R25 1.00 Ω | J6 | 30 kHz |
-| 6 | U16 | U26 | R26 1.00 Ω | J7 | 32 kHz |
-| 7 | U17 | U27 | R27 1.00 Ω | J8 | 34 kHz |
+One eight-channel `DAC80508` (`U10`) produces all eight commands; `U11`–`U17`
+do not exist. Each channel has its own LTC1563-2 reconstruction filter
+(`U80`–`U87`), OPA192 loop amp (`U30`–`U37`), LMH6321 driver (`U20`–`U27`),
+1 Ω sense resistor (`R20`–`R27`) and keyed FG header (`J20`–`J27` on the
+connectors sheet). `J1` is the power-entry barrel jack, not an FG connector.
+
+| Channel | DAC80508 output | LTC1563-2 | LMH6321 | \(R_{store}\) | FG connector | Tone |
+|---|---|---|---|---|---|---|
+| 0 | U10 ch0 | U80 | U20 | R20 1.00 Ω | J20 | 20 kHz |
+| 1 | U10 ch1 | U81 | U21 | R21 1.00 Ω | J21 | 22 kHz |
+| 2 | U10 ch2 | U82 | U22 | R22 1.00 Ω | J22 | 24 kHz |
+| 3 | U10 ch3 | U83 | U23 | R23 1.00 Ω | J23 | 26 kHz |
+| 4 | U10 ch4 | U84 | U24 | R24 1.00 Ω | J24 | 28 kHz |
+| 5 | U10 ch5 | U85 | U25 | R25 1.00 Ω | J25 | 30 kHz |
+| 6 | U10 ch6 | U86 | U26 | R26 1.00 Ω | J26 | 32 kHz |
+| 7 | U10 ch7 | U87 | U27 | R27 1.00 Ω | J27 | 34 kHz |
 
 \(R_{store}\) 1.00 Ω 0.1 % 0.5 W; the thesis values 0.957–1.239 Ω are the
 heritage baseline, a single 1.00 Ω is the Rev A value and is calibrated per
@@ -190,8 +196,11 @@ R_store7 ──► A17 buffer ──┘
 - Buffers: OPA2192 (4 dual) on ±12 V; summing amp OPA192.
 - Summer output: 8 tones, each 0.30 V RMS at 150 mA; peak sum <2.5 V, within
   the ±4.096 V ADC range.
-- Per-channel peak comparators: TLV3201 ×8, reference from a 0.6 V shunt
-  reference; open-drain fault bus to the FPGA and the hardware STOP latch.
+- Per-channel peak comparators: TLV3201 ×8 (`U60`–`U67`). Their `/driver/TRIP_REF`
+  input comes from `R710` 52.3 kΩ 0.1 % between +3.3 V and the reference node
+  and `R711` 10 kΩ 0.1 % from that node to GND, bypassed by `C710` 100 nF:
+  \(V_{REF}\approx 3.3\times 10/(52.3+10)\approx 0.53\) V. There is no shunt
+  reference part. Open-drain fault bus to the FPGA and the hardware STOP latch.
 - The summer is the \(Y_I\) phase reference; its group delay is fixed and
   absorbed by κ.
 
