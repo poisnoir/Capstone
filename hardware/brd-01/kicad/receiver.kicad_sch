@@ -7584,16 +7584,7 @@
 		)
 		(uuid "9c0aa8e8-cab3-4a75-bdd1-ac1e8663fecf")
 	)
-	(label "INA_IN_P"
-		(at 152.4 219.71 0)
-		(effects
-			(font
-				(size 1 1)
-			)
-			(justify left bottom)
-		)
-		(uuid "9e75af1d-8f8a-47ae-ad41-d9cba0aeb776")
-	)
+
 	(label "REF_COIL_IN_P"
 		(at 231.14 509.27 180)
 		(effects
@@ -7604,16 +7595,7 @@
 		)
 		(uuid "9ea1acf3-5741-45e7-a855-d38b0b598299")
 	)
-	(label "INA_IN_P"
-		(at 243.84 176.53 180)
-		(effects
-			(font
-				(size 1 1)
-			)
-			(justify right bottom)
-		)
-		(uuid "9fab2043-3460-49df-914a-08579c466cbc")
-	)
+
 	(label "FDA2_N"
 		(at 392.43 414.02 180)
 		(effects
@@ -7824,16 +7806,7 @@
 		)
 		(uuid "bfc54957-4639-4d85-ab64-3ab3bc0ec257")
 	)
-	(label "INA_IN_P"
-		(at 62.23 182.88 180)
-		(effects
-			(font
-				(size 1 1)
-			)
-			(justify right bottom)
-		)
-		(uuid "c1e8a4da-07bb-4415-8060-2579446e1041")
-	)
+
 	(label "AIN0-"
 		(at 449.58 261.62 0)
 		(effects
@@ -21229,5 +21202,71 @@
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "b1031307-3a6f-4675-bd4a-5cb1ca447bfc")
+	)
+	(wire
+		(pts
+			(xy 62.23 182.88) (xy 30.48 182.88)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "bed129bf-812f-4ae0-b134-129a75443208")
+	)
+	(wire
+		(pts
+			(xy 30.48 182.88) (xy 30.48 231.14)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "6db3d603-1500-4a33-a714-2d0e99320234")
+	)
+	(wire
+		(pts
+			(xy 30.48 231.14) (xy 240.03 231.14)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "8fc44172-4531-4a8b-8aa2-67b9b6d7e6b6")
+	)
+	(wire
+		(pts
+			(xy 152.4 219.71) (xy 152.4 231.14)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "52d843d0-4270-49c3-a150-abaf5e5f0108")
+	)
+	(wire
+		(pts
+			(xy 240.03 231.14) (xy 240.03 176.53)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "13d34b40-99d7-44b8-baec-c0c7cb88940e")
+	)
+	(wire
+		(pts
+			(xy 240.03 176.53) (xy 243.84 176.53)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "92ae8acc-6fd8-4c97-b931-e682dad41451")
+	)
+	(junction
+		(at 152.4 231.14)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "653b1bc3-b571-402b-8f96-4cfd80a35750")
 	)
 )
