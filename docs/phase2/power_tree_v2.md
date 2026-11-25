@@ -443,13 +443,20 @@ contract change) or the bench.
 
 ## 9. Schematic implementation (power sheet, 2026-11-24)
 
-The power sheet is captured and wired. The driver, fpga, receiver and
-connectors sheet changes in §7 are **not done yet**. ERC on the full
-hierarchy reports two items, and both wait on those sheets:
+The power sheet is captured and wired. The §7 cross-sheet changes are done:
 
-- `BUCK_SYNC` has no FPGA end yet (ball R3).
-- The driver's `+5V` labels still need to become `+5V_EXC` (U10 VDD shows
-  as undriven).
+- driver: 27 `+5V` labels became `+5V_EXC` (U10 VDD and the eight LTC1563
+  V+/LP pins). The `+5V` net no longer exists anywhere.
+- fpga: `U142` VCC and `~RESET` and its two decoupling capacitors moved to
+  `+3.3V`; `3V3OUT` is tied to `+3.3V` as D3 requires, with that pin typed
+  passive so ERC does not read two sources on one rail; ball `R3` is wired
+  to `BUCK_SYNC`.
+- connectors: `J123.1` is a no-connect (D4).
+- receiver: **`D_REF` (§4, C7) is not placed yet.** It is deferred to that
+  sheet's redraw so the diode lands inside the ADC reference block rather
+  than as another label island.
+
+ERC on the full hierarchy is **0 errors / 0 warnings**.
 
 Reference designators as captured (they differ from the proposals in §2–§4):
 

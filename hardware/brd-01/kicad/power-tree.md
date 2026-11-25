@@ -1,5 +1,13 @@
 # BRD-01 power tree and inter-sheet connections
 
+> **Partially superseded (2026-11-24, power-tree v2).** This page describes the
+> v1 tree: `+5V` from an OKI-78SR, LDO-fed `+5VA`, and the `+5V`/`+3.3V` split.
+> The schematic now implements [power_tree_v2.md](../../../docs/phase2/power_tree_v2.md):
+> `+6V` from a TPSM63604 module, `+5V_EXC` and `+5VA` from TPS7A4701 LDOs, no
+> `+5V` net, and hierarchical labels for the three crossing signals instead of
+> global labels. The rail table and mermaid diagram below still show v1 and
+> are kept only as the as-captured record at commit `4da4e95`.
+
 This is the **as-captured** state of the KiCad schematic. It was generated from the
 netlist of `brd-01.kicad_sch` (KiCad 10.0.8) on 2026-11-24, at commit `4da4e95`.
 Where the design docs disagree with the schematic, the schematic is described

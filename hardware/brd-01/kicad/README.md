@@ -2,7 +2,9 @@
 
 Open [brd-01.kicad_pro](brd-01.kicad_pro) in KiCad **10.0.8** with the
 official 10.0.8 symbol and footprint libraries installed. The root schematic
-contains five populated sheets and uses global labels for inter-sheet nets.
+contains five populated sheets. The three signals that cross sheets
+(`ESTOP_ASSERTED`, `DRIVER_FAULT_N`, `BUCK_SYNC`) use hierarchical labels and
+sheet pins on the root; power rails use power symbols.
 Title block rev **0.1**; KiCad ERC reports **zero violations** on the full
 hierarchy. The schematic is complete as an engineering draft and carries the
 following release holds.
