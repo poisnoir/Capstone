@@ -6763,16 +6763,6 @@
 	)
 	(wire
 		(pts
-			(xy 44.45 298.45) (xy 39.37 298.45)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "0841b2b8-8ea6-4a1c-b1d8-71daf82ded64")
-	)
-	(wire
-		(pts
 			(xy 177.8 327.66) (xy 182.88 327.66)
 		)
 		(stroke
@@ -6843,16 +6833,6 @@
 	)
 	(wire
 		(pts
-			(xy 82.55 394.97) (xy 77.47 394.97)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "0e5ab059-03b2-445a-881d-2f245a8c7338")
-	)
-	(wire
-		(pts
 			(xy 67.31 226.06) (xy 62.23 226.06)
 		)
 		(stroke
@@ -6870,26 +6850,6 @@
 			(type default)
 		)
 		(uuid "102f76dc-9d90-4ccd-8698-b3c5ea5512d4")
-	)
-	(wire
-		(pts
-			(xy 135.89 312.42) (xy 140.97 312.42)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "106ebdf1-9c9b-4c6b-ba04-af224bdf6604")
-	)
-	(wire
-		(pts
-			(xy 52.07 327.66) (xy 57.15 327.66)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "10f3efe1-f6e3-4b3c-89fe-2b0035e5779b")
 	)
 	(wire
 		(pts
@@ -7124,16 +7084,6 @@
 	)
 	(wire
 		(pts
-			(xy 219.71 312.42) (xy 224.79 312.42)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "36e16a14-b010-488a-bea9-9b50daa00aa4")
-	)
-	(wire
-		(pts
 			(xy 67.31 205.74) (xy 62.23 205.74)
 		)
 		(stroke
@@ -7262,16 +7212,6 @@
 			(type default)
 		)
 		(uuid "4b692235-2745-461d-ab53-12d546dab052")
-	)
-	(wire
-		(pts
-			(xy 52.07 312.42) (xy 57.15 312.42)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "4bf85a83-0142-43db-9d9f-af845955157e")
 	)
 	(wire
 		(pts
@@ -7405,16 +7345,6 @@
 	)
 	(wire
 		(pts
-			(xy 170.18 298.45) (xy 165.1 298.45)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "58b08eee-7b83-4559-8c98-e57bc7c2d385")
-	)
-	(wire
-		(pts
 			(xy 118.11 236.22) (xy 123.19 236.22)
 		)
 		(stroke
@@ -7442,16 +7372,6 @@
 			(type default)
 		)
 		(uuid "5a526183-945f-490e-89da-841b37c9ecd9")
-	)
-	(wire
-		(pts
-			(xy 219.71 298.45) (xy 224.79 298.45)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "5b4aa624-3be9-4dce-bb9e-2f2bda4168b7")
 	)
 	(wire
 		(pts
@@ -7492,16 +7412,6 @@
 			(type default)
 		)
 		(uuid "5c47d9ff-1d70-4b31-a915-b57c3098e2a9")
-	)
-	(wire
-		(pts
-			(xy 86.36 312.42) (xy 81.28 312.42)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "5ca03b40-3c3c-4bf6-9691-d31ba7232110")
 	)
 	(wire
 		(pts
@@ -7675,16 +7585,6 @@
 	)
 	(wire
 		(pts
-			(xy 36.83 394.97) (xy 31.75 394.97)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "6c95b9d3-1414-45d1-aa91-e96cb4f5aab2")
-	)
-	(wire
-		(pts
 			(xy 160.02 72.39) (xy 154.94 72.39)
 		)
 		(stroke
@@ -7757,16 +7657,6 @@
 	)
 	(wire
 		(pts
-			(xy 177.8 312.42) (xy 182.88 312.42)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "76ff5113-681a-479a-b848-95fe9a67fcaa")
-	)
-	(wire
-		(pts
 			(xy 419.1 312.42) (xy 414.02 312.42)
 		)
 		(stroke
@@ -7817,16 +7707,6 @@
 	)
 	(wire
 		(pts
-			(xy 93.98 298.45) (xy 99.06 298.45)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "7f24d50b-e530-4962-9ab6-429edec6d02c")
-	)
-	(wire
-		(pts
 			(xy 486.41 31.75) (xy 481.33 31.75)
 		)
 		(stroke
@@ -7834,16 +7714,6 @@
 			(type default)
 		)
 		(uuid "7f29b0d8-0c82-46e6-bcba-834d312de3b7")
-	)
-	(wire
-		(pts
-			(xy 212.09 298.45) (xy 207.01 298.45)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "7f4d3ef0-b467-4895-94ea-7fe34d977235")
 	)
 	(wire
 		(pts
@@ -7957,16 +7827,6 @@
 	)
 	(wire
 		(pts
-			(xy 170.18 312.42) (xy 165.1 312.42)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "8d55682a-f34d-4a9d-b8e5-7c53ab32c4f8")
-	)
-	(wire
-		(pts
 			(xy 504.19 34.29) (xy 509.27 34.29)
 		)
 		(stroke
@@ -7974,16 +7834,6 @@
 			(type default)
 		)
 		(uuid "8dafa558-6cb3-4adc-a346-a4f583e9ff9f")
-	)
-	(wire
-		(pts
-			(xy 86.36 327.66) (xy 81.28 327.66)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "90011de8-9e87-4309-84d9-74088d83b6d1")
 	)
 	(wire
 		(pts
@@ -8126,16 +7976,6 @@
 		)
 		(uuid "9b3dcdbd-b941-4cd3-b638-1a7d28f772c8")
 	)
-	(wire
-		(pts
-			(xy 128.27 298.45) (xy 123.19 298.45)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "9e6b46e3-6b29-4849-9141-7321e0074eb6")
-	)
 
 	(wire
 		(pts
@@ -8239,16 +8079,6 @@
 	)
 	(wire
 		(pts
-			(xy 135.89 298.45) (xy 140.97 298.45)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "ae5794ee-bf59-4403-bb97-7f7591c04e11")
-	)
-	(wire
-		(pts
 			(xy 375.92 218.44) (xy 381 218.44)
 		)
 		(stroke
@@ -8311,16 +8141,6 @@
 	)
 	(wire
 		(pts
-			(xy 86.36 298.45) (xy 81.28 298.45)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "b5f1517d-d754-48c0-b17a-03efb400a962")
-	)
-	(wire
-		(pts
 			(xy 330.2 271.78) (xy 335.28 271.78)
 		)
 		(stroke
@@ -8331,26 +8151,6 @@
 	)
 	(wire
 		(pts
-			(xy 52.07 298.45) (xy 57.15 298.45)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "ba31da5a-5766-43d6-b22e-0e83e4261e5e")
-	)
-	(wire
-		(pts
-			(xy 212.09 312.42) (xy 207.01 312.42)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "bc08889c-1988-4f9f-bdd3-2ae87b5fadb6")
-	)
-	(wire
-		(pts
 			(xy 510.54 83.82) (xy 515.62 83.82)
 		)
 		(stroke
@@ -8358,16 +8158,6 @@
 			(type default)
 		)
 		(uuid "bc52bace-aba6-4f6d-91d2-e521d7183062")
-	)
-	(wire
-		(pts
-			(xy 90.17 394.97) (xy 95.25 394.97)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "bdb5a37d-45ab-4d11-a76a-8e755538efc2")
 	)
 	(wire
 		(pts
@@ -8479,17 +8269,6 @@
 		)
 		(uuid "ca7b1e05-e8ac-4567-bee0-bdad72ae88bf")
 	)
-
-	(wire
-		(pts
-			(xy 128.27 312.42) (xy 123.19 312.42)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "cb77e61e-2d3f-4d49-8b36-b95f8d681a1b")
-	)
 	(wire
 		(pts
 			(xy 481.33 312.42) (xy 476.25 312.42)
@@ -8532,16 +8311,6 @@
 	)
 	(wire
 		(pts
-			(xy 44.45 394.97) (xy 49.53 394.97)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "d10291a7-5582-4b42-ab4b-98751fec127d")
-	)
-	(wire
-		(pts
 			(xy 424.18 218.44) (xy 419.1 218.44)
 		)
 		(stroke
@@ -8573,16 +8342,6 @@
 	)
 	(wire
 		(pts
-			(xy 93.98 327.66) (xy 99.06 327.66)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "d8163f01-18a2-40ce-9ca9-f6e3b29e580e")
-	)
-	(wire
-		(pts
 			(xy 419.1 102.87) (xy 424.18 102.87)
 		)
 		(stroke
@@ -8600,16 +8359,6 @@
 			(type default)
 		)
 		(uuid "dc018f6d-7cfd-4750-a299-3e300e75360d")
-	)
-	(wire
-		(pts
-			(xy 44.45 312.42) (xy 39.37 312.42)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "dc070874-b430-4ce6-bb85-1b6ecf7e5fd4")
 	)
 	(wire
 		(pts
@@ -8660,16 +8409,6 @@
 			(type default)
 		)
 		(uuid "e051c492-01ec-4e68-a451-abbf49327be7")
-	)
-	(wire
-		(pts
-			(xy 177.8 298.45) (xy 182.88 298.45)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "e15c9ceb-0f89-41fb-b62e-9a9660da2cb1")
 	)
 	(wire
 		(pts
@@ -8784,16 +8523,6 @@
 	)
 	(wire
 		(pts
-			(xy 93.98 312.42) (xy 99.06 312.42)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "efe84b2c-c31c-41d4-b7d0-db22fcf5603c")
-	)
-	(wire
-		(pts
 			(xy 67.31 223.52) (xy 62.23 223.52)
 		)
 		(stroke
@@ -8841,16 +8570,6 @@
 			(type default)
 		)
 		(uuid "f5d4056a-7e14-4831-8501-ab6c511e34d2")
-	)
-	(wire
-		(pts
-			(xy 44.45 327.66) (xy 39.37 327.66)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "f7d3caa4-7598-4549-aa40-783263d69902")
 	)
 	(wire
 		(pts
@@ -9505,28 +9224,6 @@
 			)
 		)
 	)
-	(global_label "+1V8_FPGA"
-		(shape passive)
-		(at 81.28 327.66 180)
-		(effects
-			(font
-				(size 1 1)
-			)
-			(justify right)
-		)
-		(uuid "098f3867-9afc-4a31-bb79-7f46060861ae")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 81.28 327.66 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-	)
 	(global_label "GND"
 		(shape passive)
 		(at 397.51 275.59 0)
@@ -9793,28 +9490,6 @@
 	)
 	(global_label "GND"
 		(shape passive)
-		(at 140.97 312.42 0)
-		(effects
-			(font
-				(size 1 1)
-			)
-			(justify left)
-		)
-		(uuid "21a38bec-83eb-4264-a575-a072b3753380")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 140.97 312.42 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-	)
-	(global_label "GND"
-		(shape passive)
 		(at 62.23 243.84 180)
 		(effects
 			(font
@@ -9825,28 +9500,6 @@
 		(uuid "24a29b13-47e3-4239-8c43-46f75646710c")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
 			(at 62.23 243.84 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-	)
-	(global_label "GND"
-		(shape passive)
-		(at 224.79 298.45 0)
-		(effects
-			(font
-				(size 1 1)
-			)
-			(justify left)
-		)
-		(uuid "25781ecb-7bba-4ab4-86f2-4487c5663630")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 224.79 298.45 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -9891,28 +9544,6 @@
 		(uuid "2764ae65-65de-47f4-b0da-df6e5e2deea4")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
 			(at 379.73 260.35 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-	)
-	(global_label "GND"
-		(shape passive)
-		(at 182.88 298.45 0)
-		(effects
-			(font
-				(size 1 1)
-			)
-			(justify left)
-		)
-		(uuid "28364d9f-6973-4a3a-832e-6ab4d52d3846")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 182.88 298.45 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -10363,50 +9994,6 @@
 			)
 		)
 	)
-	(global_label "GND"
-		(shape passive)
-		(at 99.06 298.45 0)
-		(effects
-			(font
-				(size 1 1)
-			)
-			(justify left)
-		)
-		(uuid "3e3ce3c0-e43f-4b37-8d15-29b92eb669e0")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 99.06 298.45 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-	)
-	(global_label "+1V8_FPGA"
-		(shape passive)
-		(at 207.01 312.42 180)
-		(effects
-			(font
-				(size 1 1)
-			)
-			(justify right)
-		)
-		(uuid "3edb7e5d-a036-411a-8820-6d0fab9d79ca")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 207.01 312.42 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-	)
 
 	(global_label "+1V0_FPGA"
 		(shape passive)
@@ -10464,28 +10051,6 @@
 		(uuid "432180f9-9fb4-4885-b245-7e9edb89c641")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
 			(at 496.57 124.46 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-	)
-	(global_label "GND"
-		(shape passive)
-		(at 99.06 327.66 0)
-		(effects
-			(font
-				(size 1 1)
-			)
-			(justify left)
-		)
-		(uuid "43b0b850-f628-4564-8988-d5e76aaca6b5")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 99.06 327.66 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -10674,28 +10239,6 @@
 	)
 	(global_label "GND"
 		(shape passive)
-		(at 182.88 312.42 0)
-		(effects
-			(font
-				(size 1 1)
-			)
-			(justify left)
-		)
-		(uuid "4b6beefe-a624-46d5-bb2b-0740177b7aca")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 182.88 312.42 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-	)
-	(global_label "GND"
-		(shape passive)
 		(at 314.96 307.34 270)
 		(effects
 			(font
@@ -10850,28 +10393,6 @@
 	)
 	(global_label "GND"
 		(shape passive)
-		(at 49.53 394.97 0)
-		(effects
-			(font
-				(size 1 1)
-			)
-			(justify left)
-		)
-		(uuid "5a031de1-bfd4-4ca3-be8e-df4b0e63dd4f")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 49.53 394.97 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-	)
-	(global_label "GND"
-		(shape passive)
 		(at 62.23 241.3 180)
 		(effects
 			(font
@@ -10992,28 +10513,6 @@
 		(uuid "61f0de4b-5387-49f0-864e-a07c2a71053e")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
 			(at 207.01 342.9 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-	)
-	(global_label "GND"
-		(shape passive)
-		(at 224.79 312.42 0)
-		(effects
-			(font
-				(size 1 1)
-			)
-			(justify left)
-		)
-		(uuid "63827b77-93ea-43ce-be48-a2ac5c415dc8")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 224.79 312.42 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -11180,28 +10679,6 @@
 	)
 	(global_label "GND"
 		(shape passive)
-		(at 99.06 312.42 0)
-		(effects
-			(font
-				(size 1 1)
-			)
-			(justify left)
-		)
-		(uuid "6c7004cd-132d-4597-aac0-b995d65c3e21")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 99.06 312.42 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-	)
-	(global_label "GND"
-		(shape passive)
 		(at 123.19 266.7 0)
 		(effects
 			(font
@@ -11256,28 +10733,6 @@
 		(uuid "6def6cde-182e-48d2-9702-15ec8dd9af60")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
 			(at 481.33 39.37 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-	)
-	(global_label "+1V0_FPGA"
-		(shape passive)
-		(at 123.19 298.45 180)
-		(effects
-			(font
-				(size 1 1)
-			)
-			(justify right)
-		)
-		(uuid "6ead0e93-c26e-404f-99e4-0cb5a13685d1")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 123.19 298.45 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -11344,28 +10799,6 @@
 		(uuid "779cf1d3-e0a4-4754-86bb-956c200a3c18")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
 			(at 485.14 83.82 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-	)
-	(global_label "+1V8_FPGA"
-		(shape passive)
-		(at 39.37 327.66 180)
-		(effects
-			(font
-				(size 1 1)
-			)
-			(justify right)
-		)
-		(uuid "780ebc3f-ab93-47ab-a34b-f21a07fd9b1c")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 39.37 327.66 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -11530,28 +10963,6 @@
 			)
 		)
 	)
-	(global_label "+1V0_FPGA"
-		(shape passive)
-		(at 39.37 312.42 180)
-		(effects
-			(font
-				(size 1 1)
-			)
-			(justify right)
-		)
-		(uuid "8a3bef3b-a585-4830-8c3b-24e29a7427f2")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 39.37 312.42 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-	)
 	(global_label "GND"
 		(shape passive)
 		(at 62.23 254 180)
@@ -11586,50 +10997,6 @@
 		(uuid "8cb055af-68ac-45f3-af37-7bee799c8fb6")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
 			(at 207.01 327.66 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-	)
-	(global_label "+1V8_FPGA"
-		(shape passive)
-		(at 77.47 394.97 180)
-		(effects
-			(font
-				(size 1 1)
-			)
-			(justify right)
-		)
-		(uuid "8d79a386-9af8-4e9c-9ade-379da3958002")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 77.47 394.97 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-	)
-	(global_label "GND"
-		(shape passive)
-		(at 95.25 394.97 0)
-		(effects
-			(font
-				(size 1 1)
-			)
-			(justify left)
-		)
-		(uuid "92da59e2-ea91-4638-9666-488854720684")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 95.25 394.97 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -11684,28 +11051,6 @@
 			)
 		)
 	)
-	(global_label "+1V0_FPGA"
-		(shape passive)
-		(at 207.01 298.45 180)
-		(effects
-			(font
-				(size 1 1)
-			)
-			(justify right)
-		)
-		(uuid "9c39463d-90ec-41fa-8f71-1daba785b73a")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 207.01 298.45 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-	)
 	(global_label "+3.3V"
 		(shape passive)
 		(at 134.62 368.3 180)
@@ -11718,28 +11063,6 @@
 		(uuid "9cb1cffa-2191-4bc5-b9f6-5279bb161b13")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
 			(at 134.62 368.3 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-	)
-	(global_label "GND"
-		(shape passive)
-		(at 57.15 298.45 0)
-		(effects
-			(font
-				(size 1 1)
-			)
-			(justify left)
-		)
-		(uuid "9cc8679e-8943-47b5-a057-173dababbe08")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 57.15 298.45 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -11950,28 +11273,6 @@
 	)
 	(global_label "GND"
 		(shape passive)
-		(at 140.97 298.45 0)
-		(effects
-			(font
-				(size 1 1)
-			)
-			(justify left)
-		)
-		(uuid "b13298f2-73e6-4b1b-ab5d-7a564987448c")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 140.97 298.45 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-	)
-	(global_label "GND"
-		(shape passive)
 		(at 123.19 238.76 0)
 		(effects
 			(font
@@ -12048,28 +11349,6 @@
 		(uuid "bc8ad9f6-ffa7-4c61-8699-867641c6c761")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
 			(at 496.57 156.21 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-	)
-	(global_label "+1V0_FPGA"
-		(shape passive)
-		(at 81.28 312.42 180)
-		(effects
-			(font
-				(size 1 1)
-			)
-			(justify right)
-		)
-		(uuid "bcab2c6c-5c99-4b98-bb63-48f117ccf99c")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 81.28 312.42 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -12300,29 +11579,6 @@
 			)
 		)
 	)
-
-	(global_label "+1V0_FPGA"
-		(shape passive)
-		(at 165.1 298.45 180)
-		(effects
-			(font
-				(size 1 1)
-			)
-			(justify right)
-		)
-		(uuid "d6a4ee7b-c041-4339-a5c3-f409ce52116d")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 165.1 298.45 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-	)
 	(global_label "GND"
 		(shape passive)
 		(at 62.23 266.7 180)
@@ -12335,28 +11591,6 @@
 		(uuid "d6bc7c4e-a18a-41ce-9093-c1431675da98")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
 			(at 62.23 266.7 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-	)
-	(global_label "GND"
-		(shape passive)
-		(at 57.15 327.66 0)
-		(effects
-			(font
-				(size 1 1)
-			)
-			(justify left)
-		)
-		(uuid "d8a77973-5029-47a7-9a48-db4eec4edde6")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 57.15 327.66 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -12478,50 +11712,6 @@
 		(uuid "de4d148e-89a1-4865-916c-4d6d10a1fe61")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
 			(at 81.28 342.9 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-	)
-	(global_label "+1V8_FPGA"
-		(shape passive)
-		(at 165.1 312.42 180)
-		(effects
-			(font
-				(size 1 1)
-			)
-			(justify right)
-		)
-		(uuid "deefc84b-fb5c-4b06-b41a-e1274318aa43")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 165.1 312.42 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-	)
-	(global_label "+1V0_FPGA"
-		(shape passive)
-		(at 39.37 298.45 180)
-		(effects
-			(font
-				(size 1 1)
-			)
-			(justify right)
-		)
-		(uuid "e054c5bf-62a3-4475-be8c-fdc6d9ae1ba7")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 39.37 298.45 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -12818,28 +12008,6 @@
 			)
 		)
 	)
-	(global_label "+1V0_FPGA"
-		(shape passive)
-		(at 31.75 394.97 180)
-		(effects
-			(font
-				(size 1 1)
-			)
-			(justify right)
-		)
-		(uuid "ee00a3e1-65bb-42fc-9d3f-d568c9a05c25")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 31.75 394.97 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-	)
 	(global_label "+1V8_FPGA"
 		(shape passive)
 		(at 62.23 210.82 180)
@@ -12928,28 +12096,6 @@
 			)
 		)
 	)
-	(global_label "+1V8_FPGA"
-		(shape passive)
-		(at 123.19 312.42 180)
-		(effects
-			(font
-				(size 1 1)
-			)
-			(justify right)
-		)
-		(uuid "f4ba730c-f8b3-426a-acbf-1babad822ce2")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 123.19 312.42 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-	)
 	(global_label "+3.3V"
 		(shape passive)
 		(at 123.19 327.66 180)
@@ -12962,50 +12108,6 @@
 		(uuid "f7210d78-5292-45f0-979e-b459c1aecdb6")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
 			(at 123.19 327.66 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-	)
-	(global_label "+1V0_FPGA"
-		(shape passive)
-		(at 81.28 298.45 180)
-		(effects
-			(font
-				(size 1 1)
-			)
-			(justify right)
-		)
-		(uuid "f7e5ef04-60f5-4e0d-967d-f341771e9572")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 81.28 298.45 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-	)
-	(global_label "GND"
-		(shape passive)
-		(at 57.15 312.42 0)
-		(effects
-			(font
-				(size 1 1)
-			)
-			(justify left)
-		)
-		(uuid "f89c5b7d-2939-405d-82a3-a13f21ce6e1e")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 57.15 312.42 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -15325,7 +14427,7 @@
 	)
 	(symbol
 		(lib_id "Device:C")
-		(at 86.36 394.97 90)
+		(at 33.02 256.54 90)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -15335,7 +14437,7 @@
 		(dnp no)
 		(uuid "29e620ba-a632-4e27-a44a-834ca163cc79")
 		(property "Reference" "C171"
-			(at 86.36 387.43 90)
+			(at 33.02 249 90)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -15345,7 +14447,7 @@
 			)
 		)
 		(property "Value" "10u"
-			(at 86.36 389.43 90)
+			(at 33.02 251 90)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -15355,7 +14457,7 @@
 			)
 		)
 		(property "Footprint" "Capacitor_SMD:C_0805_2012Metric"
-			(at 86.36 392.43 90)
+			(at 33.02 254 90)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -15366,7 +14468,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 86.36 394.97 0)
+			(at 33.02 256.54 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -15376,7 +14478,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 86.36 394.97 0)
+			(at 33.02 256.54 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -15479,7 +14581,7 @@
 	)
 	(symbol
 		(lib_id "Device:C")
-		(at 48.26 298.45 90)
+		(at 154.94 205.74 90)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -15489,7 +14591,7 @@
 		(dnp no)
 		(uuid "2a6e3226-8589-4860-85cd-d1f58e5ee69a")
 		(property "Reference" "C150"
-			(at 48.26 290.91 90)
+			(at 154.94 198.2 90)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -15499,7 +14601,7 @@
 			)
 		)
 		(property "Value" "100n"
-			(at 48.26 292.91 90)
+			(at 154.94 200.2 90)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -15509,7 +14611,7 @@
 			)
 		)
 		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
-			(at 48.26 295.91 90)
+			(at 154.94 203.2 90)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -15520,7 +14622,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 48.26 298.45 0)
+			(at 154.94 205.74 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -15530,7 +14632,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 48.26 298.45 0)
+			(at 154.94 205.74 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -15633,7 +14735,7 @@
 	)
 	(symbol
 		(lib_id "Device:C")
-		(at 48.26 327.66 90)
+		(at 33.02 236.22 90)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -15643,7 +14745,7 @@
 		(dnp no)
 		(uuid "2cdc8ccb-74eb-48d5-a724-678400932fda")
 		(property "Reference" "C160"
-			(at 48.26 320.12 90)
+			(at 33.02 228.68 90)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -15653,7 +14755,7 @@
 			)
 		)
 		(property "Value" "100n"
-			(at 48.26 322.12 90)
+			(at 33.02 230.68 90)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -15663,7 +14765,7 @@
 			)
 		)
 		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
-			(at 48.26 325.12 90)
+			(at 33.02 233.68 90)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -15674,7 +14776,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 48.26 327.66 0)
+			(at 33.02 236.22 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -15684,7 +14786,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 48.26 327.66 0)
+			(at 33.02 236.22 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -15940,7 +15042,7 @@
 	)
 	(symbol
 		(lib_id "Device:C")
-		(at 173.99 312.42 90)
+		(at 33.02 215.9 90)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -15950,7 +15052,7 @@
 		(dnp no)
 		(uuid "3af633e4-df8d-48e5-8537-c5022eb55c60")
 		(property "Reference" "C158"
-			(at 173.99 304.88 90)
+			(at 33.02 208.36 90)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -15960,7 +15062,7 @@
 			)
 		)
 		(property "Value" "100n"
-			(at 173.99 306.88 90)
+			(at 33.02 210.36 90)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -15970,7 +15072,7 @@
 			)
 		)
 		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
-			(at 173.99 309.88 90)
+			(at 33.02 213.36 90)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -15981,7 +15083,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 173.99 312.42 0)
+			(at 33.02 215.9 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -15991,7 +15093,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 173.99 312.42 0)
+			(at 33.02 215.9 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -17012,7 +16114,7 @@
 	)
 	(symbol
 		(lib_id "Device:C")
-		(at 90.17 298.45 90)
+		(at 154.94 215.9 90)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -17022,7 +16124,7 @@
 		(dnp no)
 		(uuid "499e9470-04a6-437f-8186-9b68253e2207")
 		(property "Reference" "C151"
-			(at 90.17 290.91 90)
+			(at 154.94 208.36 90)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -17032,7 +16134,7 @@
 			)
 		)
 		(property "Value" "100n"
-			(at 90.17 292.91 90)
+			(at 154.94 210.36 90)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -17042,7 +16144,7 @@
 			)
 		)
 		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
-			(at 90.17 295.91 90)
+			(at 154.94 213.36 90)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -17053,7 +16155,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 90.17 298.45 0)
+			(at 154.94 215.9 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -17063,7 +16165,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 90.17 298.45 0)
+			(at 154.94 215.9 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -18007,7 +17109,7 @@
 	)
 	(symbol
 		(lib_id "Device:C")
-		(at 48.26 312.42 90)
+		(at 154.94 256.54 90)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -18017,7 +17119,7 @@
 		(dnp no)
 		(uuid "51c20c37-4798-4b08-8d2d-5fd6960b85a4")
 		(property "Reference" "C155"
-			(at 48.26 304.88 90)
+			(at 154.94 249 90)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -18027,7 +17129,7 @@
 			)
 		)
 		(property "Value" "100n"
-			(at 48.26 306.88 90)
+			(at 154.94 251 90)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -18037,7 +17139,7 @@
 			)
 		)
 		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
-			(at 48.26 309.88 90)
+			(at 154.94 254 90)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -18048,7 +17150,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 48.26 312.42 0)
+			(at 154.94 256.54 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -18058,7 +17160,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 48.26 312.42 0)
+			(at 154.94 256.54 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -18161,7 +17263,7 @@
 	)
 	(symbol
 		(lib_id "Device:C")
-		(at 215.9 312.42 90)
+		(at 33.02 226.06 90)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -18171,7 +17273,7 @@
 		(dnp no)
 		(uuid "60d10020-e8a8-4cfb-bafa-c95f636a4620")
 		(property "Reference" "C159"
-			(at 215.9 304.88 90)
+			(at 33.02 218.52 90)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -18181,7 +17283,7 @@
 			)
 		)
 		(property "Value" "100n"
-			(at 215.9 306.88 90)
+			(at 33.02 220.52 90)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -18191,7 +17293,7 @@
 			)
 		)
 		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
-			(at 215.9 309.88 90)
+			(at 33.02 223.52 90)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -18202,7 +17304,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 215.9 312.42 0)
+			(at 33.02 226.06 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -18212,7 +17314,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 215.9 312.42 0)
+			(at 33.02 226.06 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -18315,7 +17417,7 @@
 	)
 	(symbol
 		(lib_id "Device:C")
-		(at 215.9 298.45 90)
+		(at 154.94 246.38 90)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -18325,7 +17427,7 @@
 		(dnp no)
 		(uuid "6921789e-7e72-4bce-a365-8059544868c9")
 		(property "Reference" "C154"
-			(at 215.9 290.91 90)
+			(at 154.94 238.84 90)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -18335,7 +17437,7 @@
 			)
 		)
 		(property "Value" "100n"
-			(at 215.9 292.91 90)
+			(at 154.94 240.84 90)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -18345,7 +17447,7 @@
 			)
 		)
 		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
-			(at 215.9 295.91 90)
+			(at 154.94 243.84 90)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -18356,7 +17458,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 215.9 298.45 0)
+			(at 154.94 246.38 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -18366,7 +17468,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 215.9 298.45 0)
+			(at 154.94 246.38 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -18854,7 +17956,7 @@
 	)
 	(symbol
 		(lib_id "Device:C")
-		(at 90.17 312.42 90)
+		(at 154.94 266.7 90)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -18864,7 +17966,7 @@
 		(dnp no)
 		(uuid "83a86f30-d7a5-45d2-96b9-5250a8a1f635")
 		(property "Reference" "C156"
-			(at 90.17 304.88 90)
+			(at 154.94 259.16 90)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -18874,7 +17976,7 @@
 			)
 		)
 		(property "Value" "100n"
-			(at 90.17 306.88 90)
+			(at 154.94 261.16 90)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -18884,7 +17986,7 @@
 			)
 		)
 		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
-			(at 90.17 309.88 90)
+			(at 154.94 264.16 90)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -18895,7 +17997,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 90.17 312.42 0)
+			(at 154.94 266.7 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -18905,7 +18007,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 90.17 312.42 0)
+			(at 154.94 266.7 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -19121,7 +18223,7 @@
 	)
 	(symbol
 		(lib_id "Device:C")
-		(at 132.08 312.42 90)
+		(at 33.02 205.74 90)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -19131,7 +18233,7 @@
 		(dnp no)
 		(uuid "8a44735f-be5c-4442-85c5-aa26b44b1a60")
 		(property "Reference" "C157"
-			(at 132.08 304.88 90)
+			(at 33.02 198.2 90)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -19141,7 +18243,7 @@
 			)
 		)
 		(property "Value" "100n"
-			(at 132.08 306.88 90)
+			(at 33.02 200.2 90)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -19151,7 +18253,7 @@
 			)
 		)
 		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
-			(at 132.08 309.88 90)
+			(at 33.02 203.2 90)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -19162,7 +18264,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 132.08 312.42 0)
+			(at 33.02 205.74 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -19172,7 +18274,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 132.08 312.42 0)
+			(at 33.02 205.74 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -19506,7 +18608,7 @@
 	)
 	(symbol
 		(lib_id "Device:C")
-		(at 90.17 327.66 90)
+		(at 33.02 246.38 90)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -19516,7 +18618,7 @@
 		(dnp no)
 		(uuid "a2c30035-880f-4427-94ca-c544210069b8")
 		(property "Reference" "C161"
-			(at 90.17 320.12 90)
+			(at 33.02 238.84 90)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -19526,7 +18628,7 @@
 			)
 		)
 		(property "Value" "100n"
-			(at 90.17 322.12 90)
+			(at 33.02 240.84 90)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -19536,7 +18638,7 @@
 			)
 		)
 		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
-			(at 90.17 325.12 90)
+			(at 33.02 243.84 90)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -19547,7 +18649,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 90.17 327.66 0)
+			(at 33.02 246.38 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -19557,7 +18659,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 90.17 327.66 0)
+			(at 33.02 246.38 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -20185,7 +19287,7 @@
 	)
 	(symbol
 		(lib_id "Device:C")
-		(at 40.64 394.97 90)
+		(at 154.94 276.86 90)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -20195,7 +19297,7 @@
 		(dnp no)
 		(uuid "c8fecc1d-0988-40af-a152-2485878a18e8")
 		(property "Reference" "C170"
-			(at 40.64 387.43 90)
+			(at 154.94 269.32 90)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -20205,7 +19307,7 @@
 			)
 		)
 		(property "Value" "10u"
-			(at 40.64 389.43 90)
+			(at 154.94 271.32 90)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -20215,7 +19317,7 @@
 			)
 		)
 		(property "Footprint" "Capacitor_SMD:C_0805_2012Metric"
-			(at 40.64 392.43 90)
+			(at 154.94 274.32 90)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -20226,7 +19328,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 40.64 394.97 0)
+			(at 154.94 276.86 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -20236,7 +19338,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 40.64 394.97 0)
+			(at 154.94 276.86 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -20954,7 +20056,7 @@
 	)
 	(symbol
 		(lib_id "Device:C")
-		(at 132.08 298.45 90)
+		(at 154.94 226.06 90)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -20964,7 +20066,7 @@
 		(dnp no)
 		(uuid "e530a2fe-c2d1-43cb-b923-0c20da40bdcb")
 		(property "Reference" "C152"
-			(at 132.08 290.91 90)
+			(at 154.94 218.52 90)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -20974,7 +20076,7 @@
 			)
 		)
 		(property "Value" "100n"
-			(at 132.08 292.91 90)
+			(at 154.94 220.52 90)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -20984,7 +20086,7 @@
 			)
 		)
 		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
-			(at 132.08 295.91 90)
+			(at 154.94 223.52 90)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -20995,7 +20097,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 132.08 298.45 0)
+			(at 154.94 226.06 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -21005,7 +20107,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 132.08 298.45 0)
+			(at 154.94 226.06 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -21569,7 +20671,7 @@
 	)
 	(symbol
 		(lib_id "Device:C")
-		(at 173.99 298.45 90)
+		(at 154.94 236.22 90)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -21579,7 +20681,7 @@
 		(dnp no)
 		(uuid "fdbab6c4-4f6d-4477-91fa-5581a1ed24f6")
 		(property "Reference" "C153"
-			(at 173.99 290.91 90)
+			(at 154.94 228.68 90)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -21589,7 +20691,7 @@
 			)
 		)
 		(property "Value" "100n"
-			(at 173.99 292.91 90)
+			(at 154.94 230.68 90)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -21599,7 +20701,7 @@
 			)
 		)
 		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
-			(at 173.99 295.91 90)
+			(at 154.94 233.68 90)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -21610,7 +20712,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 173.99 298.45 0)
+			(at 154.94 236.22 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -21620,7 +20722,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 173.99 298.45 0)
+			(at 154.94 236.22 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -23417,16 +22519,6 @@
 		)
 		(uuid "3dda9aba-62fa-453a-ab73-4b9b8aabc0a9")
 	)
-	(label "QSPI_D3"
-		(at 279.4 64.77 0)
-		(effects
-			(font
-				(size 1 1)
-			)
-			(justify left)
-		)
-		(uuid "0b24cbc7-f852-44d8-bbab-30fe810084ba")
-	)
 	(wire
 		(pts
 			(xy 294.64 67.31) (xy 279.4 67.31)
@@ -23436,16 +22528,6 @@
 			(type default)
 		)
 		(uuid "7b584519-601d-45ce-91d2-1a8778de312e")
-	)
-	(label "PUDC_N"
-		(at 279.4 67.31 0)
-		(effects
-			(font
-				(size 1 1)
-			)
-			(justify left)
-		)
-		(uuid "db00d531-dba0-4397-8c1b-b9c415647817")
 	)
 	(wire
 		(pts
@@ -23457,16 +22539,6 @@
 		)
 		(uuid "5bd1b2bb-2266-487b-adf1-b44f1b396765")
 	)
-	(label "QSPI_D1"
-		(at 279.4 59.69 0)
-		(effects
-			(font
-				(size 1 1)
-			)
-			(justify left)
-		)
-		(uuid "b6032024-397b-4bca-b4f1-662a41d7989c")
-	)
 	(wire
 		(pts
 			(xy 294.64 62.23) (xy 279.4 62.23)
@@ -23476,16 +22548,6 @@
 			(type default)
 		)
 		(uuid "fccceb67-b873-48f5-b9f7-a6f523450c94")
-	)
-	(label "QSPI_D2"
-		(at 279.4 62.23 0)
-		(effects
-			(font
-				(size 1 1)
-			)
-			(justify left)
-		)
-		(uuid "4141dae1-34ad-4c8f-85a6-7b21ea68bc3e")
 	)
 	(wire
 		(pts
@@ -23497,16 +22559,6 @@
 		)
 		(uuid "04fda180-27b8-459d-8661-badea219e22b")
 	)
-	(label "QSPI_CS"
-		(at 279.4 82.55 0)
-		(effects
-			(font
-				(size 1 1)
-			)
-			(justify left)
-		)
-		(uuid "4f0ec51a-023c-451f-aaee-72baeca1a50c")
-	)
 	(wire
 		(pts
 			(xy 294.64 57.15) (xy 279.4 57.15)
@@ -23516,16 +22568,6 @@
 			(type default)
 		)
 		(uuid "afbca66b-a1fd-4f78-90de-e1e690d82cda")
-	)
-	(label "QSPI_D0"
-		(at 279.4 57.15 0)
-		(effects
-			(font
-				(size 1 1)
-			)
-			(justify left)
-		)
-		(uuid "367f0506-2d33-4f8d-9a8a-bc5747127d0d")
 	)
 	(wire
 		(pts
@@ -23630,5 +22672,901 @@
 			(justify left)
 		)
 		(uuid "73446c66-230a-48ed-90d6-421b1ef2f563")
+	)
+	(wire
+		(pts
+			(xy 36.83 205.74) (xy 41.91 205.74)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "eb6b9f8e-517e-4edf-855f-21665e674b50")
+	)
+	(global_label "GND"
+		(shape passive)
+		(at 41.91 205.74 0)
+		(effects
+			(font
+				(size 1 1)
+			)
+			(justify left)
+		)
+		(uuid "bf882a4b-3593-4370-8bda-5004ff001a36")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 41.91 205.74 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 29.21 205.74) (xy 24.13 205.74)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "221f27c0-0cb4-4b55-94af-6ace2032152e")
+	)
+	(global_label "+1V8_FPGA"
+		(shape passive)
+		(at 24.13 205.74 0)
+		(effects
+			(font
+				(size 1 1)
+			)
+			(justify left)
+		)
+		(uuid "6aee3fe6-3ae3-42f4-89aa-f133c2c420ee")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 24.13 205.74 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 36.83 215.9) (xy 41.91 215.9)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "26ad7521-bea8-4a49-a9f6-3a828f738d90")
+	)
+	(global_label "GND"
+		(shape passive)
+		(at 41.91 215.9 0)
+		(effects
+			(font
+				(size 1 1)
+			)
+			(justify left)
+		)
+		(uuid "44345d6a-5a84-41fd-a2bd-8956a08bdad2")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 41.91 215.9 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 29.21 215.9) (xy 24.13 215.9)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "8d5e1561-cad1-44c6-a817-cb9222954e88")
+	)
+	(global_label "+1V8_FPGA"
+		(shape passive)
+		(at 24.13 215.9 0)
+		(effects
+			(font
+				(size 1 1)
+			)
+			(justify left)
+		)
+		(uuid "0e0a0b1c-d6d2-489e-85c0-892db91328ad")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 24.13 215.9 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 36.83 226.06) (xy 41.91 226.06)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "119f617b-7f9d-4354-9442-7511e1aabe17")
+	)
+	(global_label "GND"
+		(shape passive)
+		(at 41.91 226.06 0)
+		(effects
+			(font
+				(size 1 1)
+			)
+			(justify left)
+		)
+		(uuid "f30aff9c-309a-442f-9e67-566ce8664298")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 41.91 226.06 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 29.21 226.06) (xy 24.13 226.06)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "3a15c707-31c5-4295-8f3a-35046044d0dc")
+	)
+	(global_label "+1V8_FPGA"
+		(shape passive)
+		(at 24.13 226.06 0)
+		(effects
+			(font
+				(size 1 1)
+			)
+			(justify left)
+		)
+		(uuid "a7acb0e0-660d-441b-9aea-072fe6cefd10")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 24.13 226.06 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 36.83 236.22) (xy 41.91 236.22)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "07a757a4-f408-4a1e-978c-3f5f4971b315")
+	)
+	(global_label "GND"
+		(shape passive)
+		(at 41.91 236.22 0)
+		(effects
+			(font
+				(size 1 1)
+			)
+			(justify left)
+		)
+		(uuid "934391fd-1c31-4205-9df8-1d9279456a22")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 41.91 236.22 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 29.21 236.22) (xy 24.13 236.22)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "942b7f1b-3557-4df0-bd18-7414b2617ff5")
+	)
+	(global_label "+1V8_FPGA"
+		(shape passive)
+		(at 24.13 236.22 0)
+		(effects
+			(font
+				(size 1 1)
+			)
+			(justify left)
+		)
+		(uuid "81c31983-2b4c-4237-83df-dd1d7fc0e861")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 24.13 236.22 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 29.21 246.38) (xy 24.13 246.38)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "9e26cfce-1195-49e8-a664-f420a94b1b8e")
+	)
+	(global_label "+1V8_FPGA"
+		(shape passive)
+		(at 24.13 246.38 0)
+		(effects
+			(font
+				(size 1 1)
+			)
+			(justify left)
+		)
+		(uuid "9d03bd5e-c3b5-459d-9798-d477c71ae7d8")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 24.13 246.38 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 36.83 246.38) (xy 41.91 246.38)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "d55002d0-ee1d-4847-9fc5-23a5188ae0a0")
+	)
+	(global_label "GND"
+		(shape passive)
+		(at 41.91 246.38 0)
+		(effects
+			(font
+				(size 1 1)
+			)
+			(justify left)
+		)
+		(uuid "738da509-750f-47b6-a88b-0f5faa4bb2e7")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 41.91 246.38 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 29.21 256.54) (xy 24.13 256.54)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "20d16854-c45b-43bc-a5db-7783b4722d8e")
+	)
+	(global_label "+1V8_FPGA"
+		(shape passive)
+		(at 24.13 256.54 0)
+		(effects
+			(font
+				(size 1 1)
+			)
+			(justify left)
+		)
+		(uuid "c8ece0e8-64ab-4a52-b9ff-f15b3e66db00")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 24.13 256.54 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 36.83 256.54) (xy 41.91 256.54)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "10fb0321-d147-4bec-bc8a-9a06e209a577")
+	)
+	(global_label "GND"
+		(shape passive)
+		(at 41.91 256.54 0)
+		(effects
+			(font
+				(size 1 1)
+			)
+			(justify left)
+		)
+		(uuid "ab8538ab-f82a-4e8b-b58f-a961cd092024")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 41.91 256.54 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 151.13 205.74) (xy 146.05 205.74)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "cbb7f8f8-17a9-4570-b94d-91be96843efd")
+	)
+	(global_label "+1V0_FPGA"
+		(shape passive)
+		(at 146.05 205.74 0)
+		(effects
+			(font
+				(size 1 1)
+			)
+			(justify left)
+		)
+		(uuid "d45a3de8-fe04-4cfc-af3e-3ead90664e81")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 146.05 205.74 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 158.75 205.74) (xy 163.83 205.74)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "a60e217d-6777-475e-bfdc-22a6b6f9b6a2")
+	)
+	(global_label "GND"
+		(shape passive)
+		(at 163.83 205.74 0)
+		(effects
+			(font
+				(size 1 1)
+			)
+			(justify left)
+		)
+		(uuid "d92a74d8-9ee6-44e4-9ecc-4018247b84d9")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 163.83 205.74 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 158.75 215.9) (xy 163.83 215.9)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "058803fe-01bf-42a3-93b1-94f953379bb1")
+	)
+	(global_label "GND"
+		(shape passive)
+		(at 163.83 215.9 0)
+		(effects
+			(font
+				(size 1 1)
+			)
+			(justify left)
+		)
+		(uuid "77ed6e1c-d6fd-4c99-a235-3aee7eea3385")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 163.83 215.9 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 151.13 215.9) (xy 146.05 215.9)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "5b7cc5ce-a777-4313-87dd-d56aa1377b94")
+	)
+	(global_label "+1V0_FPGA"
+		(shape passive)
+		(at 146.05 215.9 0)
+		(effects
+			(font
+				(size 1 1)
+			)
+			(justify left)
+		)
+		(uuid "6da060d2-4f9f-40f4-8b02-b55cfe33787f")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 146.05 215.9 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 151.13 226.06) (xy 146.05 226.06)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "6891f49c-6a2c-473f-9a5f-0bb71b32246b")
+	)
+	(global_label "+1V0_FPGA"
+		(shape passive)
+		(at 146.05 226.06 0)
+		(effects
+			(font
+				(size 1 1)
+			)
+			(justify left)
+		)
+		(uuid "0e8185dd-c40e-40cb-982d-ddfdfcc7b9ac")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 146.05 226.06 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 158.75 226.06) (xy 163.83 226.06)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "9f907467-bcf8-4b3a-b223-a3e6a240d5a3")
+	)
+	(global_label "GND"
+		(shape passive)
+		(at 163.83 226.06 0)
+		(effects
+			(font
+				(size 1 1)
+			)
+			(justify left)
+		)
+		(uuid "958d2bb1-189c-4046-b0a7-f0325b6778f5")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 163.83 226.06 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 151.13 236.22) (xy 146.05 236.22)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "41f891cd-e7b0-41e4-92cc-acc473059730")
+	)
+	(global_label "+1V0_FPGA"
+		(shape passive)
+		(at 146.05 236.22 0)
+		(effects
+			(font
+				(size 1 1)
+			)
+			(justify left)
+		)
+		(uuid "2394b134-2b33-456e-9c14-529f7a51e631")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 146.05 236.22 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 158.75 236.22) (xy 163.83 236.22)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "f3bb4100-3ae0-4aa2-8189-5a74e5a30494")
+	)
+	(global_label "GND"
+		(shape passive)
+		(at 163.83 236.22 0)
+		(effects
+			(font
+				(size 1 1)
+			)
+			(justify left)
+		)
+		(uuid "773e88d9-604c-4c6c-96c9-f506f6e9e730")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 163.83 236.22 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 158.75 246.38) (xy 163.83 246.38)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "00400308-9c88-4234-8d6b-e2c783dc66f7")
+	)
+	(global_label "GND"
+		(shape passive)
+		(at 163.83 246.38 0)
+		(effects
+			(font
+				(size 1 1)
+			)
+			(justify left)
+		)
+		(uuid "928a2cd6-6a5a-4bf3-9e4b-bc932af1566b")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 163.83 246.38 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 151.13 246.38) (xy 146.05 246.38)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "46255fc9-0866-492b-a63f-42bc0d2fabe2")
+	)
+	(global_label "+1V0_FPGA"
+		(shape passive)
+		(at 146.05 246.38 0)
+		(effects
+			(font
+				(size 1 1)
+			)
+			(justify left)
+		)
+		(uuid "086c9675-641c-413e-a8b8-9e7be17f9f8b")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 146.05 246.38 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 158.75 256.54) (xy 163.83 256.54)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "87ae1f0b-0833-4160-9923-63b6384bf342")
+	)
+	(global_label "GND"
+		(shape passive)
+		(at 163.83 256.54 0)
+		(effects
+			(font
+				(size 1 1)
+			)
+			(justify left)
+		)
+		(uuid "fc84fee4-dd19-4895-badd-ba686a4d6726")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 163.83 256.54 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 151.13 256.54) (xy 146.05 256.54)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "0a571577-cf53-49e8-b0cc-58e93d9af2aa")
+	)
+	(global_label "+1V0_FPGA"
+		(shape passive)
+		(at 146.05 256.54 0)
+		(effects
+			(font
+				(size 1 1)
+			)
+			(justify left)
+		)
+		(uuid "d37a91e8-eaf3-4d1f-8180-a555e80313a9")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 146.05 256.54 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 151.13 266.7) (xy 146.05 266.7)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "74d890f7-e0ab-4365-8c5c-b80dd4f80010")
+	)
+	(global_label "+1V0_FPGA"
+		(shape passive)
+		(at 146.05 266.7 0)
+		(effects
+			(font
+				(size 1 1)
+			)
+			(justify left)
+		)
+		(uuid "4078c64c-be27-4ca2-bddf-4291e9de2350")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 146.05 266.7 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 158.75 266.7) (xy 163.83 266.7)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "4becfe03-71ce-458f-8e4c-4c647eaaf1a4")
+	)
+	(global_label "GND"
+		(shape passive)
+		(at 163.83 266.7 0)
+		(effects
+			(font
+				(size 1 1)
+			)
+			(justify left)
+		)
+		(uuid "23aa1b9e-3622-4afc-b137-8a4891e85083")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 163.83 266.7 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 151.13 276.86) (xy 146.05 276.86)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "a3e5f704-9f47-440b-b408-86f4a0acd931")
+	)
+	(global_label "+1V0_FPGA"
+		(shape passive)
+		(at 146.05 276.86 0)
+		(effects
+			(font
+				(size 1 1)
+			)
+			(justify left)
+		)
+		(uuid "382ae63e-b5f4-4025-84eb-29b872601628")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 146.05 276.86 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 158.75 276.86) (xy 163.83 276.86)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "27e600ea-44fa-4085-9898-aa993633f534")
+	)
+	(global_label "GND"
+		(shape passive)
+		(at 163.83 276.86 0)
+		(effects
+			(font
+				(size 1 1)
+			)
+			(justify left)
+		)
+		(uuid "fb569b45-ac1b-4430-b6ab-29ab39f2c3ef")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 163.83 276.86 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 	)
 )
