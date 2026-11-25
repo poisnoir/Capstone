@@ -482,3 +482,16 @@ The `U144.7` FSW strap was briefly regressed to GND in `193f280` (taken from
 at 2.5 MHz, under the 80 ns minimum [DS], so the part would fold down to an
 uncontrolled ~2.1 MHz, whereas `PG_1V0` starts at 2.5 MHz and switches to
 1.25 MHz (133 ns) once the rail is good.
+
+### Open bench item — `TRIP_REF`
+
+The comparator trip numbers are **unreconciled**; do not pick new resistors
+before measuring. Three figures are on the table and do not agree:
+
+- `R710` 52.3 kΩ / `R711` 10 kΩ divider: \(V_{REF}\approx0.53\) V at `TRIP_REF`.
+- Driver sheet note: **~253 mA at 3.3 V** positive-peak trip with the 1 Ω shunts.
+- Driver sheet note: **~280 mA nominal LMH6321 clamp**.
+
+Bench item: measure `TRIP_REF`, the per-channel trip current and the actual
+LMH6321 clamp, then reconcile the divider against both notes. No resistor
+value changes are authorized by this decision.

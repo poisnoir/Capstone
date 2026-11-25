@@ -42,8 +42,10 @@ pen coil B (air) → protection/ESD → INA163 (G≈35) → single-ended
 - The pen coil is a floating differential source. The INA163 inputs need a
   bias/return path; the 12 µA input bias current must be handled.
 - The ADC reference is ADR434 4.096 V; the ADC VCM sets the output common mode.
-- The current-sense Ch0 and reference Ch2 are separate channels; the preamp
-  design is for the pen channel and is duplicated for the reference if used.
+- The current-sense Ch0 and the pen channels Ch1/Ch2 are separate channels;
+  the preamp design is for the pen channel, and **Ch2 uses the same gain as
+  Ch1**. The Ch3 fixed-reference front end remains in the board design but is
+  **DNP in the BOM** — its parts are not ordered or fitted.
 
 ---
 

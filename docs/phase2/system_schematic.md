@@ -222,8 +222,12 @@ U753.~Q (pin 3) ────────────┘
   `/DRIVER_FAULT_N` → U752. With CLR asserted, `~Q=1`, so STOP is asserted;
   U753.Q (pin 5) is no longer used.
 - R754 pulls the FPGA-side request low while the FPGA is unconfigured.
-- The separate watchdog (TPS3823, or a PL timer) still drives the Pico stop
-  path through the FPGA request.
+- The watchdog is an **internal timer in the FPGA PL**. No TPS3823 or other
+  external supervisor part exists on BRD-01, and no watchdog part or net is
+  assigned in the schematic or BOM. Its only output is the FPGA request into
+  U755, so it can assert STOP solely through `PICO_STOP_N`. It therefore does
+  **not** restore a hardware-independent stop path: like a host request, it
+  depends on the configured FPGA fabric.
 
 ---
 
