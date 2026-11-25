@@ -10454,7 +10454,7 @@
 	)
 	(wire
 		(pts
-			(xy 398.78 207.01) (xy 406.4 207.01)
+			(xy 400.05 207.01) (xy 405.13 207.01)
 		)
 		(stroke
 			(width 0)
@@ -10774,7 +10774,7 @@
 	)
 	(wire
 		(pts
-			(xy 398.78 209.55) (xy 407.67 209.55)
+			(xy 400.05 209.55) (xy 407.67 209.55)
 		)
 		(stroke
 			(width 0)
@@ -15494,28 +15494,6 @@
 		(uuid "df0e9d54-8b14-4ae7-a72b-377fbb7a9f5e")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
 			(at 214.63 472.44 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-	)
-	(global_label "+1V8_FPGA"
-		(shape passive)
-		(at 406.4 207.01 0)
-		(effects
-			(font
-				(size 1 1)
-			)
-			(justify left)
-		)
-		(uuid "e362006b-711e-4af4-aac0-50d30b4bf22e")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 406.4 207.01 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -21709,7 +21687,7 @@
 	)
 	(symbol
 		(lib_id "Device:R")
-		(at 406.4 215.9 180)
+		(at 406.4 215.9 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -29340,6 +29318,38 @@
 				(path "/bcf11a9e-584a-4da7-9f85-9c74b718d606/37c7b2d0-10ea-4407-950d-ab058ee3e191"
 					(reference "#PWR026")
 					(unit 1)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 400.05 204.47) (xy 406.4 204.47)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "dfadf30f-a4ab-4a4e-a335-c5cb306c7a3f")
+	)
+	(global_label "+1V8_FPGA"
+		(shape passive)
+		(at 406.4 204.47 0)
+		(effects
+			(font
+				(size 1 1)
+			)
+			(justify left)
+		)
+		(uuid "260cc76c-53c3-4d4f-a0c0-73e825245e0e")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 406.4 204.47 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
 				)
 			)
 		)
