@@ -17012,7 +17012,7 @@
 				)
 			)
 		)
-		(property "Value" "1u"
+		(property "Value" "1u / 16V X7R"
 			(at 76.66 247.65 90)
 			(show_name no)
 			(do_not_autoplace no)
@@ -19046,7 +19046,7 @@
 				)
 			)
 		)
-		(property "Value" "22u"
+		(property "Value" "22u / 25V X7R"
 			(at 322.58 249.73 90)
 			(show_name no)
 			(do_not_autoplace no)
@@ -20989,7 +20989,7 @@
 				)
 			)
 		)
-		(property "Value" "22u"
+		(property "Value" "22u / 25V X7R"
 			(at 336.55 430.07 90)
 			(show_name no)
 			(do_not_autoplace no)
@@ -26202,7 +26202,7 @@
 				)
 			)
 		)
-		(property "Value" "22u"
+		(property "Value" "22u / 25V X7R"
 			(at 511.302 202.562 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -27137,7 +27137,7 @@
 				)
 			)
 		)
-		(property "Value" "1u"
+		(property "Value" "1u / 16V X7R"
 			(at 65.024 220.472 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -28084,7 +28084,7 @@
 				)
 			)
 		)
-		(property "Value" "47u"
+		(property "Value" "47u / 16V X7R"
 			(at 116.03 240.03 90)
 			(show_name no)
 			(do_not_autoplace no)
@@ -28163,7 +28163,7 @@
 				)
 			)
 		)
-		(property "Value" "47u"
+		(property "Value" "47u / 16V X7R"
 			(at 118.11 209.804 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -28787,7 +28787,7 @@
 				)
 			)
 		)
-		(property "Value" "100n"
+		(property "Value" "100n / 25V X7R"
 			(at 458.47 189.608 0)
 			(show_name no)
 			(do_not_autoplace no)

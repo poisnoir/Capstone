@@ -14,6 +14,7 @@ Write (needs --apply):
     kicad_sch_helper.py power SHEET --lib power:GND --at X,Y --ref '#PWR9xx' [--rot A] [--apply]
     kicad_sch_helper.py glabel SHEET --text NAME --at X,Y [--angle A] [--apply]
     kicad_sch_helper.py setrot SHEET --ref REF --rot 0|90|180|270 [--apply]
+    kicad_sch_helper.py setvalue SHEET --ref REF --value TEXT [--apply]
 
 Coordinates come from (lib_symbols) pin definitions plus each symbol's
 (at x y rot) and (mirror x|y). Nothing is guessed. Grid is 1.27 mm. A wire end
@@ -321,6 +322,22 @@ def cmd_glabel(path, text, at, angle, apply_):
     save(path, t[:idx] + new + t[idx:], apply_)
 
 
+def cmd_setvalue(path, ref, value, apply_):
+    t = Path(path).read_text()
+    for inst in instances(parse(t)):
+        if inst['ref'] != ref:
+            continue
+        start, stop = block_span(t, inst['uuid'])
+        blk = t[start:stop]
+        new = re.sub(r'\(property "Value" "[^"]*"', f'(property "Value" "{value}"',
+                     blk, count=1)
+        if new == blk:
+            sys.exit(f"no Value property on {ref}")
+        save(path, t[:start] + new + t[stop:], apply_)
+        return
+    sys.exit(f"ref not found: {ref}")
+
+
 def cmd_setrot(path, ref, rot, apply_):
     t = Path(path).read_text()
     root = parse(t)
@@ -448,6 +465,9 @@ def main(argv):
                        pair(rest[rest.index('--at') + 1]),
                        int(rest[rest.index('--angle') + 1]) if '--angle' in rest else 0,
                        apply_)
+        elif cmd == 'setvalue':
+            cmd_setvalue(path, rest[rest.index('--ref') + 1],
+                         rest[rest.index('--value') + 1], apply_)
         elif cmd == 'setrot':
             cmd_setrot(path, rest[rest.index('--ref') + 1],
                        int(rest[rest.index('--rot') + 1]), apply_)
