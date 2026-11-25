@@ -476,3 +476,9 @@ EN), `PG_1V0` (U144 FSW, now 1.25 MHz after start-up), `PG_1V8` (U7 EN), and
 the former `+5V` global labels there renamed to `+6V`. Generated CAD that
 still needs validation is listed in
 [bom-to-cad.md](../../hardware/brd-01/kicad/bom-to-cad.md#power-tree-v2-generated-cad-to-validate-2026-11-24).
+
+The `U144.7` FSW strap was briefly regressed to GND in `193f280` (taken from
+`b72cffd`) and restored to `PG_1V0` here: 1.0 V from 6 V gives a 67 ns on-time
+at 2.5 MHz, under the 80 ns minimum [DS], so the part would fold down to an
+uncontrolled ~2.1 MHz, whereas `PG_1V0` starts at 2.5 MHz and switches to
+1.25 MHz (133 ns) once the rail is good.

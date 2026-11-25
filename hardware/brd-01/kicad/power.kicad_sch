@@ -29816,12 +29816,12 @@
 	)
 	(wire
 		(pts
-			(xy 294.64 208.28) (xy 294.64 205.74)
+			(xy 289.56 208.28) (xy 294.64 208.28)
 		)
 		(stroke
 			(width 0)
 			(type default)
 		)
-		(uuid "d06baa09-0eb1-4ac0-9a5a-30a266f0444c")
+		(uuid "04a68d2e-03fa-4ea8-bf39-f22528596f52")
 	)
 )
