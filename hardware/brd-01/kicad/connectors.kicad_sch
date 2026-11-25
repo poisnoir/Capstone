@@ -2112,16 +2112,7 @@
 		)
 		(uuid "5743545d-0630-44f9-8d39-66fbdb14aea3")
 	)
-	(wire
-		(pts
-			(xy 85.09 113.03) (xy 90.17 113.03)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "5d917cfb-14be-44fd-94bc-14816b5907a2")
-	)
+
 	(wire
 		(pts
 			(xy 251.46 41.91) (xy 246.38 41.91)
@@ -2152,16 +2143,7 @@
 		)
 		(uuid "61a070f3-6081-4d9e-821b-cb09cae44048")
 	)
-	(wire
-		(pts
-			(xy 85.09 105.41) (xy 90.17 105.41)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "75c0946a-e6d8-4617-83f7-d48c9fd36778")
-	)
+
 	(wire
 		(pts
 			(xy 262.89 187.96) (xy 257.81 187.96)
@@ -2316,16 +2298,7 @@
 		)
 		(uuid "bc4a28de-b94f-4dc9-b0ba-65205eb1e14e")
 	)
-	(wire
-		(pts
-			(xy 83.82 260.35) (xy 88.9 260.35)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "c3dd26c2-d06e-4c12-b75d-457055d47736")
-	)
+
 
 	(wire
 		(pts
@@ -2359,16 +2332,7 @@
 		)
 		(uuid "e6093f7f-7dd0-4f5f-8e6d-99546eee62aa")
 	)
-	(wire
-		(pts
-			(xy 83.82 252.73) (xy 88.9 252.73)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "e63e3d1b-3c72-4aa6-9b89-0421bec78cf8")
-	)
+
 
 	(wire
 		(pts
@@ -2432,26 +2396,8 @@
 	)
 
 
-	(label "CHASSIS"
-		(at 88.9 260.35 0)
-		(effects
-			(font
-				(size 1 1)
-			)
-			(justify left bottom)
-		)
-		(uuid "3672fe4e-0355-4de8-95b5-c9007fad2574")
-	)
-	(label "CHASSIS"
-		(at 90.17 105.41 0)
-		(effects
-			(font
-				(size 1 1)
-			)
-			(justify left bottom)
-		)
-		(uuid "3f666058-56db-43ac-91b8-e7d082c7f74f")
-	)
+
+
 
 
 	(label "PEN2_PANEL_P"
@@ -2498,16 +2444,7 @@
 	)
 
 
-	(label "CHASSIS"
-		(at 88.9 252.73 0)
-		(effects
-			(font
-				(size 1 1)
-			)
-			(justify left bottom)
-		)
-		(uuid "d4079a82-3b5f-4255-8066-a9479d22385a")
-	)
+
 	(label "USB_CC2"
 		(at 251.46 171.45 0)
 		(effects
@@ -2518,16 +2455,7 @@
 		)
 		(uuid "ecd4c49c-2bc4-4868-8ef5-82593e0d4e45")
 	)
-	(label "CHASSIS"
-		(at 90.17 113.03 0)
-		(effects
-			(font
-				(size 1 1)
-			)
-			(justify left bottom)
-		)
-		(uuid "ee72aad9-a1c2-4cb9-94fd-435f952488a9")
-	)
+
 	(label "PEN1_PANEL_P"
 		(at 90.17 107.95 0)
 		(effects
@@ -5226,5 +5154,85 @@
 				)
 			)
 		)
+	)
+	(wire
+		(pts
+			(xy 85.09 105.41) (xy 88.9 105.41)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "523e9bf7-d8eb-4d3e-b9fa-8d72553e7480")
+	)
+	(label "CHASSIS"
+		(at 88.9 105.41 0)
+		(effects
+			(font
+				(size 1 1)
+			)
+			(justify left)
+		)
+		(uuid "65a1ef3a-82ac-4210-959c-581e0de6a294")
+	)
+	(wire
+		(pts
+			(xy 85.09 113.03) (xy 88.9 113.03)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "55cef12a-ae54-4a97-bc92-13a50be1d57e")
+	)
+	(label "CHASSIS"
+		(at 88.9 113.03 0)
+		(effects
+			(font
+				(size 1 1)
+			)
+			(justify left)
+		)
+		(uuid "15d93231-f808-4e1b-98b3-e4a32f690b02")
+	)
+	(wire
+		(pts
+			(xy 83.82 252.73) (xy 87.63 252.73)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "c9fc79b7-23d3-4d33-992f-6dc23f6e59dd")
+	)
+	(label "CHASSIS"
+		(at 87.63 252.73 0)
+		(effects
+			(font
+				(size 1 1)
+			)
+			(justify left)
+		)
+		(uuid "532009a2-b59d-4587-a574-0b872327e8a7")
+	)
+	(wire
+		(pts
+			(xy 83.82 260.35) (xy 87.63 260.35)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "cfde1af0-2d06-4180-b1cf-1a8bbeae9c5e")
+	)
+	(label "CHASSIS"
+		(at 87.63 260.35 0)
+		(effects
+			(font
+				(size 1 1)
+			)
+			(justify left)
+		)
+		(uuid "261cd2a2-5e76-42cc-94dc-77f36b435dee")
 	)
 )
