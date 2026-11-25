@@ -1960,16 +1960,7 @@
 		)
 		(uuid "029cf48a-b3cf-41bc-a418-b0b2f5708fc2")
 	)
-	(wire
-		(pts
-			(xy 220.98 105.41) (xy 215.9 105.41)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "08e618bf-a21a-4e52-b279-e2997889c6bf")
-	)
+
 	(wire
 		(pts
 			(xy 59.69 63.5) (xy 54.61 63.5)
@@ -2191,16 +2182,7 @@
 		)
 		(uuid "7700e48a-7639-4b28-9f2b-4d392b7c04cb")
 	)
-	(wire
-		(pts
-			(xy 220.98 107.95) (xy 215.9 107.95)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "783283e6-d393-418c-a001-c089e9c49ec8")
-	)
+
 	(wire
 		(pts
 			(xy 72.39 172.72) (xy 67.31 172.72)
@@ -2747,28 +2729,7 @@
 			)
 		)
 	)
-	(global_label "PEN1_N"
-		(shape passive)
-		(at 215.9 107.95 180)
-		(effects
-			(font
-				(size 1 1)
-			)
-			(justify right)
-		)
-		(uuid "5f63d526-140e-4b42-8b98-775f649415ec")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 215.9 107.95 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-	)
+
 	(global_label "USB_DP"
 		(shape passive)
 		(at 251.46 184.15 0)
@@ -3258,28 +3219,7 @@
 			)
 		)
 	)
-	(global_label "PEN1_P"
-		(shape passive)
-		(at 215.9 105.41 180)
-		(effects
-			(font
-				(size 1 1)
-			)
-			(justify right)
-		)
-		(uuid "ecff32a1-52c4-4f3f-8776-7fc626fb1c83")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 215.9 105.41 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-	)
+
 	(global_label "PICO_HEARTBEAT"
 		(shape passive)
 		(at 67.31 182.88 180)
@@ -3954,7 +3894,7 @@
 	)
 	(symbol
 		(lib_id "Connector_Generic:Conn_01x02")
-		(at 226.06 105.41 0)
+		(at 152.4 109.22 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -3964,7 +3904,7 @@
 		(dnp no)
 		(uuid "63f824e8-9608-4636-94db-f7576b8d6c2b")
 		(property "Reference" "J122"
-			(at 226.06 100.41 0)
+			(at 152.4 101.6 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -3974,7 +3914,7 @@
 			)
 		)
 		(property "Value" "B2B-PH-K-S"
-			(at 226.06 102.41 0)
+			(at 152.4 104.14 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -5236,5 +5176,69 @@
 			(type default)
 		)
 		(uuid "ef608de1-f469-4e0e-9873-fcb9eab23cf0")
+	)
+	(wire
+		(pts
+			(xy 147.32 109.22) (xy 142.24 109.22)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "cb0f5968-a9a4-443d-bb5a-fe01bfe096ce")
+	)
+	(wire
+		(pts
+			(xy 147.32 111.76) (xy 142.24 111.76)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "546c808a-9c29-4895-8dd4-e3afba8c3523")
+	)
+	(global_label "PEN1_P"
+		(shape passive)
+		(at 142.24 109.22 180)
+		(effects
+			(font
+				(size 1 1)
+			)
+			(justify right)
+		)
+		(uuid "623cfaca-c312-48cc-99f3-0eadca5966a6")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 142.24 109.22 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(global_label "PEN1_N"
+		(shape passive)
+		(at 142.24 111.76 180)
+		(effects
+			(font
+				(size 1 1)
+			)
+			(justify right)
+		)
+		(uuid "14f10f02-6ffc-402d-b422-2d7d1a646cd7")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 142.24 111.76 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 	)
 )
