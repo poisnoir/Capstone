@@ -1909,7 +1909,7 @@
 				(name "SW" (effects (font (size 1.016 1.016))))
 				(number "2" (effects (font (size 1.016 1.016))))
 			)
-			(pin no_connect line (at 12.7 -10.16 180) (length 2.54)
+			(pin passive line (at 12.7 -10.16 180) (length 2.54)
 				(name "NC" (effects (font (size 1.016 1.016))))
 				(number "15" (effects (font (size 1.016 1.016))))
 			)

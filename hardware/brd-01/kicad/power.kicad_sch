@@ -7469,7 +7469,7 @@
 						)
 					)
 				)
-				(pin no_connect line
+				(pin passive line
 					(at 12.7 -10.16 180)
 					(length 2.54)
 					(name "NC"
@@ -9807,10 +9807,6 @@
 	(no_connect
 		(at 100.33 215.9)
 		(uuid "c33e94e3-ef93-4337-ae0d-9a0f9112446b")
-	)
-	(no_connect
-		(at 106.68 170.18)
-		(uuid "caf97143-b7e2-4653-ace8-9c8a98d29e57")
 	)
 	(no_connect
 		(at 100.33 254)
@@ -29324,32 +29320,104 @@
 	)
 	(wire
 		(pts
-			(xy 400.05 204.47) (xy 406.4 204.47)
+			(xy 400.05 204.47) (xy 417.83 204.47)
 		)
 		(stroke
 			(width 0)
 			(type default)
 		)
-		(uuid "dfadf30f-a4ab-4a4e-a335-c5cb306c7a3f")
+		(uuid "a20aa8ef-0036-4e32-80fc-dd63b4fba109")
 	)
-	(global_label "+1V8_FPGA"
-		(shape passive)
-		(at 406.4 204.47 0)
-		(effects
-			(font
-				(size 1 1)
-			)
-			(justify left)
+	(wire
+		(pts
+			(xy 417.83 204.47) (xy 417.83 199.39)
 		)
-		(uuid "260cc76c-53c3-4d4f-a0c0-73e825245e0e")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 406.4 204.47 0)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "e124a7de-cf4c-4733-8c72-0b1a684656b5")
+	)
+	(junction
+		(at 417.83 199.39)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "18aab2b9-1489-4ef3-b9f0-7890f1fc3001")
+	)
+	(symbol
+		(lib_id "power:GND")
+		(at 106.68 170.18 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "791308e4-6f23-498b-81bf-d2c35b95a4ad")
+		(property "Reference" "#PWR901"
+			(at 106.68 173.99 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "GND"
+			(at 106.68 166.37 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 106.68 170.18 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 106.68 170.18 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" ""
+			(at 106.68 170.18 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "ed9498fd-3eb8-4867-9a14-c1475be7013f")
+		)
+		(instances
+			(project "brd-01"
+				(path "/bcf11a9e-584a-4da7-9f85-9c74b718d606/37c7b2d0-10ea-4407-950d-ab058ee3e191"
+					(reference "#PWR901")
+					(unit 1)
 				)
 			)
 		)

@@ -10,6 +10,8 @@ Write (needs --apply):
     kicad_sch_helper.py setpt SHEET --wire UUID --end 0|1 --to X,Y [--apply]
     kicad_sch_helper.py del   SHEET --uuids UUID[,UUID] [--apply]
     kicad_sch_helper.py nc    SHEET --at X,Y [--apply]
+    kicad_sch_helper.py junction SHEET --at X,Y [--apply]
+    kicad_sch_helper.py power SHEET --lib power:GND --at X,Y --ref '#PWR9xx' [--rot A] [--apply]
     kicad_sch_helper.py glabel SHEET --text NAME --at X,Y [--angle A] [--apply]
     kicad_sch_helper.py setrot SHEET --ref REF --rot 0|90|180|270 [--apply]
 
@@ -190,6 +192,8 @@ def cmd_audit(path, bbox):
             # endpoint coincidence only: a wire crossing a pin mid-span
             # does NOT connect in KiCad (the U145 failure mode)
             hit = any(p in (w['a'], w['b']) for w in ws)
+            hit = hit or any(p in points(root, 'junction')
+                             and on_wire(p, w['a'], w['b']) for w in ws)
             hit = hit or any(p == l['p'] for l in labs)
             hit = hit or any(p == n for n in ncs)
             hit = hit or any((qx, qy) == p
@@ -335,6 +339,67 @@ def cmd_setrot(path, ref, rot, apply_):
     sys.exit(f"ref not found: {ref}")
 
 
+def cmd_power(path, lib, at, rot, ref, apply_):
+    """Place a power symbol with its pin exactly on `at`."""
+    t = Path(path).read_text()
+    if not all(grade(v) for v in at):
+        sys.exit(f"refusing off-grid power symbol {at}")
+    name = lib.split(':')[1]
+    # reuse the sheet instance path from an existing power symbol: a symbol
+    # with the wrong (path ...) is silently ignored by KiCad
+    paths = re.findall(r'\(path "(/[^"]+)"', t)
+    deep = [x for x in paths if x.count('/') >= 2]
+    sheet_path = deep[0] if deep else "/bcf11a9e-584a-4da7-9f85-9c74b718d606"
+    import uuid as _u
+    u = _u.uuid4()
+    new = (f'\t(symbol\n\t\t(lib_id "{lib}")\n'
+           f'\t\t(at {fmt(at[0])} {fmt(at[1])} {rot})\n'
+           f'\t\t(unit 1)\n\t\t(body_style 1)\n'
+           f'\t\t(exclude_from_sim no)\n\t\t(in_bom yes)\n\t\t(on_board yes)\n'
+           f'\t\t(in_pos_files yes)\n\t\t(dnp no)\n'
+           f'\t\t(uuid "{u}")\n'
+           f'\t\t(property "Reference" "{ref}"\n'
+           f'\t\t\t(at {fmt(at[0])} {fmt(at[1] + 3.81)} 0)\n'
+           f'\t\t\t(hide yes)\n\t\t\t(show_name no)\n'
+           f'\t\t\t(do_not_autoplace no)\n\t\t\t(effects\n'
+           f'\t\t\t\t(font\n\t\t\t\t\t(size 1.27 1.27)\n\t\t\t\t)\n\t\t\t)\n\t\t)\n'
+           f'\t\t(property "Value" "{name}"\n'
+           f'\t\t\t(at {fmt(at[0])} {fmt(at[1] - 3.81)} 0)\n'
+           f'\t\t\t(show_name no)\n\t\t\t(do_not_autoplace no)\n'
+           f'\t\t\t(effects\n\t\t\t\t(font\n\t\t\t\t\t(size 1.27 1.27)\n\t\t\t\t)\n\t\t\t)\n\t\t)\n'
+           f'\t\t(property "Footprint" ""\n'
+           f'\t\t\t(at {fmt(at[0])} {fmt(at[1])} 0)\n'
+           f'\t\t\t(hide yes)\n\t\t\t(show_name no)\n\t\t\t(do_not_autoplace no)\n'
+           f'\t\t\t(effects\n\t\t\t\t(font\n\t\t\t\t\t(size 1.27 1.27)\n\t\t\t\t)\n\t\t\t)\n\t\t)\n'
+           f'\t\t(property "Datasheet" ""\n'
+           f'\t\t\t(at {fmt(at[0])} {fmt(at[1])} 0)\n'
+           f'\t\t\t(hide yes)\n\t\t\t(show_name no)\n\t\t\t(do_not_autoplace no)\n'
+           f'\t\t\t(effects\n\t\t\t\t(font\n\t\t\t\t\t(size 1.27 1.27)\n\t\t\t\t)\n\t\t\t)\n\t\t)\n'
+           f'\t\t(property "Description" ""\n'
+           f'\t\t\t(at {fmt(at[0])} {fmt(at[1])} 0)\n'
+           f'\t\t\t(hide yes)\n\t\t\t(show_name no)\n\t\t\t(do_not_autoplace no)\n'
+           f'\t\t\t(effects\n\t\t\t\t(font\n\t\t\t\t\t(size 1.27 1.27)\n\t\t\t\t)\n\t\t\t)\n\t\t)\n'
+           f'\t\t(pin "1"\n\t\t\t(uuid "{_u.uuid4()}")\n\t\t)\n'
+           f'\t\t(instances\n\t\t\t(project "brd-01"\n'
+           f'\t\t\t\t(path "{sheet_path}"\n'
+           f'\t\t\t\t\t(reference "{ref}")\n\t\t\t\t\t(unit 1)\n'
+           f'\t\t\t\t)\n\t\t\t)\n\t\t)\n\t)\n')
+    idx = t.rstrip().rfind(')')
+    save(path, t[:idx] + new + t[idx:], apply_)
+
+
+def cmd_junction(path, at, apply_):
+    t = Path(path).read_text()
+    if not all(grade(v) for v in at):
+        sys.exit(f"refusing off-grid junction {at}")
+    import uuid as _u
+    new = (f'\t(junction\n\t\t(at {fmt(at[0])} {fmt(at[1])})\n'
+           f'\t\t(diameter 0)\n\t\t(color 0 0 0 0)\n'
+           f'\t\t(uuid "{_u.uuid4()}")\n\t)\n')
+    idx = t.rstrip().rfind(')')
+    save(path, t[:idx] + new + t[idx:], apply_)
+
+
 def cmd_nc(path, at, apply_):
     text = Path(path).read_text()
     if not all(grade(v) for v in at):
@@ -386,6 +451,13 @@ def main(argv):
         elif cmd == 'setrot':
             cmd_setrot(path, rest[rest.index('--ref') + 1],
                        int(rest[rest.index('--rot') + 1]), apply_)
+        elif cmd == 'power':
+            cmd_power(path, rest[rest.index('--lib') + 1],
+                      pair(rest[rest.index('--at') + 1]),
+                      int(rest[rest.index('--rot') + 1]) if '--rot' in rest else 0,
+                      rest[rest.index('--ref') + 1], apply_)
+        elif cmd == 'junction':
+            cmd_junction(path, pair(rest[rest.index('--at') + 1]), apply_)
         elif cmd == 'nc':
             cmd_nc(path, pair(rest[rest.index('--at') + 1]), apply_)
         else:

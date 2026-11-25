@@ -55,25 +55,28 @@ def main(before_path, after_path):
     for old, new in renamed:
         print(f"renamed (OK): {old} -> {new}")
 
+    pin_net_b = {p: k for k in b for p in k}
+    pin_net_a = {p: k for k in a for p in k}
     merges, splits = [], []
     for k in removed:
-        dest = destinations(k, pin_net)
-        (merges if len(dest) < len(k) and all(k) else splits).append((a[k], k, dest))
-    for k in added:
-        origin = sorted({a.get({p: n for n in a for p in n}.get(p), '?')
-                         for p in k}) if k else []
-        if not origin:
-            continue
-        _ = origin
+        dest = sorted({b[pin_net_b[p]] for p in k if p in pin_net_b})
+        missing = [p for p in k if p not in pin_net_b]
+        if missing:
+            dest.append(f"(dropped: {sorted(f'{r}.{p}' for r, p in missing)})")
+        if len(dest) == 1:
+            merges.append((a[k], k, dest[0]))
+        else:
+            splits.append((a[k], k, dest))
 
     print()
     if not removed and not added:
         print(f"CONNECTIVITY SAME: {len(a)} nets, {len(renamed)} renamed")
     else:
         print(f"CONNECTIVITY CHANGED: {len(removed)} nets gone, {len(added)} new")
-        for name, pins, dest in removed:
-            label = "MERGE" if len(dest) == 1 else "SPLIT"
-            print(f"  {label:5s} {name} ({len(pins)} pins) -> {dest}")
+        for name, pins, into in merges:
+            print(f"  MERGE {name} ({len(pins)} pins) -> {into}")
+        for name, pins, into in splits:
+            print(f"  SPLIT {name} ({len(pins)} pins) -> {into}")
         for k in added:
             print(f"  new   {b[k]} ({len(k)} pins): "
                   f"{sorted(f'{r}.{p}' for r, p in k)[:10]}")
