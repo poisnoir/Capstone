@@ -1,4 +1,4 @@
-# BRD-01 schematic layout rules — allocate, then place, then wire
+# BRD-01 schematic layout rules — allocate → flow → place → review → wire → review → full review → loop
 
 **Audience:** any agent editing a BRD-01 `.kicad_sch`. **Authority:** the netlist and the
 200 dpi render, not the existing drawing. This document orders the work; it does not
@@ -13,7 +13,7 @@ neighbouring `FDA2_P` from **203.20 × 5.08 mm to 496.57 × 6.35 mm** (`hw/recei
 commit `136004f`; the same pattern grew `FDA3_P` from 203.20 × 6.35 mm to 496.57 × 6.35 mm
 in `d0d2c48`): the net list improved on paper while the drawing got worse.
 
-## 2. The procedure, in order, with a gate between each step
+## 2. The procedure, in order, with a gate between each step and a loop back
 
 Constants for every step: grid **G = 1.27 mm**; routing channel **C = 5.08 mm** (4 G);
 sheet frame inset **10.16 mm** (8 G); maximum in-block label hop **25.4 mm** (20 G).
@@ -117,7 +117,10 @@ Answers must be **no, no, yes, yes**.
 
 **Gate 4:** if any answer is wrong, go back to Step 3 and fix placement. Do **not** start
 wiring to work around a placement fault. Recording "ERC 0" here is not a pass: there are
-no wires yet.
+no wires yet. Then run the §3 measurement gate on this block — keep a before copy of the
+sheet plus its netlist and run `kicad_span_report.py --compare --fail-on-regression`
+(command in §3). Placement is not accepted until ΣS decreases with **no** affected net's
+S increasing; if it fails, return to Step 2/3, not to a label move.
 
 ### Step 5 — Wire, only now
 
@@ -143,7 +146,52 @@ Export the finished sheet at 200 dpi (`kicad-cli sch export pdf --pages <page> -
 **Gate 6:** no wire crosses a symbol body; no wire passes a pin mid-span; no label
 overprints a symbol. If any check fails, return to Step 3 — a wire collision is
 normally a placement collision — then repeat Steps 4–6. Finish with
-`python3 tools/kicad_sch_helper.py audit SHEET` and full-project ERC = 0/0.
+`python3 tools/kicad_sch_helper.py audit SHEET`, full-project ERC = 0/0, and a second run
+of the §3 `kicad_span_report.py --compare --fail-on-regression` gate: wiring must not
+undo the span win accepted at Gate 4. Only then dispatch Step 7.
+
+### Step 7 — Full schematic review (three independent models)
+
+This is the sheet-level gate: it reviews the whole rendered sheet against
+`docs/phase2/schematic_review_prompt.md`, including notes, title block, net names and
+cross-sheet consistency — things Gates 4 and 6 do not cover.
+
+1. Export the complete sheet at 200 dpi (`kicad-cli sch export pdf --pages <page> -o …`,
+   then `pdftoppm -png -r 200`) and attach the PNG(s) plus the `.kicad_sch`.
+2. Fill the prompt's **Sheet context** block for this sheet, then send the exact prompt
+   verbatim to each of these three reviewer models, with no hint about expected findings:
+   - `opencode-go/muse-spark-1.3-contributor`
+   - `opencode-go/hy4-flash-free`
+   - `opencode-go/deepseek-v4.1-flash`
+3. Each reply must contain a findings table, the three named change lists, and exactly
+   one verdict line (`VERDICT: APPROVE` / `VERDICT: APPROVE WITH NOTES` / `VERDICT: REJECT`).
+   Copy every finding into the lead's report with its block ID, refdes, net and severity;
+   mark a challenge to a deliberate decision `[DECISION]` and a drafting defect
+   `[DRAFTING]` (§6).
+
+**Gate 7 (pass rule):** the sheet passes only if **2 of the 3** models return `APPROVE` or
+`APPROVE WITH NOTES` *and* no blocking finding from any reviewer remains open. A single
+blocking finding is still resolved before sign-off; it is not downgraded to a note. A
+`REJECT` from any model overrides this majority and invokes the hard reset below.
+
+**Loop-back rule — the review decides which stage to re-enter.** Re-enter the **earliest**
+stage implicated by the findings and re-run every gate from there through Gate 7; do not
+patch a finding on top of a finished drawing.
+
+| Finding class (prompt section) | Re-enter | Then |
+|---|---|---|
+| Placement / layout (L1–L9): flow direction, block separation, grouping, alignment, repeated cells, density, text placement | **Step 1 allocate** if a block boundary, flow axis or routing channel is wrong; otherwise **Step 3 place** | Repeat 3 → 4 (placement render + span gate) → 5 → 6 → 7 |
+| Wiring (W1–W9): pin ends, wire over symbol/pin, junctions, label hops, NCs, pairs, sense taps | **Step 5 wire** | Repeat 5 → 6 → 7. If the wiring fault is a placement collision, go to Step 3 instead |
+| Labelling (N1–N7): naming, perspective, off-sheet names, notes, title block, rails | **Step 3 place** (where the text and label physically sit and what it says is decided) | Repeat 3 → 4 → 5 → 6 → 7; re-wire only if moving the label breaks a run |
+| `[DECISION]` — a deliberate decision in the prompt's Sheet context | Owner / integrator per §6, not a layout patch | Record the owner's ruling in the prompt context, then re-run Step 7 |
+
+**Hard reset:** if any reviewer returns `REJECT`, **or** a majority of the three report
+blocking findings, the block goes back to **Step 1 allocate**, not to a patch on the
+finished drawing. Re-derive the rectangles and signal order, then run Steps 2–7 again.
+Labelling-only or wiring-only fixes are never an excuse to skip the placement review.
+
+Every iteration re-runs the §3 span gate at Gates 4 and 6 and records the iteration in the
+§5 ledger.
 
 ## 3. The span metric: two classes, two totals, one narrow gate
 
@@ -268,10 +316,20 @@ hugely, the block still failed.
 - [ ] Signal flow mapped: in <nets>, out <nets>, order <refs> (Step 2, Gate 2)
 - [ ] All parts/labels/rails/connector placed on the 1.27 mm grid; `list`/`audit` clean (Step 3, Gate 3)
 - [ ] 200 dpi placement render viewed with wires excluded: no part in the flow path, no text collision, clear channel, readable function (Step 4, Gate 4)
+- [ ] Span gate at Gate 4: `kicad_span_report.py --compare --fail-on-regression`, ΣS down, no net up
 - [ ] Wires added pin-end to pin-end; junctions where needed; no in-block label hop >25.4 mm (Step 5, Gate 5)
 - [ ] 200 dpi wire render viewed: no wire through a symbol, no wire past a pin mid-span, no label overprint (Step 6, Gate 6)
-- [ ] Span ledger: in-block ΣS before <…> -> after <…>; in-block regressions == 0; no new W6 hop >25.4 mm; cross-block/hub growth and MOVED BLOCK lines reviewed
+- [ ] Span gate repeated at Gate 6: still ΣS down, no net regressed by wiring
+- [ ] Span ledger: in-block ΣS before <…> -> after <…>; in-block regressions == 0; no new W6 hop >25.4 mm; cross-block/hub growth and MOVED BLOCK lines reviewed; worst individual net <name> <before> -> <after>; no net increased
 - [ ] Netlist compare: connectivity/parts unchanged; ERC 0 errors / 0 warnings
+- [ ] Step 7: three reviewer verdicts recorded from `schematic_review_prompt.md`; 2/3 pass and no open blocking finding; findings mapped to a re-entry stage (Gate 7)
+```
+
+Loop ledger — one row per iteration of the block:
+
+```
+| iteration | re-entered stage | findings (ref/net, severity, [DECISION]/[DRAFTING]) | ΣS before -> after | Gate 7 verdicts | next stage |
+| 1 | ... | ... | ... | ... | ... |
 ```
 
 ## 6. What is explicitly NOT a layout decision
@@ -288,3 +346,6 @@ These need the block owner or integrator, not a layout commit:
   tool).
 - **Sheet partitioning across the hierarchy** — which net is local, global or a
   hierarchical sheet pin; that changes the contract boundary and its owner.
+
+A Step 7 finding marked `[DECISION]` belongs to one of these owners. Record the ruling in
+the prompt's Sheet context and re-run Step 7; do not silently "fix" it as drafting.
