@@ -35,15 +35,16 @@ Each number is tagged:
             └─ U147 TPSM63604, 6.0 V, 1.024 MHz synced ─► +6V ── PG_6V
                   ├─ U144 TPS62130A ─► +1V0_FPGA   EN ← PG_6V    ┐
                   ├─ U145 TPS62130A ─► +1V8_FPGA   EN ← PG_1V0   ├ FPGA rails
-                  ├─ U148 TPS62130A ─► +3.3V       EN ← PG_1V8   ┘
+                  ├─ U7 TPS62130A ─► +3.3V       EN ← PG_1V8   ┘
                   ├─ FL1 damped LC ─ U149 TPS7A4701 ─► +5V_EXC  (DAC80508, 8× LTC1563-2)
                   └─ FL2 damped LC ─ U146 TPS7A4701 ─► +5VA     (AD7768-4, 2× ADA4940-2)
 
 FPGA pin BUCK_SYNC (1.024 MHz = 32.768 MHz ÷ 32) ─ 1 nF ─► U147 EN/SYNC
 ```
 
-The reference designators U147–U149, FL1/FL2 and `PG_6V`/`BUCK_SYNC` are
-proposals.
+The passives, the FL1/FL2 filter labels and the `PG_6V`/`BUCK_SYNC` names were
+proposals. Regulator designators follow the captured schematic (§9): U147
+(6 V), U7 (3.3 V), U149 (`+5V_EXC`), U146 (`+5VA`) and U5 (±12VA).
 
 Removed: U3 OKI-78SR-5, U1 TPS7A2033, net `+5V`.
 
@@ -205,12 +206,12 @@ switches to the sync clock after 2048 cycles [DS]. The datasheet gives a sync
 range of 200 kHz–2.2 MHz and no limit relative to the RT setting; confirm the
 lock on the bench.
 
-### U144, U145, U148: FPGA rail bucks, TPS62130ARGTR
+### U144, U145, U7: FPGA rail bucks, TPS62130ARGTR
 
 The existing U144/U145 parts already follow TI's typical application
 (Table 9-1). Only their input rail, EN source and pull-up rail change.
 
-| Function                          | U144 +1V0_FPGA                          | U145 +1V8_FPGA                      | U148 +3.3V (new)                  | Source                                             |
+| Function                          | U144 +1V0_FPGA                          | U145 +1V8_FPGA                      | U7 +3.3V (new)                    | Source                                             |
 | --------------------------------- | --------------------------------------- | ----------------------------------- | --------------------------------- | -------------------------------------------------- |
 | PVIN, AVIN                        | +6V                                     | +6V                                 | +6V                               |                                                    |
 | PVIN cap                          | C180 10 µF → **specify 25 V X7R 1206**  | C184 → same                         | 10 µF 25 V X7R 1206               | [DS] §9.2.2.2.2.2; value field today is only "10u" |
@@ -233,14 +234,14 @@ controlled. At 1.25 MHz the on-time is 133 ns. The datasheet requires
 starting with FSW low to limit inrush and suggests tying FSW to VOUT or PG
 [DS]. Tying it to `PG_1V0` (already pulled to +6V, under the 7 V pin limit)
 starts at 2.5 MHz and switches to 1.25 MHz once the rail is good. The 2.2 µH
-inductor is the minimum for 1.25 MHz [DS]. U145 (120 ns) and U148 (220 ns)
+inductor is the minimum for 1.25 MHz [DS]. U145 (120 ns) and U7 (220 ns)
 are fine at 2.5 MHz. Neither 1.25 MHz nor 2.5 MHz puts a harmonic up to the
 30th into the ADC band [calc].
 
-U148 can reuse the TPS62130A, or use the fixed 3.3 V TPS62132 with no divider.
-The TPS62132's PG floats high when off [DS], which only matters if something
-is chained after it. Nothing is, so either works. Reusing the TPS62130A keeps
-one part number.
+U7 uses the captured TPS62130A. The fixed 3.3 V TPS62132 with no divider is an
+alternative. The TPS62132's PG floats high when off [DS], which only matters if
+something is chained after it. Nothing is, so either works. Keeping the
+TPS62130A keeps one part number.
 
 ### U149 +5V_EXC and U146 +5VA: TPS7A4701RGWR
 
@@ -352,7 +353,7 @@ Checks against the Artix-7 data sheet (DS181):
 - Each FPGA rail ramps in 1.65 ms, inside the 0.2–50 ms ramp-time window ✓.
 - VCCO − VCCAUX may exceed 2.625 V for at most 500 ms per power cycle. On
   power-up VCCAUX comes first. On power-down, U145's PG drops when +1V8 falls
-  below 90%, and that disables U148, so +3.3V follows within milliseconds ✓.
+  below 90%, and that disables U7, so +3.3V follows within milliseconds ✓.
 - The TPS62130A holds PG low while off [DS], so a downstream rail never
   enables early.
 
@@ -417,7 +418,7 @@ contract change) or the bench.
 
 | Sheet | Change |
 |---|---|
-| power | remove U3, U1; add U147 + passives, U148 + passives, U149 + passives, FL1/FL2; move U144/U145/U146 inputs to +6V; U144 EN ← `PG_6V`, U144 FSW ← `PG_1V0`; R192/R195 pull-ups to +6V; U146 EN to +6V; C188 → 2.2 µF; C180/C184 → 25 V |
+| power | remove U3, U1; add U147 + passives, U7 + passives, U149 + passives, FL1/FL2; move U144/U145/U146 inputs to +6V; U144 EN ← `PG_6V`, U144 FSW ← `PG_1V0`; R192/R195 pull-ups to +6V; U146 EN to +6V; C188 → 2.2 µF; C180/C184 → 25 V |
 | power | delete net `+5V`; new nets `+6V`, `+5V_EXC`, `PG_6V`, `BUCK_SYNC` |
 | driver | U10 VDD and U80–U87 V+/LP from `+5V` → `+5V_EXC` |
 | fpga | U142 VCC, ~RESET, 3V3OUT → `+3.3V`; ball R3 → `BUCK_SYNC` |
@@ -459,14 +460,15 @@ The power sheet is captured and wired. The §7 cross-sheet changes are done:
 
 ERC on the full hierarchy is **0 errors / 0 warnings**.
 
-Reference designators as captured (they differ from the proposals in §2–§4):
+Reference designators as captured; these are the refs used throughout §2–§7:
 
 | Function | Captured refs |
 |---|---|
 | 6 V module | U147; C800–C804 input; R803/R804 UVLO; C809 sync; R802 RT; R800/R801/C805 feedback; C806–C808, C810 output; R805 PG pull-up |
-| 3.3 V buck (the "U148" in §4) | **U7**; C811/C812 input; C814 soft start; L800; R806/R807 feedback; C813 output |
+| 3.3 V buck | **U7**; C811/C812 input; C814 soft start; L800; R806/R807 feedback; C813 output |
 | +5V_EXC LDO | U149; FL1 = L801, C817, R808 + C818; C815 NR; C816 output |
 | +5VA input filter | FL2 = L802, C188 (moved, now 2.2 µF), R809 + C820 → U146 |
+| ±12VA module | U5 MGJ2D151515SC → U6 LT3045-1 (+12VA) / U2 LT3093 (−12VA) |
 | Removed | U3 (OKI-78SR), U8, U9, U1 (removed earlier) |
 
 Joins into the older label-based FPGA buck area use labels: `PG_6V` (U144
