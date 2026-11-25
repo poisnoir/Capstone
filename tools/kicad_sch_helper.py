@@ -371,6 +371,18 @@ def cmd_del_at(path, kind, point=None, text=None, apply_=False):
     save(path, t, apply_)
 
 
+def cmd_retext(path, old, new, apply_):
+    """Rename a free text note, in place, by its exact current contents."""
+    t = Path(path).read_text()
+    hits = [(s, e) for s, e, _name in top_blocks(t, 'text')
+            if t[s:e].startswith(f'(text "{old}"')]
+    if len(hits) != 1:
+        sys.exit(f'text {old!r}: found {len(hits)} matches, need exactly 1')
+    s, e = hits[0]
+    blk = t[s:e].replace(f'(text "{old}"', f'(text "{new}"', 1)
+    save(path, t[:s] + blk + t[e:], apply_)
+
+
 def cmd_delwire(path, a, b, apply_):
     """Delete the wire whose two endpoints are exactly a and b (either order)."""
     t = Path(path).read_text()
@@ -740,6 +752,9 @@ def main(argv):
                        pair(rest[rest.index('--at') + 1]) if '--at' in rest else None,
                        rest[rest.index('--text') + 1] if '--text' in rest else None,
                        apply_)
+        elif cmd == 'retext':
+            cmd_retext(path, rest[rest.index('--old') + 1],
+                       rest[rest.index('--new') + 1], apply_)
         elif cmd == 'delwire':
             cmd_delwire(path, pair(rest[rest.index('--from') + 1]),
                         pair(rest[rest.index('--to') + 1]), apply_)
