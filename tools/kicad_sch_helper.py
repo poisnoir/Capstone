@@ -8,9 +8,15 @@ Read (no writes):
 Write (needs --apply):
     kicad_sch_helper.py wire  SHEET --from X,Y --to X,Y [--apply]
     kicad_sch_helper.py setpt SHEET --wire UUID --end 0|1 --to X,Y [--apply]
+    kicad_sch_helper.py delat SHEET --kind K [--at X,Y | --text T] [--apply]
+    kicad_sch_helper.py delwire SHEET --from X,Y --to X,Y [--apply]
     kicad_sch_helper.py del   SHEET --uuids UUID[,UUID] [--apply]
     kicad_sch_helper.py nc    SHEET --at X,Y [--apply]
     kicad_sch_helper.py junction SHEET --at X,Y [--apply]
+    kicad_sch_helper.py move  SHEET --ref REF --to X,Y [--apply]
+    kicad_sch_helper.py textpos SHEET --ref REF --prop Reference|Value --at X,Y [--justify left|center] [--apply]
+    kicad_sch_helper.py list  SHEET --bbox x1,y1,x2,y2
+    kicad_sch_helper.py box   SHEET --from X,Y --to X,Y --title T [--apply]
     kicad_sch_helper.py labelkind SHEET --uuids U --kind hierarchical_label|label [--apply]
     kicad_sch_helper.py label SHEET --text NAME --at X,Y [--angle A] [--apply]
     kicad_sch_helper.py sheetpin SHEET --sheet UUID --name N --at X,Y --angle A --shape S [--apply]
@@ -145,6 +151,23 @@ def on_wire(p, a, b, tol=1e-6):
 
 def grade(v):
     return abs(v / GRID - round(v / GRID)) < 1e-6
+
+
+def items(root):
+    """[(kind, uuid, point)] for every connection object on the sheet."""
+    out = []
+    for w in wires(root):
+        out.append(('wire', w['uuid'], w['a']))
+        out.append(('wire', w['uuid'], w['b']))
+    for kind in ('label', 'global_label', 'hierarchical_label'):
+        for l in labels(root, kind):
+            out.append((kind, l['uuid'], l['p']))
+    for kind in ('junction', 'no_connect'):
+        for j in children(root, kind):
+            at = child(j, 'at')
+            out.append((kind, child(j, 'uuid')[1],
+                        (float(at[1]), float(at[2]))))
+    return out
 
 
 def cmd_pins(path, refs):
@@ -290,6 +313,84 @@ def cmd_setpt(path, wire_uuid, end, to, apply_):
     blk = re.sub(r'\(xy [\d.-]+ [\d.-]+\) \(xy [\d.-]+ [\d.-]+\)',
                  f'(xy {xy[0][0]} {xy[0][1]}) (xy {xy[1][0]} {xy[1][1]})', blk)
     save(path, text[:start] + blk + text[stop:], apply_)
+
+
+def top_blocks(t, kind=None):
+    """[(start, end, name)] for every direct child of the root node.
+
+    Depth-aware on purpose: KiCad writes some blocks on a shared line
+    (")\t(label ..."), so line-anchored regexes mis-span and delete
+    neighbouring objects.
+    """
+    out, stack, i, n = [], [], 0, len(t)
+    while i < n:
+        c = t[i]
+        if c == '"':
+            i += 1
+            while i < n and t[i] != '"':
+                if t[i] == '\\':
+                    i += 1
+                i += 1
+        elif c == '(':
+            j = i + 1
+            while j < n and t[j] in ' \t\r\n':
+                j += 1
+            k = j
+            while k < n and t[k] not in ' \t\r\n()"':
+                k += 1
+            stack.append((i, t[j:k]))
+        elif c == ')':
+            if stack:
+                start, name = stack.pop()
+                if len(stack) == 1:
+                    out.append((start, i + 1, name))
+        i += 1
+    return [b for b in out if kind is None or b[2] == kind]
+
+
+def cmd_del_at(path, kind, point=None, text=None, apply_=False):
+    """Delete top-level blocks of `kind` at a point or by label text."""
+    t = Path(path).read_text()
+    hit = []
+    for start, end, _name in top_blocks(t, kind):
+        blk = t[start:end]
+        if text is not None:
+            if blk.startswith(f'({kind} "{text}"'):
+                hit.append((start, end))
+        else:
+            m = re.search(r'\(at ([\d.-]+) ([\d.-]+)', blk)
+            if m and abs(float(m.group(1)) - point[0]) < 0.6 \
+                    and abs(float(m.group(2)) - point[1]) < 0.6:
+                hit.append((start, end))
+    if not hit:
+        print(f"  no {kind} at {point or text}")
+        return
+    for start, end in sorted(hit, reverse=True):
+        t = t[:start - 1] + t[end:]
+    print(f"  deleted {len(hit)} x {kind} at {point or text}")
+    save(path, t, apply_)
+
+
+def cmd_delwire(path, a, b, apply_):
+    """Delete the wire whose two endpoints are exactly a and b (either order)."""
+    t = Path(path).read_text()
+    hit = []
+    for start, end, _name in top_blocks(t, 'wire'):
+        blk = t[start:end]
+        xy = re.findall(r'\(xy ([\d.-]+) ([\d.-]+)\)', blk)
+        if len(xy) != 2:
+            continue
+        p = (float(xy[0][0]), float(xy[0][1]))
+        q = (float(xy[1][0]), float(xy[1][1]))
+        if (p, q) == (a, b) or (p, q) == (b, a):
+            hit.append((start, end))
+    for start, end in sorted(hit, reverse=True):
+        t = t[:start - 1] + t[end:]
+    if hit:
+        print(f"  wire {a}-{b} deleted")
+    else:
+        print(f"  no wire {a}-{b}")
+    save(path, t, apply_)
 
 
 def cmd_del(path, uuids, apply_):
@@ -509,6 +610,105 @@ def pair(s):
     return (float(x), float(y))
 
 
+
+def cmd_move(path, ref, to, apply_):
+    """Move a symbol. Property texts are placed separately with textpos."""
+    t = Path(path).read_text()
+    for inst in instances(parse(t)):
+        if inst['ref'] != ref:
+            continue
+        start, stop = block_span(t, inst['uuid'])
+        blk = t[start:stop]
+        m = re.search(r'\t\t\(at [\d.-]+ [\d.-]+ ([\d.-]+)\)', blk)
+        blk = (blk[:m.start()]
+               + f'\t\t(at {fmt(to[0])} {fmt(to[1])} {m.group(1)})'
+               + blk[m.end():])
+        save(path, t[:start] + blk + t[stop:], apply_)
+        return
+    sys.exit(f"ref not found: {ref}")
+
+
+def cmd_textpos(path, ref, prop, at, justify, apply_, angle=0):
+    """Place one property text of a symbol, with reliable justification."""
+    t = Path(path).read_text()
+    for inst in instances(parse(t)):
+        if inst['ref'] != ref:
+            continue
+        start, stop = block_span(t, inst['uuid'])
+        blk = t[start:stop]
+        # locate the property's own sub-block
+        i = blk.find(f'(property "{prop}"')
+        if i < 0:
+            sys.exit(f"{ref} has no {prop} property")
+        depth, j = 0, i
+        while j < len(blk):
+            if blk[j] == '(':
+                depth += 1
+            elif blk[j] == ')':
+                depth -= 1
+                if depth == 0:
+                    break
+            j += 1
+        sub = blk[i:j + 1]
+        sub = re.sub(r'\(at [\d.-]+ [\d.-]+ [\d.-]+\)',
+                     f'(at {fmt(at[0])} {fmt(at[1])} {angle})', sub, count=1)
+        sub = re.sub(r'\(justify [^)]*\)', '', sub)
+        if justify != 'center':
+            sub = sub.replace('(size 1.27 1.27)',
+                              f'(size 1.27 1.27)', 1)
+            sub = re.sub(r'(\(font\n\t+\t+\(size 1\.27 1\.27\)\n)(\t+)',
+                         r'\1\2)', sub)
+            sub = sub.replace('\t\t\t)', f'\t\t\t)\n\t\t\t\t(justify {justify})', 1)
+        blk = blk[:i] + sub + blk[j + 1:]
+        save(path, t[:start] + blk + t[stop:], apply_)
+        return
+    sys.exit(f"ref not found: {ref}")
+
+
+def cmd_list(path, bbox):
+    """Print every symbol and connection object inside a rectangle."""
+    root = parse(Path(path).read_text())
+    x1, y1, x2, y2 = bbox
+
+    def inb(p):
+        return x1 <= p[0] <= x2 and y1 <= p[1] <= y2
+
+    for i in instances(root):
+        if inb((i['x'], i['y'])):
+            print(f"SYM  {i['ref']:8s} {i['x']:8.2f},{i['y']:8.2f} {i['uuid']}")
+    for w in wires(root):
+        if inb(w['a']) or inb(w['b']):
+            print(f"WIRE {w['a']} {w['b']} {w['uuid']}")
+    for kind in ('label', 'global_label', 'hierarchical_label'):
+        for l in labels(root, kind):
+            if inb(l['p']):
+                print(f"{kind[:4].upper()} {l['text']:18s} {l['p']} {l['uuid']}")
+    for j in points(root, 'junction'):
+        if inb(j):
+            print(f"JUNC {j}")
+
+
+def cmd_box(path, a, b, title, apply_):
+    """Draw a titled rectangle, matching the sheet's block convention."""
+    t = Path(path).read_text()
+    for v in (a[0], a[1], b[0], b[1]):
+        if not grade(v):
+            sys.exit(f"refusing off-grid box {a} {b}")
+    import uuid as _u
+    new = (f'\t(rectangle\n\t\t(start {fmt(a[0])} {fmt(a[1])})\n'
+           f'\t\t(end {fmt(b[0])} {fmt(b[1])})\n'
+           f'\t\t(stroke\n\t\t\t(width 0.1524)\n\t\t\t(type solid)\n\t\t)\n'
+           f'\t\t(fill\n\t\t\t(type none)\n\t\t)\n'
+           f'\t\t(uuid "{_u.uuid4()}")\n\t)\n'
+           f'\t(text "{title}"\n\t\t(exclude_from_sim no)\n'
+           f'\t\t(at {fmt(a[0] + 1.27)} {fmt(b[1] - 2.54)} 0)\n'
+           f'\t\t(effects\n\t\t\t(font\n\t\t\t\t(size 2 2)\n\t\t\t)\n'
+           f'\t\t\t(justify left bottom)\n\t\t)\n'
+           f'\t\t(uuid "{_u.uuid4()}")\n\t)\n')
+    idx = t.rstrip().rfind(')')
+    save(path, t[:idx] + new + t[idx:], apply_)
+
+
 def main(argv):
     if len(argv) < 3:
         sys.exit(__doc__)
@@ -534,6 +734,14 @@ def main(argv):
             cmd_setpt(path, rest[rest.index('--wire') + 1],
                       int(rest[rest.index('--end') + 1]),
                       pair(rest[rest.index('--to') + 1]), apply_)
+        elif cmd == 'delat':
+            cmd_del_at(path, rest[rest.index('--kind') + 1],
+                       pair(rest[rest.index('--at') + 1]) if '--at' in rest else None,
+                       rest[rest.index('--text') + 1] if '--text' in rest else None,
+                       apply_)
+        elif cmd == 'delwire':
+            cmd_delwire(path, pair(rest[rest.index('--from') + 1]),
+                        pair(rest[rest.index('--to') + 1]), apply_)
         elif cmd == 'del':
             cmd_del(path, rest[rest.index('--uuids') + 1].split(','), apply_)
         elif cmd == 'glabel':
@@ -547,6 +755,24 @@ def main(argv):
         elif cmd == 'setrot':
             cmd_setrot(path, rest[rest.index('--ref') + 1],
                        int(rest[rest.index('--rot') + 1]), apply_)
+        elif cmd == 'move':
+            cmd_move(path, rest[rest.index('--ref') + 1],
+                     pair(rest[rest.index('--to') + 1]), apply_)
+        elif cmd == 'textpos':
+            cmd_textpos(path, rest[rest.index('--ref') + 1],
+                        rest[rest.index('--prop') + 1],
+                        pair(rest[rest.index('--at') + 1]),
+                        rest[rest.index('--justify') + 1]
+                        if '--justify' in rest else 'center', apply_,
+                        int(rest[rest.index('--angle') + 1])
+                        if '--angle' in rest else 0)
+        elif cmd == 'list':
+            cmd_list(path, [float(v) for v in
+                            rest[rest.index('--bbox') + 1].split(',')])
+        elif cmd == 'box':
+            cmd_box(path, pair(rest[rest.index('--from') + 1]),
+                    pair(rest[rest.index('--to') + 1]),
+                    rest[rest.index('--title') + 1], apply_)
         elif cmd == 'labelkind':
             cmd_labelkind(path, rest[rest.index('--uuids') + 1].split(','),
                           rest[rest.index('--kind') + 1], apply_,
