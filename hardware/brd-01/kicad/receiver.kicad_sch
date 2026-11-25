@@ -20928,23 +20928,29 @@
 		(dnp no)
 		(uuid "fff20a72-1e8c-4bc1-9561-fcf22cd10cd4")
 		(property "Reference" "R544"
-			(at 185.42 412.83 90)
+			(at 264.16 71.12 90)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.1 1.1)
 				)
+				(justify left)
+				
+				
 			)
 		)
 		(property "Value" "176"
-			(at 185.42 414.83 90)
+			(at 264.16 73.66 90)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.1 1.1)
 				)
+				(justify left)
+				
+				
 			)
 		)
 		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
@@ -20989,6 +20995,126 @@
 				(path "/bcf11a9e-584a-4da7-9f85-9c74b718d606/0fb3cf57-3d6d-4e45-b58e-c90ee5551265"
 					(reference "R544")
 					(unit 1)
+				)
+			)
+		)
+	)
+(symbol
+		(lib_id "Device:D_Schottky")
+		(at 261.62 73.66 270)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "6cf4de18-70da-4a5d-930e-d40e521aa338")
+		(property "Reference" "D534"
+			(at 201.93 232.49 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.1 1.1)
+				)
+			)
+		)
+		(property "Value" "BAS70H,115"
+			(at 201.93 234.49 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.1 1.1)
+				)
+			)
+		)
+		(property "Footprint" "Diode_SMD:D_SOD-123F"
+			(at 201.93 237.49 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.1 1.1)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 201.93 237.49 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" ""
+			(at 201.93 237.49 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "bd94fff0-232a-4f90-a5ec-e4916deb35ef")
+		)
+		(pin "2"
+			(uuid "f2a38c82-66f9-4fcd-b889-fab9dbb66de1")
+		)
+		(instances
+			(project "brd-01"
+				(path "/bcf11a9e-584a-4da7-9f85-9c74b718d606/0fb3cf57-3d6d-4e45-b58e-c90ee5551265"
+					(reference "D534")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 256.54 77.47) (xy 261.62 77.47)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "d31b14e6-92bf-4c05-abaf-ca79dd9c28c4")
+	)
+	(wire
+		(pts
+			(xy 261.62 69.85) (xy 261.62 67.31)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "c4c8f5ad-1081-4ef8-8581-1ae0f33d4a2d")
+	)
+
+	(global_label "+5VA"
+		(shape passive)
+		(at 261.62 67.31 0)
+		(effects
+			(font
+				(size 1 1)
+			)
+			(justify left)
+		)
+		(uuid "59936d1b-2159-4197-8107-3db22dc8a047")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 261.62 67.31 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
 				)
 			)
 		)

@@ -452,9 +452,10 @@ The power sheet is captured and wired. The §7 cross-sheet changes are done:
   passive so ERC does not read two sources on one rail; ball `R3` is wired
   to `BUCK_SYNC`.
 - connectors: `J123.1` is a no-connect (D4).
-- receiver: **`D_REF` (§4, C7) is not placed yet.** It is deferred to that
-  sheet's redraw so the diode lands inside the ADC reference block rather
-  than as another label island.
+- receiver: `D_REF` (§4, C7) is placed as `D534` (`BAS70H,115`,
+  `Diode_SMD:D_SOD-123F`, the part already on the receiver BOM). Anode on
+  `/receiver/ADC_REF` after `R184`, cathode on `+5VA`; ADC_REF is 6 pins and
+  +5VA 30 pins in the netlist.
 
 ERC on the full hierarchy is **0 errors / 0 warnings**.
 
