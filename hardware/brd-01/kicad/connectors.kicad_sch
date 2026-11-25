@@ -2100,16 +2100,7 @@
 		)
 		(uuid "497e3034-0b5c-482b-b27e-0e53cce6a28b")
 	)
-	(wire
-		(pts
-			(xy 146.05 251.46) (xy 140.97 251.46)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "5098d186-ddb3-416d-9bc2-ef662698a2b5")
-	)
+
 	(wire
 		(pts
 			(xy 72.39 177.8) (xy 67.31 177.8)
@@ -2371,16 +2362,7 @@
 		)
 		(uuid "c3dd26c2-d06e-4c12-b75d-457055d47736")
 	)
-	(wire
-		(pts
-			(xy 146.05 254) (xy 140.97 254)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "ce34a3c7-eb05-4067-b780-8fd79a1293e1")
-	)
+
 	(wire
 		(pts
 			(xy 246.38 179.07) (xy 251.46 179.07)
@@ -2525,16 +2507,7 @@
 		(uuid "3f666058-56db-43ac-91b8-e7d082c7f74f")
 	)
 
-	(label "PEN2_PANEL_P"
-		(at 140.97 251.46 180)
-		(effects
-			(font
-				(size 1 1)
-			)
-			(justify right bottom)
-		)
-		(uuid "688a3adb-023c-418f-b211-f0a326792380")
-	)
+
 	(label "PEN2_PANEL_P"
 		(at 88.9 255.27 0)
 		(effects
@@ -2556,16 +2529,7 @@
 		(uuid "88513e19-5613-4d10-9b51-77b977fb729c")
 	)
 
-	(label "PEN2_PANEL_N"
-		(at 140.97 254 180)
-		(effects
-			(font
-				(size 1 1)
-			)
-			(justify right bottom)
-		)
-		(uuid "a96e48d9-4ebb-4a0f-9605-c3f417896dc9")
-	)
+
 	(label "PEN2_PANEL_N"
 		(at 88.9 257.81 0)
 		(effects
@@ -3439,7 +3403,7 @@
 	)
 	(symbol
 		(lib_id "Connector_Generic:Conn_01x02")
-		(at 151.13 251.46 0)
+		(at 106.68 255.27 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -3449,7 +3413,7 @@
 		(dnp no)
 		(uuid "11fc1551-f10a-43e6-8a05-95819edd51a7")
 		(property "Reference" "J126"
-			(at 151.13 246.46 0)
+			(at 106.68 247.65 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -3459,7 +3423,7 @@
 			)
 		)
 		(property "Value" "JST PHR-2 harness plug"
-			(at 151.13 248.46 0)
+			(at 106.68 250.19 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -5252,5 +5216,25 @@
 			(type default)
 		)
 		(uuid "ed82dbde-1284-4d3b-9b9d-e38992c9d586")
+	)
+	(wire
+		(pts
+			(xy 88.9 255.27) (xy 101.6 255.27)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "e3a25ef4-4101-4e24-aeca-15f7365f8efb")
+	)
+	(wire
+		(pts
+			(xy 88.9 257.81) (xy 101.6 257.81)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "ef608de1-f469-4e0e-9873-fcb9eab23cf0")
 	)
 )
