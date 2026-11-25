@@ -11,7 +11,7 @@
 		(company "Team 25 | ELEC/COEN 490 | Concordia University")
 		(comment 1 "Engineering draft. Contract v1.0.0.")
 		(comment 2 "Analog power: MGJ2D151515SC / LT3045EDD-1 / LT3093EMSE, user-approved.")
-		(comment 3 "Power entry, interlock and rails. Open: relay selection.")
+		(comment 3 "Power entry, rails and arm-stop latch. No panel E-stop by decision; stop halts the arm, field remains energised.")
 	)
 	(lib_symbols
 		(symbol "74xGxx:74LVC1G08"
@@ -9050,7 +9050,7 @@
 		)
 		(uuid "a949d4fd-f8c6-476f-95d6-768489a6d300")
 	)
-	(text "Driver interlock | Power-up, E-stop and overcurrent clear the arm latch"
+	(text "Power-up, manual stop and overcurrent clear the arm latch"
 		(exclude_from_sim no)
 		(at 54.48 417.79 0)
 		(effects
@@ -9129,7 +9129,7 @@
 		)
 		(uuid "3bbecf7a-bad3-474f-8cc3-2ada75dd3667")
 	)
-	(text "Panel E-stop harness"
+	(text "+/-15V rail bypass (C780/C781)"
 		(exclude_from_sim no)
 		(at 383.34 318.54 0)
 		(effects
@@ -9151,7 +9151,7 @@
 		)
 		(uuid "48f279cb-9396-4f84-9e0c-83b801b72a58")
 	)
-	(text "K1 opens the physical coil feed. A fresh press of SW750 arms K2 after the clear conditions are released."
+	(text "STOP: host request, power-up/brownout, /DRIVER_FAULT_N or unconfigured FPGA; SW750 arms latch; arm STOP does not remove field power."
 		(exclude_from_sim no)
 		(at 54.48 428.79 0)
 		(effects
@@ -9162,28 +9162,8 @@
 		)
 		(uuid "5831944f-2b3d-4b68-b86f-b0232662c423")
 	)
-	(text "Check E-stop relay drop-out time with the selected coil clamp."
-		(exclude_from_sim no)
-		(at 51.48 324.22 0)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left)
-		)
-		(uuid "660357ed-8c6b-4573-91f5-4920f88eef3e")
-	)
-	(text "Draft single-channel inhibit. Relay model, contact feedback and fault validation remain open."
-		(exclude_from_sim no)
-		(at 54.48 578.79 0)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left)
-		)
-		(uuid "733e4ef7-4c64-4c40-a221-750ec164b7ae")
-	)
+
+
 	(text "FPGA regulator sequence | 1.0 V → 1.8 V → 3.3 V"
 		(exclude_from_sim no)
 		(at 51.48 331.22 0)
@@ -9195,17 +9175,7 @@
 		)
 		(uuid "75fc3e7c-b5c7-42bd-992b-8040f102ccc3")
 	)
-	(text "Verify K2 coil/diode ratings, relay drop-out, power-up and brownout, fault pulse width, and manual restart."
-		(exclude_from_sim no)
-		(at 54.48 568.79 0)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left)
-		)
-		(uuid "b9c8f856-e96a-4281-a0b0-35c21ffd0a8f")
-	)
+
 	(text "F1 cartridge: Schurter 0001.2509, 3.15 A time-delay, 1.5 kA at 300 VDC."
 		(exclude_from_sim no)
 		(at 15.24 19.812 0)
@@ -11989,12 +11959,12 @@
 		(uuid "7600d011-2a16-43cb-9790-6735345bba29")
 	)
 	(label "PG_1V0"
-		(at 289.56 208.28 180)
+		(at 287.02 208.28 180)
 		(effects
 			(font
 				(size 1 1)
 			)
-			(justify right bottom)
+			(justify right)
 		)
 		(uuid "874a1b78-c04a-4c72-910e-68a6512e5c44")
 	)
@@ -19239,7 +19209,7 @@
 			)
 		)
 		(property "Value" "TPS62130ARGTR"
-			(at 391.668 203.708 90)
+			(at 394.97 197.58 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
