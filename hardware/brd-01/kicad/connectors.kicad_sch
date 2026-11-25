@@ -1812,7 +1812,7 @@
 			(embedded_fonts no)
 		)
 	)
-	(text "Pico follower | provisional keyed JST GH, 1–6 in ICD order"
+	(text "Pico follower | provisional keyed JST GH. Pin 1 is no-connect: BRD-01 does not supply 3V3 to the Pico. Pins 2–6 follow ICD order."
 		(exclude_from_sim no)
 		(at 22 146 0)
 		(effects
@@ -1823,7 +1823,7 @@
 		)
 		(uuid "2538aefd-0310-4517-bc94-82c9f46299fa")
 	)
-	(text "J121 mates with J122 off-board. Bond panel shell and pin 1 to chassis at the feedthrough."
+	(text "J121 mates with J122 off-board. At the feedthrough bond only XLR J120 pin 1 (SHIELD) and its shell to chassis; J121/J122 pin 1 are live PEN1_P/PEN1_N, never chassis."
 		(exclude_from_sim no)
 		(at 22 127 0)
 		(effects
@@ -1845,7 +1845,7 @@
 		)
 		(uuid "636b16b2-8614-4541-b3f2-65c4ff7834d0")
 	)
-	(text "Host USB-C | provisional USB4110-GF-A"
+	(text "USB-C device link to host PC | provisional USB4110-GF-A; 5.1k Rd on CC1/CC2, not Rp"
 		(exclude_from_sim no)
 		(at 195 146 0)
 		(effects
@@ -1900,7 +1900,7 @@
 		)
 		(uuid "eecb7df0-0ee2-4033-bf80-0db76ed07b20")
 	)
-	(text "STOP pull-down is at the Pico. Verify opposite UART directions, 3V3 use and shield termination."
+	(text "STOP pull-down is at the Pico. Verify shield termination."
 		(exclude_from_sim no)
 		(at 22 201 0)
 		(effects
@@ -5234,5 +5234,27 @@
 			(justify left)
 		)
 		(uuid "261cd2a2-5e76-42cc-94dc-77f36b435dee")
+	)
+	(text "J123 UART direction: pin 3 PICO_TX = Pico → FPGA (FPGA receives); pin 4 PICO_RX = FPGA → Pico (Pico receives)."
+		(exclude_from_sim no)
+		(at 22 163 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "1266f187-013b-4d9d-b3c7-0bd9bd111323")
+	)
+	(text "At the feedthrough bond only XLR J125 pin 1 (SHIELD) and its shell to chassis; J126/J127/J128 pin 1 are live PEN2_PANEL_P/PEN2_P/REF_COIL_P, never chassis."
+		(exclude_from_sim no)
+		(at 22 238 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "d08893d8-cfbb-469d-b20d-b56ac3fa53b0")
 	)
 )
