@@ -3,9 +3,10 @@
 
     python3 tools/test_span_report.py
 
-Builds three tiny synthetic sheets/netlists in a temp dir: a known two-pin-net
-span, a multi-unit part whose duplicate pin must be de-duplicated, and rail
-exclusion. Exits non-zero on any failed assertion.
+Builds tiny synthetic sheets/netlists in a temp dir: a known two-pin-net span,
+a multi-unit part whose duplicate pin must be de-duplicated, rail exclusion,
+and the in-block / cross-block / hub / moved-block gate rules. Exits non-zero
+on any failed assertion.
 """
 import contextlib
 import io
@@ -110,25 +111,103 @@ def main():
         res_all = S.report(sheetfile, xmlfile, None, None, None, True)
         check(len(res_all['rows']) == 4, '--include-rails restores all 4 nets')
 
-        # 4. A worse net is reported and gates CI even if the total improves.
+        # 4. An in-block worse net gates CI even if the total improves.
         before = d / 'before.kicad_sch'
         after = d / 'after.kicad_sch'
+        blocksfile = d / 'blocks.csv'
+        blocksfile.write_text('BIG 0,0,100,100\n')
+        blocks = S.load_blocks(blocksfile)
         before.write_text(sheet(lib, inst('R1', 'test:R', 10, 10, 1, ['1', '2'])
                                 + inst('R2', 'test:R', 30.5, 10, 1, ['1', '2'])))
         after.write_text(sheet(lib, inst('R1', 'test:R', 10, 10, 1, ['1', '2'])
                                + inst('R2', 'test:R', 50, 10, 1, ['1', '2'])))
         xmlfile.write_text(netlist([('SIG', [('R1', '1'), ('R2', '2')])], ['R1', 'R2']))
         cmp = S.compare(before, after, xmlfile, xmlfile, None, None,
-                        None, False, 0.0)
+                        None, False, 0.0, blocks)
         row = cmp['rows'][0]
         check(row['status'] == 'worsened' and row['delta'] == 19.5,
               'compare flags a moved pin as worsened by 19.50 mm')
+        check(row['klass'] == 'in-block' and cmp['summary']['inblock_regressions'] == 1,
+              'declared block makes the net in-block')
         with contextlib.redirect_stdout(io.StringIO()):
             rc = S.main(['--compare', str(before), str(after),
                          '--netlist-before', str(xmlfile),
                          '--netlist-after', str(xmlfile),
+                         '--blocks', str(blocksfile),
                          '--fail-on-regression', '--json'])
-        check(rc == 1, '--fail-on-regression exits 1 on a regression')
+        check(rc == 1, '--fail-on-regression exits 1 on an in-block regression')
+
+        # 5. In-block hop > 25.4 mm is flagged; inference reports itself.
+        hopfile = d / 'hop.kicad_sch'
+        hopfile.write_text(sheet(lib, inst('R1', 'test:R', 10, 10, 1, ['1'])
+                                 + inst('R2', 'test:R', 45, 10, 1, ['2'])))
+        hopxml = d / 'hop.xml'
+        hopxml.write_text(netlist([('HOP', [('R1', '1'), ('R2', '2')])], ['R1', 'R2']))
+        res = S.report(hopfile, hopxml, None, None, None, False, blocks)
+        check(res['rows'][0]['klass'] == 'in-block' and res['rows'][0]['hop'],
+              'in-block span of 35.00 mm gets W6-HOP')
+        out = io.StringIO()
+        with contextlib.redirect_stdout(out):
+            S.show_report(res)
+        check('W6-HOP' in out.getvalue(), 'report prints W6-HOP')
+        out = io.StringIO()
+        with contextlib.redirect_stdout(out):
+            inferred = S.report(hopfile, hopxml, None, None, None, False)
+            check(inferred['blocks_source'].startswith('inferred'),
+                  'omitting --blocks infers blocks from symbol positions')
+            S.show_report(inferred)
+        check('inferred' in out.getvalue(),
+              'report states clearly that blocks were inferred')
+
+        # 6. A cross-block net touching a declared hub is INFO, not a warning.
+        blocksfile.write_text('A 0,0,60,60\nB 60,0,160,60\n')
+        blocks = S.load_blocks(blocksfile)
+        hubfile = d / 'hub.kicad_sch'
+        hubfile.write_text(sheet(lib, inst('R1', 'test:R', 10, 10, 1, ['1'])
+                                 + inst('U1', 'test:R', 100, 10, 1, ['2'])))
+        hubxml = d / 'hub.xml'
+        hubxml.write_text(netlist([('TO_HUB', [('R1', '1'), ('U1', '2')])],
+                                  ['R1', 'U1']))
+        hubs = S.parse_hubs('U1')
+        res = S.report(hubfile, hubxml, None, None, None, False, blocks, hubs)
+        m = res['rows'][0]
+        check(m['klass'] == 'cross-block' and m['hub'] and not m['hop'],
+              'hub net is cross-block and INFO, not W6-HOP')
+        out = io.StringIO()
+        with contextlib.redirect_stdout(out):
+            S.show_report(res)
+        check('INFO (shared-hub cross-block)' in out.getvalue(),
+              'report prints INFO (shared-hub cross-block)')
+
+        # 7. Cross-block growth never fails; membership changes always print.
+        xbefore = d / 'xb.kicad_sch'
+        xafter = d / 'xa.kicad_sch'
+        xbefore.write_text(sheet(lib, inst('R1', 'test:R', 10, 10, 1, ['1', '2'])
+                                 + inst('U1', 'test:R', 100, 10, 1, ['2'])
+                                 + inst('R2', 'test:R', 45, 10, 1, ['1'])))
+        xafter.write_text(sheet(lib, inst('R1', 'test:R', 10, 10, 1, ['1', '2'])
+                                + inst('U1', 'test:R', 110, 10, 1, ['2'])
+                                + inst('R2', 'test:R', 70, 10, 1, ['1'])))
+        xxml = d / 'x.xml'
+        xxml.write_text(netlist([('TO_HUB', [('R1', '1'), ('U1', '2')]),
+                                 ('MOVED', [('R1', '2'), ('R2', '1')])],
+                                ['R1', 'U1', 'R2']))
+        args = ['--compare', str(xbefore), str(xafter),
+                '--netlist-before', str(xxml), '--netlist-after', str(xxml),
+                '--blocks', str(blocksfile), '--hubs', 'U1',
+                '--fail-on-regression']
+        out = io.StringIO()
+        with contextlib.redirect_stdout(out):
+            rc = S.main(args)
+        check(rc == 0, 'cross-block growth does not fail the gate')
+        text = out.getvalue()
+        check('MOVED BLOCK MOVED: in-block [A] -> cross-block [A, B]' in text,
+              'block-membership change prints as MOVED BLOCK even when gate passes')
+        cmp = S.compare(xbefore, xafter, xxml, xxml, None, None, None, False,
+                        0.0, blocks, hubs)
+        check(cmp['summary']['worsened'] >= 1
+              and cmp['summary']['inblock_regressions'] == 0,
+              'cross-block regression is counted but not gated')
 
     print('all checks passed')
     return 0

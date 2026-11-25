@@ -145,7 +145,7 @@ overprints a symbol. If any check fails, return to Step 3 — a wire collision i
 normally a placement collision — then repeat Steps 4–6. Finish with
 `python3 tools/kicad_sch_helper.py audit SHEET` and full-project ERC = 0/0.
 
-## 3. The span metric, and its trap
+## 3. The span metric: two classes, two totals, one narrow gate
 
 Measure a net's span from **pin positions**, not from label positions. Use
 `tools/kicad_span_report.py`; it is the ledger for this rule, not a script to
@@ -154,7 +154,8 @@ hand-roll per block:
 ```bash
 kicad-cli sch export netlist --format kicadxml -o /tmp/opencode/brd01.xml hardware/brd-01/kicad/brd-01.kicad_sch
 python3 tools/kicad_span_report.py hardware/brd-01/kicad/receiver.kicad_sch \
-    --netlist /tmp/opencode/brd01.xml --sheet /receiver/
+    --netlist /tmp/opencode/brd01.xml --sheet /receiver/ \
+    --blocks /tmp/opencode/receiver.blocks.csv --hubs U101,ADC_VCM
 ```
 
 Net membership comes from the kicadxml netlist and coordinates from
@@ -165,11 +166,44 @@ double-counts U105/U108, so do not use that output as a span ledger. Rails are
 excluded by default (`GND`, `+`/`-` supplies and `power:` symbol values); the
 excluded count is printed and `--include-rails` shows them — a distributed
 rail such as `/driver/BUFFER_VMID` spans the whole board by design and cannot
-be closed by one block. Span = `(max x − min x) × (max y − min y)` mm; the sum
-rule uses **S = width + height** (the convention of `hw/receiver-frontends`
+be closed by one block. Span = `(max x − min x) × (max y − min y)` mm; each
+section totals **S = width + height** (the convention of `hw/receiver-frontends`
 commit `ff7e52e`). `--sheet /receiver/` filters by the netlist's `<sheetpath>`;
 nets with pins on more than one sheet are marked `CROSS` rather than being
 attributed to one sheet.
+
+**Blocks are explicit.** `--blocks FILE` takes either a JSON list of
+`{"name", "x0", "y0", "x1", "y1"}` objects (or `name: [x0,y0,x1,y1]`) or the
+plain CSV form `name x0,y0,x1,y1` with `#` comments. Use the rectangles written
+down in Step 1, e.g. for the receiver (`hw/relayout-receiver`):
+
+```
+R1 447.04,25.40,814.07,568.96   # ADC + reference + FDA
+R2 25.40,25.40,434.34,200.66    # Ch0/Ch1 front end
+R3 25.40,213.36,434.34,393.70   # Ch2 pen 2 front end
+R4 25.40,406.40,434.34,568.96   # Ch3 reference-coil front end
+```
+
+If `--blocks` is omitted the tool **infers** blocks by clustering symbol
+origins on each axis and splitting where the gap is ≥ 12.7 mm (cross-product
+of x and y clusters, padded by half the gap so pins on the edge are included),
+and the header says `blocks: inferred ...`. Inferred blocks are convenient for
+a quick look but are sensitive to whole-sheet moves such as a rotation; use
+declared blocks for a before/after gate.
+
+A net is **in-block** when every pin whose part is on the sheet under review
+lies in one allocated rectangle; it is **cross-block** when its on-sheet pins
+touch two or more. Pins of parts on other sheets never assign a block here.
+The two classes print as separate sections with separate S totals:
+
+- **in-block** — `net, w × h, S, pins, block`; a net with `w > 25.4` or
+  `h > 25.4` is flagged `W6-HOP`. This is the drafting defect reviewers care
+  about: W6 of the review prompt forbids an *in-block* label hop over ~25.4 mm.
+- **cross-block** — `net, w × h, S, blocks touched`. Cross-block span is
+  reported, never flagged: four channels sharing one AD7768-4 (U101) cannot
+  all reach the hub with zero hops. `--hubs U101,ADC_VCM` names hub refs and
+  nets; a cross-block net that reaches a hub pin, the hub's block, or a named
+  hub net prints `INFO (shared-hub cross-block)` instead of a warning.
 
 Before and after a block, run the gate on a plain copy of the old sheet (the
 tool is read-only; it never writes a schematic):
@@ -178,27 +212,42 @@ tool is read-only; it never writes a schematic):
 python3 tools/kicad_span_report.py --compare /tmp/opencode/before.receiver.kicad_sch \
     hardware/brd-01/kicad/receiver.kicad_sch \
     --netlist-before /tmp/opencode/before.xml --netlist-after /tmp/opencode/brd01.xml \
-    --sheet /receiver/ --fail-on-regression
+    --sheet /receiver/ --blocks /tmp/opencode/receiver.blocks.csv \
+    --hubs U101,ADC_VCM --fail-on-regression
 ```
 
 `--compare` classifies every net in both revisions as improved / unchanged /
 worsened, prints `before -> after`, and **always prints a regressed net even
 when the total improves**. `--tolerance MM` allows a small per-net delta;
-`--json` emits the same data for scripts.
+`--top` never hides a gated or moved net; `--json` emits the same data for
+scripts.
 
-The trap: **a span can be reduced by moving the problem, not solving it.** In `136004f`,
-moving R548 from x = 486.41 to 100.33 beside U106 cut `PEN2_AMP` from 410.21 × 8.89 mm to
-24.13 × 2.54 mm, but the far pins of `FDA2_P` (U108.24 and R550.2) stayed at
-x = 397.51 / 600.71 while the label hop moved to x = 104.14 — so `FDA2_P` grew from
-203.20 × 5.08 mm to 496.57 × 6.35 mm. `d0d2c48` repeated it for `FDA3_P`
+**The gate is deliberately narrow.** `--fail-on-regression` exits 1 only when
+(a) an **in-block** net's S increases beyond tolerance, or (b) a **new**
+in-block hop above 25.4 mm appears that was not there before. Cross-block
+growth never fails — that is the expected cost of routing to a shared hub.
+The summary line prints `in-block regressions == N` (the number that decides
+the gate) alongside the ungated cross-block count, and `--help` states the
+same rule. To keep the relaxation honest, **any net whose block membership
+changes prints `MOVED BLOCK` before→after, whether the gate fails or not**;
+a net migrating from in-block to cross-block is itself a finding.
+
+The trap has not gone away: **a span can be reduced by moving the problem, not
+solving it.** In `136004f`, moving R548 from x = 486.41 to 100.33 beside U106
+cut `PEN2_AMP` from 410.21 × 8.89 mm to 24.13 × 2.54 mm, but the far pins of
+`FDA2_P` (U108.24 and R550.2) stayed at x = 397.51 / 600.71 while the label
+hop moved to x = 104.14 — so `FDA2_P` grew from 203.20 × 5.08 mm to
+496.57 × 6.35 mm. `d0d2c48` repeated it for `FDA3_P`
 (203.20 × 6.35 → 496.57 × 6.35 mm).
 
-**Rule:** a block is done only when **ΣS over all affected nets decreases and no affected
-net's S increases** (`S_after ≤ S_before` for each). A small width increase with a larger
-height decrease is acceptable (commits `ff7e52e`: `AIN2−` width 144.78 → 148.59 mm but
-S 520.70 → 500.38 mm). If any net regresses, the fix belongs in Step 2/3, not in a label
-move. `FDA2_P` is the counter-example: the targeted net improved hugely, the block still
-failed.
+**Rule:** a block is done only when the in-block ΣS decreases, no in-block
+net's S increases, and no new in-block W6 hop appears. A small width increase
+with a larger height decrease is acceptable (commits `ff7e52e`: `AIN2−` width
+144.78 → 148.59 mm but S 520.70 → 500.38 mm). Cross-block growth to a declared
+hub is acceptable and logged as INFO, with the `MOVED BLOCK` lines kept as the
+record of the trade. If an in-block net regresses, the fix belongs in Step 2/3,
+not in a label move. `FDA2_P` is the counter-example: the targeted net improved
+hugely, the block still failed.
 
 ## 4. What "acceptable" looks like, per block type
 
@@ -221,7 +270,7 @@ failed.
 - [ ] 200 dpi placement render viewed with wires excluded: no part in the flow path, no text collision, clear channel, readable function (Step 4, Gate 4)
 - [ ] Wires added pin-end to pin-end; junctions where needed; no in-block label hop >25.4 mm (Step 5, Gate 5)
 - [ ] 200 dpi wire render viewed: no wire through a symbol, no wire past a pin mid-span, no label overprint (Step 6, Gate 6)
-- [ ] Span ledger: ΣS before <…> -> after <…>; worst individual net <name> <before> -> <after>; no net increased
+- [ ] Span ledger: in-block ΣS before <…> -> after <…>; in-block regressions == 0; no new W6 hop >25.4 mm; cross-block/hub growth and MOVED BLOCK lines reviewed
 - [ ] Netlist compare: connectivity/parts unchanged; ERC 0 errors / 0 warnings
 ```
 
