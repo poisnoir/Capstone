@@ -11,6 +11,10 @@ Write (needs --apply):
     kicad_sch_helper.py del   SHEET --uuids UUID[,UUID] [--apply]
     kicad_sch_helper.py nc    SHEET --at X,Y [--apply]
     kicad_sch_helper.py junction SHEET --at X,Y [--apply]
+    kicad_sch_helper.py move  SHEET --ref REF --to X,Y [--apply]
+    kicad_sch_helper.py textpos SHEET --ref REF --prop Reference|Value --at X,Y [--justify left|center] [--apply]
+    kicad_sch_helper.py list  SHEET --bbox x1,y1,x2,y2
+    kicad_sch_helper.py box   SHEET --from X,Y --to X,Y --title T [--apply]
     kicad_sch_helper.py labelkind SHEET --uuids U --kind hierarchical_label|label [--apply]
     kicad_sch_helper.py label SHEET --text NAME --at X,Y [--angle A] [--apply]
     kicad_sch_helper.py sheetpin SHEET --sheet UUID --name N --at X,Y --angle A --shape S [--apply]
@@ -509,6 +513,105 @@ def pair(s):
     return (float(x), float(y))
 
 
+
+def cmd_move(path, ref, to, apply_):
+    """Move a symbol. Property texts are placed separately with textpos."""
+    t = Path(path).read_text()
+    for inst in instances(parse(t)):
+        if inst['ref'] != ref:
+            continue
+        start, stop = block_span(t, inst['uuid'])
+        blk = t[start:stop]
+        m = re.search(r'\t\t\(at [\d.-]+ [\d.-]+ ([\d.-]+)\)', blk)
+        blk = (blk[:m.start()]
+               + f'\t\t(at {fmt(to[0])} {fmt(to[1])} {m.group(1)})'
+               + blk[m.end():])
+        save(path, t[:start] + blk + t[stop:], apply_)
+        return
+    sys.exit(f"ref not found: {ref}")
+
+
+def cmd_textpos(path, ref, prop, at, justify, apply_, angle=0):
+    """Place one property text of a symbol, with reliable justification."""
+    t = Path(path).read_text()
+    for inst in instances(parse(t)):
+        if inst['ref'] != ref:
+            continue
+        start, stop = block_span(t, inst['uuid'])
+        blk = t[start:stop]
+        # locate the property's own sub-block
+        i = blk.find(f'(property "{prop}"')
+        if i < 0:
+            sys.exit(f"{ref} has no {prop} property")
+        depth, j = 0, i
+        while j < len(blk):
+            if blk[j] == '(':
+                depth += 1
+            elif blk[j] == ')':
+                depth -= 1
+                if depth == 0:
+                    break
+            j += 1
+        sub = blk[i:j + 1]
+        sub = re.sub(r'\(at [\d.-]+ [\d.-]+ [\d.-]+\)',
+                     f'(at {fmt(at[0])} {fmt(at[1])} {angle})', sub, count=1)
+        sub = re.sub(r'\(justify [^)]*\)', '', sub)
+        if justify != 'center':
+            sub = sub.replace('(size 1.27 1.27)',
+                              f'(size 1.27 1.27)', 1)
+            sub = re.sub(r'(\(font\n\t+\t+\(size 1\.27 1\.27\)\n)(\t+)',
+                         r'\1\2)', sub)
+            sub = sub.replace('\t\t\t)', f'\t\t\t)\n\t\t\t\t(justify {justify})', 1)
+        blk = blk[:i] + sub + blk[j + 1:]
+        save(path, t[:start] + blk + t[stop:], apply_)
+        return
+    sys.exit(f"ref not found: {ref}")
+
+
+def cmd_list(path, bbox):
+    """Print every symbol and connection object inside a rectangle."""
+    root = parse(Path(path).read_text())
+    x1, y1, x2, y2 = bbox
+
+    def inb(p):
+        return x1 <= p[0] <= x2 and y1 <= p[1] <= y2
+
+    for i in instances(root):
+        if inb((i['x'], i['y'])):
+            print(f"SYM  {i['ref']:8s} {i['x']:8.2f},{i['y']:8.2f} {i['uuid']}")
+    for w in wires(root):
+        if inb(w['a']) or inb(w['b']):
+            print(f"WIRE {w['a']} {w['b']} {w['uuid']}")
+    for kind in ('label', 'global_label', 'hierarchical_label'):
+        for l in labels(root, kind):
+            if inb(l['p']):
+                print(f"{kind[:4].upper()} {l['text']:18s} {l['p']} {l['uuid']}")
+    for j in points(root, 'junction'):
+        if inb(j):
+            print(f"JUNC {j}")
+
+
+def cmd_box(path, a, b, title, apply_):
+    """Draw a titled rectangle, matching the sheet's block convention."""
+    t = Path(path).read_text()
+    for v in (a[0], a[1], b[0], b[1]):
+        if not grade(v):
+            sys.exit(f"refusing off-grid box {a} {b}")
+    import uuid as _u
+    new = (f'\t(rectangle\n\t\t(start {fmt(a[0])} {fmt(a[1])})\n'
+           f'\t\t(end {fmt(b[0])} {fmt(b[1])})\n'
+           f'\t\t(stroke\n\t\t\t(width 0.1524)\n\t\t\t(type solid)\n\t\t)\n'
+           f'\t\t(fill\n\t\t\t(type none)\n\t\t)\n'
+           f'\t\t(uuid "{_u.uuid4()}")\n\t)\n'
+           f'\t(text "{title}"\n\t\t(exclude_from_sim no)\n'
+           f'\t\t(at {fmt(a[0] + 1.27)} {fmt(b[1] - 2.54)} 0)\n'
+           f'\t\t(effects\n\t\t\t(font\n\t\t\t\t(size 2 2)\n\t\t\t)\n'
+           f'\t\t\t(justify left bottom)\n\t\t)\n'
+           f'\t\t(uuid "{_u.uuid4()}")\n\t)\n')
+    idx = t.rstrip().rfind(')')
+    save(path, t[:idx] + new + t[idx:], apply_)
+
+
 def main(argv):
     if len(argv) < 3:
         sys.exit(__doc__)
@@ -547,6 +650,24 @@ def main(argv):
         elif cmd == 'setrot':
             cmd_setrot(path, rest[rest.index('--ref') + 1],
                        int(rest[rest.index('--rot') + 1]), apply_)
+        elif cmd == 'move':
+            cmd_move(path, rest[rest.index('--ref') + 1],
+                     pair(rest[rest.index('--to') + 1]), apply_)
+        elif cmd == 'textpos':
+            cmd_textpos(path, rest[rest.index('--ref') + 1],
+                        rest[rest.index('--prop') + 1],
+                        pair(rest[rest.index('--at') + 1]),
+                        rest[rest.index('--justify') + 1]
+                        if '--justify' in rest else 'center', apply_,
+                        int(rest[rest.index('--angle') + 1])
+                        if '--angle' in rest else 0)
+        elif cmd == 'list':
+            cmd_list(path, [float(v) for v in
+                            rest[rest.index('--bbox') + 1].split(',')])
+        elif cmd == 'box':
+            cmd_box(path, pair(rest[rest.index('--from') + 1]),
+                    pair(rest[rest.index('--to') + 1]),
+                    rest[rest.index('--title') + 1], apply_)
         elif cmd == 'labelkind':
             cmd_labelkind(path, rest[rest.index('--uuids') + 1].split(','),
                           rest[rest.index('--kind') + 1], apply_,
