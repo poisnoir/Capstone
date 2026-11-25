@@ -410,7 +410,7 @@ contract change) or the bench.
 | C4 | FT231X VCC range | **closed**: see D3 |
 | C5 | MGJ2 load margin and 45 kHz | **closed on paper**: ~7–8 mA margin per rail (bom-to-cad.md). **Bench:** look for a 45 kHz spur and its drift; place U5 away from the pen input (§6) |
 | C6 | FPGA running currents | **estimated** (§3): 0.37 / 0.10 / 0.015 A typical, 0.8 / 0.2 / 0.03 A design max. FPGA team confirms with the Power Estimator after synthesis |
-| C7 | AD7768-4 supply limits at power-up/down | **closed with a fix**: no limit between its own supplies [DS], but REF+ ≤ AVDD1 + 0.3 V is violated at v2 power-down. Add D_REF (§4) |
+| C7 | AD7768-4 supply limits at power-up/down | **closed with a fix, one margin open**: no limit between its own supplies [DS], but REF+ ≤ AVDD1 + 0.3 V is violated at v2 power-down. `D_REF` = `D534` (BAS70H,115) is placed (§4). Abs-max is AVDD1 + 0.3 V (`AD7768-4` Rev D, Table 7, p. 23, "Reference Input Voltage to AVSS"); a Schottky clamp holds ADC_REF at AVDD1 + Vf, so the clamp is compliant only while Vf ≤ 0.3 V at the actual fault current. **Bench:** measure V(ADC_REF) − V(+5VA) while cycling +15 V with a 4.096 V reference applied; if it exceeds 0.3 V, fit a lower-Vf part or add a series resistor ahead of D534 |
 | C8 | C180/C184 voltage rating | **closed**: specify 10 µF 25 V X7R 1206 (§4); the schematic value field only says "10u" today |
 
 ### Schematic changes this implies
