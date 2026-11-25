@@ -17777,7 +17777,7 @@
 			)
 		)
 	)
-	(global_label "+15V_DRV"
+	(global_label "+15V_FUSED"
 		(shape passive)
 		(at 707.39 514.35 180)
 		(effects
@@ -17799,7 +17799,7 @@
 			)
 		)
 	)
-	(global_label "+15V_DRV"
+	(global_label "+15V_FUSED"
 		(shape passive)
 		(at 294.64 186.69 180)
 		(effects
@@ -17843,7 +17843,7 @@
 			)
 		)
 	)
-	(global_label "+15V_DRV"
+	(global_label "+15V_FUSED"
 		(shape passive)
 		(at 274.32 398.78 180)
 		(effects
@@ -18393,7 +18393,7 @@
 			)
 		)
 	)
-	(global_label "+15V_DRV"
+	(global_label "+15V_FUSED"
 		(shape passive)
 		(at 753.11 370.84 180)
 		(effects
@@ -18663,7 +18663,7 @@
 			)
 		)
 	)
-	(global_label "+15V_DRV"
+	(global_label "+15V_FUSED"
 		(shape passive)
 		(at 685.8 398.78 180)
 		(effects
@@ -18685,7 +18685,7 @@
 			)
 		)
 	)
-	(global_label "+15V_DRV"
+	(global_label "+15V_FUSED"
 		(shape passive)
 		(at 274.32 508 180)
 		(effects
@@ -19719,7 +19719,7 @@
 			)
 		)
 	)
-	(global_label "+15V_DRV"
+	(global_label "+15V_FUSED"
 		(shape passive)
 		(at 707.39 295.91 180)
 		(effects
@@ -19917,7 +19917,7 @@
 			)
 		)
 	)
-	(global_label "+15V_DRV"
+	(global_label "+15V_FUSED"
 		(shape passive)
 		(at 537.21 86.36 180)
 		(effects
@@ -20696,7 +20696,7 @@
 			)
 		)
 	)
-	(global_label "+15V_DRV"
+	(global_label "+15V_FUSED"
 		(shape passive)
 		(at 341.63 152.4 180)
 		(effects
@@ -20982,7 +20982,7 @@
 			)
 		)
 	)
-	(global_label "+15V_DRV"
+	(global_label "+15V_FUSED"
 		(shape passive)
 		(at 685.8 181.61 180)
 		(effects
@@ -21312,7 +21312,7 @@
 			)
 		)
 	)
-	(global_label "+15V_DRV"
+	(global_label "+15V_FUSED"
 		(shape passive)
 		(at 753.11 152.4 180)
 		(effects
@@ -21576,7 +21576,7 @@
 			)
 		)
 	)
-	(global_label "+15V_DRV"
+	(global_label "+15V_FUSED"
 		(shape passive)
 		(at 707.39 186.69 180)
 		(effects
@@ -21730,7 +21730,7 @@
 			)
 		)
 	)
-	(global_label "+15V_DRV"
+	(global_label "+15V_FUSED"
 		(shape passive)
 		(at 513.08 107.95 180)
 		(effects
@@ -22126,7 +22126,7 @@
 			)
 		)
 	)
-	(global_label "+15V_DRV"
+	(global_label "+15V_FUSED"
 		(shape passive)
 		(at 294.64 295.91 180)
 		(effects
@@ -22302,7 +22302,7 @@
 			)
 		)
 	)
-	(global_label "+15V_DRV"
+	(global_label "+15V_FUSED"
 		(shape passive)
 		(at 685.8 508 180)
 		(effects
@@ -22368,7 +22368,7 @@
 			)
 		)
 	)
-	(global_label "+15V_DRV"
+	(global_label "+15V_FUSED"
 		(shape passive)
 		(at 685.8 289.56 180)
 		(effects
@@ -22390,7 +22390,7 @@
 			)
 		)
 	)
-	(global_label "+15V_DRV"
+	(global_label "+15V_FUSED"
 		(shape passive)
 		(at 294.64 514.35 180)
 		(effects
@@ -22544,7 +22544,7 @@
 			)
 		)
 	)
-	(global_label "+15V_DRV"
+	(global_label "+15V_FUSED"
 		(shape passive)
 		(at 753.11 261.62 180)
 		(effects
@@ -23015,7 +23015,7 @@
 			)
 		)
 	)
-	(global_label "+15V_DRV"
+	(global_label "+15V_FUSED"
 		(shape passive)
 		(at 274.32 181.61 180)
 		(effects
@@ -23125,7 +23125,7 @@
 			)
 		)
 	)
-	(global_label "+15V_DRV"
+	(global_label "+15V_FUSED"
 		(shape passive)
 		(at 341.63 261.62 180)
 		(effects
@@ -23728,7 +23728,7 @@
 			)
 		)
 	)
-	(global_label "+15V_DRV"
+	(global_label "+15V_FUSED"
 		(shape passive)
 		(at 670.56 86.36 180)
 		(effects
@@ -23781,7 +23781,7 @@
 			)
 		)
 	)
-	(global_label "+15V_DRV"
+	(global_label "+15V_FUSED"
 		(shape passive)
 		(at 707.39 405.13 180)
 		(effects
@@ -24507,7 +24507,7 @@
 			)
 		)
 	)
-	(global_label "+15V_DRV"
+	(global_label "+15V_FUSED"
 		(shape passive)
 		(at 753.11 480.06 180)
 		(effects
@@ -24551,7 +24551,7 @@
 			)
 		)
 	)
-	(global_label "+15V_DRV"
+	(global_label "+15V_FUSED"
 		(shape passive)
 		(at 341.63 480.06 180)
 		(effects
@@ -25101,7 +25101,7 @@
 			)
 		)
 	)
-	(global_label "+15V_DRV"
+	(global_label "+15V_FUSED"
 		(shape passive)
 		(at 294.64 405.13 180)
 		(effects
@@ -25145,7 +25145,7 @@
 			)
 		)
 	)
-	(global_label "+15V_DRV"
+	(global_label "+15V_FUSED"
 		(shape passive)
 		(at 274.32 289.56 180)
 		(effects
@@ -25233,7 +25233,7 @@
 			)
 		)
 	)
-	(global_label "+15V_DRV"
+	(global_label "+15V_FUSED"
 		(shape passive)
 		(at 430.53 97.79 180)
 		(effects
@@ -25427,7 +25427,7 @@
 			)
 		)
 	)
-	(global_label "+15V_DRV"
+	(global_label "+15V_FUSED"
 		(shape passive)
 		(at 341.63 370.84 180)
 		(effects
