@@ -4544,16 +4544,6 @@
 	)
 	(wire
 		(pts
-			(xy 482.6 509.27) (xy 477.52 509.27)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "72d3f644-3a0d-454e-a982-00762563a63f")
-	)
-	(wire
-		(pts
 			(xy 396.24 464.82) (xy 391.16 464.82)
 		)
 		(stroke
@@ -6044,16 +6034,6 @@
 	)
 	(wire
 		(pts
-			(xy 490.22 509.27) (xy 495.3 509.27)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "ec49c623-be29-4584-8a7c-45cceb787cfc")
-	)
-	(wire
-		(pts
 			(xy 397.51 421.64) (xy 392.43 421.64)
 		)
 		(stroke
@@ -6823,16 +6803,6 @@
 		)
 		(uuid "46a3b830-7a12-4577-bfb4-2b8ca4ec64ef")
 	)
-	(label "REF_COIL_AMP"
-		(at 77.47 518.16 0)
-		(effects
-			(font
-				(size 1 1)
-			)
-			(justify left bottom)
-		)
-		(uuid "46e86a5a-abcb-4f7f-a18a-89c37f03ad30")
-	)
 	(label "FDA1_N"
 		(at 213.36 323.85 0)
 		(effects
@@ -7213,16 +7183,6 @@
 			(justify left bottom)
 		)
 		(uuid "86568d3f-9424-4c62-9073-c6c6d7a13cc8")
-	)
-	(label "REF_COIL_AMP"
-		(at 477.52 509.27 180)
-		(effects
-			(font
-				(size 1 1)
-			)
-			(justify right bottom)
-		)
-		(uuid "87e1c10b-9408-475c-bb24-62b3055e4a17")
 	)
 	(label "FDA0_N"
 		(at 213.36 261.62 0)
@@ -7637,16 +7597,6 @@
 		)
 		(uuid "c98aa3fc-483e-4647-8d4f-c9b6b6abbf8d")
 	)
-	(label "REF_COIL_AMP"
-		(at 77.47 515.62 0)
-		(effects
-			(font
-				(size 1 1)
-			)
-			(justify left bottom)
-		)
-		(uuid "c9f2ba80-7580-4c3b-a24a-fe23547214c0")
-	)
 	(label "ADC_DAISY_IN"
 		(at 370.84 156.21 180)
 		(effects
@@ -7667,16 +7617,6 @@
 			(justify right bottom)
 		)
 		(uuid "d5a27f0a-9d83-4ee3-86d4-a88cf6de3215")
-	)
-	(label "FDA3_P"
-		(at 495.3 509.27 0)
-		(effects
-			(font
-				(size 1 1)
-			)
-			(justify left bottom)
-		)
-		(uuid "d5b9ff3b-2703-4f68-b046-9650371c98de")
 	)
 	(label "PEN2_IN_P"
 		(at 231.14 406.4 180)
@@ -15661,7 +15601,7 @@
 	)
 	(symbol
 		(lib_id "Device:R")
-		(at 486.41 509.27 90)
+		(at 100.33 515.62 90)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -15671,7 +15611,7 @@
 		(dnp no)
 		(uuid "779ec15a-dd1e-4cc9-a3e8-3e8ae518eba8")
 		(property "Reference" "R568"
-			(at 486.41 501.73 90)
+			(at 100.33 508.08 90)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -15681,7 +15621,7 @@
 			)
 		)
 		(property "Value" "499"
-			(at 486.41 503.73 90)
+			(at 100.33 510.08 90)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -15691,7 +15631,7 @@
 			)
 		)
 		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
-			(at 486.41 506.73 90)
+			(at 100.33 513.08 90)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -21259,5 +21199,57 @@
 			(justify left)
 		)
 		(uuid "583ae3e8-1e2a-4370-bb4b-dbfc09773348")
+	)
+	(wire
+		(pts
+			(xy 77.47 518.16) (xy 77.47 515.62)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "880b9469-2cbc-4f79-a22d-d7545f72a36b")
+	)
+	(wire
+		(pts
+			(xy 77.47 515.62) (xy 96.52 515.62)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "74fb0f29-98d2-47e5-b133-33510a0de605")
+	)
+	(junction
+		(at 77.47 515.62)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "d7169b2a-b093-4f31-bcc1-95ad2de37f9a")
+	)
+	(junction
+		(at 77.47 518.16)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "8f03bb16-2d25-4982-90c6-31bcb86e519c")
+	)
+	(wire
+		(pts
+			(xy 104.14 515.62) (xy 109.22 515.62)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "f991f3d1-c999-41f0-8a00-0eccda304835")
+	)
+	(label "FDA3_P"
+		(at 109.22 515.62 0)
+		(effects
+			(font
+				(size 1 1)
+			)
+			(justify left)
+		)
+		(uuid "72570c0c-ae08-4f0e-9e5a-e927d885f2c7")
 	)
 )
