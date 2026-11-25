@@ -185,17 +185,6 @@
 				(font
 					(size 1.27 1.27)
 				)
-				(justify left top)
-			)
-		)
-		(pin "ESTOP_ASSERTED" output
-			(at 71.12 80.01 90)
-			(uuid "d69f7813-9ada-43b6-a159-ceb8d964d27c")
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify right)
 			)
 		)
 		(pin "DRIVER_FAULT_N" input
@@ -261,17 +250,6 @@
 				(font
 					(size 1.27 1.27)
 				)
-				(justify left top)
-			)
-		)
-		(pin "ESTOP_ASSERTED" input
-			(at 180.34 80.01 90)
-			(uuid "c6d9cfe6-15d2-4868-98e8-a28ec1aa694f")
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify right)
 			)
 		)
 		(pin "DRIVER_FAULT_N" input
@@ -366,26 +344,6 @@
 	(embedded_fonts no)
 	(wire
 		(pts
-			(xy 71.12 80.01) (xy 71.12 74.93)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "05d5fd98-3461-42d9-a397-8b9f84cf88b4")
-	)
-	(label "ESTOP_ASSERTED"
-		(at 71.12 74.93 0)
-		(effects
-			(font
-				(size 1 1)
-			)
-			(justify left)
-		)
-		(uuid "073a870f-ebb9-4e6b-82df-b8d08fc7ea40")
-	)
-	(wire
-		(pts
 			(xy 76.2 80.01) (xy 76.2 69.85)
 		)
 		(stroke
@@ -443,26 +401,6 @@
 			(justify left)
 		)
 		(uuid "69c17a17-e680-4761-8538-18413f647feb")
-	)
-	(wire
-		(pts
-			(xy 180.34 80.01) (xy 180.34 74.93)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "7b14f585-4f4c-41d1-a5fe-e04f7d520d01")
-	)
-	(label "ESTOP_ASSERTED"
-		(at 180.34 74.93 0)
-		(effects
-			(font
-				(size 1 1)
-			)
-			(justify left)
-		)
-		(uuid "7a655c1a-5468-40ba-8574-d17e4dff5bff")
 	)
 	(wire
 		(pts
