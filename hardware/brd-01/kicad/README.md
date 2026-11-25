@@ -4,7 +4,8 @@ Open [brd-01.kicad_pro](brd-01.kicad_pro) in KiCad **10.0.8** with the
 official 10.0.8 symbol and footprint libraries installed. The root schematic
 contains five populated sheets. Signals that cross sheets
 (`DRIVER_FAULT_N`, `BUCK_SYNC`) use hierarchical labels and
-sheet pins on the root; power rails use power symbols.
+sheet pins on the root; power rails use power symbols. The connectors sheet
+keeps the C2 (pen 1) and C4 (pen 2) harnesses as wired blocks.
 Title block rev **0.1**; KiCad ERC reports **zero violations** on the full
 hierarchy. The schematic is complete as an engineering draft and carries the
 following release holds.
@@ -13,9 +14,9 @@ following release holds.
 |---|---|---|---|
 | 2 | Power | Fused entry and corrected TVS polarity, unswitched +15 V_FUSED driver rail and hardware overcurrent latch retargeted to arm STOP, FPGA rail sequencing, +5VA regulator fed from fused 15 V, and the approved MGJ2D151515SC/LT3045EDD-1#TRPBF/LT3093EMSE#TRPBF ±12VA chain | Verify converter headroom and combined receiver and driver load against the 67 mA per-rail rating. Verify startup, rail load and dissipation against the 67 mA per-rail rating, clamp/release time, restart behavior and input protection. The 3.15 A fuse cartridge is a recorded deviation from the 3.00 A spec. |
 | 3 | Driver | DAC80508, eight 60 kHz reconstruction filters, coil outputs and sense returns, sense summer, individual comparator test nets, nominal 253 mA prototype trip, nominal 280 mA peak LMH6321 clamps and a shared active-low fault output to the FPGA | Measure prototype command scaling and loop compensation with the coil and cable, verify coil-return midpoint impedance, LMH6321 clamp tolerance and thermal validation, trip threshold tolerance, and hardware latch pulse capture with arm STOP assertion. Confirm the summer scale and phase on the bench. |
-| 4 | Receiver | AD7768-4 in four-lane SPI-control configuration, ADR434 reference, Ch0 current sense, Ch1 pen 1, Ch2 pen 2 and Ch3 fixed-reference paths | Ch2 and Ch3 reuse the Ch1 circuit provisionally. Reconcile the resulting INA163 and ADA4940-2 quantities with the BOM, verify reference-coil gain, and check ADC settling, reference buffer stability and phase matching. |
+| 4 | Receiver | AD7768-4 in four-lane SPI-control configuration, ADR434 reference, Ch0 current sense, Ch1 pen 1, Ch2 pen 2 and Ch3 fixed-reference paths; three INA163UA (U104/U106/U107) and two dual ADA4940-2ACPZ (U105/U108), matching the BOM-to-CAD ±12VA load check | Ch2 gain values are open, and whether Ch3 (reference coil) is populated and used is undecided. If Ch3 is built, verify reference-coil gain; also check ADC settling, reference buffer stability and phase matching. |
 | 5 | FPGA | FTG256 ball assignments, QSPI and JTAG, shared clock, USB-UART and Pico signals | Verify timing, power and bypass allocation on the target device. Program FT231X CBUS2 for VBUS sensing and verify USB ESD and power-off behavior. |
-| 6 | Connectors | Eight keyed FG headers, two pen panel connectors and JST harnesses, provisional JST GH headers for reference and Pico, plus USB-C with data and CC ESD clamps | Freeze pen and reference polarity and verify mating harnesses, Pico 3V3 use and shield termination. Approve USB shield bonding, enclosure fit and FG mating hardware. |
+| 6 | Connectors | Eight keyed FG headers, two pen panel connectors and JST harnesses, C2 (pen 1) and C4 (pen 2) as wired harness blocks, provisional JST GH headers for reference and Pico (J123.1 no-connect), plus USB-C with data and CC ESD clamps | Freeze pen and reference polarity and verify mating harnesses and shield termination. Approve USB shield bonding, enclosure fit and FG mating hardware. |
 
 The BRD-01 draft uses the LTC1563-2 high-speed unity-gain application and the
 LMH6321 single-supply ground-pin bias configuration. The driver and receiver
@@ -72,7 +73,7 @@ documents every rail, the arm STOP latch and every net that crosses sheets.
 | 3 | Driver | DAC80508, eight 60 kHz filters, eight current loops, sense summer, comparators and open-drain fault bus |
 | 4 | Receiver | AD7768-4, ADR434 reference, Ch0 current sense and Ch1–Ch3 sensor front ends |
 | 5 | FPGA | FTG256 ball map, QSPI, JTAG, clock, USB-UART and Pico signals |
-| 6 | Connectors | FG headers, pen and reference connectors, Pico header, USB-C and ESD |
+| 6 | Connectors | FG headers, pen panels, wired C2/C4 harness blocks, reference and Pico headers (J123.1 no-connect), USB-C and ESD |
 
 No E-stop mushroom or relay remains on the power sheet. The board has no
 panel E-stop: arm STOP comes from the host request or the hardware latch
