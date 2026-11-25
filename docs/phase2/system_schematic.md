@@ -13,7 +13,7 @@ left-to-right, power top-to-bottom, faults red dashed, calibration blue dashed.
 
 | Board | Function | Size | Power |
 |---|---|---|---|
-| **BRD-01** | **single electronics board** — power entry + E-stop + DC-DC/LDO; FPGA + clock (§6.0); DAC80508 + 8× LTC1563-2 + 8 current loops + current sense; receiver (INA163 + ADA4940-2 + AD7768-4 + ADR434); FG and pen connectors | ~250 × 200 mm, 4-layer | +15 V in |
+| **BRD-01** | **single electronics board** — power entry + DC-DC/LDO; FPGA + clock (§6.0); DAC80508 + 8× LTC1563-2 + 8 current loops + current sense; receiver (INA163 + ADA4940-2 + AD7768-4 + ADR434); FG and pen connectors | ~250 × 200 mm, 4-layer | +15 V in |
 | FG-01 | 8 vendor emitter coils on machined plates (passive; mechanically separate) | 8 × ~91 mm PCB + 2 plates | passive |
 | PEN-01 | Coil B + cable + mini-XLR | pen | passive |
 | PMS-01 | Pico 2 + XYZ stage + camera | bench | 5 V |
@@ -35,7 +35,7 @@ FPGA is integrated into BRD-01 (on-board, module, or the owned dev board) is sti
  ┌────────────────────────────▼──────────────────────────────────────────┐
  │ BRD-01 — one 4-layer board, ~250 × 200 mm                             │
  │                                                                       │
- │  power entry F1/TVS/L1 ──► E-stop K1/K2 ──► +15 V_DRV                 │
+ │  power entry F1/TVS/L1 ──► +15 V_FUSED ──► 8× LMH6321                │
  │        ├─► OKI 5 V ─► 3.3 V LDO ─► FPGA                               │
  │        └─► RV-1515D ±15 V iso ─► TPS7A47/33 ─► ±12 V_A                │
  │                                                                       │
@@ -77,8 +77,8 @@ Ch1–3 → FPGA.
 
 | Rail | Source | Load | Current (typ/max) | Notes |
 |---|---|---|---|---|
-| +15 V_RAW | ME60A1503F01 | input protection, E-stop, OKI, RV | 1.5 A / 3.0 A | 60 W adapter; fuse 3 A |
-| +15 V_DRV | E-stop K1 | 8× LMH6321 | 1.2 A / 2.0 A | 150 mA first; 250 mA fallback |
+| +15 V_RAW | ME60A1503F01 | input protection, OKI, RV | 1.5 A / 3.0 A | 60 W adapter; fuse 3 A |
+| +15 V_FUSED | F1/TVS/L1, unswitched | 8× LMH6321 | 1.2 A / 2.0 A | was +15 V_DRV; no E-stop contact remains |
 | +5 V_D | OKI-78SR-5/1.5 | FPGA board, DACs, ADC, LDOs | 0.8 A / 1.5 A | buck module; LDO after for analog |
 | +3.3 V_D | TPS7A20 from +5 V_D | FPGA I/O, ADC IOVDD | 0.2 A / 0.3 A | digital |
 | +15 V_A_ISO | RV-1515D | TPS7A47 | 30 mA / 66 mA | isolated analog module |
@@ -89,8 +89,9 @@ Ch1–3 → FPGA.
 
 **Protection at the adapter input:** F1 3 A slow-blow, D1 TVS (SMBJ18A),
 L1 common-mode choke, C1 1000 µF/25 V, reverse-polarity MOSFET or ideal diode.
-The E-stop K1 is a normally-closed contact in the +15 V_DRV enable; it is not
-in the FPGA supply, so the FPGA stays alive to log the stop.
+No E-stop contact remains in the power path: +15 V_FUSED feeds the driver
+continuously. An overcurrent trip still clears the hardware latch, which now
+asserts the arm STOP line instead of removing the field rail.
 
 **Power budget at 150 mA:** driver 8×0.15×15 ≈ 18 W; FPGA/ADC/analog ≈ 6 W;
 losses ≈ 3 W; total ≈ 27 W of the 60 W adapter. At 250 mA the driver is ≈ 30 W;
@@ -190,23 +191,30 @@ R_store7 ──► A17 buffer ──┘
 - Summer output: 8 tones, each 0.30 V RMS at 150 mA; peak sum <2.5 V, within
   the ±4.096 V ADC range.
 - Per-channel peak comparators: TLV3201 ×8, reference from a 0.6 V shunt
-  reference; open-drain fault bus to the FPGA and the E-stop logic.
+  reference; open-drain fault bus to the FPGA and the hardware STOP latch.
 - The summer is the \(Y_I\) phase reference; its group delay is fixed and
   absorbed by κ.
 
-### 4.5 E-stop / enable chain
+### 4.5 Arm STOP / latch chain
 
 ```text
-+15 V_RAW ──► F1 ──► K1 contact (NC mushroom) ──► K2 relay coil ──► +15 V_DRV
-                              │
-                              └──► opto ──► FPGA ESTOP_STATUS
++15 V_RAW ──► F1 ──► +15 V_FUSED ──► 8× LMH6321      (no E-stop contact)
+
+U4.P4 ──► PICO_STOP_REQ_N ──┐
+            R754 pull-down  ├──► U755 74LVC1G08 ──► PICO_STOP_N ──► J123.5
+U753.~Q (pin 3) ────────────┘
 ```
 
-- K1 is the panel mushroom (Schneider XB4BS8444 or AutomationDirect GCX1131),
-  normally closed, latching; pressing it drops K2 and removes +15 V_DRV.
-- K2 is a force-guided relay; its NO contact feeds the LMH6321 enables.
-- The FPGA gets an opto-isolated status; it cannot re-enable the driver.
-- A separate watchdog (TPS3823, or a PL timer) drives the Pico stop line.
+- There is no panel mushroom or K2 relay on BRD-01. The field rail is never
+  interrupted by a stop.
+- `PICO_STOP_N` is active low. U755 (74LVC1G08) ANDs the FPGA request with
+  `U753.~Q`; either input low asserts STOP to the arm.
+- U753 is cleared at power-up/brownout by U751 and on overcurrent via
+  `/DRIVER_FAULT_N` → U752. With CLR asserted, `~Q=1`, so STOP is asserted;
+  U753.Q (pin 5) is no longer used.
+- R754 pulls the FPGA-side request low while the FPGA is unconfigured.
+- The separate watchdog (TPS3823, or a PL timer) still drives the Pico stop
+  path through the FPGA request.
 
 ---
 
@@ -310,7 +318,7 @@ The pin list below is the on-board net assignment (no cable).
 | 22 | DAC_SDO | in | optional readback |
 | 23–35 | spare | — | **13** pins freed (no LDAC pin; 8-lane DAC removed) |
 | 36 | GND | power | — |
-| 37 | ESTOP_STATUS | in | opto-isolated |
+| 37 | — | — | freed (was ESTOP_STATUS opto input) |
 | 38 | WATCHDOG_KICK | out | to Pico/relay |
 | 39 | FAULT_IRQ | in | wired-OR fault bus |
 | 40 | GND | power | — |
@@ -366,15 +374,15 @@ may swap coil→tone assignment; the tone set and 2 kHz spacing are fixed.
   on-board can, fan with
   filter; no metal within 150 mm of the tracking volume. The ICNIRP guard is
   non-metal and removable.
-- **E-stop:** panel mushroom on the front; the NC contact is in the +15 V_DRV
-  enable. The FPGA status is opto-isolated.
+- **Arm STOP:** no panel E-stop on BRD-01; stop comes from the host request or
+  the hardware latch, and the field rail is unaffected.
 
 ---
 
 ## 9. Bring-up order
 
 1. **Power only:** adapter, +15 V_RAW, +5 V_D, ±12 V_A, +3.3 V_D; check rails,
-   ripple, no load; then E-stop K1/K2.
+   ripple, no load; then verify the unswitched +15 V_FUSED driver rail.
 2. **FG continuity:** 8 coils, 2 Ω ±0.5, no shorts; LCR 70 µH ±20 %.
 3. **Driver one channel:** 150 mA into a 2 Ω/70 µH load; step response, phase
    margin, THD; then all 8.
@@ -383,7 +391,7 @@ may swap coil→tone assignment; the tone set and 2 kHz spacing are fixed.
 6. **ADC:** 4-channel capture, 32.768 Mbit/s, zero dropped frames; FFT/SINAD.
 7. **DDS/DAC:** 8 tones, FTWs, amplitude/phase; DAC80508 192-bit SPI; LTC1563-2 filter; current-sense FFT.
 8. **Closed loop:** demod → solver → pose on the 7×7 grid; κ.
-9. **System:** E-stop, watchdog, thermal soak, EMI, 1-hour run.
+9. **System:** arm STOP, watchdog, thermal soak, EMI, 1-hour run.
 
 ---
 

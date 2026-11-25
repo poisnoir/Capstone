@@ -2,8 +2,8 @@
 
 Open [brd-01.kicad_pro](brd-01.kicad_pro) in KiCad **10.0.8** with the
 official 10.0.8 symbol and footprint libraries installed. The root schematic
-contains five populated sheets. The three signals that cross sheets
-(`ESTOP_ASSERTED`, `DRIVER_FAULT_N`, `BUCK_SYNC`) use hierarchical labels and
+contains five populated sheets. Signals that cross sheets
+(`DRIVER_FAULT_N`, `BUCK_SYNC`) use hierarchical labels and
 sheet pins on the root; power rails use power symbols.
 Title block rev **0.1**; KiCad ERC reports **zero violations** on the full
 hierarchy. The schematic is complete as an engineering draft and carries the
@@ -11,8 +11,8 @@ following release holds.
 
 | Page | Sheet | Captured | Open |
 |---|---|---|---|
-| 2 | Power | Fused entry and corrected TVS polarity, draft hardwired K1/K2 chain, opto status and hardware overcurrent latch with manual rearm, FPGA rail sequencing, +5VA regulator fed from fused 15 V, and the approved MGJ2D151515SC/LT3045EDD-1#TRPBF/LT3093EMSE#TRPBF ±12VA chain | Verify converter headroom and combined receiver and driver load against the 67 mA per-rail rating. Relay selection is the one open hardware item; K1/K2 stay draft and off the BOM. Verify startup, rail load and dissipation against the 67 mA per-rail rating, clamp/release time, restart behavior and input protection. The 3.15 A fuse cartridge is a recorded deviation from the 3.00 A spec. |
-| 3 | Driver | DAC80508, eight 60 kHz reconstruction filters, coil outputs and sense returns, sense summer, individual comparator test nets, nominal 253 mA prototype trip, nominal 280 mA peak LMH6321 clamps and a shared active-low fault output to the FPGA | Measure prototype command scaling and loop compensation with the coil and cable, verify coil-return midpoint impedance, LMH6321 clamp tolerance and thermal validation, trip threshold tolerance, and hardware latch pulse capture and relay drop-out. Confirm the summer scale and phase on the bench. |
+| 2 | Power | Fused entry and corrected TVS polarity, unswitched +15 V_FUSED driver rail and hardware overcurrent latch retargeted to arm STOP, FPGA rail sequencing, +5VA regulator fed from fused 15 V, and the approved MGJ2D151515SC/LT3045EDD-1#TRPBF/LT3093EMSE#TRPBF ±12VA chain | Verify converter headroom and combined receiver and driver load against the 67 mA per-rail rating. Verify startup, rail load and dissipation against the 67 mA per-rail rating, clamp/release time, restart behavior and input protection. The 3.15 A fuse cartridge is a recorded deviation from the 3.00 A spec. |
+| 3 | Driver | DAC80508, eight 60 kHz reconstruction filters, coil outputs and sense returns, sense summer, individual comparator test nets, nominal 253 mA prototype trip, nominal 280 mA peak LMH6321 clamps and a shared active-low fault output to the FPGA | Measure prototype command scaling and loop compensation with the coil and cable, verify coil-return midpoint impedance, LMH6321 clamp tolerance and thermal validation, trip threshold tolerance, and hardware latch pulse capture with arm STOP assertion. Confirm the summer scale and phase on the bench. |
 | 4 | Receiver | AD7768-4 in four-lane SPI-control configuration, ADR434 reference, Ch0 current sense, Ch1 pen 1, Ch2 pen 2 and Ch3 fixed-reference paths | Ch2 and Ch3 reuse the Ch1 circuit provisionally. Reconcile the resulting INA163 and ADA4940-2 quantities with the BOM, verify reference-coil gain, and check ADC settling, reference buffer stability and phase matching. |
 | 5 | FPGA | FTG256 ball assignments, QSPI and JTAG, shared clock, USB-UART and Pico signals | Verify timing, power and bypass allocation on the target device. Program FT231X CBUS2 for VBUS sensing and verify USB ESD and power-off behavior. |
 | 6 | Connectors | Eight keyed FG headers, two pen panel connectors and JST harnesses, provisional JST GH headers for reference and Pico, plus USB-C with data and CC ESD clamps | Freeze pen and reference polarity and verify mating harnesses, Pico 3V3 use and shield termination. Approve USB shield bonding, enclosure fit and FG mating hardware. |
@@ -64,22 +64,20 @@ transient response against the implemented FPGA rail loads.
 Capture is complete: every on-board symbol carries a value and a footprint.
 The [BOM-to-CAD ledger](bom-to-cad.md) records the part evidence and the
 release verification left on each lot. The [power tree](power-tree.md)
-documents every rail, the E-stop latch and every net that crosses sheets.
+documents every rail, the arm STOP latch and every net that crosses sheets.
 
 | Page | Sheet | Contents |
 |---|---|---|
-| 2 | Power | Adapter entry, protection and EMI filter, hardware interlock, FPGA rail sequencing, +5VA regulator and the approved ±12VA chain |
+| 2 | Power | Adapter entry, protection and EMI filter, unswitched driver rail, arm STOP latch, FPGA rail sequencing, +5VA regulator and the approved ±12VA chain |
 | 3 | Driver | DAC80508, eight 60 kHz filters, eight current loops, sense summer, comparators and open-drain fault bus |
 | 4 | Receiver | AD7768-4, ADR434 reference, Ch0 current sense and Ch1–Ch3 sensor front ends |
 | 5 | FPGA | FTG256 ball map, QSPI, JTAG, clock, USB-UART and Pico signals |
 | 6 | Connectors | FG headers, pen and reference connectors, Pico header, USB-C and ESD |
 
-Two symbols remain deliberate drafts: `accubot:Draft_EStop_Mushroom_NC` and
-`accubot:Draft_EStop_Relay_NO` on the power sheet. They are excluded from
-the BOM and PCB and use terminal IDs for schematic wiring only, so the
-interlock is a drawn proof-of-concept until relays are selected. Everything
-else uses a mapped or prototype part. The pen mini-XLR stays in the BOM as
-panel hardware.
+No E-stop mushroom or relay remains on the power sheet. The board has no
+panel E-stop: arm STOP comes from the host request or the hardware latch
+(U752/U753/U755), and the +15 V_FUSED driver rail is unswitched. The pen
+mini-XLR stays in the BOM as panel hardware.
 
 ### Library setup and checks
 
@@ -103,12 +101,11 @@ kicad-cli sym export svg --output /tmp/opencode/brd01-symbol-svg hardware/kicad/
 
 KiCad ERC reports zero violations on rev 0.1. F1 carries the Schurter `0001.2509`
 3.15 A time-delay cartridge as its MPN field; the 3.15 A rating is a recorded
-deviation from the 3.00 A spec that the power owner accepted. K1 and K2 stay
-draft symbols excluded from the BOM and PCB, so relay selection is the single
-open hardware item. The active-low overcurrent bus reaches both the FPGA and
-the hardware K2 coil inhibit. The latch clears on fault, E-stop, or supervisor
-reset. A new momentary arm edge is required to energize K2. The interlock
-still needs relay/contact selection and fault-injection validation. The prototype loop uses AC-coupled command scaling, a DC feedback path and provisional PI compensation. The summer uses a nominal gain of −2.000 from each input. Measure phase margin, tracking gain and polarity before operating the full array.
+deviation from the 3.00 A spec that the power owner accepted. The active-low
+overcurrent bus reaches both the FPGA and the hardware latch (U752). The latch
+clears on fault or supervisor reset; `U753.~Q` then drives U755 so STOP is
+asserted to the arm. U753.Q is an intentional no-connect, and the field rail
+stays live. The interlock still needs fault-injection validation. The prototype loop uses AC-coupled command scaling, a DC feedback path and provisional PI compensation. The summer uses a nominal gain of −2.000 from each input. Measure phase margin, tracking gain and polarity before operating the full array.
 A nominal small-signal check used the captured 10 kΩ/100 nF sense path,
 parallel 10 MΩ feedback and 330 kΩ/150 pF compensation, a one-pole 10 MHz
 gain-bandwidth OPA192 model, an ideal buffer, and 70 µH + 2 Ω coil with
