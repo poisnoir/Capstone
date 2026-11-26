@@ -13,13 +13,13 @@ Board:          EM AccuBot BRD-01, 4-layer, PS-less Artix-7 XC7A35T-1FTG256C
 Sheet:          <file, e.g. hardware/brd-01/kicad/connectors.kicad_sch>
 Page / paper:   <page N, size>
 What this sheet carries:
-  <blocks and the nets they carry; e.g. "FG headers J1–J8; pen harness; J123 Pico
+  <blocks and the nets they carry; e.g. "FG headers J20–J27; pen harness; J123 Pico
    follower link; USB-C J124 + ESD; reference and Pico headers">
 Nets entering / leaving, and from where:
   <take from docs/handoff/brd01_io_handoff.md §1, §5, §6 — not a guess>
 Deliberate decisions to judge against (do not assume the conventional choice):
-  - <e.g. "BRD-01 has no panel E-stop by decision: STOP originates at the host,
-    passes FPGA U4.P4 -> PICO_STOP_N -> J123.5">
+  - <e.g. "BRD-01 has no panel E-stop or K1/K2 relay: the power-sheet arm latch
+    U755.4 drives PICO_STOP_N -> J123.5; FPGA U4.P4 drives PICO_STOP_REQ_N into U755.1">
   - <e.g. "J123 pin 1 is a no-connect by decision (D4): BRD-01 does not power the Pico">
   - <e.g. "CHASSIS is deliberately unbonded; this is an open item, not a drafted bond">
 Known open items (not yet decided; say so if the drawing pretends otherwise):

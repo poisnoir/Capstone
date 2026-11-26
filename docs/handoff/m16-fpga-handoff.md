@@ -36,12 +36,18 @@ with a hardware STOP and a heartbeat.
 
 | Clock | Source | Value | Use |
 |---|---|---|---|
-| XO | 32.768 MHz TCXO | 32.768 MHz | ADC MCLK; DDS clock; counter reference |
+| XO | 32.768 MHz XO, Citizen CSX750FBC32.768M-UT | 32.768 MHz | ADC MCLK (via R100 33 Ω); FPGA clock input; DDS clock; counter reference |
 | PLL | XO ×3 | 98.304 MHz | SPI source |
 | SPI SCLK | 98.304 ÷2 | **49.152 MHz** | DAC80508 SCLK (max 50 MHz) |
 | DAC update | XO ÷164 | **199.805 kSPS** | DAC word latch; period 5.00488 µs |
 | ADC ODR | XO ÷128 | 256 kSPS | AD7768-4 |
 | Frame | N = 512 | 2.000 ms | integer-J demod |
+
+**Topology (locked 2026-11-25, decision #28 / SC-07):** XO-direct — one 32.768 MHz XO
+drives the FPGA clock input directly and ADC MCLK through a 33 Ω series resistor;
+there is no discrete buffer and no TCXO. The PLL ×3 = 98.304 MHz feeds only the
+÷2 = 49.152 MHz DAC SPI; the DDS, DAC update (÷164) and ADC ODR (÷128) all come
+directly from the XO.
 
 **Rules:**
 - One XO, one reset. The DDS phase accumulator runs continuously; do **not** reset it at the ADC frame boundary.
@@ -59,7 +65,7 @@ with a hardware STOP and a heartbeat.
 | FTW | \(k \times 262144\), k = 10…17 (exact) |
 | LUT | 4096 × 16 sine, 12-bit phase truncation |
 | Per-tone | 16-bit amplitude, 16-bit phase offset |
-| DAC word | 16-bit unsigned, 0–5 V full scale, midscale 2.5 V |
+| DAC word | 16-bit unsigned; **part** full scale 0–5 V, midscale 2.5 V (decision #19). **FPGA tone clamp 0.3–4.6 V** per `power_tree_v2.md` §7 D2; the band-centre wording (2.45 V vs 2.5 V) is open |
 | Update | every 164 XO clocks; latch 8 words; SPI out |
 
 FTW table:
@@ -89,7 +95,7 @@ The DDS phase is **not** reset per frame. The current-sense Ch0 is the phase ref
 
 ## 4. DAC80508 interface
 
-**Part:** DAC80508MRTET (WQFN-16), 16-bit, 8 channels, SPI, internal 2.5 V reference, gain 2 → 0–5 V, 5 µs settling.
+**Part:** DAC80508MRTET (WQFN-16), 16-bit, 8 channels, SPI, internal 2.5 V reference, gain 2 → 0–5 V, 5 µs settling. That 0–5 V is the **part** range; the commanded tone is clamped in firmware to **0.3–4.6 V** (`power_tree_v2.md` §7 D2).
 
 ### 4.1 Pins (FPGA side)
 
@@ -108,7 +114,8 @@ The same SPI bus carries it as a 9th 24-bit frame.
 1. SYNC register (0x02) = `0x00FF` → set SYNC-EN = 1 for DAC0…DAC7 (frame `0x0200FF`). The reset
    value `0xFF00` is asynchronous mode, where each channel updates on its own CS rising edge.
 2. Gain 2 (0–5 V) is the **M-variant default** (CONFIG 0x03 BUFF-GAIN = 1); no write needed
-   unless you change the range or power down a channel.
+   unless you change the range or power down a channel. This is the DAC hardware
+   range, not the FPGA tone clamp (0.3–4.6 V, decision #31 / D2).
 3. Per update: write the 8 data frames, then write TRIGGER = `0x0010` (frame `0x050010`).
 
 **SPI mode:** CPOL = 0, CPHA = 1 (idle low, SDI changes on the rising edge, latched on the
@@ -151,7 +158,7 @@ divisor. Plan on a small protocol adapter, not a drop-in.
 | | Pmod DA4 (AD5628-1) | M16 (DAC80508MRTET) |
 |---|---|---|
 | Resolution | 12 bit | 16 bit |
-| Full scale | 0–2.5 V (1.25 V ref ×2) | 0–5 V |
+| Full scale (part) | 0–2.5 V (1.25 V ref ×2) | 0–5 V (FPGA tone clamp 0.3–4.6 V, D2) |
 | Frame | **32 bit**: 4 don't-care + C[3:0] + A[3:0] + 12-bit data + 8 don't-care | **24 bit**: RW + 000 + A[3:0] + 16-bit data |
 | Frames per update | **8** (7 data + 1 update-all) | **9** (8 data + TRIGGER) |
 | Update-all | command `0010` (write input n, update all) on the 8th frame | TRIGGER 0x05 bit 4, 9th frame |
@@ -296,8 +303,14 @@ clock that supports 200 kSPS.
 
 ### 4.6 Output scaling
 
-- 0–5 V maps to 0–500 mA in the current loop; 150 mA = 1.5 V.
-- The sine is around 2.5 V; the 100 µF coupling blocks DC.
+- The 0–5 V → 0–500 mA loop mapping (150 mA = 1.5 V) is the **pre-D2 design
+  assumption**; decision #31 / `power_tree_v2.md` §7 D2 now clamps the FPGA tone
+  to 0.3–4.6 V. **OPEN:** the exact current-loop mapping (offset/gain) under that
+  clamp is not settled in the repo — do not assume a linear end-point mapping;
+  confirm on the bench before setting amplitude.
+- The sine is nominally midscale of the DAC part range; the 100 µF coupling
+  blocks DC. The exact centre of the clamped band is the D2 wording item
+  (2.45 V arithmetic vs 2.5 V nominal).
 - Per-tone amplitude is a 16-bit word; the 8 tones are **not** summed in one DAC — each channel carries one tone. The current-sense summer sums the eight coil currents; the ADC Ch0 sees eight tones.
 
 ---
@@ -341,7 +354,15 @@ clock that supports 200 kSPS.
 
 ## 8. FPGA pin assignment (M16)
 
-| Pin | Signal | Direction | Notes |
+**Historical point-in-time table (2026-10-27), not the captured pinout.** The
+abstract pins 1–40 below were the M16 proposal; BRD-01 uses real FTG256 balls and
+netlist names — use `docs/handoff/brd01_io_handoff.md` §3 for the authoritative
+map. Examples: `CLOCK_32M768` = ball D13 (not "pin 5 MCLK_ADC"), `ADC_DCLK` C11,
+`ADC_DOUT0…3` A8/A9/B9/A10, `DRIVER_FAULT_N` R1, `PICO_STOP_REQ_N` P4,
+`BUCK_SYNC` R3, host UART N1/P1, Pico TX/RX/HEARTBEAT N2/N3/P3. Rows 37–39 are
+obsolete as written; the captured equivalents are given in those rows and in §10.
+
+| Pin (historical) | Signal | Direction | Notes |
 |---|---|---|---|
 | 1–2 | +3.3 V | power |  |
 | 3–4 | GND | power |  |
@@ -362,12 +383,15 @@ clock that supports 200 kSPS.
 | 22 | DAC_SDO | in | optional |
 | 23–35 | spare | — | **13** pins freed (no LDAC pin; 8-lane DAC removed) |
 | 36 | GND | power |  |
-| 37 | ESTOP_STATUS | in | opto-isolated |
-| 38 | WATCHDOG_KICK | out | to Pico/relay |
-| 39 | FAULT_IRQ | in | wired-OR fault |
+| 37 | ~~ESTOP_STATUS~~ | — | obsolete: no such net; `U4.R2` is a no-connect |
+| 38 | ~~WATCHDOG_KICK~~ | — | obsolete: no relay net; follower watchdog uses HEARTBEAT (`U4.P3`) and the stale-pose rule |
+| 39 | ~~FAULT_IRQ~~ | in | captured as `DRIVER_FAULT_N`, ball `R1`; wired-OR overcurrent bus + arm-latch clear |
 | 40 | GND | power |  |
 
-These are on-board nets on BRD-01 (option D), not a header. The 13 spare pins are available for the host UART, Pico UART, config flash and debug. Do not repurpose the ADC/DAC pins without a schematic revision.
+The original numbering was on-board (option D), not a header; the captured
+schematic leaves 139 U4 pins no-connect, so the 13-spare-pin count is a M16
+migration figure, not the present tally. Do not repurpose the ADC/DAC balls
+without a schematic revision.
 
 ---
 
@@ -391,9 +415,14 @@ Calibration flow: Helmholtz \(A_{sens}(f)\) → 7×7 κ/zOffset → per-tone amp
 
 ## 10. Fault / stop
 
-- **E-stop:** NC mushroom cuts the +15 V driver enable; the FPGA gets an opto-isolated `ESTOP_STATUS`; it cannot re-enable the driver.
-- **Watchdog:** `WATCHDOG_KICK` to the Pico/relay; a missing kick stops the follower.
-- **Overcurrent:** per-coil peak comparators wire-OR to `FAULT_IRQ`; the FPGA disables the DAC channels and flags.
+- **Stop (BRD-01, netlist):** there is no relay E-stop and no `ESTOP_STATUS` net.
+  The hardware arm latch `U753.Q`/`U755` drives `PICO_STOP_N` to J123.5; the
+  FPGA drives only `PICO_STOP_REQ_N` (ball P4) into U755.1 and reads the shared
+  `DRIVER_FAULT_N` (ball R1). The `+15V_FUSED` field rail is unswitched.
+- **Watchdog:** the follower/Pico side stops locally on missing heartbeat or stale
+  pose (`contract/icd/pico_link.md`); no `WATCHDOG_KICK` pin exists at the FPGA.
+- **Overcurrent:** per-coil peak comparators wire-OR via U600–U603 open-drain
+  buffers to `DRIVER_FAULT_N`; the FPGA flags the fault and clears the latch.
 - **Status:** tracking / clamped / stopped / fault; the Pico stops ≤100 ms.
 
 ---
@@ -419,9 +448,10 @@ Calibration flow: Helmholtz \(A_{sens}(f)\) → 7×7 κ/zOffset → per-tone amp
 - LTC1563-2 fc/phase (analog, fixed resistor).
 - Current-loop stability/compensation (analog/bench).
 - LMH6321 crossover distortion (bench).
-- EMI/layout/thermal (board/bench).
+- EMI/layout/thermal (on-board shield can, ground partitioning, bench).
 - The final 8-tone FFT and jitter measurement (bench).
-- Pico 2 motor control (step/dir, encoder loop, homing/limits/local stop) is a separate MCU; the PS is the host/coordinator, not the motor controller.
+- Pico 2 motor control (step/dir, encoder loop, homing/limits/local stop) is a
+  separate MCU; there is no PS. The host PC is log/calibration/viz only.
 
 ---
 
@@ -430,14 +460,14 @@ Calibration flow: Helmholtz \(A_{sens}(f)\) → 7×7 κ/zOffset → per-tone amp
 | Item | Risk | Action |
 |---|---|---|
 | DAC80508 SPI mode/TRIGGER/address map | Wrong frame → no output or no simultaneous update | Read the datasheet; logic-analyser the first 216-bit burst |
-| 49.152 MHz PLL/CDC | Setup/hold, jitter | Constrain the PLL; verify with the scope; keep the SPI away from the analog |
+| 49.152 MHz PLL/CDC | Setup/hold, jitter | Constrain the PLL ×3 → ÷2 (SPI only); verify with the scope; keep the SPI away from the analog |
 | **SPI hold 0.17 ns** | Data hold at the DAC pin; header/cable skew | Delay SDI ~2.5 ns; keep the DAC on the FPGA board; probe SCLK/SDI at the DAC |
 | 199.805 kSPS ÷164 | Non-200k update; DDS phase | Verify the ÷164 counter and the DAC word latch |
 | 13 spare pins | Board mapping | Freeze the FTG256 pin assignment before layout |
 | Filter phase/κ | Phase error | Calibrate per tone; 0.1% R; 1% C0G |
 | Loop PM/step | Oscillation | Bench; lead network; 150 mA first |
 | DAC INL/IMD | 8-tone products | Bench one channel; crosstalk screen |
-| EMI | In-band spurs | One-box shield; star ground; bench FFT |
+| EMI | In-band spurs | On-board shield can; ground partitioning; bench FFT |
 
 ---
 

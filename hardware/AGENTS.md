@@ -11,7 +11,9 @@ Scope: BRD-01, FG-01, pen and mechanical. Read `../AGENTS.md` and
 - Closed-loop coil current is load-bearing. Verify constant-current before any
   accuracy claim (O'Donoghue 2014 §II; thesis §4.3.3).
 - Do not change a locked part without a contract change: AD7768-4, INA163,
-  ADA4940-2, DAC80508, LTC1563-2, the FPGA part, the power tree.
+  ADA4940-2, DAC80508, LTC1563-2, the FPGA part and the power tree. The as-built
+  tree is `docs/phase2/power_tree_v2.md` (LOCKED as decision #31, superseding
+  the #20 part list).
 - The pen is passive; the sensor coil/tip is the tracked point.
 
 ## EDA and BOM
@@ -29,7 +31,8 @@ Scope: BRD-01, FG-01, pen and mechanical. Read `../AGENTS.md` and
 - DRC/ERC clean before a fab release.
 - 150 mm metal-free check on the assembled setup.
 - Field-probe scan at the accessible boundary + guard check (SC-04b).
-- Constant-current test, thermal soak, E-stop/overcurrent (DRV-2).
+- Constant-current test, thermal soak, arm STOP/overcurrent latch (DRV-2);
+  BRD-01 has no relay E-stop.
 
 ## Do not
 

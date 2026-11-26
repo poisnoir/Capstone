@@ -5,6 +5,7 @@ contract; if a handoff and `contract/` disagree, the contract wins.
 
 | Document | What it covers |
 |---|---|
+| `brd01_io_handoff.md` | Live BRD-01 I/O handoff: every FPGA ball, connector pin and cross-sheet net, checked against the committed netlist |
 | `m16-fpga-handoff.md` | M16 DAC/filter decision, FPGA interface, pinout, clocking |
 | `solver-algorithm-handoff.md` | LM/TRF solver port, cost function, retry strategy |
 | `system-flowchart-handoff.md` | System flow, stage boundaries, schedule |

@@ -1,8 +1,15 @@
 # Phase 2 — System flow chart (Rev A)
 
-**Status:** Rev A draft, 2026-10-27. This is the design-review flow chart for the
-Phase 2 report. It uses the recommended options in `decisions_log.md`; decisions
-14–24 await the team's final approval. Test gates are in `design_order.md`.
+**Status (2026-11-25): Rev A design-review draft, 2026-10-27 — historical point in
+time, kept for the report record.** Locked decisions since then win where they
+conflict: #19 (one DAC80508), #25 (one four-layer BRD-01), #26 (PS-less
+XC7A35T-1FTG256C), #27 (FG-01 = eight 79 µH / 2.9 Ω coils) and #28 (XO-direct
+clock); BRD-01 rails follow the adopted `power_tree_v2.md` (decision #31,
+superseding the #20 part list).
+BRD-01 has no relay E-stop and no `+5V` rail; the field rail is
+`+15V_FUSED` and the arm latch drives `PICO_STOP_N`. Current rails, pins and nets
+come from `docs/phase2/power_tree_v2.md` and
+`docs/phase2/brd01_wiring_manifest.md`. Test gates are in `design_order.md`.
 
 **Drawing standard.** The report version must follow IEEE 315 / IEC 60617 for
 symbols and signal flow (left-to-right signal, top-to-bottom power, red dashed
@@ -12,7 +19,8 @@ for the drawing; the EDA schematic is `system_schematic.md`.
 **One-line summary.** 8 coils transmit 8 tones; one pen coil receives the sum;
 the AD7768-4 digitizes 4 channels on one clock; the FPGA demodulates, solves
 5-DOF, filters tremor, scales, and commands the follower; the host only logs,
-calibrates, and visualizes; a hardware E-stop cuts the driver independently.
+calibrates, and visualizes; a hardware arm STOP latch halts the follower
+independently of the FPGA (the driver rail is unswitched).
 
 ---
 
@@ -67,11 +75,11 @@ flowchart LR
     FIL --> SCL["Scaling<br/>20:1–1000:1"]
   end
   subgraph FOL["5 Follower"]
-    PICO["3× Pico 2"] --> STG["XYZ stage<br/>+ camera"]
+    PICO["Pico 2 follower"] --> STG["XYZ stage<br/>+ camera"]
   end
   subgraph PWR["7 Power / safety"]
-    AD["15 V medical"] --> RAIL["+15 V, ±12 V<br/>+5 V, +3.3 V"]
-    ESTOP["NC E-stop"] --> AMP
+    AD["15 V medical"] --> RAIL["+15V_FUSED, +6V, +3.3V<br/>+5V_EXC, +5VA, ±12VA"]
+    ESTOP["arm STOP latch<br/>U755 -> PICO_STOP_N"] --> PICO
     WD["watchdog"] --> PICO
   end
   DDS -- "8 FTW" --> AMP
@@ -89,13 +97,13 @@ flowchart LR
 | Block | Owns | Key interface | Recommendation |
 |---|---|---|---|
 | 1 FG | 8-coil PCB, geometry, guard | B field per tone | FG-01, SC-04b |
-| 1b Driver/DDS | 8 DACs, 8 current loops, current sense | I drive, \(Y_I\) | DRV-01/02/08, D3-A |
+| 1b Driver/DDS | one DAC80508 (8 ch), 8 current loops, current sense | I drive, \(Y_I\) | DRV-01/02/08, D3-A |
 | 2 Pen/FE | Coil B, INA163, ADA4940-2 | \(V_s\), differential out | PEN-02, FE-01/04 |
 | 3 ADC | AD7768-4, 4 ch, 4 lanes | 32.768 Mbit/s | SC-05, ADC-05 |
 | 4 FPGA | DDS, capture, demod, solver, filter, scaling | pose 115.8 Hz | DIG-01…06 |
 | 5 Follower | Pico 2, XYZ stage, camera | pose/status | RQ-M1…M17 |
 | 6 Host | log, calibration UI, viz | pose log, κ | no pose solve |
-| 7 Power/safety | adapter, rails, E-stop, watchdog | enables, faults | C1, DRV-05/07 |
+| 7 Power/safety | adapter, rails, arm STOP latch, watchdog | STOP level, faults | C1, DRV-05/07 |
 
 ---
 
@@ -112,7 +120,7 @@ flowchart LR
   REC --> ERR["error amp<br/>mid-rail bias"]
   ERR --> BUF["LMH6321<br/>+15 V, 300 mA"]
   BUF --> CPL["100 µF<br/>AC coupling"]
-  CPL --> COIL["FG coil<br/>70 µH + 2 Ω"]
+  CPL --> COIL["FG coil<br/>79 µH + 2.9 Ω (decision #27)"]
   COIL --> RS["R_store<br/>1 Ω"]
   RS --> SUM["summer<br/>×2.0103"]
   SUM --> ADC0["AD7768 Ch0<br/>Y_I"]
@@ -206,7 +214,7 @@ margin. See `dig6_requirements.md` for the full budget.
 
 ```mermaid
 flowchart LR
-  CMD["tool command<br/>115.8 Hz"] --> PICO["3× Pico 2<br/>step/dir"]
+  CMD["tool command<br/>115.8 Hz"] --> PICO["Pico 2 follower<br/>step/dir"]
   PICO --> XYZ["XYZ stage<br/>MicroManipulatorStepper"]
   XYZ --> TIP["tool tip<br/>5 mm cube"]
   CAM["camera ≥50x"] --> VIEW["display"]
@@ -214,12 +222,12 @@ flowchart LR
   POSE["pose + status"] --> HOST["host<br/>log / calibration / viz"]
   HOST --> CAL["κ / A_sens / current"]
   CAL --> FPGA["FPGA calibration regs"]
-  ESTOP["E-stop"] --> PICO
+  ESTOP["arm STOP latch / PICO_STOP_N"] --> PICO
   WD["watchdog"] --> PICO
 ```
 
 **Follower states:** `IDLE` → `ENGAGED` (hand in volume, tracking valid) →
-`CLAMPED` (hand speed >50 mm/s) → `STOPPED` (E-stop, tracking lost, jump >10 mm,
+`CLAMPED` (hand speed >50 mm/s) → `STOPPED` (arm STOP, tracking lost, jump >10 mm,
 overcurrent, overtemp) → `IDLE` after re-engage. `TILT_STALE` holds the last good
 tilt and keeps XYZ if valid. Stop ≤100 ms.
 
@@ -245,7 +253,7 @@ sequenceDiagram
 | Clock | Divide | Rate | Destination |
 |---|---|---|---|
 | XO | ÷1 | 32.768 MHz | ADC MCLK, FPGA DDS |
-| SCLK | ×3/2 | 49.152 MHz | DAC80508 |
+| SCLK | PLL ×3 then ÷2 | 49.152 MHz | DAC80508 |
 | DAC update | ÷164 | 199.805 kSPS | 8 DAC words |
 | ADC ODR | ÷128 | 256 kSPS | 4-channel frames |
 | Frame | N=512 | 2.000 ms | integer-J window |
@@ -284,7 +292,7 @@ flowchart TD
   T["TRACKING"] -->|hand speed >50 mm/s| C["CLAMPED"]
   T -->|out of volume / tracking lost| W["watchdog ≤100 ms"]
   T -->|overcurrent / overtemp| F["fault latch"]
-  T -->|E-stop NC opens| E["driver enable off <1 ms"]
+  T -->|arm STOP latch asserts| E["PICO_STOP_N low -> follower stop ≤100 ms"]
   T -->|tilt >45° or >90°/s| TS["TILT_STALE<br/>hold last tilt, keep XYZ"]
   C -->|speed normal| T
   W --> S["STOPPED<br/>brakes, require re-engage"]
@@ -297,15 +305,17 @@ flowchart TD
 
 | Fault | Detect | Action | Time |
 |---|---|---|---|
-| E-stop | NC contact opens | cut +15 V driver enable, opto status | <1 ms |
+| Arm STOP | fault or supervisor reset clears latch | U755.4 drives `PICO_STOP_N` low; `+15V_FUSED` stays live | ≤100 ms |
 | Tracking lost | no valid pose / out of volume | stop follower, flag | ≤100 ms |
 | Overcurrent | per-coil peak comparator | disable channel, flag | <1 ms |
 | Overtemp | board/coil sensor | disable, flag | ≤100 ms |
 | Software hang | watchdog | stop follower, flag | ≤100 ms |
 | Comm loss | host/Pico heartbeat | stop follower, flag | ≤100 ms |
 
-The E-stop is independent of the FPGA. The FPGA only receives an opto-isolated
-status and runs a separate software watchdog.
+The arm STOP latch is independent of the FPGA: its `PICO_STOP_N` level reaches
+the follower through J123.5, while the FPGA only drives the request
+(`PICO_STOP_REQ_N` → U755.1) and reads `DRIVER_FAULT_N`. There is no relay E-stop,
+no `ESTOP_STATUS` net and no opto-isolated status net on BRD-01.
 
 ---
 
@@ -323,6 +333,6 @@ status and runs a separate software watchdog.
 | Calibration | §8 | `calibration_tooling.md` |
 | Fault/stop | §9 | `driver_power_requirements.md` §6 |
 
-**Open at the drawing level:** exact EDA symbols/footprints (KiCad), connector
-pin numbers, and enclosure cut-outs. The interfaces and signal levels above are
-proposed; freeze them after the team approves the decision sheet.
+**Open at the drawing level:** connector pin detail and enclosure cut-outs.
+Rev A signal levels are historical; the captured BRD-01 netlist is authoritative
+for pins and nets.

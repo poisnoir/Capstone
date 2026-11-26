@@ -21,7 +21,7 @@ citation):
 
 | Alias | File |
 |---|---|
-| PT2 | `docs/phase2/power_tree_v2.md` |
+| PT2 | `docs/phase2/power_tree_v2.md` — **LOCKED power tree, decision #31 (2026-11-25); supersedes the #20 part list**, not a proposal |
 | BOM | `hardware/brd-01/kicad/bom-to-cad.md` |
 | SS | `docs/phase2/system_schematic.md` |
 | FE | `docs/phase2/frontend_requirements.md` |

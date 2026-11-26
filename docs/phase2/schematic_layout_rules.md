@@ -19,7 +19,7 @@ Constants for every step: grid **G = 1.27 mm**; routing channel **C = 5.08 mm** 
 sheet frame inset **10.16 mm** (8 G); maximum in-block label hop **25.4 mm** (20 G).
 Snap every coordinate inward to G. All schematic edits go through
 `tools/kicad_sch_helper.py` — "no raw `.kicad_sch` coordinate guessing" is already a
-locked team rule (`docs/phase2/brd01_full_board_deepseek_handoff.md` §1.1).
+locked team rule (`docs/phase2/brd01_full_board_deepseek_handoff.md` §1 item 1).
 
 Paper sizes come from the `(paper …)` header of each sheet; page numbers from
 `hardware/brd-01/kicad/README.md` (sheet index):

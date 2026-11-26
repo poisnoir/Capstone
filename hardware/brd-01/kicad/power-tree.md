@@ -1,12 +1,16 @@
 # BRD-01 power tree and inter-sheet connections
 
-> **Partially superseded (2026-11-24, power-tree v2).** This page describes the
-> v1 tree: `+5V` from an OKI-78SR, LDO-fed `+5VA`, and the `+5V`/`+3.3V` split.
-> The schematic now implements [power_tree_v2.md](../../../docs/phase2/power_tree_v2.md):
-> `+6V` from a TPSM63604 module, `+5V_EXC` and `+5VA` from TPS7A4701 LDOs, no
-> `+5V` net, and hierarchical labels for the three crossing signals instead of
-> global labels. The rail table and mermaid diagram below still show v1 and
-> are kept only as the as-captured record at commit `4da4e95`.
+> **SUPERSEDED — HISTORICAL RECORD; DO NOT BUILD FROM THIS (banner dated
+> 2026-11-25).** This page is the v1 tree as captured at commit `4da4e95`: `+5V`
+> from an OKI-78SR, LDO-fed `+5VA`, K1/K2 relays and `ESTOP_ASSERTED`. None of
+> those nets or parts exists in the committed BRD-01 netlist. The authority is
+> [power_tree_v2.md](../../../docs/phase2/power_tree_v2.md) with `+6V` from a
+> TPSM63604, `+5V_EXC`/`+5VA` from TPS7A4701 LDOs, the unswitched `+15V_FUSED`
+> field rail and an arm STOP latch; netlist truth is
+> [brd01_wiring_manifest.md](../../../docs/phase2/brd01_wiring_manifest.md).
+> The rail table and diagrams below are kept only as a point-in-time record.
+> The v2 tree is now LOCKED as decision #31 (2026-11-25); nothing in this
+> historical page is a current power proposal.
 
 This is the **as-captured** state of the KiCad schematic. It was generated from the
 netlist of `brd-01.kicad_sch` (KiCad 10.0.8) on 2026-11-24, at commit `4da4e95`.

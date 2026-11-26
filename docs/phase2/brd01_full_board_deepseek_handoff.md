@@ -1,5 +1,21 @@
 # BRD-01 Full Board (Driver, Receiver, FPGA, Connectors): Verification, Cost-Optimized BOM & Schematic Wiring Handoff
 
+**Status (2026-11-25): planning handoff, kept as history — not a record of
+execution.** Committed BRD-01 facts come from
+`docs/phase2/brd01_wiring_manifest.md`, `docs/phase2/brd01_component_reference.md`
+and `docs/phase2/power_tree_v2.md` §9: eight driver channels and one DAC80508,
+the `+5V_EXC` excitation rail, `D_REF` = `D534`, the 32.768 MHz XO and the
+PS-less FPGA netlist are captured, with ERC 0/0. Not evidenced as landed: the
+Stage 2 cheapest-qualified BOM substitutions and the open-drain comparator
+replacement (the netlist still carries TLV3201 comparators feeding U600–U603
+open-drain buffers). The coil value locked by decision #27 is 79 µH / 2.9 Ω;
+the "70 µH / 2 Ω" figure quoted below is a driver-budget starting point, not
+the locked coil. The BRD-01 power tree is locked as decision #31 (2026-11-25),
+superseding the #20 part list; the captured schematic implements it. BOM
+reconciliation is not evidenced.
+Keep the stages below as the original proposal; do not treat their checklists
+as completed gates.
+
 **Orchestrator:** `DeepSeek-V4.1-Flash-1017` (calculations gate, BOM/contract decisions, `tools/kicad_sch_helper.py`, `brd-01.kicad_sch` root, `kicad-cli` gates, `git`)  
 **Parallel Workers:** `Tencent Hy4 Flash` (read-only doc/math audits, supplier/part-cost screening, disjoint child-sheet edits via helper, SVG→PNG visual checks)  
 **Scope:** Everything on `BRD-01` outside the `power` sheet — `driver.kicad_sch`, `receiver.kicad_sch`, `fpga.kicad_sch`, `connectors.kicad_sch`, and `brd-01.kicad_sch` (after/alongside `power_tree_v2.md` PR-A & PR-B)  

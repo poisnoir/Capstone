@@ -1,5 +1,5 @@
 # BRD-01 wiring manifest
-
+**Provenance (2026-11-25, base commit `ef04f63`):** generated with `kicad-cli sch export netlist --format kicadxml -o net.xml hardware/brd-01/kicad/brd-01.kicad_sch` (KiCad 10.0.8); regenerate after any BRD-01 netlist change — regeneration pends the uncommitted KiCad WIP, so these tables describe the committed netlist only.
 Generated from the KiCad netlist of `hardware/brd-01/kicad/brd-01.kicad_sch` (KiCad 10.0.8) by `kicad-cli sch export netlist --format kicadxml`. Companion machine-readable file: `brd01_wiring_manifest.csv` (one row per sheet, net, ref and pin).
 
 ## 1. How to read it
