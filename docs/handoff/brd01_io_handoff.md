@@ -307,7 +307,8 @@ unassigned, but the remaining bank 14/15/34 spares and the XADC pins have no doc
    connector with 3V3, and `hardware/brd-01/kicad/power-tree.md` §4 lists `+3.3V` on `J123`
    pin 1. The netlist has `unconnected-(J123-Pin_1-Pad1)`; BRD-01 does **not** power the Pico.
    `docs/phase2/power_tree_v2.md` §"+3.3V (digital)" and decision D4 explicitly record the
-   no-connect and say the ICD changes in the same contract PR.
+   no-connect; decision #31 adopts the power tree and the ICD pin-1 update is
+   handled in the parallel contract stream.
 4. **Power rails.** `hardware/brd-01/kicad/power-tree.md` (banner: as-captured at `4da4e95`) shows
    `U3` OKI-78SR → `+5V`, `U1` TPS7A2033 → `+3.3V`, `U146` fed from `+15V_FUSED`, and RV-1515D
    ±15 V. The present netlist has `U147` TPSM63604 → `+6V`, `U7` TPS62130 → `+3.3V`, `U149`

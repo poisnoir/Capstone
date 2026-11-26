@@ -4,7 +4,8 @@
 time, kept for the report record.** Locked decisions since then win where they
 conflict: #19 (one DAC80508), #25 (one four-layer BRD-01), #26 (PS-less
 XC7A35T-1FTG256C), #27 (FG-01 = eight 79 µH / 2.9 Ω coils) and #28 (XO-direct
-clock); BRD-01 rails follow `power_tree_v2.md` (contract #20 change pending).
+clock); BRD-01 rails follow the adopted `power_tree_v2.md` (decision #31,
+superseding the #20 part list).
 BRD-01 has no relay E-stop and no `+5V` rail; the field rail is
 `+15V_FUSED` and the arm latch drives `PICO_STOP_N`. Current rails, pins and nets
 come from `docs/phase2/power_tree_v2.md` and

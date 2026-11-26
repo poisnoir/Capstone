@@ -12,7 +12,8 @@ Scope: BRD-01, FG-01, pen and mechanical. Read `../AGENTS.md` and
   accuracy claim (O'Donoghue 2014 §II; thesis §4.3.3).
 - Do not change a locked part without a contract change: AD7768-4, INA163,
   ADA4940-2, DAC80508, LTC1563-2, the FPGA part and the power tree. The as-built
-  tree is `docs/phase2/power_tree_v2.md` (contract #20 change still pending).
+  tree is `docs/phase2/power_tree_v2.md` (LOCKED as decision #31, superseding
+  the #20 part list).
 - The pen is passive; the sensor coil/tip is the tracked point.
 
 ## EDA and BOM

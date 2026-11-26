@@ -25,8 +25,9 @@ items, not suggestions.
 - DAC80508 + 8× LTC1563-2; SPI 49.152 MHz (#19).
 - AD7768-4 + INA163 + ADA4940-2 (#5/#17).
 - Power: one medical-grade 15 V/60 W adapter; BRD-01 rails `+15V_FUSED`, `+6V`,
-  `+3.3V`, `+5V_EXC`, `+5VA`, ±12VA (`docs/phase2/power_tree_v2.md`); the arm STOP
-  latch gates the follower, the driver rail is unswitched (#7/#10/#20, #25).
+  `+3.3V`, `+5V_EXC`, `+5VA`, ±12VA (`docs/phase2/power_tree_v2.md`, decision
+  #31, superseding the #20 part list); the arm STOP latch gates the follower,
+  the driver rail is unswitched (#7/#10/#31, #25).
 - No metal within 150 mm of the tracking volume; the ICNIRP guard is a non-metal
   access barrier, not a shield (`SC-04b`, D2).
 

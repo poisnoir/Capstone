@@ -21,7 +21,8 @@ points the repo. Until then, the contract release and the ICD are the interface.
 
 The ICD in `contract/icd/pico_link.md` still lists 3V3 on connector pin 1; the
 committed BRD-01 netlist has J123.1 as a no-connect and
-`docs/phase2/brd01_wiring_manifest.md` §5 records the pending ICD change. Keep
+`docs/phase2/brd01_wiring_manifest.md` §5 records it; the ICD update is in the
+parallel contract stream. Keep
 Pico firmware, motor config and mechanics in the arm repo — nothing here is a
 second copy.
 

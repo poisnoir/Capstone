@@ -10,8 +10,10 @@ Stage 2 cheapest-qualified BOM substitutions and the open-drain comparator
 replacement (the netlist still carries TLV3201 comparators feeding U600–U603
 open-drain buffers). The coil value locked by decision #27 is 79 µH / 2.9 Ω;
 the "70 µH / 2 Ω" figure quoted below is a driver-budget starting point, not
-the locked coil. Keep the stages below as the original proposal; do not treat
-their checklists as completed gates.
+the locked coil. The BRD-01 power tree is locked as decision #31 (2026-11-25),
+superseding the #20 part list; the captured schematic and BOM implement it.
+Keep the stages below as the original proposal; do not treat their checklists
+as completed gates.
 
 **Orchestrator:** `DeepSeek-V4.1-Flash-1017` (calculations gate, BOM/contract decisions, `tools/kicad_sch_helper.py`, `brd-01.kicad_sch` root, `kicad-cli` gates, `git`)  
 **Parallel Workers:** `Tencent Hy4 Flash` (read-only doc/math audits, supplier/part-cost screening, disjoint child-sheet edits via helper, SVG→PNG visual checks)  

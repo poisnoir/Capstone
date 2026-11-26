@@ -5,11 +5,13 @@ is recorded in `docs/phase2/power_tree_v2.md` §9 and confirmed by the committed
 netlist in `docs/phase2/brd01_wiring_manifest.md`: `+6V`/`+3.3V`/`+5V_EXC`/`+5VA`,
 `U147`/`U7`/`U149`/`U146`/`U5`, `D_REF` = `D534`, `J123.1` no-connect, `U142`
 on `+3.3V`, ball `R3` → `BUCK_SYNC`, full-hierarchy ERC 0 errors / 0 warnings.
-**Still open:** the `contract-change` PR for locked decision #20 (the contract
-still lists OKI-78SR-5 / RV-1515D / TPS7A20), the `pico_link.md` pin-1 ICD
-change, the M16 DDS-swing centre (2.45 V vs 2.5 V), and the bench items in
-`power_tree_v2.md` §7 C1/C5/C7. The instructions below are the original plan,
-not current work orders.
+**Adopted:** decision #31 (2026-11-25) locks this power tree and supersedes
+the decision #20 part list; the captured schematic and BOM implement it. The
+contract row and `pico_link.md` ICD updates are handled in a parallel stream.
+**Still open:** the M16 DDS-swing centre wording (2.45 V vs 2.5 V) and the bench
+items in `power_tree_v2.md` §7 C1/C5/C7. The instructions below are the original
+plan, not current work orders — do not re-open the #20 change or treat v2 as
+proposed.
 
 **Orchestrator:** `DeepSeek-V4.1-Flash-1017` (state, `git`, `tools/kicad_sch_helper.py`, `power.kicad_sch`, `brd-01.kicad_sch` root wiring, `kicad-cli` gates)  
 **Parallel Workers:** `Tencent Hy4 Flash` (read-only audits, SVG/PNG vision checks, disjoint child-sheet edits via helper, docs/issue drafting)  
@@ -55,7 +57,7 @@ not current work orders.
   * **W2-D (`connectors.kicad_sch`):** **D4** `J123.1` → `no_connect` + crossing `hlabel`s.
   * `DeepSeek` then wires matching `sheet` `pin`s on `brd-01.kicad_sch`, runs full-hierarchy ERC (`0/0`) + expected-diff ledger, and fans out `Hy4 Flash` vision workers across all 6 sheet PNGs in parallel.
 * **Wave 3 — Docs & Tracking (3 parallel `Hy4 Flash` workers on disjoint files):**
-  * **W3-A:** `contract/decisions_log.md` #20, `contract/icd/pico_link.md` (`J123.1` → `NC`), M16 handoff (resolve D2 `0.3–4.6 V` / `2.45 V` midpoint), `contract-change` PR body.
+  * **W3-A (historical; done under #31 / parallel ICD update):** `contract/decisions_log.md` #20, `contract/icd/pico_link.md` (`J123.1` → `NC`), M16 handoff (resolve D2 `0.3–4.6 V` / `2.45 V` midpoint), `contract-change` PR body.
   * **W3-B:** `hardware/brd-01/kicad/power-tree.md`, README page table, `bom-to-cad.md`, `power_tree_v2.md` §9 (fix stale ERC status).
   * **W3-C:** FPGA RTL tasks (`BUCK_SYNC` `32.768 MHz ÷ 32` on `R3`, DDS clamp `0.3–4.6 V`, Power Estimator `C6`).
 
@@ -63,7 +65,7 @@ not current work orders.
 
 ## 3. Pre-Flight & Step 0 — Contract Issue, Golden Pin, Provenance
 
-1. **Open `contract-change` issue now** retroactively covering `ec88cd1` against locked decision #20, and resolve D2's arithmetic discrepancy (`0.3–4.6 V` midpoint is `2.45 V`, not `2.5 V`).
+1. **Historical step:** a `contract-change` issue was raised for `ec88cd1` against decision #20; it is now resolved by decision #31. D2's arithmetic discrepancy (`0.3–4.6 V` midpoint `2.45 V`, not `2.5 V`) remains a wording item only.
 2. **Close KiCad & record version:** Ensure `/usr/bin/kicad` (PID `764171`) is saved/closed and `.lck` files are removed. Record `kicad-cli --version`.
 3. **Pin golden `ec88cd1` exports:**
    ```bash
@@ -138,7 +140,7 @@ HARD RULES:
 3. Confirm tools/kicad_netlist_compare.py checks pin-membership equality (not net names), flags BOTH splits and merges, and checks refdes/lib_id/footprint set equality.
 
 EXECUTION WAVES:
-- Step 0 & Wave 0: Verify KiCad closed/.lck gone; do NOT commit broken working tree yet. Open contract-change issue for #20 (resolve D2 2.45 V midpoint). Dispatch 4 parallel Hy4 Flash workers: (A) ec88cd1~1..ec88cd1 provenance diff; (B) ERC baseline + U145 15-pin +1V8_FPGA enumeration; (C) U147/U7/U149 pad-map audit + C810/VLDOIN 1 uF check; (D) §4 NC whitelist + PWR_FLAG audit. Lock page size (A1 portrait 594x841 mm if block budgets fit cleanly, else A0 portrait 841x1189 mm).
+- Step 0 & Wave 0 (historical; #20 issue is resolved by #31): Verify KiCad closed/.lck gone; do NOT commit broken working tree yet. Resolve D2 2.45 V wording. Dispatch 4 parallel Hy4 Flash workers: (A) ec88cd1~1..ec88cd1 provenance diff; (B) ERC baseline + U145 15-pin +1V8_FPGA enumeration; (C) U147/U7/U149 pad-map audit + C810/VLDOIN 1 uF check; (D) §4 NC whitelist + PWR_FLAG audit. Lock page size (A1 portrait 594x841 mm if block budgets fit cleanly, else A0 portrait 841x1189 mm).
 - Wave 1 (PR-A on power.kicad_sch):
   - Step 1: Delete all wires in U145 output block (BUCK2_FB is merged to GND). Rewire all U145 pins (VOS 14, FB 5, PG 4) + L141/R193/R194 on 1.27 mm grid. Gate: membership-SAME vs ec88cd1 + measured baseline ERC. Commit resize+repair as one commit.
   - Step 2: Redraw 7 blue-boxed blocks sequentially; after each block run netlist-SAME + ERC + dispatch Hy4 Flash vision on block PNG, then commit. Apply NC whitelist (never NC BUCK_SYNC; U147 NC(15)->GND), PWR_FLAG on GND + inductor-fed rails, direct wires inside blocks, 2.54 mm stubs only on block exits.

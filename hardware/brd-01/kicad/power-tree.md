@@ -9,6 +9,8 @@
 > field rail and an arm STOP latch; netlist truth is
 > [brd01_wiring_manifest.md](../../../docs/phase2/brd01_wiring_manifest.md).
 > The rail table and diagrams below are kept only as a point-in-time record.
+> The v2 tree is now LOCKED as decision #31 (2026-11-25); nothing in this
+> historical page is a current power proposal.
 
 This is the **as-captured** state of the KiCad schematic. It was generated from the
 netlist of `brd-01.kicad_sch` (KiCad 10.0.8) on 2026-11-24, at commit `4da4e95`.

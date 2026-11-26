@@ -2,7 +2,8 @@
 
 **Status (2026-11-25): historical point-in-time handoff, superseded by locked
 decisions #19 (M16 DAC/filter), #25 (one 4-layer BRD-01), #26 (PS-less
-XC7A35T-1FTG256C) and #28 (XO-direct clock).** The recommended design below is
+XC7A35T-1FTG256C), #28 (XO-direct clock) and #31 (BRD-01 power tree).** The
+recommended design below is
 kept as written for the Phase 2 record; do not build from its TCXO→PLL clock,
 TBD FPGA, CONVST/2×6 Pmod or board-partitioning statements. Current facts:
 `contract/system_contract.md` SC-07, `docs/phase2/power_tree_v2.md` and the
