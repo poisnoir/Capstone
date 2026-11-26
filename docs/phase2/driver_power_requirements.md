@@ -238,8 +238,8 @@ This is a DIG-6 synthesis gate, not an open part choice.
 
 **Requirements (M16):** 8 independent outputs; 16-bit; DAC update 199.805 kSPS;
 SPI 49.152 MHz; 4th-order 60 kHz filter; image −35.3 dB at 165.8 kHz; 8-tone
-EVM ≤−60 dBc; output 0–5 V into the LMH6321 loop. SPICE screen:
-`simulations/m16/FINAL_REPORT.md`.
+EVM ≤−60 dBc; part span 0–5 V, firmware tone band 0.3–4.6 V (centre 2.45 V,
+#33) into the LMH6321 loop. SPICE screen: `simulations/m16/FINAL_REPORT.md`.
 
 ## 6. Open items
 

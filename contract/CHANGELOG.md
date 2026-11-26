@@ -3,6 +3,22 @@
 All notable contract changes. Versioning: MAJOR = breaking interface change,
 MINOR = additive, PATCH = clarification.
 
+## 1.1.2 — 2026-11-26 — tag `contract-v1.1.2` pending release
+
+PATCH clarification; no rail, part or wire-interface behaviour changed. The
+tag, release zip/json and arm-repo sync are pending PR approval and the two
+required approvals.
+
+- **Decision #33 (DAC tone band):** the DDS is clamped to **0.3–4.6 V, centre
+  2.45 V** (≤92 % FS). `+5V_EXC` stays 5.0 V and the DAC80508 keeps its gain-2
+  0–5 V part span; the 5.3 V ANY-OUT alternative is rejected (70 mV under the
+  DAC 5.5 V maximum). This closes the amplitude wording left open by #31.
+- `icd/dac_fpga.md` §3 — the OPEN amplitude follow-up is replaced by the locked
+  firmware band; the gain-2 part span and no-CONFIG-write statement stand.
+  `decisions_log.md` #33 added, the DAC OPEN bullet closed; cross-referencing
+  docs (`power_tree_v2.md` §7 D2, `system_schematic.md`, the M16 FPGA handoff,
+  `dig6_requirements.md` and `driver_power_requirements.md`) state the same band.
+
 ## 1.1.1 — 2026-11-26 — tag `contract-v1.1.1` pending review
 
 PATCH clarification; no electrical or interface behaviour changed. Prepared on
