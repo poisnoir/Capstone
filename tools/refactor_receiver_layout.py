@@ -10,13 +10,19 @@ other properties are carried over verbatim.
 
     python3 tools/refactor_receiver_layout.py            # regenerate
     python3 tools/refactor_receiver_layout.py --check    # verify idempotence
+
+The pin->net map is committed as tools/receiver_net_map.json.  Regenerate it
+from a checkout of the baseline commit with:
+
+    git show 9f7dddb:hardware/brd-01/kicad/brd-01.kicad_sch > /tmp/base.kicad_sch
+    kicad-cli sch export netlist --format kicadxml -o /tmp/base.xml /tmp/base.kicad_sch
+    python3 -c 'import xml.etree.ElementTree as E,json,pathlib; r=E.parse("/tmp/base.xml").getroot(); p=[[n.get("ref"),n.get("pin"),net.get("name")] for net in r.iter("net") for n in net.iter("node")]; p.sort(key=lambda x:(x[0],(0,int(x[1])) if x[1].isdigit() else (1,x[1]))); pathlib.Path("tools/receiver_net_map.json").write_text(json.dumps(p,separators=(",",":")))'
 """
 import itertools
 import re
 import subprocess
 import sys
 import uuid
-import xml.etree.ElementTree as ET
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
@@ -26,7 +32,7 @@ import kicad_sch_helper as H  # noqa: E402
 
 SHEET = ROOT / 'hardware/brd-01/kicad/receiver.kicad_sch'
 BASE = '9f7dddb:hardware/brd-01/kicad/receiver.kicad_sch'
-NETLIST = Path('/tmp/baseline_netlist.xml')
+NETMAP = HERE / 'receiver_net_map.json'
 G = 1.27
 # FDA output riser offsets (mm), searched for zero crossings
 OUT_RISER = 2.54
@@ -441,12 +447,10 @@ class Router:
 # Netlist-derived pin -> net map and NC pin resolve
 # ---------------------------------------------------------------------------
 def pin_net_map():
-    root = ET.parse(NETLIST).getroot()
-    out = {}
-    for net in root.iter('net'):
-        for n in net.iter('node'):
-            out[(n.get('ref'), n.get('pin'))] = net.get('name')
-    return out
+    """Committed pin->net map; regenerated with the command in the docstring."""
+    import json
+    return {(ref, pin): net for ref, pin, net in
+            json.loads(NETMAP.read_text())}
 
 
 def baseline_nc_pins(base_sh):
@@ -972,6 +976,63 @@ def move_notes(ed):
         ed.t = ed.t[:start] + blk + ed.t[end:]
 
 
+def add_missing_junctions(ed, sh, pinmap):
+    """Place a dot at a T only when both wires provably carry the same net.
+
+    KiCad connects a wire end to another wire's interior only if a junction
+    dot is present; adding one between two different nets would short them.
+    Net membership is derived from the baseline pin->net map and exact wire
+    endpoint sharing, never from label positions.
+    """
+    root = H.parse(ed.t)
+    ws = H.wires(root)
+    have = set(H.points(root, 'junction'))
+    pin_net = {}
+    for key in sh.inst:
+        ref = key.split(':')[0]
+        for num, pt in sh.unit_pins(key).items():
+            net = pinmap.get((ref, num))
+            if net is not None:
+                pin_net[pt] = net
+    parent = list(range(len(ws)))
+
+    def find(x):
+        while parent[x] != x:
+            parent[x] = parent[parent[x]]
+            x = parent[x]
+        return x
+
+    bypoint = {}
+    for i, w in enumerate(ws):
+        for pt in (w['a'], w['b']):
+            bypoint.setdefault(pt, []).append(i)
+    for ids in bypoint.values():
+        if len(ids) > 1:
+            for j in ids[1:]:
+                a, b = find(ids[0]), find(j)
+                if a != b:
+                    parent[a] = b
+    nets = {}
+    for i, w in enumerate(ws):
+        found = {pin_net[pt] for pt in (w['a'], w['b']) if pt in pin_net}
+        nets.setdefault(find(i), set()).update(found)
+    need = set()
+    for i, w in enumerate(ws):
+        for pt in (w['a'], w['b']):
+            if pt in have:
+                continue
+            for j, o in enumerate(ws):
+                if i == j or not H.on_wire(pt, o['a'], o['b']) \
+                        or pt in (o['a'], o['b']):
+                    continue
+                if find(i) == find(j):
+                    need.add(pt)
+                break
+    for pt in sorted(need):
+        ed.append(junction_block(pt))
+    print(f'  junctions added at same-net T points: {len(need)}')
+
+
 def regenerate(text):
     _U[0] = 0
     base_sh = Sheet(text)
@@ -1047,6 +1108,7 @@ def regenerate(text):
                 if l['text'] not in RAILS}
     place_labels(r, ed, sh, pinmap, offsheet)
     move_notes(ed)
+    add_missing_junctions(ed, sh, pinmap)
     text = add_lib_symbols(ed.t)
     return text
 

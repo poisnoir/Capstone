@@ -40,7 +40,7 @@ INA163 → ADA4940-2 → RC at x = 114.30 / 152.40 / 190.50 / 228.60 / 279.40 /
 ## Spans (`kicad_span_report.py --compare`, declared blocks)
 
 - in-block ΣS **13498.83 → 12510.77 mm** (−988.06 mm); 32 improved, 27 unchanged.
-- cross-block ΣS 3512.82 → 4307.84 mm (ungated; ADC/ADC_VCM hub growth, logged as INFO).
+- cross-block ΣS 3512.82 → 4353.56 mm (measured; ungated; ADC/ADC_VCM hub growth, logged as INFO).
 - `in-block regressions == 33`; `new in-block hops == 12`; `MOVED BLOCK == 35`.
 
 The largest improvements are the formerly cross-channel nets now contained in one
@@ -97,14 +97,14 @@ The span gate is **accepted as a mandated trade, not fixed**. Orchestrator
 ruling 2026-11-26: the span gate is subordinate to the user's binding geometry
 (four lanes at 100–590 mm, >= 7.62 mm passive spacing, unstacked C103–C111).
 Recorded: in-block ΣS 13498.83 -> 12510.77 mm (-988.06), 33 in-block
-regressions, 12 new in-block hops, cross-block ΣS 3512.82 -> 4353.56 mm.
+regressions, 12 new in-block hops, cross-block ΣS 3512.82 -> 4353.56 mm (measured).
 
 All 61 GND and 51 other rail global labels became `power:GND`,
 `power:+5VA`, `power:+12VA`, `power:-12VA`, `power:+3.3V` symbols copied
 verbatim from the installed KiCad `power.kicad_sym` library. The 22 remaining
 global labels are exactly the baseline off-sheet set (PEN1/2, REF_COIL,
 CURRENT_SUM, CLOCK_32M768 and ADC_*). The seven orphan local labels were
-removed; the 23 remaining local labels are ADC_VCM, the ADC AIN/REF taps and
+removed; the 25 remaining local labels are ADC_VCM, the ADC AIN/REF taps and
 the FDA out-N feedback labels (replacing crossing wires around the
 interleaved ADA4940 output pins).
 
@@ -154,3 +154,23 @@ R542/R562 references moved off the vertical pin wire; R186 value moved above
 its route; U102/U103 rail text moved outside the bodies.
 
 G5 ruling (unchanged): span gate accepted as a mandated trade, not fixed.
+
+
+## Round 5 hygiene
+
+- Reproducibility: option (b) chosen. The pin->net map is committed as
+  `tools/receiver_net_map.json` (2155 entries); the script no longer reads
+  `/tmp/baseline_netlist.xml`. The one-line regeneration command is in the
+  script docstring. Verified with the temp file moved aside: `--check` still
+  reports `IDEMPOTENT`.
+- Junctions: 5 same-net T dots added; object inventory otherwise unchanged
+  (symbols 205, wires 373, labels 25/22, no_connect 16, text 10; junctions
+  167 -> 172). G1/G2/G3/G4 remain green.
+- Residual, not fixed: 8 pairs of collinear overlapping wires and the 32
+  matching wire-end-on-interior points all sit on the +OUT/-OUT riser columns
+  (x = 336.55 and 444.50). They are different nets separated only by the
+  absence of a junction dot. A 180-configuration search of the riser offsets
+  found zero crossing-free configurations with distinct riser x; adding a dot
+  at those points merges +OUT and -OUT (8 nets gone, 4 new), which G1 forbids.
+  They are left as-is rather than introducing a short or a crossing. The span
+  gate remains an accepted mandated trade (33 regressions, 12 hops).
