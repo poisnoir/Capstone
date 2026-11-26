@@ -1,15 +1,17 @@
 # contract-change: decision #20 power parts superseded by power-tree v2
 
-**Status: APPLIED by decision #31 (2026-11-25).** The user adopted the v2 power
-tree; `contract/decisions_log.md` #31 is LOCKED, `contract/icd/power.md` and
+**Status: parts/tree decision APPLIED by #31 (LOCKED, 2026-11-25); contract
+process still OPEN.** The user adopted the v2 power tree, recorded as
+`contract/decisions_log.md` #31; `contract/icd/power.md` and
 `docs/phase2/system_schematic.md` §2 carry the adopted rails, and
-`contract/VERSION` remains 1.1.0 (additive). The approval checklist below is
-retained as the original draft's history, not as pending work; #20's part list
-is superseded, while its adapter and one-board intent stand. The as-built board
-already implemented these parts (`hardware/brd-01/kicad/brd-01.kicad_sch` at
-`ef04f63`; `hardware/brd-01/kicad/bom-to-cad.md:151`;
-`docs/phase2/brd01_component_reference.md:357`).
-Prepared 2026-11-24; evidence is on branch `main` at `387f90e`.
+`contract/VERSION` remains 1.1.0 (additive). #20's part list is superseded,
+while its adapter and one-board intent stand. **Not done yet:** the two required
+approvals, tag `contract-v1.1.0`, release zip/json publication and the arm-repo
+sync — the checklist below is pending work on the contract PR, not history.
+The captured BRD-01 schematic implements v2
+(`hardware/brd-01/kicad/brd-01.kicad_sch` at `ef04f63`;
+`docs/phase2/brd01_component_reference.md:357`); BOM reconciliation is tracked
+separately. Prepared 2026-11-24; evidence is on branch `main` at `387f90e`.
 
 ## What changes and why
 

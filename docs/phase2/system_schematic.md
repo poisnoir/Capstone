@@ -99,8 +99,9 @@ the field path (#30).
 > **Conflict closed by #31 (2026-11-25).** `docs/phase2/power_tree_v2.md` and
 > `docs/phase2/contract_change_20_draft.md` were the basis for the adoption.
 > OKI-78SR-5, RV-1515D and TPS7A20 / TPS7A2033 are removed from the contract
-> part list. The captured BRD-01 schematic and BOM Rev 0.06 already implement
-> v2: `hardware/brd-01/kicad/brd-01.kicad_sch` at `ef04f63` contains
+> part list. The captured BRD-01 schematic already implements v2 (BOM
+> reconciliation is tracked separately):
+> `hardware/brd-01/kicad/brd-01.kicad_sch` at `ef04f63` contains
 > `MGJ2D151515SC` and no `OKI-78SR`, `RV-1515`, `TPS7A20` or `TPS7A4701`
 > strings; `hardware/brd-01/kicad/bom-to-cad.md:151` records the user's part
 > confirmation (U5 MGJ2D151515SC, U6 LT3045EDD-1#TRPBF, U2 LT3093EMSE#TRPBF);
@@ -195,7 +196,7 @@ DAC80508 ch_i ──► LTC1563-2 60 kHz ──► R1 10k ──► A1 + ──�
 | DAC_CS | FPGA | DAC80508 SYNC/CS | one per 24-bit frame |
 | DAC_SDI | FPGA | DAC80508 SDI | MSB first |
 | DAC_SDO | DAC80508 | FPGA | optional readback |
-| DAC_REF | DAC80508 internal 2.5 V | — | gain 2 → 0–5 V |
+| DAC_REF | DAC80508 internal 2.5 V | — | gain 2 → 0–5 V default; **OPEN follow-up:** `power_tree_v2.md` §7 D2 gives a 0.3–4.6 V DDS limit on `+5V_EXC` (see `icd/dac_fpga.md` §3) |
 
 Each 24-bit frame carries one channel; 8 channels = **192 bits**; at 49.152 MHz
 the data burst is **3.906 µs** inside the **5.005 µs** update period (199.805 kSPS =
@@ -236,10 +237,11 @@ U753.5 (Q) ─► /power/ARM_Q ─┘        (U753.3 ~Q = no-connect)
 
 - There is no panel mushroom or K2 relay on BRD-01. The field rail is never
   interrupted by a stop.
-- `PICO_STOP_N` is active low. U755 (74LVC1G08) ANDs the FPGA request with the
-  latch output `U753.5 (Q)` on `/power/ARM_Q`; either input low asserts STOP to
-  the arm. `U753.3 (~Q)` is the **no-connect**, not the arming signal — netlist
-  evidence in `docs/phase2/brd01_wiring_manifest.md` §5 item 1.
+- `PICO_STOP_N` is active low. U755 (74LVC1G08) ANDs the FPGA request on
+  `U755.1` with the latch output `U753.5 (Q)` on `/power/ARM_Q` → `U755.2`;
+  either input low asserts STOP to the arm. `U753.3 (~Q)` is the **no-connect**,
+  not the arming signal — netlist evidence in
+  `docs/phase2/brd01_wiring_manifest.md` §5 item 1.
 - U753 is cleared at power-up/brownout by U751 and on overcurrent via
   `/DRIVER_FAULT_N` → U752. With CLR asserted, `Q=0`, so STOP is asserted; the
   latch is armed by SW750 (`Q=1`), which passes the FPGA request through.
@@ -303,7 +305,7 @@ ADA4940-2 OUT− ──► R4 20Ω ──► C4 470pF ─┼──► C5 100pF �
 | Control | SYNC_IN/START, SYNC_OUT, RESET, DRDY | one-time sync; count DRDY |
 | Data | DCLK, DOUT0…DOUT3 | 8.192 MHz, 4 lanes, 32-bit frames |
 | SPI | SCLK, SDI, SDO, CS | configuration only |
-| Power | AVDD1, AVDD2, IOVDD, AVSS, DGND | +5 V, +5 V, +3.3 V |
+| Power | AVDD1, AVDD2, IOVDD, AVSS, DGND | +5VA, +5VA, +3.3V |
 
 Pin numbers are per the AD7768-4 Rev.D datasheet; the EDA symbol must use the
 datasheet pinout, not a generic 64-LQFP.
@@ -357,7 +359,7 @@ The pin list below is the on-board net assignment (no cable).
 | 23–35 | spare | — | **13** pins freed (no LDAC pin; 8-lane DAC removed) |
 | 36 | GND | power | — |
 | 37 | — | — | no-connect (was ESTOP_STATUS opto input; removed by #30) |
-| 38 | WATCHDOG_KICK | out | to Pico/relay |
+| 38 | WATCHDOG_KICK | out | internal PL watchdog output; contributes to the FPGA `PICO_STOP_REQ_N` request into `U755` (netlist ball `U4.P4`), not a Pico/relay drive (#30) |
 | 39 | FAULT_IRQ | in | wired-OR fault bus |
 | 40 | GND | power | — |
 

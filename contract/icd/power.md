@@ -27,8 +27,8 @@ schematic are authoritative.
 | `±12VA` | U5 MGJ2D151515SC → U6 LT3045-1 / U2 LT3093 | INA163, OPA192, ADR434 buffer | isolated analog |
 
 - Removed by #31: OKI-78SR-5 (`+5V`), RV-1515D and TPS7A20 / TPS7A2033. The
-  captured BRD-01 schematic and BOM Rev 0.06 already implement these rails;
-  #31 closes the former contract-vs-board part conflict.
+  captured BRD-01 schematic already implements these rails; BOM reconciliation
+  is tracked separately. #31 closes the former contract-vs-board part conflict.
 - One box with an internal shield partition. There is **no panel E-stop, K1 or
   K2** on BRD-01; `+15V_FUSED` feeds the eight LMH6321 continuously and a STOP
   never removes the field (#30). Arm STOP is active low `PICO_STOP_N` from the U755

@@ -16,9 +16,10 @@ arm-repo sync have not happened**; they follow PR approval and the two required 
 - `icd/dac_fpga.md` — frozen Rev A (2026-11-02): 216-bit burst, TRIGGER cadence, CS gaps,
   CPOL/CPHA, SDI +2.5 ns delay, readback/CRC limits. §3 safe state clarified: genuine faults
   stop the DDS; an arm STOP does not (decision #30).
-- `decisions_log.md` — #18, #20, #22, #23 promoted to LOCKED; #21 updated for the PS-less
-  Artix-7 on BRD-01 (no 2×20 IDC); #27 FG-01 vendor coils (contract PR in review); #30
-  arm-only STOP scope.
+- `decisions_log.md` — #21 updated for the PS-less Artix-7 on BRD-01 (no 2×20 IDC);
+  #27 FG-01 vendor coils (contract PR in review); #28 clock clarification; #30 arm-only
+  STOP scope. #18/#20/#22/#23 were already LOCKED on main; #20's part list is now
+  superseded in part by #31.
 - **Decision #30 (STOP):** no panel E-stop / K1 / K2 on BRD-01. `PICO_STOP_N` is the AND of the
   FPGA request (`PICO_STOP_REQ_N`, `U4.P4` + `R754` pull-down) and the arm latch `U753.5 (Q)`
   via `/power/ARM_Q`; `U753.3 (~Q)` is NC. STOP is arm motion only, ≤100 ms; field and pose
