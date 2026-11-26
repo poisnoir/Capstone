@@ -266,16 +266,23 @@ Triggers, all leading to halt within 100 ms with status reported: stop command; 
 
 ## 12. Open decisions / traps (show as diamonds or notes, do not resolve silently)
 
-- FPGA part and HDL partitioning not frozen — leave a generic "FPGA (TBD)" box.
-- Final field-generator placement plus drive current (ICNIRP 27 uT check pending sim).
-- Final ADC part pending the §9e vetting gate (simultaneous sigma-delta locked, SAR fallback documented, single/muxed/32 kSPS rejected).
-- Final pen coil (A–E plus air/ferrite) pending kappa-grid plus jitter measurement; assume bespoke worse than NDI until measured.
+**Status note (2026-11-25): point-in-time charting list, kept as history.** Locked
+since: #19 (DAC80508 + 8× LTC1563-2, 216-bit burst), #21/#28 (one 32.768 MHz XO,
+XO-direct), #25 (one four-layer BRD-01), #26 (PS-less XC7A35T-1FTG256C), #27
+(eight vendor FG coils), #30 (arm-only STOP, no panel E-stop) and #31 (BRD-01
+power tree). Annotations below mark the settled parts; the remaining items are
+genuinely open verification gates, not choices to re-open.
+
+- FPGA part and HDL partitioning not frozen — leave a generic "FPGA (TBD)" box. **Historical guidance only:** #26 locks a PS-less XC7A35T-1FTG256C on one four-layer BRD-01 (#25). Draw that part; do not add a PS, DDR3/Linux, second board or "TBD" box.
+- Final field-generator placement plus drive current (ICNIRP 27 uT check pending sim). **Assembly locked by #27/#11:** eight vendor coils at the `fSysSetup.m` centres, 150 mA prototype first / 250 mA nominal / 500 mA max. The trace-based field/ICNIRP report is still absent — that verification stays open.
+- Final ADC part pending the §9e vetting gate (simultaneous sigma-delta locked, SAR fallback documented, single/muxed/32 kSPS rejected). **Part locked:** AD7768-4 (`SC-05`, design_order); the §9 vetting gate applies only to fallbacks, not to the selected part.
+- Final pen coil (A–E plus air/ferrite) pending kappa-grid plus jitter measurement; assume bespoke worse than NDI until measured. **Choice locked by #4:** coil B, air core; A/E alternates, C air out. Only the kappa-grid/jitter measurement (PEN-3) stays open.
 - Dipole model invalid near large/planar coils — always draw filament (3.17), never (3.15).
 - Never put the pose solver on PC/MATLAB in the chart (stale Phase 1); host is logging/calibration/visualization only.
 - Never edit vendor snapshots or frozen reference PDFs; regenerate extracts with document tools, do not hand-edit outputs.
-- Single-channel or multiplexed ADC variants reintroduce mux-skew and crosstalk verbatim and do NOT qualify as fallback; only simultaneous parts count.
+- Single-channel or multiplexed ADC variants reintroduce mux-skew and crosstalk verbatim and do NOT qualify as fallback; only simultaneous parts count. **Locked:** AD7768-4 is the selected simultaneous part (`SC-05`); this is a rejected-path rule, not an open selection.
 - `TolX = 1e-6` is an optimizer step (1 um), not system resolution.
-- Metal within 150 mm invalidates all accuracy claims; ferrite gain is not free accuracy (linearity/noise tradeoff).
+- Metal within 150 mm invalidates all accuracy claims (`SC-04b`); ferrite gain is not free accuracy (linearity/noise tradeoff, #4 air-core pen lock).
 
 ---
 
