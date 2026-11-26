@@ -3357,12 +3357,7 @@
 		(color 0 0 0 0)
 		(uuid "cde2d575-2e01-4337-a5b1-20d983242a20")
 	)
-	(junction
-		(at 425.45 415.29)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "d6715aa2-6168-446c-b40b-d40fc7cbe305")
-	)
+
 	(junction
 		(at 523.24 142.24)
 		(diameter 0)
@@ -5461,16 +5456,7 @@
 		)
 		(uuid "8403c791-0830-49f5-a148-151eba731671")
 	)
-	(wire
-		(pts
-			(xy 422.91 415.29) (xy 425.45 415.29)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "85bdcbb6-81d8-4fe9-a5e1-ef0477cc9b0b")
-	)
+
 	(wire
 		(pts
 			(xy 497.84 205.74) (xy 490.22 205.74)
@@ -7551,16 +7537,7 @@
 		)
 		(uuid "3f9df9d1-d580-485b-a28c-b09ba2432456")
 	)
-	(label "FDA3_N"
-		(at 427.99 415.29 0)
-		(effects
-			(font
-				(size 1 1)
-			)
-			(justify left)
-		)
-		(uuid "406f71fb-60ee-4a71-9040-a9107d9fdef4")
-	)
+
 	(label "REF_COIL_PROT_P"
 		(at 213.36 381 180)
 		(effects
@@ -7901,16 +7878,7 @@
 		)
 		(uuid "8c7fb9c2-21b4-4b11-ad45-a2cb2abc9543")
 	)
-	(label "FDA3_OUT_P"
-		(at 420.37 415.29 180)
-		(effects
-			(font
-				(size 1 1)
-			)
-			(justify right)
-		)
-		(uuid "8de2257c-bd92-4486-a94f-2412e0d65501")
-	)
+
 	(label "REF_COIL_RG1"
 		(at 384.81 407.67 180)
 		(effects
@@ -21882,5 +21850,25 @@
 				)
 			)
 		)
+	)
+	(label "FDA3_N"
+		(at 420.37 415.29 180)
+		(effects
+			(font
+				(size 1 1)
+			)
+			(justify right)
+		)
+		(uuid "3511c8e7-5a07-4851-b0e5-7564e50bb41a")
+	)
+	(label "FDA3_OUT_P"
+		(at 427.99 415.29 0)
+		(effects
+			(font
+				(size 1 1)
+			)
+			(justify left)
+		)
+		(uuid "4b695d75-993f-4877-a42d-907803081c49")
 	)
 )
