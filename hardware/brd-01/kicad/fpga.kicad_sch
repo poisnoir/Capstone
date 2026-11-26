@@ -23548,4 +23548,24 @@
 			)
 		)
 	)
+	(wire
+		(pts
+			(xy 267.97 38.1) (xy 267.97 33.02)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "b4c57fd1-46b6-4804-8906-d01ff259b8dd")
+	)
+	(wire
+		(pts
+			(xy 270.51 38.1) (xy 270.51 33.02)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "93b18d20-2cdb-4601-bfed-535bdb4639dd")
+	)
 )

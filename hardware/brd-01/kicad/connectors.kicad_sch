@@ -2738,16 +2738,7 @@
 		)
 		(uuid "8f8a4ce8-04a4-45a6-8cd4-1a46253299d6")
 	)
-	(wire
-		(pts
-			(xy 284.48 179.07) (xy 284.48 182.88)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "969f004c-c49c-4b14-8144-102eb52b948c")
-	)
+
 	(wire
 		(pts
 			(xy 261.62 163.83) (xy 246.38 163.83)
@@ -2768,16 +2759,7 @@
 		)
 		(uuid "a119d639-bd61-4f10-bdfb-deb4b2511e00")
 	)
-	(wire
-		(pts
-			(xy 295.91 179.07) (xy 284.48 177.8)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "afb8d795-4afb-4925-975c-f78b464a3cee")
-	)
+
 	(wire
 		(pts
 			(xy 72.39 175.26) (xy 67.31 175.26)
@@ -2788,16 +2770,7 @@
 		)
 		(uuid "b0c07365-58ee-419f-bddc-8c1668ad0578")
 	)
-	(wire
-		(pts
-			(xy 284.48 177.8) (xy 284.48 179.07)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "b2d4f8a2-f06b-4dca-a9c7-1ce4f6da9bd7")
-	)
+
 	(wire
 		(pts
 			(xy 246.38 176.53) (xy 251.46 176.53)
@@ -2958,16 +2931,7 @@
 		)
 		(uuid "fba3c7f4-5891-474f-b4ad-bf0cf02098bc")
 	)
-	(wire
-		(pts
-			(xy 284.48 179.07) (xy 295.91 179.07)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "fc9315ae-f321-420c-a4b7-06cccb7e238e")
-	)
+
 	(label "CHASSIS"
 		(at 223.52 207.01 90)
 		(effects
@@ -3118,28 +3082,7 @@
 		)
 		(uuid "ff0c5564-3ced-4d45-a007-79903c772d7a")
 	)
-	(global_label "GND"
-		(shape passive)
-		(at 284.48 182.88 0)
-		(effects
-			(font
-				(size 1 1)
-			)
-			(justify left)
-		)
-		(uuid "065cf7a5-0bec-471c-a113-574303940c9e")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 284.48 182.88 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-	)
+
 	(global_label "PICO_STOP_N"
 		(shape passive)
 		(at 67.31 180.34 180)
@@ -3294,28 +3237,7 @@
 			)
 		)
 	)
-	(global_label "USB_DM"
-		(shape passive)
-		(at 273.05 179.07 0)
-		(effects
-			(font
-				(size 1 1)
-			)
-			(justify left)
-		)
-		(uuid "34399908-cc49-4b37-abe3-fd35c28e9b8c")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 273.05 179.07 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-	)
+
 	(global_label "FG7_OUT"
 		(shape passive)
 		(at 246.38 63.5 180)
@@ -5888,6 +5810,60 @@
 				(path "/bcf11a9e-584a-4da7-9f85-9c74b718d606/1e7ea821-dced-4e77-a47d-753913008d55"
 					(reference "J27")
 					(unit 1)
+				)
+			)
+		)
+	)
+	(global_label "USB_DM"
+		(shape passive)
+		(at 284.48 179.07 0)
+		(effects
+			(font
+				(size 1 1)
+			)
+			(justify left)
+		)
+		(uuid "bb3ffebb-9b93-427c-8a71-0c28f5b1852e")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 284.48 179.07 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(wire
+		(pts
+			(xy 295.91 179.07) (xy 295.91 182.88)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "edf7e968-9eb2-4053-b5b2-82dfa452e5f2")
+	)
+	(global_label "GND"
+		(shape passive)
+		(at 295.91 182.88 0)
+		(effects
+			(font
+				(size 1 1)
+			)
+			(justify left)
+		)
+		(uuid "38c75231-d1d6-4263-9108-de7f2e3732bc")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 295.91 182.88 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
 				)
 			)
 		)

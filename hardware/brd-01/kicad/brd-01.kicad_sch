@@ -58,106 +58,16 @@
 		)
 		(uuid "fbe62a26-a845-4eb6-9a35-03093381e153")
 	)
-	(wire
-		(pts
-			(xy 190.5 80.01) (xy 190.5 64.77)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "7e9576e9-0017-44f2-b633-c9723e7d19ae")
-	)
-	(wire
-		(pts
-			(xy 110.49 80.01) (xy 110.49 69.85)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "92c5bc00-e424-41fd-9f07-4798a4e14895")
-	)
-	(wire
-		(pts
-			(xy 81.28 80.01) (xy 81.28 64.77)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "a08915cd-bc89-4ca0-9171-05704ae468d8")
-	)
-	(wire
-		(pts
-			(xy 76.2 80.01) (xy 76.2 69.85)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "a95ec983-25af-4c85-b9d0-0711cdcc937f")
-	)
-	(wire
-		(pts
-			(xy 185.42 80.01) (xy 185.42 69.85)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "fe22027a-6c4e-4d7a-a61e-d7ea5c81c785")
-	)
-	(label "BUCK_SYNC"
-		(at 81.28 64.77 0)
-		(effects
-			(font
-				(size 1 1)
-			)
-			(justify left)
-		)
-		(uuid "386525a7-e8c0-4429-9b63-379f003bf74c")
-	)
-	(label "DRIVER_FAULT_N"
-		(at 110.49 69.85 0)
-		(effects
-			(font
-				(size 1 1)
-			)
-			(justify left)
-		)
-		(uuid "69c17a17-e680-4761-8538-18413f647feb")
-	)
-	(label "DRIVER_FAULT_N"
-		(at 185.42 69.85 0)
-		(effects
-			(font
-				(size 1 1)
-			)
-			(justify left)
-		)
-		(uuid "71955db3-5b98-4820-bb30-8fd06bd77f2c")
-	)
-	(label "BUCK_SYNC"
-		(at 190.5 64.77 0)
-		(effects
-			(font
-				(size 1 1)
-			)
-			(justify left)
-		)
-		(uuid "8be1fccc-fb6a-4304-9e5e-07ef83375028")
-	)
-	(label "DRIVER_FAULT_N"
-		(at 76.2 69.85 0)
-		(effects
-			(font
-				(size 1 1)
-			)
-			(justify left)
-		)
-		(uuid "fc03507f-388a-4114-8419-ae4e0d381c71")
-	)
+
+
+
+
+
+
+
+
+
+
 	(sheet
 		(at 138.37 80.01)
 		(size 20.32 21.59)
@@ -442,4 +352,54 @@
 		)
 	)
 	(embedded_fonts no)
+	(label "BUCK_SYNC"
+		(at 81.28 80.01 0)
+		(effects
+			(font
+				(size 1 1)
+			)
+			(justify left)
+		)
+		(uuid "d71bece5-cbfe-467e-bc5c-3d266a5724ed")
+	)
+	(label "BUCK_SYNC"
+		(at 190.5 80.01 0)
+		(effects
+			(font
+				(size 1 1)
+			)
+			(justify left)
+		)
+		(uuid "7191b9e6-463d-44a7-b936-f172ac8699a7")
+	)
+	(label "DRIVER_FAULT_N"
+		(at 76.2 80.01 0)
+		(effects
+			(font
+				(size 1 1)
+			)
+			(justify left)
+		)
+		(uuid "b5dca5cb-0bd1-45ae-a3db-94584bf84c26")
+	)
+	(label "DRIVER_FAULT_N"
+		(at 110.49 80.01 0)
+		(effects
+			(font
+				(size 1 1)
+			)
+			(justify left)
+		)
+		(uuid "5c1e59f8-8e52-4876-bc6e-487d2462b451")
+	)
+	(label "DRIVER_FAULT_N"
+		(at 185.42 80.01 0)
+		(effects
+			(font
+				(size 1 1)
+			)
+			(justify left)
+		)
+		(uuid "88e2dba2-ba6e-4226-a683-ff64d66f8d1d")
+	)
 )
