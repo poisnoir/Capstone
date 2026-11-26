@@ -85,20 +85,19 @@ integer (`docs/phase2/tone_plan.md` §1, §4; `contract/system_contract.md` SC-0
 The DDS clock and ADC ODR are integer divides of one 32.768 MHz XO
 (`contract/system_contract.md` SC-07, decision #28).
 
-| \(i\) | \(f_i\) (kHz) | \(J_i\) (derived: \(f_i N/F_s\)) | FTW \(\Delta\Phi_i=k\cdot262144\) | DAC channel / coil |
-|---|---|---|---|---|
-| 1 | 20 | 40 | 2,621,440 (0x00280000) | A / 1 |
-| 2 | 22 | 44 | 2,883,584 (0x002C0000) | B / 2 |
-| 3 | 24 | 48 | 3,145,728 (0x00300000) | C / 3 |
-| 4 | 26 | 52 | 3,407,872 (0x00340000) | D / 4 |
-| 5 | 28 | 56 | 3,670,016 (0x00380000) | E / 5 |
-| 6 | 30 | 60 | 3,932,160 (0x003C0000) | F / 6 |
-| 7 | 32 | 64 | 4,194,304 (0x00400000) | G / 7 |
-| 8 | 34 | 68 | 4,456,448 (0x00440000) | H / 8 |
+| \(i\) | \(f_i\) (kHz) | \(J_i\) (derived: \(f_i N/F_s\)) | FTW \(\Delta\Phi_i=k\cdot262144\) | DAC channel / coil | Source |
+|---|---|---|---|---|---|
+| 1 | 20 | 40 | 2,621,440 (0x00280000) | A / 1 | `docs/handoff/m16-fpga-handoff.md` §3, §4.3; `docs/phase2/dig6_requirements.md` §1; `docs/phase2/tone_plan.md` §4 |
+| 2 | 22 | 44 | 2,883,584 (0x002C0000) | B / 2 | same |
+| 3 | 24 | 48 | 3,145,728 (0x00300000) | C / 3 | same |
+| 4 | 26 | 52 | 3,407,872 (0x00340000) | D / 4 | same |
+| 5 | 28 | 56 | 3,670,016 (0x00380000) | E / 5 | same |
+| 6 | 30 | 60 | 3,932,160 (0x003C0000) | F / 6 | same |
+| 7 | 32 | 64 | 4,194,304 (0x00400000) | G / 7 | same |
+| 8 | 34 | 68 | 4,456,448 (0x00440000) | H / 8 | same |
 
-Source: `docs/handoff/m16-fpga-handoff.md` §3 and §4.3;
-`docs/phase2/dig6_requirements.md` §1. FG-1 may reassign coil→tone; the tone set
-and spacing are fixed (`docs/phase2/tone_plan.md` §4).
+FG-1 may reassign coil→tone; the tone set and spacing are fixed
+(`docs/phase2/tone_plan.md` §4).
 
 **Integer-J / leakage-free condition.** For a rectangular observation of length
 \(N\), \(X[J]=\sum_{n=0}^{N-1}x[n]e^{-j2\pi Jn/N}\). A tone at bin \(J_i\) gives
@@ -264,10 +263,12 @@ against `simulations/field_jacobian.py` (§9).
 ## 3. Sensing / receiving
 
 **Point-sensor flux.** Thesis Eq.(3.19)–(3.25) gives the point-coil
-approximation
+approximation. Convention for this file: \(\Phi\) is **flux linkage**, i.e. turns
+times flux per turn; \(A\) is the mean area of one turn, so the per-turn flux is
+\(\mu_a\mathbf B\!\cdot\!A\hat n\):
 
 $$
-\Phi=\mu_a\,\mathbf B\!\cdot\!A\hat n,\qquad
+\Phi=N\mu_a\,\mathbf B\!\cdot\!A\hat n,\qquad
 \hat n(\theta,\phi)=[\sin\theta\cos\phi,\ \sin\theta\sin\phi,\ \cos\theta],
 $$
 
@@ -282,7 +283,7 @@ re-derive it here (`AGENTS.md`; `docs/phase2/README.md` §4).
 $$
 \tilde V=-\frac{d\Phi}{dt}=-j\omega\tilde\Phi
 \;\Rightarrow\;
-|\tilde V|=\omega\,\mu_a A\,|\mathbf B\!\cdot\!\hat n|,
+|\tilde V|=\omega\,N\mu_a A\,|\mathbf B\!\cdot\!\hat n|,
 \qquad \frac{V}{T}=N A\omega\mu_a .
 $$
 
@@ -374,8 +375,16 @@ $$
 $$
 
 (`docs/phase2/adc_justification.md` §2a). With the tabulated weakest tone
-\(A=0.496\) mV, \(\sigma_n=26.1\) nV and \(N=512\), *derived*
-\(\sigma_\phi=2.33\times10^{-6}\) rad = 0.000133°. The sign decision boundary is
+\(A=0.496\) mV, \(N=512\), and the **analog-front-end-only** \(\sigma_n=26.1\) nV
+(the 26.1 nV line above), *derived* \(\sigma_\phi=2.33\times10^{-6}\) rad =
+0.000133°. That figure omits \(\sigma_q\), \(\sigma_{xtalk}\) and
+\(\sigma_{leak}\): at 24 bits \(q=8.192/2^{24}=488.3\) nV gives
+\(\sigma_q=q/\sqrt{12}=141\) nV, 5.4× the analog term, so quantization alone
+puts \(\sigma_\phi\ge1.26\times10^{-5}\) rad (0.00072°); adding analog and
+quantization in quadrature gives \(1.28\times10^{-5}\) rad (*derived* from the
+LSB of §4 and the bound above). Crosstalk and leakage are not yet measured, so
+the **combined \(\sigma_\phi\) is not yet fixed**; the 2.33 µrad number is an
+analog-only lower bound, not the system bound. The sign decision boundary is
 \(\Delta\phi_i=0\) or \(\pm\pi\), where the determinant of §5 vanishes, so this
 variance must be compared with the calibrated distance to that boundary; the
 per-tone calibrated offsets are not yet fixed numerically (§10). The relative
@@ -387,21 +396,22 @@ achieved, versus \(26/100=2.6\times10^{-4}\) (71.7 dB) required
 there quotes 85.4 dB SNR). An explicit \(\sigma_A/A\) column is not tabulated
 in the cited docs; the values above are derived, not a new spec.
 
-**Code→field scaling chain** (all gains algebraic):
+**Code→field scaling chain** (all gains algebraic). \(A_{sens,i}\) is the
+measured V/T **at the amplifier output**, so it already contains \(G_{FE}\),
+\(\mu_aNA\) and \(\omega_i\); divide by it once, not by its factors again:
 
 $$
 \underbrace{k_{ADC}}_{\text{counts}}
 \;\xrightarrow{\;8.192/2^{24}\;}\;V_{diff}
-\;\xrightarrow{\;/G_{FE}\;}\;V_{coil}
-\;\xrightarrow{\;/\mu_aNA\;}\;\omega B_{\parallel}
-\;\xrightarrow{\;/\omega_i\;}\;B_{\parallel}
 \;\xrightarrow{\;/A_{sens,i}\;}\;B_i\ \text{(signed per §5)} .
 $$
 
-\(G_{FE}\approx70\) (`docs/phase2/frontend_requirements.md` §4),
-\(\mu_aNA=3.95\times10^{-2}\) m² and the V/T values are in §3,
 \(A_{sens,i}\) comes from the Helmholtz fit
-(`docs/phase2/calibration_tooling.md` §1).
+(`docs/phase2/calibration_tooling.md` §1); the equivalent coil-only route would
+be \(V_{diff}/G_{FE}/(\mu_aNA\omega_i)\), with \(G_{FE}\approx70\)
+(`docs/phase2/frontend_requirements.md` §4) and
+\(\mu_aNA=3.95\times10^{-2}\) m² from §3. The two routes are alternatives, not
+successive steps.
 
 ---
 
@@ -425,11 +435,13 @@ $$
 $$
 
 the last line derived by expanding \(e^{-j\theta_k}\). Coefficient
-\(2\cos\theta_k\), bin \(J_k=f_kN/F_s=40,44,\ldots,68\). Run for Ch0 (\(Y_I\))
-and the pen channel (\(Y_V\)) at all eight tones: 32 tone/channel pairs × 512
-samples = 16,384 real multiplies per frame, 1.90 M multiply/s at 115.8 Hz
-(`docs/phase2/dig6_requirements.md` §4 DIG-03a). Output per frame: 8 complex
-\(Y_V\), 8 complex \(Y_I\), timestamp and status (DIG-03d).
+\(2\cos\theta_k\), bin \(J_k=f_kN/F_s=40,44,\ldots,68\). Eight tones × four
+captured channels = **32 Goertzel instances** (not 32 tones): 32 × 512 samples
+= 16,384 real multiplies per frame, 1.90 M multiply/s at 115.8 Hz. Of these,
+Ch0 (current reference \(Y_I\)) and Ch1 (pen \(Y_V\)) feed the solver; Ch2/Ch3
+are captured but not used in the single-pen solve
+(`docs/phase2/dig6_requirements.md` §4 DIG-03a:105, §4:110, DIG-03d:108). Output
+per frame: 8 complex \(Y_V\), 8 complex \(Y_I\), timestamp and status.
 
 **Windows.** Rectangular with integer \(J\) gives zero tone-to-tone leakage and
 the narrowest ENBW; its −13 dB sidelobes affect only non-bin components, which
@@ -572,8 +584,10 @@ estimate with a `degraded` flag (`docs/handoff/solver-algorithm-handoff.md` §4,
 §8–§9). This is a bounded-budget approximation of the golden TRF subproblem,
 not a claim about MATLAB internals (handoff §3 note).
 
-**Analytic Jacobian.** From \(\Phi=k\,\mathbf B(\mathbf p)\cdot\hat n\) with
-\(k=\kappa\,\mu_aNA\,I_{out}/R_{store}\),
+**Analytic Jacobian.** The residual is already in tesla (§5), so the model
+scalar is \(\Phi=k\,\mathbf B(\mathbf p)\cdot\hat n\) with
+\(k=\kappa_c I_{out,c}/R_{store,c}\): κ absorbs the sensor turns/area and
+\(A_{sens}\) scaling, and no \(NA\) factor is applied again. With
 \(\partial\hat n/\partial\theta=[\cos\theta\cos\phi,\cos\theta\sin\phi,-\sin\theta]\)
 and \(\partial\hat n/\partial\phi=[-\sin\theta\sin\phi,\sin\theta\cos\phi,0]\):
 
@@ -638,25 +652,26 @@ values are tracking / clamped / stopped / fault (M16 handoff §10).
 ## 8. Worked end-to-end example (no fabricated intermediates)
 
 Representative pose: a 7×7 calibration point on the locked 150 mm/B cube bottom
-plane, \(z=85.6\) mm, with x/y from the 31.75 mm grid and \(\theta=\phi=0\)
-(`contract/system_contract.md` SC-02, D1-B;
-`software/anser-matlab-ref/fSysSetup.m:68-73`). The weakest-tone field input
+plane, \(z=85.6\) mm (`contract/system_contract.md` SC-02, D1-B), with x/y from
+the 31.75 mm grid and \(\theta=\phi=0\)
+(`software/anser-matlab-ref/fSysSetup.m:68-70`, x/y grid only; the golden setup's
+own z is 120.6 mm at `fSysSetup.m:71-73`). The weakest-tone field input
 0.10 µT at 150 mm/B and the strongest 5.76 µT are first-pass 8×5 scan values at
 250 mA (`docs/phase2/pen_link_budget.md` Assumptions;
 `docs/phase2/frontend_requirements.md` §4).
 
-| Step | Calculation | Status |
-|---|---|---|
-| 1. Coil current | \(\tilde I_i=250\) mA at each tone, closed loop; phase reference Ch0 | sourced: `docs/phase2/driver_power_requirements.md` §1 DRV-02, §4 |
-| 2. DAC word | centre 2.45 V → code 32,113; clamp 0.3–4.6 V | computed: §1 |
-| 3. Filter image | 34 kHz tone → image 165.805 kHz at −35.3 dB | computed: §1, matches `simulations/m16/FINAL_REPORT.md` §3.1 |
-| 4. Field at sensor | \(\mathbf B(\mathbf p)=\sum_i\tilde I_i\mathbf b_i(\mathbf p)\); weakest tone 0.10 µT, strongest 5.76 µT | input sourced; per-pose fields **requires sim/bench** (`simulations/field_jacobian.py`) |
-| 5. Sensor EMF | \(V/T=4,959\) @20 kHz / 8,430 @34 kHz; weakest 0.496 mV, strongest 48.6 mV | computed: §4 table |
-| 6. Front end / ADC | ×70 → 34.7 mV / 3.40 V; 71,066 / 6,963,200 counts | computed: §4 table |
-| 7. Noise / CRLB | 26.1 nV in 500 Hz → 5.3 pT @20 kHz; \(\sigma_\phi\approx2.33\times10^{-6}\) rad, \(\sigma_A/A\approx5.3\times10^{-5}\) | computed: §4 |
-| 8. Demod | Goertzel at bins 40…68; \(|Y|\) and sign via determinant; \(B_i=\operatorname{sign}(\Delta\phi_i)|Y_i|/A_{sens,i}\) | equations in §5; numeric \(|Y|\) **requires bench** (`A_sens` not yet fixed numerically for Phase 2 tones) |
-| 9. Calibration | κ, \(\delta z\) from the 7×7 fit; 98-point RMS Eq.(7.10) | procedure sourced; numeric κ **not yet fixed** in the repo (§10) |
-| 10. Solve | 8 residuals, TRF golden / damped-GN FPGA, warm start, bounds, one retry | equations in §6; output pose for this point **requires sim/bench** |
+| Step | Calculation | Status | Source |
+|---|---|---|---|
+| 1. Coil current | \(\tilde I_i=250\) mA at each tone, closed loop; phase reference Ch0 | sourced | `docs/phase2/driver_power_requirements.md` §1 DRV-02, §4 |
+| 2. DAC word | centre 2.45 V → code 32,113; clamp 0.3–4.6 V | computed | §1; decision #33 |
+| 3. Filter image | 34 kHz tone → image 165.805 kHz at −35.3 dB | computed | §1; `simulations/m16/FINAL_REPORT.md` §3.1 |
+| 4. Field at sensor | \(\mathbf B(\mathbf p)=\sum_i\tilde I_i\mathbf b_i(\mathbf p)\); weakest tone 0.10 µT, strongest 5.76 µT | input sourced; per-pose fields **requires sim/bench** | `docs/phase2/pen_link_budget.md` Assumptions; `simulations/field_jacobian.py` |
+| 5. Sensor EMF | \(V/T=4,959\) @20 kHz / 8,430 @34 kHz; weakest 0.496 mV, strongest 48.6 mV | computed | §4 table |
+| 6. Front end / ADC | ×70 → 34.7 mV / 3.40 V; 71,066 / 6,963,200 counts | computed | §4 table |
+| 7. Noise / CRLB | 26.1 nV in 500 Hz → 5.3 pT @20 kHz; \(\sigma_\phi=2.33\times10^{-6}\) rad analog-only (quantization alone \(\ge1.26\times10^{-5}\) rad; combined **not yet fixed**), \(\sigma_A/A\approx5.3\times10^{-5}\) | computed / open | §4; `docs/phase2/adc_justification.md` §2a |
+| 8. Demod | Goertzel at bins 40…68; \(|Y|\) and sign via determinant; \(B_i=\operatorname{sign}(\Delta\phi_i)|Y_i|/A_{sens,i}\) | equations in §5; numeric \(|Y|\) **requires bench** (`A_sens` not yet fixed) | `docs/phase2/dig6_requirements.md` §4; `docs/phase2/calibration_tooling.md` §1 |
+| 9. Calibration | κ, \(\delta z\) from the 7×7 fit; 98-point RMS Eq.(7.10) | procedure sourced; numeric κ **not yet fixed** | §5; `docs/phase2/calibration_tooling.md` §2, §7 |
+| 10. Solve | 8 residuals, TRF golden / damped-GN FPGA, warm start, bounds, one retry | equations in §6; output pose for this point **requires sim/bench** | `docs/handoff/solver-algorithm-handoff.md` §3–4 |
 
 The repo has no numeric per-tone κ, Phase-2 \(A_{sens}\), or measured 8-tone
 frame vectors, so steps 4, 8–10 cannot be carried to a numeric pose without
@@ -697,3 +712,4 @@ their sources instead of inventing values.
 | 12 | Ferrite parameters | AGENTS.md gives µr≈2300 / +10 dB / Eqs.(7.5)–(7.7); local thesis extracts are absent (`docs/extracts/README.md`), so Eq. numbers are cited via AGENTS.md, not re-derived | Air-core lock (decision #4) makes Eqs.(7.5)–(7.7) inactive; re-open only with a ferrite variant |
 | 13 | Spur floor target | "60–70 dB below tone" is a range (`docs/phase2/adc_justification.md` §1); simulated summer EVM is −67.1 dBc (`simulations/m16/FINAL_REPORT.md` §3.2) | Keep the range; bench 8-tone FFT closes it (`docs/phase2/tone_plan.md` §7) |
 | 14 | JAEGER extract availability | `docs/extracts/README.md` says the three thesis extracts are local-only and absent from the repo; §2 and §3 cite equation numbers through `AGENTS.md` and tracked handoffs | No inline quotation of the thesis; regenerate locally via `tools/extract_jaeger.sh` if equation text must be re-checked |
+| 15 | Combined phase variance | The 2.33 µrad figure in §4 uses the 26.1 nV analog-only term; \(\sigma_q=141\) nV alone gives \(\ge1.26\times10^{-5}\) rad, and \(\sigma_{xtalk}\) / \(\sigma_{leak}\) are unmeasured (`docs/phase2/adc_justification.md` §2a) | **Not yet fixed**: the analog-only value is a lower bound; bench crosstalk/leakage plus the derived quantization bound set the combined \(\sigma_\phi\) |
