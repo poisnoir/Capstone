@@ -93,7 +93,7 @@ by 164 from the 32.768 MHz DDS; the tones stay exact (FTW k×262144).
 | DIG-02b | One-time START/SYNC after power-up; discard the first 68 samples (266 µs); count DRDY; never pulse SYNC per frame | AD7768 wideband filter settling; preserve integer-J phase | Scope/counter |
 | DIG-02c | Ping-pong BRAM: 4 ch × 512 samples × 32 bit = 64 kb per frame; 2 frames = 128 kb (4 BRAM36) | One frame is demodulated while the next is captured | BRAM utilization; no overwrite |
 | DIG-02d | Frame boundary at DRDY count 512; timestamp from a free-running 32-bit counter | Deterministic latency and log timestamps | Timestamp check |
-| DIG-02e | Lane/pin: 4 DOUT + DCLK + DRDY + SYNC/START + MCLK + RESET + SPI config = 2×8/custom header | 2×6 Pmod is insufficient | Pin-budget review |
+| DIG-02e | Lane/pin: 4 DOUT + DCLK + DRDY + SYNC/START + MCLK + RESET + SPI config are **board nets on BRD-01**, not an external ADC header (SC-05b/`icd/adc_fpga.md`) | A 2×6 Pmod (8 I/O) is insufficient — rationale for on-board nets, not a build instruction | FPGA pin/bank assignment review; capture |
 
 ---
 
@@ -138,7 +138,7 @@ covers this; the earlier 2.5–5.8 GFLOP/s estimate is the conservative bound.
 | **Pose period** | **8.633 ms** | **115.8 Hz** |
 | Filter-off latency | ≈9.1 ms | Pose period + 0.5 ms output |
 | Filter-on latency | ≤100 ms | Kalman group delay; measure |
-| STOP (arm motion only) | <1 ms hardware | NC mushroom button; no K1/K2, `+15V_FUSED` field rail unswitched; field, DDS/DAC and pose continue (#30) |
+| STOP (arm motion only) | <1 ms hardware | `PICO_STOP_N` = FPGA request AND `U753.5 (Q)` latch; no panel button, no K1/K2, no opto status, `+15V_FUSED` unswitched; field, DDS/DAC and pose continue (#30) |
 | STOP on tracking loss (arm) | ≤100 ms | Watchdog + follower; field, DDS/DAC and pose continue (#30) |
 | Tracker-side safe state | on genuine FPGA/ADC/driver fault only | Separate from arm STOP; tracker enters safe state (#30) |
 

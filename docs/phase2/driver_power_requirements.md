@@ -8,9 +8,9 @@ Current-sense A+ (summed Ch0 + individual peak/fault taps) is LOCKED.
 DAC/filter is LOCKED: **M16 — 1× DAC80508 (16-bit, 8 ch, 200 kSPS) + 8×
 LTC1563-2 (4th-order, 60 kHz)**; DAC update 199.805 kSPS, SPI 49.152 MHz. Enclosure is LOCKED:
 one box with an internal shield partition. STOP is **arm-motion only** (#30):
-NC mushroom button, no K1/K2, field rail `+15V_FUSED` unswitched; field, DDS/DAC
-and pose continue. A genuine FPGA/ADC/driver fault is the separate tracker-side
-safe state.
+`PICO_STOP_N` = FPGA request AND `U753.5 (Q)` latch; no panel mushroom, no K1/K2,
+no opto STOP status, field rail `+15V_FUSED` unswitched; field, DDS/DAC and pose
+continue. A genuine FPGA/ADC/driver fault is the separate tracker-side safe state.
 **Current: 150 mA prototype first; 250 mA fallback; 500 mA max; programmable
 150–500 mA.** BOM/schematic/test details remain open at the BOM pass.
 
@@ -46,11 +46,12 @@ safe state.
   driver/DC-DC section and the FE/ADC. Star ground, LDO analog rails, 15 V input
   CMC/CLC; thermal/EMI test. Two-box split is a fallback only if the EMI test
   fails and a deviation is approved.
-- **LOCKED: STOP is arm-motion only (decision #30)** — normally-closed mushroom
-  button; **no K1/K2** and the `+15V_FUSED` field rail is **unswitched**. Field,
-  DDS/DAC and pose continue; only arm motion stops (≤100 ms). The FPGA gets an
-  opto-isolated STOP status. A genuine FPGA/ADC/driver fault triggers the
-  separate tracker-side safe state, not the arm STOP.
+- **LOCKED: STOP is arm-motion only (decision #30)** — `PICO_STOP_N` is the AND
+  of the FPGA STOP request and the `U753.5 (Q)` latch; **no panel mushroom, no
+  K1/K2, no opto-isolated STOP status** and the `+15V_FUSED` field rail is
+  **unswitched**. Field, DDS/DAC and pose continue; only arm motion stops
+  (≤100 ms). A genuine FPGA/ADC/driver fault triggers the separate tracker-side
+  safe state, not the arm STOP.
 
 ---
 
@@ -245,12 +246,13 @@ EVM ≤−60 dBc; output 0–5 V into the LMH6321 loop. SPICE screen:
 - **Thermal reality:** 8×250 mA linear from +15 V is roughly 12–16 W in the
   LMH6321 output stages (the old discrete design was ~30 W/3 kg). The series cap
   **alone at +15 V does not reduce this** — lowering the load voltage increases
-  the pass-device drop. The thermal fix is a lower driver rail (+5 V) plus the
-  series cap (~4 W for 8×250 mA), and/or 150 mA nominal (the B air + INA163
+  the pass-device drop. A hypothetical lower driver rail (`+5V_DRV`, outside
+  the #31 v2 tree — the `+5 V` net is deleted) plus the series cap (~4 W for
+  8×250 mA), and/or 150 mA nominal (the B air + INA163
   link budget still passes 200/B at 150 mA: ~5.3 pT vs ~6.6 pT required), plus a
   heatsink/fan and the one-box thermal soak. The 500 mA max at 34 kHz still
-  needs the higher rail (~7.5 V cap/coil), so a +5 V nominal / +15 V max
-  arrangement must be checked.
+  needs the higher rail (~7.5 V cap/coil), so a `+5V_DRV` nominal / +15 V max
+  arrangement must be checked if that option is ever reopened.
 - **Series tuning capacitor option (not locked):** a series cap per coil at its
   tone cancels the coil reactance, reducing the driver voltage/reactive power
   (e.g. 3.8 V → 0.5 V at 250 mA/34 kHz; C 0.31–0.9 µF), but **not** the coil
@@ -272,10 +274,11 @@ EVM ≤−60 dBc; output 0–5 V into the LMH6321 loop. SPICE screen:
   the INA163 inputs, and check its switching spur on the bench; place the +6 V
   module and FPGA bucks at the power/driver end of the board. The digital clocks
   are the other inside source. See `docs/phase2/power_tree_v2.md` §6.
-- **STOP is arm-motion only (decision #30):** normally-closed mushroom button,
-  no K1/K2, `+15V_FUSED` unswitched; field, DDS/DAC and pose continue, only the
-  arm halts (≤100 ms). FPGA gets opto-isolated STOP status. A genuine
-  FPGA/ADC/driver fault is the separate tracker-side safe state.
+- **STOP is arm-motion only (decision #30):** `PICO_STOP_N` = FPGA request AND
+  `U753.5 (Q)` latch; no panel mushroom, no K1/K2, no opto STOP status,
+  `+15V_FUSED` unswitched; field, DDS/DAC and pose continue, only the arm halts
+  (≤100 ms). A genuine FPGA/ADC/driver fault is the separate tracker-side safe
+  state.
 - **LMH6321 availability**: if the part is obsolete/unavailable, use the
   vendor Rev A discrete stage as a fallback, or a comparable high-current
   buffer; re-check the thermal/loop.
