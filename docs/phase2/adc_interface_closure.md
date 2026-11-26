@@ -17,7 +17,7 @@ replaced).
 | Control | SYNC_IN/START/SYNC_OUT/DRDY; no CONVST; one-time START/SYNC; discard first 68 samples (266 µs); count DRDY |
 | Data | DCLK/DOUT lanes, not SPI; SPI configuration only; 4 active ch (D3-A/SC-05b) × 32-bit × 256 kSPS = 32.768 Mbit/s; 4 lanes → 8.192 MHz; 2 lanes → 16.384 MHz |
 | Pin budget | 4 DOUT + DCLK + DRDY + SYNC/START + MCLK + RESET = 10, plus SPI config; 2×6 Pmod (8 I/O) insufficient; use 2×8/custom header |
-| Power | +5 V AVDD1/AVDD2; +3.3 V IOVDD; C1 medical-grade PSU; FPGA core via its board regulator |
+| Power | +5VA AVDD1/AVDD2; +3.3 V IOVDD; on-board tree v2 (#31); FPGA core rails +1V0_FPGA/+1V8_FPGA from +6 V |
 | BOM | U1 AD7768-4BSTZ-RL7 qty 2; U2 ADR434BRZ qty 1; verify RL7/RL qty-1 price, ADI lifecycle, exact supplier P/N |
 | Tests | Code density; FFT/SINAD/THD; CMRR; reference noise; lane capture; 1-hour zero dropped frames |
 

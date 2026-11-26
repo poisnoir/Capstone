@@ -2,7 +2,8 @@
 
 **Status:** **DRV-2 requirements gate ACCEPTED 2026-10-27.** Driver topology A
 (LMH6321-class, single +15 V AC-coupled) is LOCKED. Power C1 + medical-grade
-(one external 15 V/60 W adapter + on-board DC-DC/LDO tree) is LOCKED.
+(one external 15 V/60 W adapter + on-board DC-DC/LDO tree) is LOCKED; the
+on-board tree is the v2 tree locked by decision #31 (2026-11-25).
 Current-sense A+ (summed Ch0 + individual peak/fault taps) is LOCKED.
 DAC/filter is LOCKED: **M16 — 1× DAC80508 (16-bit, 8 ch, 200 kSPS) + 8×
 LTC1563-2 (4th-order, 60 kHz)**; DAC update 199.805 kSPS, SPI 49.152 MHz. Enclosure is LOCKED:
@@ -26,9 +27,9 @@ mushroom button in the driver enable chain, independent of the FPGA.
   deviation and a re-check of current, loop, and thermal. The vendor Rev A
   discrete class-AB board is reference/fallback only.
 - **LOCKED: C1 — one external medical-grade 15 V/60 W-class adapter + on-board
-  DC-DC/LDO tree.** +15 V, −15 V, +5 V, +3.3 V; +1.8 V only if the FPGA board
-  needs it. Exact parts are BOM decisions. The FPGA board regulates its own
-  core from +5 V/+3.3 V unless the final board requires an added rail.
+  DC-DC/LDO tree (v2, decision #31).** +15 V driver rail; on-board +6 V,
+  +5V_EXC, +5VA, +3.3 V/+1V0_FPGA/+1V8_FPGA and ±12VA. Exact parts are locked
+  per #31 (see §3); the +15 V driver swing is unchanged (#8).
 - **LOCKED: A+ — current-sense.** Per-coil \(R_{store}\) + analog summer to
   AD7768 Ch0 for \(Y_I\); individual per-coil peak/overcurrent comparators for
   fault detection. No mux, no second ADC. Keep the thesis \(R_{store}\) values
@@ -58,7 +59,7 @@ mushroom button in the driver enable chain, independent of the FPGA.
 | DRV-02 | Output: 250 mA nominal / 500 mA max; **150 mA prototype first**; programmable 150–500 mA; load 70 µH + 2 Ω; 34 kHz \(\lvert Z\rvert\approx15.1\ \Omega\); 250 mA → 3.8 V RMS / 5.3 V peak; 500 mA peak → 7.55 V peak (rail limit); 20–34 kHz | Thesis §4.2–4.3; `tone_plan.md`; thermal note | PROPOSED; 150 mA first | Load-step test |
 | DRV-03 | Constant-current: loop phase margin ≥45° at 34 kHz; output impedance high; current error ≤0.1%; drift ≤0.1% over 18–28 °C; no DC current in the coil | Thesis §4.3.3; O'Donoghue §II | PROPOSED | Step/load response; current log |
 | DRV-04 | Distortion: THD ≤−60 dBc at 250 mA; all-tone IMD below the spur budget; channel crosstalk ≤−60 dB; noise | Docs spur budget; `tone_plan.md` IMD note | PROPOSED | Sense-resistor FFT + 8-tone IMD |
-| DRV-05 | Power: **C1 + medical-grade locked** — one external 15 V/60 W-class medical-grade adapter + on-board DC-DC/LDO tree; +15 V, −15 V, +5 V, +3.3 V; no on-board mains stage | §3 | LOCKED | Rail noise/load test |
+| DRV-05 | Power: **C1 + medical-grade locked; on-board tree v2 locked (#31)** — one external 15 V/60 W-class medical-grade adapter; +15 V driver rail, +6 V, +5V_EXC, +5VA, +3.3 V/+1V0_FPGA/+1V8_FPGA, ±12VA; no on-board mains stage | §3; #31 | LOCKED | Rail noise/load test |
 | DRV-06 | Thermal: 8 channels at 250 mA; coil \(I^2R\) ≈0.125 W/coil, sense ≈0.06 W each, LMH6321 dissipation; no 3 kg heatsink; ~180 cm² board | Thesis §4.3; measured R/L | PROPOSED | Thermal soak |
 | DRV-07 | Protection: overcurrent, overtemp, disable, fault, stop ≤100 ms; AC coupling prevents DC coil current | Phase 1 #17; thesis §4.3.1 | PROPOSED | Fault injection |
 | DRV-08 | Current-sense: \(R_{store}\) per coil, summer scale 2.0103, V/I transfer, bandwidth ≥34 kHz, phase, common-mode, ADC Ch0 | `fSysSetup.m` | PROPOSED | Known-current injection |
@@ -95,24 +96,23 @@ mushroom button in the driver enable chain, independent of the FPGA.
 ## 3. Power delivery
 
 **LOCKED: C1 — one external medical-grade 15 V/60 W adapter + on-board
-DC-DC/LDO tree.** Use a modern medical-grade 15 V/60 W-class adapter plus an
-on-board DC-DC/LDO tree; outputs +15 V, −15 V, +5 V, +3.3 V (and +1.8 V only if
-the FPGA board needs it). Exact adapter/DC-DC/LDO parts are BOM decisions; the
-thesis ME60/PTN78000AAH/TPS7A33/47 chain is the reference.
+DC-DC/LDO tree (v2, decision #31, 2026-11-25).** Use a modern medical-grade
+15 V/60 W-class adapter; the on-board tree is the v2 tree in
+`docs/phase2/power_tree_v2.md`, which decision #31 adopts, superseding the #20
+part list.
 
-> **Rail-tree status (2026-11-25):** the rails above reflect LOCKED decision #20
-> (ME60A1503F01 15 V/60 W adapter, OKI-78SR-5/1.5 +5 V, RV-1515D ±15 V isolated,
-> TPS7A4701/TPS7A33 to ±12 V analog, TPS7A20 +3.3 V). `docs/phase2/power_tree_v2.md`
-> is **PROPOSED**, explicitly changes #20, and proposes +6 V / +3.3 V / +5V_EXC /
-> +5VA with MGJ2D151515SC for ±12 VA; it requires a `contract-change` PR before
-> these rails change. The +15 V driver swing (decision #8, single +15 V
-> AC-coupled) is unchanged by either tree.
+> **Rail tree (#31, LOCKED 2026-11-25):** **+6 V** from TPSM63604;
+> **+5V_EXC** for DAC80508 + 8× LTC1563-2; **+5VA** for AD7768-4 + 2× ADA4940-2;
+> **+3.3 V / +1V0_FPGA / +1V8_FPGA**; **±12VA** from MGJ2D151515SC → LT3045-1 /
+> LT3093. **OKI-78SR-5 and TPS7A2033 are removed** (the `+5 V` net no longer
+> exists). The thesis ME60/PTN78000AAH/TPS7A33/47 chain is historical reference
+> only. The +15 V driver swing (decision #8, single +15 V AC-coupled) is unchanged.
 
 **No on-board mains stage.** The 108/120/132 V 60 Hz wall is handled by the
 external 15 V adapter; the board does not implement a mains rectifier,
 transformer, or isolation. The adapter is the mains safety/EMC boundary. The
 board's power stage is only the low-voltage DC-DC/LDO tree: 15 V DC input →
-inverting −15 V, +5 V, +3.3 V, and the +15 V pass-through for the LMH6321. This
++6 V buck pre-rail and ±12VA, with the +15 V pass-through for the LMH6321. This
 is the thesis ME60 approach and avoids a from-scratch 110 V design (creepage,
 isolation, EMC, safety testing, board size). The board input still needs a fuse,
 common-mode choke, reverse-polarity/transient protection, and a hardware disable.
@@ -120,42 +120,44 @@ common-mode choke, reverse-polarity/transient protection, and a hardware disable
 **What is actually switched on-board:**
 
 - **+15 V is not converted.** It comes from the adapter and feeds the LMH6321
-  current buffer directly.
-- **−15 V is generated from +15 V** for the bipolar INA163/ADA4940/ADA4896
-  analog stages. A linear regulator cannot invert, so an inverting switching
-  converter (PTN78000AAH or modern equivalent) makes −15 V, followed by a
-  low-noise LDO (TPS7A33).
-- **+5 V/+3.3 V are generated from +15 V** for the AD7768/FPGA. A buck is used
-  if the current is high; an LDO after it cleans the rail. If only the ADC is
-  powered (tens of mA), linear LDOs from +15 V are also possible.
+  current buffer directly (driver swing unchanged, #8).
+- **+6 V is generated from +15 V** by U147 TPSM63604 (synced to `BUCK_SYNC`);
+  it feeds the +1V0_FPGA/+1V8_FPGA/+3.3 V bucks and the two 5 V LDOs.
+- **±12VA is generated by U5 MGJ2D151515SC** → U6 LT3045-1 / U2 LT3093 for the
+  analog stages (replaces RV-1515D + TPS7A47/TPS7A33).
+- **+5V_EXC (U149 TPS7A4701) and +5VA (U146 TPS7A4701)** feed the DAC80508 +
+  8× LTC1563-2 and the AD7768-4 + 2× ADA4940-2 respectively; the `+5 V` net is
+  removed. OKI-78SR-5 and TPS7A2033 are gone.
 - The external adapter switches 120 V AC → 15 V DC; the board switches 15 V DC
-  → −15 V/+5 V/+3.3 V. The two stages are different.
+  → +6 V and ±12VA. The two stages are different.
 
 **Why switching instead of linear:** 15 V → 5 V at 1 A dissipates 10 W in a
 linear pass element; 15 V → 3.3 V at 1 A dissipates 11.7 W. A buck is much more
 efficient; the LDO after it removes the switching ripple. A negative rail cannot
 be made with a positive linear regulator at all.
 
-**If on-board switcher EMI is a concern:** a **±15 V/5 V medical-grade
-multi-output adapter** (C2) or a second −15 V adapter would move the −15 V/+5 V
+**If on-board switcher EMI is a concern:** *(v1-era option, not adopted)* a
+**±15 V/5 V medical-grade multi-output adapter** (C2) or a second −15 V adapter would move the −15 V/+5 V
 conversion outside the box; the board would only LDO/filter. That is a power-tree
 change from C1; trade size/cost/availability.
 
 | Rail | Load | Note |
 |---|---|---|
-| +15 V | LMH6321 current buffer (8 ch), analog | 250 mA nominal; 5.3 V peak at 34 kHz; 60 W adapter |
-| −15 V | INA163/ADA4940/ADA4896 analog | Low current; inverting DC-DC + LDO |
-| +5 V | AD7768 AVDD1/AVDD2, FPGA input | AD7768 AVDD1 5 V; AVDD2 2.25–5 V |
-| +3.3 V | AD7768 IOVDD, FPGA/digital | AD7768 IOVDD 2.5–3.3 V |
-| +1.8 V | FPGA core if needed | Use the FPGA board regulator or add a rail |
+| +15 V | LMH6321 current buffer (8 ch) | 250 mA nominal; 5.3 V peak at 34 kHz; 60 W adapter; driver swing unchanged (#8) |
+| +6 V | Pre-rail for all on-board rails | TPSM63604 from +15 V, synced to `BUCK_SYNC` |
+| ±12VA | INA163/ADA4940/ADA4896 analog | MGJ2D151515SC → LT3045-1 / LT3093 |
+| +5V_EXC | DAC80508 + 8× LTC1563-2 | TPS7A4701 from +6 V |
+| +5VA | AD7768 AVDD1/AVDD2, ADA4940-2 | TPS7A4701 from +6 V; AD7768 AVDD1 5 V; AVDD2 2.25–5 V |
+| +3.3 V | AD7768 IOVDD, FPGA/digital | TPS62130A from +6 V; AD7768 IOVDD 2.5–3.3 V |
+| +1V0_FPGA / +1V8_FPGA | FPGA core / aux | TPS62130A from +6 V |
 
 - One wall adapter, one enclosure; no bench supply in the final build.
-- **Isolation grade LOCKED: medical-grade isolated adapter** (thesis ME60 class).
+- **Isolation grade LOCKED: medical-grade isolated adapter** — ME60A1503F01
+  (decision #20, retained by #31); the thesis ME60 class is the reference.
   The pen is handheld; medical-grade is required for the operator safety/leakage
-  case. Exact part is a BOM decision; verify IEC 60601-class isolation.
-- **FPGA rail scope DEFAULT:** the PSU provides +5 V/+3.3 V and the FPGA board
-  derives its core rails; add +1.8 V (or another rail) only if the final FPGA
-  board requires it.
+  case. Verify IEC 60601-class isolation.
+- **FPGA rail scope (v2, #31):** the PSU provides +3.3 V, +1V0_FPGA and
+  +1V8_FPGA from +6 V; no added rail is needed.
 - Add input common-mode choke, CLC filtering, fusing, reverse-polarity
   protection, and a hardware disable for the driver; the stop path must remove
   coil current within 100 ms.
@@ -256,16 +258,16 @@ EVM ≤−60 dBc; output 0–5 V into the LMH6321 loop. SPICE screen:
   is the alternate if the M16 bench fails.
 - **Enclosure/EMI LOCKED: one box with an internal shield partition** between
   the driver/DC-DC section and the FE/ADC. The external adapter removes the mains
-  switching, but the on-board −15 V/+5 V/+3.3 V converters still switch inside.
+  switching, but the on-board +6 V/+3.3 V/+1V0/+1V8 bucks and ±12VA converter
+  still switch inside (v2, #31).
   The LMH6321 is linear; the 8×250 mA 20–34 kHz current loops and FG cables are
   the intentional field, not EMI. Use a shielded partition/star ground/LDO analog
   rails/15 V input CMC; test the thermal/EMI. A two-box split is a fallback only
   if the EMI test fails and a deviation is approved.
-  **The −15 V rail is the least aggressive switcher:** it powers only the
-  low-current analog (tens of mA), and its ~440 kHz switching is far above the
-  20–34 kHz signal; a shielded inductor, small switching loop, LDO + pi filter
-  make it manageable. The bigger inside sources are the +5 V/+3.3 V/FPGA
-  regulators and the digital clocks, not the −15 V rail.
+  **Switcher placement:** keep U5 MGJ2D151515SC away from the pen connector and
+  the INA163 inputs, and check its switching spur on the bench; place the +6 V
+  module and FPGA bucks at the power/driver end of the board. The digital clocks
+  are the other inside source. See `docs/phase2/power_tree_v2.md` §6.
 - **Hardware E-stop LOCKED:** normally-closed mushroom button in the driver
   enable chain, independent of the FPGA; it cuts the +15 V driver/load-switch
   enable. The FPGA gets an opto-isolated status and runs a separate software
@@ -312,4 +314,4 @@ Still required before build/sign-off (not deferred):
 - LMH6321, 250 mA nominal / 500 mA max, 100 µF AC coupling.
 - \(R_{store}\) values and summer scale; current-sense V/I/phase.
 - Compensation topology / phase margin at 34 kHz.
-- +15 V/±15 V rails, protection/disable, DAC interface.
+- +15 V driver swing and the v2 on-board rails (#31), protection/disable, DAC interface.
