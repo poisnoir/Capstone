@@ -192,8 +192,9 @@ there is no per-tone drift because the DDS and ADC share the clock.
   \[
   C_{cable}=73.04-10-10=53.04\ \mathrm{pF}\approx53\ \mathrm{pF}.
   \]
-  The SC-05c "56 pF cable budget" wording is stale; a contract change is
-  proposed, not applied here. The filed W2697 0.6 m whip is \(0.6\times65=39\) pF
+  SC-05c's former "56 pF cable budget" wording was corrected to 53 pF and
+  locked by decision #34 (contract 1.1.3); no contract change is pending.
+  The filed W2697 0.6 m whip is \(0.6\times65=39\) pF
   cable, 59 pF with the 20 pF terminations: it passes the 53 pF cable line by
   14 pF (total \(f_{res}\approx378\) kHz). At 65 pF/m the longest cable that fits
   53 pF is \(53.04/65=0.816\) m; the 0.8 m alternate is 52 pF cable / 72 pF
@@ -244,8 +245,9 @@ there is no per-tone drift because the DDS and ADC share the clock.
   the 73 pF cable budget. Air-core is preferred unless ferrite is needed for accuracy.
 - **Connector/cable:** RQ-C3/RQ-B2 and BOM_PEN-ANA-01 must be read with the
   2026-11-26 recalc in §6 / `adc_justification.md` §4: 73 pF total at 34 kHz =
-  10 pF connector + 10 pF preamp input stack + **53 pF cable** (SC-05c's 56 pF
-  cable phrase is stale; contract change proposed). Bulk-wire requirement:
+  10 pF connector + 10 pF preamp input stack + **53 pF cable** (SC-05c's cable
+  phrase was corrected from 56 pF to 53 pF and locked by decision #34,
+  contract 1.1.3). Bulk-wire requirement:
   \(L\times K0\le53\) pF with \(K0\le150\) pF/m; W2697 at 65 pF/m gives
   \(L_{max}=0.816\) m. The filed 0.6 m whip (39 pF cable / 59 pF total) is
   compliant with 14 pF margin; the 0.8 m alternate (52 pF cable / 72 pF total)

@@ -1,7 +1,8 @@
 # BRD-01 component reference — component → pins → wires
 
 > **⚠ STALE TABLES — DO NOT USE AS WIRING TRUTH (2026-11-26).** Every table
-> below was generated from the `ef04f63` netlist. Commit `8d39a99` changed that
+> below was generated from the `ef04f63` netlist. Commit `8d39a99` and the
+> subsequent BRD-01 ERC/receiver commits through `41e3d2e` changed that
 > netlist: `/power/BUCK1_FB` → `Net-(U144-FB)`,
 > `/receiver/DREGCAP` → `Net-(U101-DREGCAP)`,
 > `/receiver/FDA1_N` → `Net-(U105B--IN2)`,
