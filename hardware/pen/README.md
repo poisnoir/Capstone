@@ -18,7 +18,8 @@ tracked point is the sensor coil/tip, not the pen housing (SC-01c).
 
 - Final coil choice (B baseline; A/E alternates; C air out).
 - Shell, strain relief, connector, and the cable capacitance budget
-  (73 pF total at 34 kHz, SC-05c).
+  (73 pF total at 34 kHz = 10 pF connector + 10 pF preamp input + 53 pF cable;
+  SC-05c's cable wording is stale, change proposed — `docs/phase2/tone_plan.md` §6).
 - Winding fixture and repeatability.
 
 ## Do not

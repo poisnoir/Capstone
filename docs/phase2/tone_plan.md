@@ -13,8 +13,8 @@ retained only as a comparison and as a fallback if the ferrite resonance or narr
 requirements later force it.
 
 **Key numbers:** \(T_{acq}=2.0\) ms; \(J=40\ldots68\); 4 bins; rectangular margin
-1.11 bins, Hamming margin 25–95 Hz; 34 kHz top tone; 73 pF cable/coil budget; 30 ps
-clock jitter for 104 dB.
+1.11 bins, Hamming margin 25–95 Hz; 34 kHz top tone; 73 pF total / 53 pF cable
+budget (§6); 30 ps clock jitter for 104 dB.
 
 Sources: AD7768/AD7768-4 Rev.D datasheet (`docs/ad7768-ad7768-4.pdf`); thesis §3
 (window/DFT) and §4.2–4.8 (driver/coil); `docs/phase2/anser-baseline-findings.md`;
@@ -170,16 +170,39 @@ there is no per-tone drift because the DDS and ADC share the clock.
   chosen in PEN-3, measure \(A_{sens}(f)\) and phase at 34 kHz and confirm linearity; the
   preliminary link budget says the amp floor is easily cleared, so ferrite is an
   accuracy/size choice, not an SNR necessity.
-- **Cable capacitance:** the 10× resonance target at 34 kHz is 340 kHz. Worst case
-  \(L=3\) mH gives
+- **Cable capacitance — recalculated 2026-11-26 (full arithmetic; also in
+  `adc_justification.md` §4):** the 10× resonance target at the 34 kHz top tone
+  (§1) is \(f_{res}\ge340\) kHz. Worst case is coil E + ferrite \(L\approx3\) mH
+  (Jaeger Table 7.1 as quoted in AGENTS.md; the thesis is local-only and the
+  coil value is not re-derived here):
   \[
-  C_{max}=\frac{1}{(2\pi\cdot340\,\mathrm{kHz})^2\cdot3\,\mathrm{mH}}\approx73\ \mathrm{pF}
+  C_{max}=\frac{1}{(2\pi\cdot340\times10^3)^2\cdot3\times10^{-3}}
+  =\frac{1}{4.5637\times10^{12}\cdot3\times10^{-3}}
+  =73.04\ \mathrm{pF}\approx73\ \mathrm{pF}\ (3\ \mathrm{s.f.})
   \]
-  (was 94 pF at 27.5 kHz). The filed W2697 0.6 m whip is 59 pF, so it passes with 14 pF
-  margin; 0.8 m is marginal. **Topology note:** the coil sees the preamp input, not the
-  ADC input. The 73 pF budget covers cable + connector + preamp input; the AD7768's
-  switched-cap RC sits after the preamp and is designed in FE-4/ADC-5. Updated in
-  connector Rev D / BOM Rev 0.03.
+  Air-coil margins at the same 340 kHz threshold: B (\(L=804\ \mu\)H) gives
+  \(1/((2\pi\cdot340\times10^3)^2\cdot804\times10^{-6})=272.5\) pF ≈ 272 pF;
+  C (\(L=91\ \mu\)H) gives 2.41 nF. Both pass trivially. The 350 pF figure in
+  the point-in-time flowchart handoff is stale (an earlier, lower-frequency view).
+  The 73 pF splits as \(C_{max}=C_{cable}+C_{conn}+C_{preamp}+C_{tune}\), with
+  \(C_{conn}=10\) pF (RQ-C3) and \(C_{preamp}=10\) pF allocation (INA163 2 pF
+  differential + 2 pF common-mode worst leg + BAS70H clamps 4 pF worst leg +
+  2 pF layout; derivation and sources in `adc_justification.md` §4, inside
+  FE-01's ≤20 pF gate), so
+  \[
+  C_{cable}=73.04-10-10=53.04\ \mathrm{pF}\approx53\ \mathrm{pF}.
+  \]
+  The SC-05c "56 pF cable budget" wording is stale; a contract change is
+  proposed, not applied here. The filed W2697 0.6 m whip is \(0.6\times65=39\) pF
+  cable, 59 pF with the 20 pF terminations: it passes the 53 pF cable line by
+  14 pF (total \(f_{res}\approx378\) kHz). At 65 pF/m the longest cable that fits
+  53 pF is \(53.04/65=0.816\) m; the 0.8 m alternate is 52 pF cable / 72 pF
+  total (\(f_{res}\approx342\) kHz) and passes only if \(C_{tune}\approx0\) —
+  marginal, not worst-case robust. **Topology note:** the coil sees the preamp
+  input, not the ADC input. The 73 pF budget covers cable + connector + preamp
+  input (+ any tuning cap); the AD7768's switched-cap RC sits after the preamp
+  and is designed in FE-4/ADC-5. Connector Rev D / BOM Rev 0.03 still carry the
+  stale cable allocation and need the same update.
 - **Driver compliance:** at 34 kHz, \(Z_{coil}=\sqrt{2^2+(2\pi\cdot34\,\mathrm{kHz}\cdot70\,\mu H)^2}\approx15.1\ \Omega\).
   - 250 mA RMS → 3.8 V RMS = 5.3 V peak; within the 7.5 V single-rail swing.
   - 500 mA peak → 7.55 V peak; at the rail limit.
@@ -219,8 +242,13 @@ there is no per-tone drift because the DDS and ADC share the clock.
   tone spacing to 1 kHz without re-running this comparison.
 - **Ferrite:** if PEN-3 chooses ferrite, re-check the 34 kHz resonance/phase margin and
   the 73 pF cable budget. Air-core is preferred unless ferrite is needed for accuracy.
-- **Connector/cable:** RQ-C3/RQ-B2 and BOM_PEN-ANA-01 are updated to 73 pF total /
-  56 pF cable at 34 kHz (connector Rev D, BOM Rev 0.03). The filed 0.6 m W2697 remains
-  compliant; the 0.8 m alternate is not worst-case compliant.
+- **Connector/cable:** RQ-C3/RQ-B2 and BOM_PEN-ANA-01 must be read with the
+  2026-11-26 recalc in §6 / `adc_justification.md` §4: 73 pF total at 34 kHz =
+  10 pF connector + 10 pF preamp input stack + **53 pF cable** (SC-05c's 56 pF
+  cable phrase is stale; contract change proposed). Bulk-wire requirement:
+  \(L\times K0\le53\) pF with \(K0\le150\) pF/m; W2697 at 65 pF/m gives
+  \(L_{max}=0.816\) m. The filed 0.6 m whip (39 pF cable / 59 pF total) is
+  compliant with 14 pF margin; the 0.8 m alternate (52 pF cable / 72 pF total)
+  passes only with \(C_{tune}\approx0\) and is not worst-case robust.
 - **AGENTS.md:** the 20.5–27.5 kHz @1 kHz line remains a heritage note; this file is the
   Phase 2 decision.
