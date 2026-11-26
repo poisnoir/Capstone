@@ -1,6 +1,6 @@
 # Phase 2 — External ADC justification (signal path)
 
-Authoritative math appendix for the decision: **dedicated simultaneous-sampling ADC, not XC7Z010 XADC, for the sensor + current-sense signal path.** XADC stays for DC housekeeping only (rails, die temp, static field probe).
+Authoritative math appendix for the decision: **dedicated simultaneous-sampling ADC, not XC7Z010 XADC, for the sensor + current-sense signal path.** The XADC comparison in §2 is historical (that Zynq/PS option was rejected); the locked design is PS-less Artix-7 (#26) with no XADC in the signal path (#9).
 
 Traces to: `docs/phase2/README.md` §§2–6 (specs #1–25), AGENTS.md full-FPGA override, Jaeger 2018 Eq.(3.17)–(3.27), (7.1)–(7.9), `software/anser-matlab-ref/fSysSetup.m`, `user/system/fSysGetField.m`, `user/system/fSysDecodeField.m`.
 
@@ -128,7 +128,7 @@ Throughput is not the blocker (256 kS/s/ch × 512-sample frame = 2 ms acq — fa
 | RQ-A3 rate | ≥250 kS/s/ch sustained (256 kS/s used), no missing codes | N=512 at 256 k = 2.0 ms; N=1024 = 4.0 ms; leaves demod + LM inside 10 ms pose budget (§5) | sustained DRDY capture, code-density histogram |
 | RQ-A4 sync | external MCLK ≤32.768 MHz (XO direct); ODR 256 kSPS ceiling; SYNC/START/DRDY; aperture jitter set by the SNR target | \(SNR_j = -20\log(2\pi f t_j)\): 1 ns @34 kHz = 73.4 dB, not 104 dB. For 104 dB at 34 kHz, \(t_j \le 30\) ps. Specify the XO jitter from this (one XO drives MCLK directly, no PLL-generated MCLK — SC-07/#28), not from a 1 ns assumption | clock-phase sweep; integer-J leakage test (§5); jitter measurement |
 | RQ-A5 input | differential ±VREF = ±4.096 V (not ±5/±10 V), VCM common mode, Zin ≥1 MΩ, CMRR ≥60 dB | AD7768-4 actual input; the earlier ±5/±10 V wording is stale and superseded; the front end maps the pen signal to ±4.096 V differential around VCM | CMRR sweep 20–34 kHz; Zin vs frequency; full-scale sweep |
-| RQ-A6 digital | DCLK/DOUT lanes to PL; DCLK ≤32.768 MHz; 3.3 V header; SPI configuration only | \(R_{data}=4\cdot32\cdot256\ \mathrm{k}=32.768\ \mathrm{Mbit/s}\) (D3-A/SC-05b); 4 lanes → 8.192 MHz, 2 lanes → 16.384 MHz; a 2×6 Pmod is too small (§6) | eye/continuity; sustained lane-rate soak |
+| RQ-A6 digital | DCLK/DOUT lanes to PL; DCLK ≤32.768 MHz; on-board 3.3 V board nets on BRD-01, no external header (SC-05b/`icd/adc_fpga.md`); SPI configuration only | \(R_{data}=4\cdot32\cdot256\ \mathrm{k}=32.768\ \mathrm{Mbit/s}\) (D3-A/SC-05b); 4 lanes → 8.192 MHz, 2 lanes → 16.384 MHz; a 2×6 Pmod is too small — rationale for on-board nets (§6) | eye/continuity; sustained lane-rate soak |
 | RQ-A7 determinism | DRDY → PL interrupt; ping-pong BRAM/DMA; zero dropped frames at ≥100 Hz | §2c; TL + Tsolv < 10 ms mapped in §5 | 1-hour ≥100 Hz moving-sensor run, drop counter = 0 |
 
 **Locked part: AD7768-4** (simultaneous sigma-delta 24-bit, §9). The §9e shortlist (2× ADS127L11 synced or ADS1278-class) is a vetting fallback if the locked part fails. Fallback: AD7606C-16 (8-ch simultaneous 16-bit 1 MSPS, serial, ±10/±5 V) or TI ADS8688S/ADS85xx equivalents, with the §9a.1 analog-AA verification burden. Single-channel or muxed parts (e.g. AD4004 alone, ADS131M0x-class ≤32 kSPS) do **not** pass RQ-A1/§9c — rejected.
@@ -179,7 +179,7 @@ The AD7768-4 tops out at 256 kSPS, so the earlier 500 kSPS examples are stale. T
 
 ## 6. Digital lane math (physical + PL)
 
-Pmod = physical 2×6 100 mil, host-female / peripheral-male, 3.3 V. The AD7768-4 data path is **not SPI**: it outputs 24-bit data on DOUTx lanes synchronous to DCLK, framed by DRDY; SPI is configuration only. PL implements: one-time `START`/`SYNC` at startup, DCLK capture of the DOUT lanes, DRDY-gated frame ping-pong → AXI DMA. PS configures and consumes frames; nothing bit-banged at rate.
+A 2×6 Pmod is a physical 100 mil, 3.3 V connector with 8 I/O. The AD7768-4 data path is **not SPI**: it outputs 24-bit data on DOUTx lanes synchronous to DCLK, framed by DRDY; SPI is configuration only. PL implements: one-time `START`/`SYNC` at startup, DCLK capture of the DOUT lanes, DRDY-gated frame ping-pong → BRAM. There is no PS on BRD-01 (#26); nothing is bit-banged at rate.
 
 Data rate (4 active channels per D3-A/SC-05b, 32-bit frames, 256 kSPS):
 
@@ -187,13 +187,16 @@ $$
 R_{data} = 4\cdot32\cdot256\ \mathrm{k} = 32.768\ \mathrm{Mbit/s}
 $$
 
-4 DOUT lanes → DCLK 8.192 MHz; 2 lanes → 16.384 MHz. A 2×6 Pmod has 8 I/O; 4 DOUT + DCLK + DRDY + SYNC/START + MCLK + RESET already needs 10 signals before SPI configuration. Use a 2×8 or custom header; FMC/LVDS is not needed at this rate.
+4 DOUT lanes → DCLK 8.192 MHz; 2 lanes → 16.384 MHz. A 2×6 Pmod has 8 I/O; 4 DOUT + DCLK + DRDY + SYNC/START + MCLK + RESET already needs 10 signals before SPI configuration — that is why these are board nets on BRD-01, not an external header (SC-05b/`icd/adc_fpga.md`). FMC/LVDS is not needed at this rate.
 
 ---
 
-## 7. What XADC still does
+## 7. XADC housekeeping — historical Zynq comparison only
 
-Slow DC housekeeping through the PS: die temperature, rail monitors, static field-probe level, interlock comparators. Nothing in the 20–30 kHz signal path, nothing phase-sensitive, nothing in the pose timing loop.
+In the rejected XC7Z010/Zynq option, the XADC would have handled slow DC
+housekeeping (die temperature, rail monitors, static field-probe level,
+interlock comparators), never the 20–30 kHz signal path or the pose loop. The
+locked design has no PS and does not use the 12-bit XADC (#9/#26).
 
 ---
 
@@ -210,7 +213,7 @@ Slow DC housekeeping through the PS: die temperature, rail monitors, static fiel
 
 ## 9. Architecture decision: sigma-delta (locked) vs SAR vs XADC
 
-**Decision (2026-10-16): external simultaneous sigma-delta (24-bit class) for the signal path.** SAR simultaneous (e.g. AD7606C-16 class) is retained as the documented fallback. XADC remains housekeeping-only per §2.
+**Decision (2026-10-16): external simultaneous sigma-delta (24-bit class) for the signal path.** SAR simultaneous (e.g. AD7606C-16 class) is retained as the documented fallback. XADC is rejected (#9); its §2/§7 housekeeping discussion is historical, not a live path.
 
 ### 9a. The load-bearing difference: where the anti-alias filter lives
 

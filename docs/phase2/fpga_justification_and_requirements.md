@@ -338,7 +338,7 @@ Status tags: `LOCKED` (source-backed), `PROPOSED` (needs approval/test), `TBD`.
 
 | ID | Requirement | Threshold | Rationale | Verification |
 |---|---|---|---|---|
-| FPGA-I01 | ADC header | 4 active channels; 4/2 DOUT lanes; DCLK 8.192/16.384 MHz; 2×8/custom header, not 2×6 Pmod | AD7768-4 pin count; SC-05b/D3-A | Pin-budget review; capture |
+| FPGA-I01 | ADC interface | 4 active channels; 4/2 DOUT lanes; DCLK 8.192/16.384 MHz; **board nets on BRD-01, no external 2×8/custom header** | SC-05b/`icd/adc_fpga.md`; a 2×6 Pmod is insufficient — rationale for on-board nets | FPGA pin/bank assignment review; capture |
 | FPGA-I02 | DAC/excitation | 8 tones; M16 DAC80508 (16-bit, 8 ch, 200 kSPS) + 8× LTC1563-2 (4th-order, 60 kHz); SPI 49.152 MHz; DAC update 199.805 kSPS | Driver interface | Two-tone/8-tone FFT; filter/image/EVM |
 | FPGA-I03 | Host link | ≥100 Hz pose log; calibration UI; no pose solve on host | Full-FPGA decision | Log rate; host review |
 | FPGA-I04 | Motor/Pico link | Pose/status; engage/arm-motion STOP; ≤100 ms; no field or rail switching (#30) | Phase 1 #17; #30 | Integration test |
@@ -470,7 +470,7 @@ parallel-kernel rationale.
 | FPGA resource/timing not yet synthesized | utilisation/timing unknown; fit risk | part/board locked (#26/#25); keep RTL/HLS portable; 50T same-footprint escape; synthesis early |
 | HLS resource/timing | may not fit or close timing | parallel/pipelined kernel; float/fixed study; synthesis early |
 | Solver worst-case/retry | misses 100 Hz | warm start; analytic Jacobian; relaxed tolerance; cap retries; MATLAB golden |
-| ADC header/pin count | 2×6 Pmod insufficient | use 2×8/custom header; verify pin budget |
+| ADC lane/pin count | 2×6 Pmod insufficient | lanes are board nets on BRD-01, not an external header (SC-05b); verify FPGA pin/bank budget |
 | Clock jitter | SNR/phase degradation | XO part locked (CSX750FBC32.768M-UT); measure on BRD-01; 30 ps target for 104 dB |
 | DAC part/reconstruction | excitation/spur | DAC80508 + 8× LTC1563-2 locked (#19); bench 8-tone EVM/FFT |
 | Thermal/power | board/enclosure | thermal test; power budget |
@@ -487,7 +487,7 @@ product fallback; it is only a development reference.
 1. FPGA toolchain/build flow (part locked #26; board BRD-01).
 2. HLS versus RTL split; float versus fixed point.
 3. M16 bench: DAC80508 SPI/LDAC and 8-tone EVM (part/filter locked #19).
-4. ADC header/pin budget (2×8/custom; not 2×6 Pmod).
+4. ADC lane/bank pinout on BRD-01 (on-board nets; a 2×6 Pmod would be insufficient).
 5. XO jitter measurement on BRD-01 (clock tree locked by SC-07/#28).
 6. Resource/timing estimate and place-and-route.
 7. Solver precision/tolerance and worst-case retry policy.

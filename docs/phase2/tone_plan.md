@@ -153,7 +153,8 @@ there is no per-tone drift because the DDS and ADC share the clock.
   1 ns may be sufficient. Specify the XO/clock jitter from the chosen target and measure it;
   do not claim 104 dB at 1 ns.
 - **Pin budget:** 4 DOUT + DCLK + DRDY + SYNC/START + MCLK + RESET = 10 signals, plus SPI
-  configuration. A 2×6 Pmod has 8 I/O; use a 2×8 or custom header.
+  configuration; these are board nets on BRD-01, not an external header (SC-05b).
+  A 2×6 Pmod has 8 I/O — insufficient, hence the on-board nets.
 - **Correct the stale requirements:** `adc_justification.md` RQ-A4/A5/A6 still says
   CONVST/SCLK, ±5/±10 V, and SPI data. The actual AD7768-4 is ±4.096 V differential,
   DCLK/DOUT data, SYNC/START/DRDY control.

@@ -1,11 +1,11 @@
 # Phase 2 — PEN-3 pen coil + amp link budget
 
 **Status:** draft for PEN-3 sign-off, 2026-10-27. **Coil B air-core is LOCKED
-(no ferrite).** The INA163 amp is a proposed choice, not locked; the rest of the
-link budget is first-pass from the Jaeger Ch.7 coil table and the thesis
-INA163/INA128 comparison. It answers the CRLB question: can the pen coil + amp
-deliver the field-equivalent noise \(\sigma_B\) required by the 100/150/200 mm
-volume gates?
+(no ferrite); INA163 + ADA4940-2 is LOCKED (#5/#17).** Coil/winding details stay
+open at PEN-3; the link budget is first-pass from the Jaeger Ch.7 coil table and
+the thesis INA163/INA128 comparison. It answers the CRLB question: can the pen
+coil + amp deliver the field-equivalent noise \(\sigma_B\) required by the
+100/150/200 mm volume gates?
 
 **Sources:** `HAJ_Thesis_2018.pdf` Ch.7 Table 7.1 and §4.4 (INA163 vs INA128);
 `docs/extracts/Jaeger2018_bespoke-sensor_Ch7_extract.txt`;
