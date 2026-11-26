@@ -212,7 +212,7 @@ class Rezone:
         if kind != 'label':
             head += f'\t\t(shape {shape})\n'
         block = (head + f'\t\t(at {fmt(at[0])} {fmt(at[1])} {angle})\n'
-                 '\t\t(effects\n\t\t\t(font\n\t\t\t\t(size 0.8 0.8)\n\t\t\t)\n'
+                 '\t\t(effects\n\t\t\t(font\n\t\t\t\t(size 1 1)\n\t\t\t)\n'
                  f'\t\t\t(justify {just})\n\t\t)\n'
                  f'\t\t(uuid "{uid}")\n')
         if kind == 'global_label':
@@ -231,6 +231,10 @@ class Rezone:
         self.label('label', text, at, angle)
 
     # ---- cleanup ------------------------------------------------------
+    def normalize_text_sizes(self):
+        """Undo the round-1 undersized text; the sheet's normal size is 1 mm."""
+        self.text = re.sub(r'\(size 0\.8 0\.8\)', '(size 1 1)', self.text)
+
     def prune_dangling_labels(self):
         """Drop labels left behind by deleted wires (they would be ERC errors).
 
@@ -288,6 +292,28 @@ class Rezone:
                 blk = blk[:ins + 1] + line + blk[ins + 1:]
             self.text = self.text[:blk_start] + blk + self.text[blk_end:]
         self.refresh()
+
+    def prop_pos(self, ref: str, prop: str, to, angle: int = 0):
+        """Place one symbol property (Reference/Value) at an absolute point."""
+        to = (g(to[0]), g(to[1]))
+        uid = self.sym_uuid(ref)
+        bs, be = K.block_span(self.text, uid)
+        blk = self.text[bs:be]
+        pat = re.compile(r'(\(property "' + re.escape(prop)
+                         + r'" "[^"]*"\s*\(at )([-\d.]+) ([-\d.]+)([^)]*)\)')
+        found = False
+
+        def sub(m):
+            nonlocal found
+            found = True
+            tail = re.sub(r'\s[\d.-]+$', '', m.group(4))
+            return (m.group(1) + fmt(to[0]) + ' ' + fmt(to[1]) + ' '
+                    + str(angle) + tail + ')')
+
+        blk = pat.sub(sub, blk, count=1)
+        if not found:
+            raise ValueError(f'{ref}.{prop} not found')
+        self.text = self.text[:bs] + blk + self.text[be:]
 
     def textpos(self, snippet: str, to, angle: int = 0):
         to = (g(to[0]), g(to[1]))
@@ -408,19 +434,32 @@ def zone_b(rz: Rezone):
     rz.detach(['R163', 'R164', 'R165', 'R166', 'Y1', 'C141'])
     rz.del_wire((440.69, 73.66), (440.69, 113.03))   # old clock dog-leg
     rz.del_wire((447.04, 115.57), (447.04, 96.52))
-    for y in (81.28, 93.98, 96.52, 99.06, 116.84):
+    for y in (81.28, 83.82, 91.44, 93.98, 96.52, 99.06, 116.84):
         rz.del_wire((290.83, y), (295.91, y))        # old FPGA-to-label stubs
+    for net, y in (('ADC_SDI', 83.82), ('ADC_SCLK', 91.44)):
+        rz.del_label_at('global_label', net, (295.91, y))
+        rz.glabel(net, (290.83, y), 0)               # same flag, at the pin
+    # 5.08 mm pitch rows give Reference/Value room at the sheet's normal 1 mm text.
+    rows = {'R164': 86.36, 'R163': 91.44, 'R166': 96.52, 'R165': 101.60}
     for ref, ball, net in (('R163', 'A14', 'ADC_RESET_N'),
                            ('R164', 'B12', 'ADC_CS'),
                            ('R165', 'B14', 'ADC_START_N'),
                            ('R166', 'C14', 'ADC_SYNC_IN')):
         px, py = rz.pin('U4', ball)
         rz.del_label_at('global_label', net, (295.91, py))   # superseded flag
-        rz.move(ref, (303.53, py), rot=270)
+        row = rows[ref]
+        cx = 317.50
+        rz.move(ref, (cx, row), rot=270)
         p1, p2 = rz.pin(ref, '1'), rz.pin(ref, '2')
-        rz.wire(p2, (px, py), ref)
+        knee = (295.91, row)
+        rz.wire((px, py), (295.91, py), ref + 'in')
+        if abs(row - py) > 1e-6:
+            rz.wire((295.91, py), knee, ref + 'jog')
+        rz.wire(knee, p2, ref + 'out')
         rz.glabel('+3.3V', p1, 0)
-        rz.glabel(net, (px, py), 0)     # one global label per ADC net
+        rz.glabel(net, (303.53, row), 0)         # clear of the old ADC flags
+        rz.prop_pos(ref, 'Reference', (cx, row - 3.81))
+        rz.prop_pos(ref, 'Value', (cx, row + 3.81))
     px, py = rz.pin('U4', 'D13')
     rz.del_label_at('global_label', 'CLOCK_32M768', (295.91, py))
     rz.move('Y1', (321.31, py - 2.54), rot=180)
@@ -444,6 +483,9 @@ def zone_c(rz: Rezone):
     rz.move('R790', (431.80, cclk[1]), rot=90)   # pin 1 faces the FPGA
     rz.wire(rz.pin('R790', '1'), cclk, 'cclk')
     rz.move('U141', (445.77, cclk[1] + 1.27), rot=0)
+    fy = cclk[1] + 1.27
+    rz.prop_pos('U141', 'Reference', (445.77, fy - 8.89))
+    rz.prop_pos('U141', 'Value', (445.77, fy + 6.35))
     rz.wire(rz.pin('R790', '2'), rz.pin('U141', '6'), 'flashclk')
     # QSPI nets are local labels on this sheet in the baseline netlist.
     for net, fpin in (('QSPI_CS', '1'), ('QSPI_D0', '5'), ('QSPI_D1', '2'),
@@ -451,15 +493,19 @@ def zone_c(rz: Rezone):
         rz.llabel(net, rz.pin('U141', fpin), 0)
     rz.glabel('+3.3V', rz.pin('U141', '8'), 0)
     rz.glabel('GND', rz.pin('U141', '4'), 180)
-    for ref, net, at in (('R140', 'QSPI_CS', (444.50, cclk[1] - 12.70)),
+    for ref, net, at in (('R140', 'QSPI_CS', (444.50, cclk[1] - 16.51)),
                          ('R148', 'QSPI_D2', (466.09, cclk[1] + 12.70)),
                          ('R149', 'QSPI_D3', (466.09, cclk[1] + 25.40)),
                          ('C140', None, (435.61, cclk[1] + 15.24))):
         rz.move(ref, at, rot=0)
-        rz.glabel('+3.3V', rz.pin(ref, '1'), 0)
         if net:
-            rz.llabel(net, rz.pin(ref, '2'), 0)
+            ry = at[1]
+            rz.glabel('+3.3V', rz.pin(ref, '1'), 180)   # text left of the body
+            rz.llabel(net, rz.pin(ref, '2'), 180)       # text left of the body
+            rz.prop_pos(ref, 'Reference', (at[0], ry - 6.35))
+            rz.prop_pos(ref, 'Value', (at[0], ry + 6.35))
         else:
+            rz.glabel('+3.3V', rz.pin(ref, '1'), 0)
             rz.glabel('GND', rz.pin(ref, '2'), 0)
     # JTAG header level with the JTAG balls; labels keep the four nets straight.
     jy = g(rz.pin('U4', 'L7')[1] - 2.54)
@@ -476,7 +522,7 @@ def zone_c(rz: Rezone):
     for jp in ('1', '12', '13', '14'):
         rz.nc(rz.pin('J140', jp))
     rz.textpos('Configuration bring-up', (444.50, cclk[1] - 24.13))
-    rz.textpos('Place R790 at the FPGA', (466.09, cclk[1] + 30.48))
+    rz.textpos('Place R790 at the FPGA', (480.06, cclk[1] + 38.10))
 
 
 def zone_e(rz: Rezone):
@@ -485,6 +531,8 @@ def zone_e(rz: Rezone):
     rz.del_wire((431.80, 298.45), (431.80, 307.34))   # old VBUS divider stub
     rz.del_wire((330.20, 292.10), (335.28, 292.10))   # old CBUS2 label stub
     cb2 = rz.pin('U142', '7')
+    rz.del_label_at('label', 'VBUS_SENSE', cb2)       # superseded pin-side flag
+    rz.del_label_at('label', 'VBUS_SENSE', (335.28, cb2[1]))
     tap = (342.90, cb2[1])
     rz.move('R158', (342.90, cb2[1] - 3.81), rot=0)
     rz.move('R159', (342.90, cb2[1] + 3.81), rot=0)
@@ -494,7 +542,8 @@ def zone_e(rz: Rezone):
     rz.wire(rz.pin('R159', '1'), tap, 'vbus-bot')
     rz.junction(tap)
     rz.glabel('GND', rz.pin('R159', '2'), 0)
-    rz.llabel('VBUS_SENSE', cb2, 0)
+    # Put the sense flag on the divider tap, clear of U142's CBUS2 pin text.
+    rz.llabel('VBUS_SENSE', tap, 0)
     for i, ref in enumerate(('C143', 'C144', 'C145')):
         rz.move(ref, (254.00, 250.19 + i * 10.16), rot=0)
         rz.glabel('+3.3V', rz.pin(ref, '1'), 0)
@@ -672,6 +721,7 @@ def main():
         fn[z](rz)
         rz.save()
     rz.prune_dangling_labels()
+    rz.normalize_text_sizes()
     rz.save()
     print(f'rezoned {args.sheet}: zones {",".join(zones)}')
 
