@@ -3,6 +3,29 @@
 All notable contract changes. Versioning: MAJOR = breaking interface change,
 MINOR = additive, PATCH = clarification.
 
+## 1.1.3 — 2026-11-26 — tag `contract-v1.1.3` pending release
+
+PATCH defect correction in a locked SC row; no interface added or removed. The
+cable requirement is tightened from a number that failed its own self-resonance
+rule. The user approved this change directly on 2026-11-26; that approval is
+recorded here (and in decision #34) in place of the usual `contract-change` PR
+and two approvals. The tag, release zip/json and arm-repo sync remain pending,
+as for 1.1.1 and 1.1.2.
+
+- **Decision #34 (pen-cable capacitance):** SC-05c's cable allocation is
+  corrected 56 → 53 pF. The locked total stays 73 pF at 34 kHz: 10 pF connector
+  (RQ-C3) + 10 pF preamp-input stack + 53 pF cable. The old 56 pF gives
+  76 pF total, \(f_{res}\approx333\) kHz < the 340 kHz floor;
+  \(73.04-10-10=53.04\) pF. The filed 0.6 m W2697 whip passes by 14 pF; the
+  longest cable at 65 pF/m is 0.816 m. Derivation: `docs/phase2/tone_plan.md` §6
+  and `docs/phase2/adc_justification.md` §4 (both from the verified recalc
+  \(e871e1f\)); preamp stack sources: INA163 SBOS177D and the BAS70H datasheet.
+- `system_contract.md` SC-05c — decision text and status unchanged (LOCKED)
+  except for the corrected allocation and the explicit 10 pF breakdown. The
+  stale "connector Rev D" source citation is **dropped**: that file still
+  quotes the superseded 56 pF cable allocation. The row now cites the two
+  recalculated design documents instead, as does `decisions_log.md` #34.
+
 ## 1.1.2 — 2026-11-26 — tag `contract-v1.1.2` pending release
 
 PATCH clarification; no rail, part or wire-interface behaviour changed. The
