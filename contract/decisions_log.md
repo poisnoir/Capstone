@@ -1,6 +1,6 @@
 # Phase 2 — Locked decisions log
 
-**Canonical location:** `contract/` · **Version:** 1.1.4 · **Tag:** `contract-v1.1.4` (published 2026-11-26; two-approval review pending)
+**Canonical location:** `contract/` · **Version:** 1.1.5 · **Tag:** `contract-v1.1.5` (published when CI runs; two-approval review pending)
 **Change process:** `contract/README.md`.
 
 **Status:** decisions locked through 2026-11-26. **M16 selected 2026-10-27.**
