@@ -19,10 +19,10 @@ points the repo. Until then, the contract release and the ICD are the interface.
 | FPGA-side mock-Pico tests | `tests/` |
 | Handshake templates | `templates/` |
 
-The ICD in `contract/icd/pico_link.md` still lists 3V3 on connector pin 1; the
-committed BRD-01 netlist has J123.1 as a no-connect and
-`docs/phase2/brd01_wiring_manifest.md` §5 records it; the ICD update is in the
-parallel contract stream. Keep
+The ICD in `contract/icd/pico_link.md` Rev B now lists pin 1 as NC, matching the
+committed BRD-01 netlist (`J123.1` no-connect, recorded in
+`docs/phase2/brd01_wiring_manifest.md` §5 note 2). BRD-01 supplies no 3V3 on
+J123; the Pico runs from its own USB. Closed by decision #32 (2026-11-26). Keep
 Pico firmware, motor config and mechanics in the arm repo — nothing here is a
 second copy.
 

@@ -186,12 +186,14 @@ So a host stop can travel host → FPGA → `U4.P4` → `PICO_STOP_N` → `J123.
 using existing hardware. **No BRD-01 schematic or BOM change is required for the computer
 origin.** Two caveats, neither a hardware change: (1) this path depends on the host link, the
 FPGA and the cable, so this is the **only** stop origin and it is *not* hardware-independent —
-that is the explicit safety consequence of deleting the button; (2) `J123.1` is currently NC in
-the netlist but `pico_link.md` §2 lists pin 1 as 3V3, and
+that is the explicit safety consequence of deleting the button; (2) `J123.1` was NC in
+the netlist while `pico_link.md` Rev A §2 listed pin 1 as 3V3, and
 `brd01_full_board_deepseek_handoff.md` line 85 records D4 as "J123.1 → no_connect". That
-pre-existing mismatch is noted but needs no change under the no-button decision.
+pre-existing mismatch needed no change under the no-button decision.
 **Follow-up (2026-11-25):** decision #31 adopted the v2 rails; the frozen
-`pico_link.md` pinout is still being aligned (OPEN note before its §3).
+`pico_link.md` pinout was still being aligned (OPEN note before its §3).
+**Closed 2026-11-26 by #32:** `pico_link.md` is now Rev B with pin 1 = NC, matching
+the netlist; BRD-01 supplies no 3V3 on J123 and the Pico uses its own USB.
 
 ---
 

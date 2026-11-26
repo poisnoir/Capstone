@@ -130,7 +130,7 @@ File the issue and PR for exactly these items; do not edit `contract/` from this
    push-pull FPGA high. The AND gate U755 is the adopted arbitration.
 4. The board has **no panel E-stop**; the removal of the last hardware-independent stop path
    must be accepted by the interface owner and integrator.
-5. `J123.1` is NC in the netlist but `pico_link.md` §2 calls pin 1 3V3 (D4 records no_connect);
-   a pre-existing mismatch, untouched by this change. **Still OPEN (2026-11-25):** the
-   v2 rails were adopted by decision #31, but the frozen ICD pinout was not changed;
-   `pico_link.md` keeps 3V3 with an OPEN note before §3.
+5. `J123.1` is NC in the netlist but Rev A of `pico_link.md` §2 called pin 1 3V3 (D4 records
+   no_connect); a pre-existing mismatch, untouched by this change. **Closed 2026-11-26 by
+   #32** (historical note): decision #31 adopted the v2 rails, and #32 aligned the ICD —
+   `pico_link.md` Rev B now lists pin 1 as NC and the Pico uses its own USB.

@@ -402,7 +402,7 @@ verification (§7 checks) and the D2 wording point.
 | D1 | 6 V pre-regulator | **TPSM63604RDLR at 5.99 V, RT 1.000 MHz, synced to 1.024 MHz**, replacing the OKI-78SR-5 (supersedes the decision #20 part list) |
 | D2 | `+5V_EXC` voltage | **5.0 V.** FPGA keeps the DDS tone within 0.3–4.6 V (≤ 92% of full scale); the band is described elsewhere here as centered on 2.5 V, but (0.3+4.6)/2 = 2.45 V — **OPEN (wording only): restate the centre as 2.45 V or as nominal 2.5 V; no rail or value changes**. Changes the M16 handoff's "0–5 V full scale" |
 | D3 | FT231X supply | **U142 VCC (12) and ~RESET (11) move to `+3.3V`; 3V3OUT (10, net `FT_3V3`) ties to `+3.3V`.** VCC range 2.97–5.5 V; with VCC at 3.3 V, 3V3OUT must be driven with 3.3 V [DS] |
-| D4 | Pico power | **BRD-01 does not power the Pico.** J123 pin 1 becomes a no-connect on BRD-01, so the two 3.3 V supplies are never tied together. The ICD (`contract/icd/pico_link.md`) lists pin 1 as "3V3"; the ICD update is handled in the parallel contract stream |
+| D4 | Pico power | **BRD-01 does not power the Pico.** J123 pin 1 is a no-connect on BRD-01, so the two 3.3 V supplies are never tied together. The ICD (`contract/icd/pico_link.md`) Rev B now lists pin 1 as NC, aligned by decision #32 (2026-11-26); the Pico uses its own USB |
 | D5 | `BUCK_SYNC` pin | **FPGA ball R3** (IO_L8P_T1_34, Bank 34 at 3.3 V, a plain I/O next to R1/R2), 32.768 MHz ÷ 32, through 1 nF to U147 EN/SYNC |
 
 ### Checks

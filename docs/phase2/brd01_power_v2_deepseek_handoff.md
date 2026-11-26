@@ -7,9 +7,9 @@ netlist in `docs/phase2/brd01_wiring_manifest.md`: `+6V`/`+3.3V`/`+5V_EXC`/`+5VA
 on `+3.3V`, ball `R3` → `BUCK_SYNC`, full-hierarchy ERC 0 errors / 0 warnings.
 **Adopted:** decision #31 (2026-11-25) locks this power tree and supersedes
 the decision #20 part list; the captured schematic implements it (BOM
-reconciliation not evidenced). The contract row and `pico_link.md` ICD updates
-are **pending in a parallel stream** (`pico_link.md` still lists pin 1 as 3V3
-versus J123.1 no-connect).
+reconciliation not evidenced). The pin-1 item is **DONE under decision #32
+(2026-11-26)**: `pico_link.md` Rev B now lists pin 1 as NC, matching J123.1's
+no-connect; BRD-01 supplies no 3V3 and the Pico uses its own USB.
 **Still open:** the M16 DDS-swing centre wording (2.45 V vs 2.5 V) and the bench
 items in `power_tree_v2.md` §7 C1/C5/C7. The instructions below are the original
 plan, not current work orders — do not re-open the #20 change or treat v2 as
@@ -59,7 +59,7 @@ proposed.
   * **W2-D (`connectors.kicad_sch`):** **D4** `J123.1` → `no_connect` + crossing `hlabel`s.
   * `DeepSeek` then wires matching `sheet` `pin`s on `brd-01.kicad_sch`, runs full-hierarchy ERC (`0/0`) + expected-diff ledger, and fans out `Hy4 Flash` vision workers across all 6 sheet PNGs in parallel.
 * **Wave 3 — Docs & Tracking (3 parallel `Hy4 Flash` workers on disjoint files):**
-  * **W3-A (historical plan; #31 row landed, remaining items pending in the parallel stream):** `contract/decisions_log.md` #20, `contract/icd/pico_link.md` (`J123.1` → `NC`, still open), M16 handoff (resolve D2 `0.3–4.6 V` / `2.45 V` midpoint, still open), `contract-change` PR body.
+  * **W3-A (historical plan; #31 row landed; pin-1 done by #32 2026-11-26):** `contract/decisions_log.md` #20, `contract/icd/pico_link.md` (`J123.1` → `NC`, done — Rev B), M16 handoff (resolve D2 `0.3–4.6 V` / `2.45 V` midpoint, still open), `contract-change` PR body.
   * **W3-B:** `hardware/brd-01/kicad/power-tree.md`, README page table, `bom-to-cad.md`, `power_tree_v2.md` §9 (fix stale ERC status).
   * **W3-C:** FPGA RTL tasks (`BUCK_SYNC` `32.768 MHz ÷ 32` on `R3`, DDS clamp `0.3–4.6 V`, Power Estimator `C6`).
 

@@ -1,9 +1,8 @@
 # Pico 2 link — interface control document
 
-**Canonical location:** `contract/icd/pico_link.md` · **Contract version:** 1.1.0 (tag pending review)
-**Status:** Rev A, 2026-10-28; STOP scope clarified 2026-11-25 (#30). The
-pin-1 ICD change is an OPEN follow-up to the v2 rails adopted by #31.
-Applies to BRD-01 (PL) ↔ Pico 2 (follower).
+**Canonical location:** `contract/icd/pico_link.md` · **Contract version:** 1.1.1 (tag pending review)
+**Status:** Rev B, 2026-11-26; STOP scope clarified 2026-11-25 (#30); pin 1
+changed to no-connect by #32. Applies to BRD-01 (PL) ↔ Pico 2 (follower).
 **Owners:** PL side = FPGA engineer; Pico side = follower firmware.
 **Scope:** the minimum contract. Encoding, framing and timing details are the implementers' choice
 as long as this document holds.
@@ -24,7 +23,7 @@ The PL also keeps the ADC capture and Goertzel regardless — raw ADC would be ~
 
 | Item | Value |
 |---|---|
-| Connector on BRD-01 | 6-pin `J123`: pin 1 3V3 (Rev A), pin 2 GND, pin 3 TX, pin 4 RX, pin 5 STOP, pin 6 HEARTBEAT — **pin 1 is OPEN, see note below** |
+| Connector on BRD-01 | 6-pin `J123`: pin 1 **NC**, pin 2 GND, pin 3 `PICO_TX`, pin 4 `PICO_RX`, pin 5 `PICO_STOP_N`, pin 6 `PICO_HEARTBEAT` (Rev B, #32) |
 | Cable | 1 m, shielded, **signal ground only** — no motor current in it |
 | Level | 3.3 V LVCMOS UART, no translation (both ends 3.3 V) |
 | Rate | 1 Mbaud default; 0.5–3 Mbaud acceptable |
@@ -33,12 +32,9 @@ The PL also keeps the ADC capture and Goertzel regardless — raw ADC would be ~
 
 RP2350 I/O is **not** 5 V tolerant. Keep everything 3.3 V.
 
-> **OPEN follow-up — pin 1 power.** The committed netlist has `J123.1` as a
-> no-connect (`docs/phase2/brd01_wiring_manifest.md` §5 item 6;
-> `docs/handoff/brd01_io_handoff.md` §1; `power_tree_v2.md` §7 D4 gives BRD-01
-> not powering the Pico). Decision #31 adopted the v2 rails but not this frozen
-> ICD's pinout, so Rev A still lists pin 1 as 3V3; align it before wiring the
-> follower harness.
+**Pico power (Rev B, #32).** BRD-01 supplies **no 3V3 on J123** — pin 1 is a
+no-connect in the committed netlist. The Pico is powered from its own USB;
+do not assume a 3V3 source on this connector. RP2350 I/O is not 5 V tolerant.
 
 ## 3. Information that must cross
 
