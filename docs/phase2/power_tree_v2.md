@@ -7,8 +7,8 @@ and the committed netlist in
 (`+6V`, `+3.3V`, `+5V_EXC`, `+5VA`, MGJ2D151515SC). This file is the power
 authority for the as-built board; the older v1 tree in
 [power-tree.md](../../hardware/brd-01/kicad/power-tree.md) is historical.
-The only remaining **design-wording** point is the §7 D2 arithmetic wording
-(centre of the 0.3–4.6 V band); the §7 bench checks C1/C5/C6/C7 and the §9
+The §7 D2 tone band is locked by decision #33 (2026-11-26): 0.3–4.6 V, centre
+2.45 V, on a 5.0 V rail. The §7 bench checks C1/C5/C6/C7 and the §9
 `TRIP_REF` reconciliation remain open. No rail or value is changed here.
 
 Each number is tagged:
@@ -271,9 +271,9 @@ rail:
 - LTC1563-2: output high is ≥ 4.55 V at VS = 4.75 V [DS], about 0.2 V below
   the rail. At 4.875 V that is about 4.67 V.
 
-**Proposed FPGA requirement: keep the DDS tone within 0.3–4.6 V (≤ 92% of
-full scale, centered on 2.5 V).** The alternative is 5.3 V (add 0P2V +
-0P1V), which leaves only 70 mV under the DAC's 5.5 V maximum.
+**Locked FPGA requirement (#33): keep the DDS tone within 0.3–4.6 V (≤ 92% of
+full scale, centre 2.45 V).** The alternative is 5.3 V (add 0P2V +
+0P1V), which leaves only 70 mV under the DAC's 5.5 V maximum — rejected.
 
 ### D_REF: ADC reference clamp (new)
 
@@ -392,15 +392,15 @@ return currents out of the receiver ground.
 
 ## 7. Decisions and checks
 
-Every paper item is resolved under decision #31. What remains is bench
-verification (§7 checks) and the D2 wording point.
+Every paper item is resolved. D2's tone band is locked by decision #33;
+what remains is bench verification (§7 checks).
 
-### Decisions (locked with decision #31)
+### Decisions (locked with #31; D2 band locked with #33)
 
 | # | Item | Resolution |
 |---|---|---|
 | D1 | 6 V pre-regulator | **TPSM63604RDLR at 5.99 V, RT 1.000 MHz, synced to 1.024 MHz**, replacing the OKI-78SR-5 (supersedes the decision #20 part list) |
-| D2 | `+5V_EXC` voltage | **5.0 V.** FPGA keeps the DDS tone within 0.3–4.6 V (≤ 92% of full scale); the band is described elsewhere here as centered on 2.5 V, but (0.3+4.6)/2 = 2.45 V — **OPEN (wording only): restate the centre as 2.45 V or as nominal 2.5 V; no rail or value changes**. Changes the M16 handoff's "0–5 V full scale" |
+| D2 | `+5V_EXC` voltage | **LOCKED #33: 5.0 V rail.** The DAC80508 keeps its gain-2 0–5 V part span; the FPGA keeps the DDS tone within the locked **0.3–4.6 V band (centre 2.45 V, ≤ 92% FS)**. The 5.3 V ANY-OUT alternative is rejected (70 mV under the DAC 5.5 V maximum). Cross-referenced in `icd/dac_fpga.md` §3, `docs/handoff/m16-fpga-handoff.md` and `dig6_requirements.md` |
 | D3 | FT231X supply | **U142 VCC (12) and ~RESET (11) move to `+3.3V`; 3V3OUT (10, net `FT_3V3`) ties to `+3.3V`.** VCC range 2.97–5.5 V; with VCC at 3.3 V, 3V3OUT must be driven with 3.3 V [DS] |
 | D4 | Pico power | **BRD-01 does not power the Pico.** J123 pin 1 is a no-connect on BRD-01, so the two 3.3 V supplies are never tied together. The ICD (`contract/icd/pico_link.md`) Rev B now lists pin 1 as NC, aligned by decision #32 (2026-11-26); the Pico uses its own USB |
 | D5 | `BUCK_SYNC` pin | **FPGA ball R3** (IO_L8P_T1_34, Bank 34 at 3.3 V, a plain I/O next to R1/R2), 32.768 MHz ÷ 32, through 1 nF to U147 EN/SYNC |

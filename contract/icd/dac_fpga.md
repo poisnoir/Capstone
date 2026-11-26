@@ -1,7 +1,8 @@
 # ICD — DAC80508 ↔ FPGA DDS/SPI
 
 **Status:** **FROZEN Rev A, 2026-11-02**; §3 safe-state clause clarified 2026-11-25
-(decision #30) — the wire interface is unchanged. **Owners:** Tung (hardware/DAC), Kevin (FPGA DDS).
+(decision #30) and the §3 tone band locked 2026-11-26 (decision #33) — the wire
+interface is unchanged. **Owners:** Tung (hardware/DAC), Kevin (FPGA DDS).
 **Canonical sources:** `contract/decisions_log.md` #19 and #21;
 `contract/system_contract.md` SC-03 and SC-07; `docs/phase2/system_schematic.md`;
 `simulations/m16/FINAL_REPORT.md`; `docs/handoff/m16-fpga-handoff.md` §4.
@@ -38,11 +39,12 @@ M16 SPICE evidence.
 
 1. Write SYNC `0x02` = `0x00FF` once (frame `0x0200FF`) to put all 8 channels in
    synchronous mode. Reset value `0xFF00` is asynchronous.
-2. Gain 2 (0–5 V) is the M-variant default; no CONFIG write needed.
-   **OPEN follow-up:** `power_tree_v2.md` §7 D2 gives a 0.3–4.6 V DDS limit on
-   `+5V_EXC`; decision #31 adopted the rails, not this frozen ICD's amplitude
-   clause, so this ICD keeps the 0–5 V default pending a follow-up ICD change.
-3. Power-on reset is **midscale** (2.5 V), matching the AC-coupled current loop.
+2. Gain 2 (0–5 V) is the M-variant part span; no CONFIG write needed. The
+   firmware/data-path limit is the locked DDS band **0.3–4.6 V, centre 2.45 V**
+   (≤92 % FS) on the 5.0 V `+5V_EXC` rail (decision #33). This is a tone limit,
+   not a hardware span change; the 5.3 V ANY-OUT alternative is rejected.
+3. Power-on reset is **midscale** (2.5 V), a DAC part property matching the
+   AC-coupled current loop; it is not the operating tone centre.
 4. **Genuine FPGA/ADC/driver fault:** stop the DDS, write zero-scale to all 8
    channels, then one TRIGGER. **Arm-only STOP (#30):** no DDS/DAC/coil effect —
    field and pose continue. A missed TRIGGER holds the previous sample for one

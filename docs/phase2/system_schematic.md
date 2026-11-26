@@ -196,7 +196,7 @@ DAC80508 ch_i ──► LTC1563-2 60 kHz ──► R1 10k ──► A1 + ──�
 | DAC_CS | FPGA | DAC80508 SYNC/CS | one per 24-bit frame |
 | DAC_SDI | FPGA | DAC80508 SDI | MSB first |
 | DAC_SDO | DAC80508 | FPGA | optional readback |
-| DAC_REF | DAC80508 internal 2.5 V | — | gain 2 → 0–5 V default; **OPEN follow-up:** `power_tree_v2.md` §7 D2 gives a 0.3–4.6 V DDS limit on `+5V_EXC` (see `icd/dac_fpga.md` §3) |
+| DAC_REF | DAC80508 internal 2.5 V | — | gain 2 → 0–5 V part span; the DDS is clamped to 0.3–4.6 V (centre 2.45 V) on the 5.0 V `+5V_EXC` rail (#33; `icd/dac_fpga.md` §3, `power_tree_v2.md` §7 D2) |
 
 Each 24-bit frame carries one channel; 8 channels = **192 bits**; at 49.152 MHz
 the data burst is **3.906 µs** inside the **5.005 µs** update period (199.805 kSPS =

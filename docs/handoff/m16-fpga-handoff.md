@@ -65,7 +65,7 @@ directly from the XO.
 | FTW | \(k \times 262144\), k = 10…17 (exact) |
 | LUT | 4096 × 16 sine, 12-bit phase truncation |
 | Per-tone | 16-bit amplitude, 16-bit phase offset |
-| DAC word | 16-bit unsigned; **part** full scale 0–5 V, midscale 2.5 V (decision #19). **FPGA tone clamp 0.3–4.6 V** per `power_tree_v2.md` §7 D2; the band-centre wording (2.45 V vs 2.5 V) is open |
+| DAC word | 16-bit unsigned; **part** span 0–5 V, power-on midscale 2.5 V (decision #19). **Locked firmware tone band 0.3–4.6 V, centre 2.45 V** (≤92 % FS, decision #33) on the 5.0 V `+5V_EXC` rail |
 | Update | every 164 XO clocks; latch 8 words; SPI out |
 
 FTW table:
@@ -95,7 +95,7 @@ The DDS phase is **not** reset per frame. The current-sense Ch0 is the phase ref
 
 ## 4. DAC80508 interface
 
-**Part:** DAC80508MRTET (WQFN-16), 16-bit, 8 channels, SPI, internal 2.5 V reference, gain 2 → 0–5 V, 5 µs settling. That 0–5 V is the **part** range; the commanded tone is clamped in firmware to **0.3–4.6 V** (`power_tree_v2.md` §7 D2).
+**Part:** DAC80508MRTET (WQFN-16), 16-bit, 8 channels, SPI, internal 2.5 V reference, gain 2 → 0–5 V, 5 µs settling. That 0–5 V is the **part** span; the commanded tone is clamped in firmware to the locked band **0.3–4.6 V, centre 2.45 V** (≤92 % FS, decision #33; `power_tree_v2.md` §7 D2, `contract/icd/dac_fpga.md` §3). The 5.0 V `+5V_EXC` rail and the 5.3 V ANY-OUT alternative are unchanged/rejected respectively.
 
 ### 4.1 Pins (FPGA side)
 
@@ -113,9 +113,10 @@ The same SPI bus carries it as a 9th 24-bit frame.
 **Init sequence (once):**
 1. SYNC register (0x02) = `0x00FF` → set SYNC-EN = 1 for DAC0…DAC7 (frame `0x0200FF`). The reset
    value `0xFF00` is asynchronous mode, where each channel updates on its own CS rising edge.
-2. Gain 2 (0–5 V) is the **M-variant default** (CONFIG 0x03 BUFF-GAIN = 1); no write needed
-   unless you change the range or power down a channel. This is the DAC hardware
-   range, not the FPGA tone clamp (0.3–4.6 V, decision #31 / D2).
+2. Gain 2 (0–5 V) is the **M-variant default part span** (CONFIG 0x03 BUFF-GAIN = 1);
+   no write needed unless you change the range or power down a channel. The
+   firmware/data-path tone band is **0.3–4.6 V, centre 2.45 V** (#33), not the
+   hardware span.
 3. Per update: write the 8 data frames, then write TRIGGER = `0x0010` (frame `0x050010`).
 
 **SPI mode:** CPOL = 0, CPHA = 1 (idle low, SDI changes on the rising edge, latched on the
@@ -158,7 +159,7 @@ divisor. Plan on a small protocol adapter, not a drop-in.
 | | Pmod DA4 (AD5628-1) | M16 (DAC80508MRTET) |
 |---|---|---|
 | Resolution | 12 bit | 16 bit |
-| Full scale (part) | 0–2.5 V (1.25 V ref ×2) | 0–5 V (FPGA tone clamp 0.3–4.6 V, D2) |
+| Full scale (part) | 0–2.5 V (1.25 V ref ×2) | 0–5 V (firmware tone band 0.3–4.6 V, centre 2.45 V, #33) |
 | Frame | **32 bit**: 4 don't-care + C[3:0] + A[3:0] + 12-bit data + 8 don't-care | **24 bit**: RW + 000 + A[3:0] + 16-bit data |
 | Frames per update | **8** (7 data + 1 update-all) | **9** (8 data + TRIGGER) |
 | Update-all | command `0010` (write input n, update all) on the 8th frame | TRIGGER 0x05 bit 4, 9th frame |
@@ -200,7 +201,7 @@ de-risk the M16 hold problem** — treat them as two separate risks. The Pmod's 
 | LTC1563-2 response, image rejection, filter phase | The DAC80508 0.17 ns hold — the AD5628 spec is 4 ns, not 10 ns |
 | Current-loop closure, PM/step, LMH6321 crossover, 150 mA thermal | The final 49.152 MHz / 5.005 µs timing and settling margin |
 | Current-sense phase, grounding/crosstalk, demod/solver end-to-end | SDO readback, midscale power-up, 16-bit INL/crosstalk |
-| 12-bit resolution (0.61 mV = 0.61 mA step) for a first light | Anything that depends on 0–5 V full scale or 16-bit amplitude |
+| 12-bit resolution (0.61 mV = 0.61 mA step) for a first light | Anything that depends on the 0–5 V part span, the locked 0.3–4.6 V band (#33) or 16-bit amplitude |
 
 **RTL:** keep one sequencer (frame width, CS gap, optional post-frame register write) and put the
 packer behind a variant parameter — `pack_m16(ch, code16)` and `pack_da4(ch, code12)`. The DDS,
@@ -303,14 +304,15 @@ clock that supports 200 kSPS.
 
 ### 4.6 Output scaling
 
-- The 0–5 V → 0–500 mA loop mapping (150 mA = 1.5 V) is the **pre-D2 design
-  assumption**; decision #31 / `power_tree_v2.md` §7 D2 now clamps the FPGA tone
-  to 0.3–4.6 V. **OPEN:** the exact current-loop mapping (offset/gain) under that
-  clamp is not settled in the repo — do not assume a linear end-point mapping;
-  confirm on the bench before setting amplitude.
-- The sine is nominally midscale of the DAC part range; the 100 µF coupling
-  blocks DC. The exact centre of the clamped band is the D2 wording item
-  (2.45 V arithmetic vs 2.5 V nominal).
+- The DAC80508 part span is 0–5 V (gain 2). The **locked firmware tone band is
+  0.3–4.6 V, centre 2.45 V** (≤92 % FS, decision #33); the current-loop mapping
+  must use this clamped band, not the 0–5 V end points.
+- **OPEN (bench):** the exact current-loop offset/gain under the clamp is not
+  settled in the repo — the old 0–5 V → 0–500 mA (150 mA = 1.5 V) mapping was a
+  pre-D2 assumption; do not assume a linear end-point mapping. Confirm on the
+  bench before setting amplitude.
+- The sine sits at the locked band centre (2.45 V), not the DAC part's power-on
+  midscale (2.5 V); the 100 µF coupling blocks DC.
 - Per-tone amplitude is a 16-bit word; the 8 tones are **not** summed in one DAC — each channel carries one tone. The current-sense summer sums the eight coil currents; the ADC Ch0 sees eight tones.
 
 ---
@@ -430,7 +432,7 @@ Calibration flow: Helmholtz \(A_{sens}(f)\) → 7×7 κ/zOffset → per-tone amp
 ## 11. Bring-up order
 
 1. **Clock:** 32.768 MHz at the ADC/FPGA; 49.152 MHz at the DAC; 199.805 kSPS update; scope.
-2. **SPI:** 216-bit burst (8×24 data + 24-bit TRIGGER); CS per frame; DAC midscale on all 8 channels; readback if SDO.
+2. **SPI:** 216-bit burst (8×24 data + 24-bit TRIGGER); CS per frame; DAC at the locked band centre 2.45 V on all 8 channels (part midscale is 2.5 V); readback if SDO.
 3. **One tone:** 20 kHz, 150 mA command; DAC output; filter output; current-sense; FFT.
 4. **Eight tones:** current-sense FFT; image at 165.8 kHz; 8-tone EVM; target ≤−60 dBc.
 5. **ADC:** 4 lanes, 256 kSPS, 32.768 Mbit/s; zero dropped frames over 1 hour.

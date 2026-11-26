@@ -67,6 +67,7 @@ sample clock is 32.768 MHz/128 = 256 kSPS; the ADC frame is 512 DRDY pulses =
 | DIG-01c | DDS update at **199.805 kSPS (÷164)**; one SPI at **49.152 MHz**, 24-bit frame per channel, 8 data frames + 24-bit TRIGGER (0x05 bit 4) = **216 bits** | 216 bits at 49.152 MHz = **4.394 µs** < 5.005 µs; the software LDAC removes inter-channel skew; ≥1 µs between output updates is met | Logic-analyser capture; DAC update rate |
 | DIG-01d | Amplitude/phase words double-buffered; update on frame boundary, not mid-frame | No phase discontinuity or amplitude step in the observation window | Frame-boundary scope/FFT |
 | DIG-01e | DDS suppression **only** on a genuine FPGA/ADC/driver fault (tracker-side safe state), **not** on STOP; STOP is arm-motion only and leaves DDS/DAC/field/pose running (#30) | Arm STOP must not disturb the field or the pose stream | Fault injection + STOP-then-field check |
+| DIG-01f | DAC part span 0–5 V (gain 2 on the 5.0 V `+5V_EXC` rail); the DDS tone is clamped to **0.3–4.6 V, centre 2.45 V** (≤92 % FS, #33). The exact current-loop offset/gain under the clamp stays an OPEN bench item | 4.875 V worst-case rail clips the DAC above ~4.7 V and the LTC1563-2 sits ~0.2 V below its rail; 5.3 V ANY-OUT leaves only 70 mV under the DAC 5.5 V max | DAC word range check; bench current-loop mapping |
 
 **DAC interface.** 1× DAC80508 (16-bit, 8 channels, 200 kSPS, SPI) + 8×
 LTC1563-2 (4th-order Butterworth, 60 kHz, one resistor per channel). One 24-bit
