@@ -277,9 +277,13 @@ class Rezone:
         # Property text coordinates are absolute: translate them with the part.
         bs, be = K.block_span(self.text, uid)
         blk = self.text[bs:be]
-        prop = re.compile(r'(\(property "[^"]*" "[^"]*"\s*\(at )([-\d.]+) ([-\d.]+)([^)]*\))')
-        blk = prop.sub(lambda m: (m.group(1) + fmt(float(m.group(2)) + dx) + ' '
-                                  + fmt(float(m.group(3)) + dy) + m.group(4)), blk)
+        prop = re.compile(r'(\(property "[^"]*" "[^"]*"\s*\(at )([-\d.]+) ([-\d.]+)([^)]*)\)')
+        def flat(m):
+            # Property text is always horizontal; rotating it with the body is
+            # the source of every unreadable refdes/value on this sheet.
+            return (m.group(1) + fmt(float(m.group(2)) + dx) + ' '
+                    + fmt(float(m.group(3)) + dy) + ' 0)')
+        blk = prop.sub(flat, blk)
         self.text = self.text[:bs] + blk + self.text[be:]
         if mirror is not None:
             blk_start, blk_end = K.block_span(self.text, uid)
@@ -293,12 +297,42 @@ class Rezone:
             self.text = self.text[:blk_start] + blk + self.text[blk_end:]
         self.refresh()
 
+    def label_at(self, kind: str, text: str, at, new_at, angle=None):
+        """Move an existing label and/or change its angle, in place."""
+        new_at = (g(new_at[0]), g(new_at[1]))
+        for s, e, _ in K.top_blocks(self.text, kind):
+            blk = self.text[s:e]
+            if not blk.startswith(f'({kind} "{text}"'):
+                continue
+            m = re.search(r'\(at ([\d.-]+) ([\d.-]+)(?: ([\d.-]+))?\)', blk)
+            if not m:
+                continue
+            p = (float(m.group(1)), float(m.group(2)))
+            if abs(p[0] - at[0]) > 1e-6 or abs(p[1] - at[1]) > 1e-6:
+                continue
+            a = int(float(m.group(3))) if m.group(3) else 0
+            if angle is not None:
+                a = angle
+            nb = blk[:m.start()] + f'(at {fmt(new_at[0])} {fmt(new_at[1])} {a})' + blk[m.end():]
+            if angle is not None:
+                nb = re.sub(r'\(justify (?:left|right)\)',
+                            f'(justify {"right" if angle in (180, 270) else "left"})',
+                            nb, count=1)
+            self.text = self.text[:s] + nb + self.text[e:]
+            self.refresh()
+            return
+
     def prop_pos(self, ref: str, prop: str, to, angle: int = 0):
         """Place one symbol property (Reference/Value) at an absolute point."""
         to = (g(to[0]), g(to[1]))
         uid = self.sym_uuid(ref)
         bs, be = K.block_span(self.text, uid)
         blk = self.text[bs:be]
+        # KiCad adds the symbol rotation to the property angle at draw time;
+        # compensate so the requested angle is what actually renders.
+        sm = re.search(r'\n\t\t\(at [\d.-]+ [\d.-]+ ([\d.-]+)\)', blk)
+        rot = int(float(sm.group(1))) if sm else 0
+        angle = (angle - rot) % 360
         pat = re.compile(r'(\(property "' + re.escape(prop)
                          + r'" "[^"]*"\s*\(at )([-\d.]+) ([-\d.]+)([^)]*)\)')
         found = False
@@ -422,6 +456,9 @@ def zone_a(rz: Rezone):
         p1, p2 = rz.pin(ref, '1'), rz.pin(ref, '2')
         rz.wire(p1, (px, py), ref)
         rz.glabel(net, p2, 180)
+        # text to the right of the body, clear of both wire and neighbour row
+        rz.prop_pos(ref, 'Reference', (27.94, py - 1.27), 0)
+        rz.prop_pos(ref, 'Value', (27.94, py + 1.27), 0)
     rz.move('R162', (15.24, 48.26), rot=90)
     p1, p2 = rz.pin('R162', '1'), rz.pin('R162', '2')
     rz.glabel('+3.3V', p1, 90)
@@ -456,7 +493,7 @@ def zone_b(rz: Rezone):
         if abs(row - py) > 1e-6:
             rz.wire((295.91, py), knee, ref + 'jog')
         rz.wire(knee, p2, ref + 'out')
-        rz.glabel('+3.3V', p1, 0)
+        rz.glabel('+3.3V', p1, 180)              # text left of the body
         rz.glabel(net, (303.53, row), 0)         # clear of the old ADC flags
         rz.prop_pos(ref, 'Reference', (cx, row - 3.81))
         rz.prop_pos(ref, 'Value', (cx, row + 3.81))
@@ -466,13 +503,15 @@ def zone_b(rz: Rezone):
     out = rz.pin('Y1', '3')
     rz.wire(out, (px, py), 'clk')
     rz.glabel('CLOCK_32M768', (px, py), 0)
-    rz.glabel('+3.3V', rz.pin('Y1', '1'), 0)
-    rz.glabel('+3.3V', rz.pin('Y1', '4'), 0)
-    rz.glabel('GND', rz.pin('Y1', '2'), 0)
+    for pin_no, net in (('1', '+3.3V'), ('4', '+3.3V'), ('2', 'GND')):
+        p = rz.pin('Y1', pin_no)
+        end = (p[0] + 5.08, p[1])
+        rz.wire(p, end, 'clkpwr' + pin_no)
+        rz.glabel(net, end, 0)
     rz.move('C141', (321.31, py + 12.70), rot=0)
     rz.glabel('+3.3V', rz.pin('C141', '1'), 0)
     rz.glabel('GND', rz.pin('C141', '2'), 0)
-    rz.textpos('Clock branch termination', (335.28, py + 24.13))
+    rz.textpos('Clock branch termination', (295.91, py + 24.13))
 
 
 def zone_c(rz: Rezone):
@@ -488,11 +527,18 @@ def zone_c(rz: Rezone):
     rz.prop_pos('U141', 'Value', (445.77, fy + 6.35))
     rz.wire(rz.pin('R790', '2'), rz.pin('U141', '6'), 'flashclk')
     # QSPI nets are local labels on this sheet in the baseline netlist.
-    for net, fpin in (('QSPI_CS', '1'), ('QSPI_D0', '5'), ('QSPI_D1', '2'),
-                      ('QSPI_D2', '3'), ('QSPI_D3', '7')):
-        rz.llabel(net, rz.pin('U141', fpin), 0)
-    rz.glabel('+3.3V', rz.pin('U141', '8'), 0)
-    rz.glabel('GND', rz.pin('U141', '4'), 180)
+    for net, fpin, side in (('QSPI_CS', '1', -1), ('QSPI_D0', '5', 1),
+                            ('QSPI_D1', '2', 1), ('QSPI_D2', '3', 1),
+                            ('QSPI_D3', '7', 1)):
+        p = rz.pin('U141', fpin)
+        end = (p[0] + side * 5.08, p[1])   # stub clears the body and pin name
+        rz.wire(p, end, 'flash' + net)
+        rz.llabel(net, end, 0 if side > 0 else 180)
+    for pin_no, net in (('8', '+3.3V'), ('4', 'GND')):
+        p = rz.pin('U141', pin_no)
+        end = (p[0] - 5.08, p[1])
+        rz.wire(p, end, 'flashpwr' + pin_no)
+        rz.glabel(net, end, 180)
     for ref, net, at in (('R140', 'QSPI_CS', (444.50, cclk[1] - 16.51)),
                          ('R148', 'QSPI_D2', (466.09, cclk[1] + 12.70)),
                          ('R149', 'QSPI_D3', (466.09, cclk[1] + 25.40)),
@@ -514,11 +560,16 @@ def zone_c(rz: Rezone):
                           ('4', 'M7', 'JTAG_TMS'),
                           ('10', 'N7', 'JTAG_TDI'),
                           ('8', 'N8', 'JTAG_TDO')):
-        rz.llabel(net, rz.pin('J140', jp), 180)
+        p = rz.pin('J140', jp)
+        end = (p[0] - 5.08, p[1])          # stub clears the pin name
+        rz.wire(p, end, 'jtag' + net)
+        rz.llabel(net, end, 180)
         rz.llabel(net, rz.pin('U4', ball), 0)
-    rz.glabel('+3.3V', rz.pin('J140', '2'), 180)
-    for jp in ('3', '5', '7', '9', '11'):
-        rz.glabel('GND', rz.pin('J140', jp), 0)
+    for jp, net in [('2', '+3.3V')] + [(p, 'GND') for p in ('3', '5', '7', '9', '11')]:
+        p = rz.pin('J140', jp)
+        end = (p[0] + (-5.08 if p[0] < 518.16 else 5.08), p[1])
+        rz.wire(p, end, 'jtagpwr' + jp)
+        rz.glabel(net, end, 0)
     for jp in ('1', '12', '13', '14'):
         rz.nc(rz.pin('J140', jp))
     rz.textpos('Configuration bring-up', (444.50, cclk[1] - 24.13))
@@ -542,8 +593,10 @@ def zone_e(rz: Rezone):
     rz.wire(rz.pin('R159', '1'), tap, 'vbus-bot')
     rz.junction(tap)
     rz.glabel('GND', rz.pin('R159', '2'), 0)
-    # Put the sense flag on the divider tap, clear of U142's CBUS2 pin text.
-    rz.llabel('VBUS_SENSE', tap, 0)
+    # Sense flag on a stub end, clear of both the junction dot and CBUS2 text.
+    sense_end = (tap[0] + 7.62, tap[1])
+    rz.wire(tap, sense_end, 'vbus-sense-stub')
+    rz.llabel('VBUS_SENSE', sense_end, 0)
     for i, ref in enumerate(('C143', 'C144', 'C145')):
         rz.move(ref, (254.00, 250.19 + i * 10.16), rot=0)
         rz.glabel('+3.3V', rz.pin(ref, '1'), 0)
@@ -561,6 +614,91 @@ def zone_e(rz: Rezone):
         rz.wire(cp, (cp[0], uy), cap)
         rz.wire((cp[0], uy), up, cap + 'u')
     rz.textpos('Configure CBUS2', (342.90, cb2[1] + 13.97))
+
+
+MOVED_REFS = [
+    'R145', 'R146', 'R147', 'R162',
+    'R163', 'R164', 'R165', 'R166', 'Y1', 'C141',
+    'R790', 'U141', 'R140', 'R148', 'R149', 'C140', 'J140',
+    'R158', 'R159', 'C143', 'C144', 'C145', 'R160', 'R161',
+] + [r for caps in BANKS.values() for r in caps]
+
+
+def finalize_property_text(rz: Rezone):
+    """All moved parts get horizontal Reference/Value clear of body and wire."""
+    root = K.parse(rz.text)
+    special_side = {'C140', 'C141', 'C143', 'C144', 'C145', 'Y1', 'U141',
+                    'J140', 'R158', 'R159'}
+    # dense clusters need explicit (ref, value) anchor points
+    fixed = {
+        'U141': ((445.77, 105.41), (445.77, 123.19)),
+        'J140': ((518.16, 93.98), (518.16, 118.11)),
+        'Y1': ((321.31, 105.41), (321.31, 126.365)),
+        'R142': ((469.90, 130.81), (469.90, 135.89)),
+        'R143': ((469.90, 122.555), (469.90, 127.635)),
+        'R144': ((469.90, 138.43), (469.90, 143.51)),
+        'TP790': ((421.65, 139.70), (421.65, 142.24)),
+        'TP791': ((421.65, 132.08), (421.65, 134.62)),
+        'TP792': ((421.65, 124.46), (421.65, 127.00)),
+        'C142': ((388.62, 241.30), (388.62, 248.92)),
+        'C140': ((435.61, 126.365), (447.04, 132.08)),
+        'C145': ((254.00, 269.24), (248.92, 270.51)),
+        'R160': ((258.32, 274.32), (258.32, 276.86)),
+        'R161': ((258.32, 269.24), (258.32, 271.78)),
+        'R148': ((477.50, 119.38), (477.50, 132.08)),
+        'R149': ((477.50, 134.62), (477.50, 147.32)),
+    }
+    for ref, ball, tx in (('R145', 'M2', 27.94), ('R146', 'M1', 30.48),
+                          ('R147', 'L4', 27.94)):
+        py = rz.pin('U4', ball)[1]
+        fixed[ref] = ((tx, py - 1.27), (tx, py + 1.27))
+    for ref, ball, tx in (('R163', 'A14', 328.93), ('R164', 'B12', 328.93),
+                          ('R165', 'B14', 328.93), ('R166', 'C14', 340.16)):
+        py = rz.pin('U4', ball)[1]
+        fixed[ref] = ((tx, py - 1.27), (tx, py + 1.27))
+    for sym in K.children(root, 'symbol'):
+        ref = next((p[2] for p in K.children(sym, 'property')
+                    if p[1] == 'Reference'), None)
+        lib = K.child(sym, 'lib_id')
+        if ref is None or lib is None or ref == 'U4':
+            continue
+        at = K.child(sym, 'at')
+        x, y = float(at[1]), float(at[2])
+        rot = int(float(at[3])) if len(at) > 3 else 0
+        if ref in fixed:
+            rz.prop_pos(ref, 'Reference', fixed[ref][0], 0)
+            rz.prop_pos(ref, 'Value', fixed[ref][1], 0)
+            continue
+        if ref in special_side or ref.startswith('U'):
+            gap = {'Y1': 10.16, 'U141': 10.16, 'J140': 10.16,
+                   'U142': 19.05}.get(ref, 6.35)
+            if ref == 'U142':   # text above/below the QFN body
+                rz.prop_pos(ref, 'Reference', (312.42, 252.73), 0)
+                rz.prop_pos(ref, 'Value', (312.42, 309.88), 0)
+                continue
+            rz.prop_pos(ref, 'Reference', (x - gap, y), 0)
+            rz.prop_pos(ref, 'Value', (x + gap, y), 0)
+        elif ref.startswith('C'):
+            rz.prop_pos(ref, 'Reference', (x - 2.54, y), 0)
+            rz.prop_pos(ref, 'Value', (x + 2.54, y), 0)
+        elif rot in (90, 270) or ref.startswith('TP'):
+            rz.prop_pos(ref, 'Reference', (x, y - 3.81), 0)
+            rz.prop_pos(ref, 'Value', (x, y + 3.81), 0)
+        else:
+            rz.prop_pos(ref, 'Reference', (x - 3.81, y), 0)
+            rz.prop_pos(ref, 'Value', (x + 3.81, y), 0)
+    # Keep labels off wire interiors: move the two bridge labels and the XADC
+    # tap to wire corners, and alternate the dense top rail flags.
+    rz.label_at('label', 'FT_DP', (289.56, 274.32), (276.86, 274.32))
+    rz.label_at('label', 'FT_DM', (289.56, 271.78), (276.86, 271.78))
+    # XADC_VP stays at its baseline anchor: (427.99,140.97) belongs to
+    # PROGRAM_B_0, so relocating the flag there would merge two nets.
+    rails = sorted((l for l in K.labels(rz.root, 'global_label')
+                    if l['text'] == '+3.3V' and abs(l['p'][1] - 33.02) < 0.1),
+                   key=lambda l: l['p'][0])
+    for i, lab in enumerate(rails):
+        rz.label_at('global_label', '+3.3V', lab['p'], lab['p'],
+                    180 if i % 2 else 0)
 
 
 def verify(path: str) -> int:
@@ -701,6 +839,126 @@ def verify(path: str) -> int:
     for p in sorted(missing)[:10]:
         print('  ', p)
         bad.append('missing junction')
+
+    # 7 -- text bounding boxes
+    def text_items():
+        out = []
+
+        def add(owner, txt, at, size, angle, kind, justify=None):
+            w = 0.6 * size * max(len(str(txt)), 1)
+            h = size
+            if int(round(angle)) in (90, 270):
+                w, h = h, w
+            x, y = float(at[1]), float(at[2])
+            if justify == 'right':
+                x0, x1 = x - w, x
+            elif justify == 'left':
+                x0, x1 = x, x + w
+            else:
+                x0, x1 = x - w / 2, x + w / 2
+            if int(round(angle)) in (90, 270):
+                # vertical text grows up for 90, down for 270
+                y0, y1 = (y - h, y) if int(round(angle)) == 90 else (y, y + h)
+            else:
+                y0, y1 = y - h / 2, y + h / 2
+            out.append((owner, str(txt), kind, x0, y0, x1, y1, (x, y)))
+
+        sym_rot = {}
+        for sym in K.children(root, 'symbol'):
+            ref = next((p[2] for p in K.children(sym, 'property')
+                        if p[1] == 'Reference'), '?')
+            at = K.child(sym, 'at')
+            sym_rot[ref] = int(float(at[3])) if at is not None and len(at) > 3 else 0
+        for sym in K.children(root, 'symbol'):
+            ref = next((p[2] for p in K.children(sym, 'property')
+                        if p[1] == 'Reference'), '?')
+            for p in K.children(sym, 'property'):
+                if p[1] not in ('Reference', 'Value'):
+                    continue
+                at = K.child(p, 'at')
+                size = 1.0
+                eff = K.child(p, 'effects')
+                if eff is not None:
+                    font = K.child(eff, 'font')
+                    if font is not None:
+                        sz = K.child(font, 'size')
+                        if sz is not None:
+                            size = float(sz[1])
+                pr = (float(at[3]) if len(at) > 3 else 0) + sym_rot.get(ref, 0)
+                add(f'{ref}.{p[1]}', p[2], at, size, pr % 360, 'property')
+        for kind in ('label', 'global_label', 'text'):
+            for node in K.children(root, kind):
+                at = K.child(node, 'at')
+                eff = K.child(node, 'effects')
+                size = 1.0
+                if eff is not None:
+                    font = K.child(eff, 'font')
+                    if font is not None:
+                        sz = K.child(font, 'size')
+                        if sz is not None:
+                            size = float(sz[1])
+                just = None
+                if eff is not None:
+                    jn = K.child(eff, 'justify')
+                    if jn is not None:
+                        just = 'right' if 'right' in jn else ('left' if 'left' in jn else None)
+                add(f'{kind}:{node[1]}', node[1], at, size,
+                    float(at[3]) if len(at) > 3 else 0, kind, just)
+        # pin names of the parts this script relocates
+        touched = {'R140','R141','R145','R146','R147','R148','R149','R158','R159',
+                   'R160','R161','R162','R163','R164','R165','R166','R790',
+                   'C140','C141','C143','C144','C145','U141','U142','Y1','J140'}
+        touched |= {r for caps in BANKS.values() for r in caps}
+        for (ref, num), (nm, px, py, _u) in pins.items():
+            if ref in touched and nm:
+                add(f'{ref}.{num}:pin', nm, ['at', px, py, 0], 1.0, 0, 'pin')
+        return out
+
+    def overlap(a, b, eps=1e-6):
+        return (min(a[5], b[5]) - max(a[3], b[3]) > eps
+                and min(a[6], b[6]) - max(a[4], b[4]) > eps)
+
+    def seg_hits_box(w, t):
+        ax, ay = w['a']; bx, by = w['b']
+        if abs(ay - by) < 1e-6:
+            lo, hi = sorted((ax, bx))
+            return (max(lo, t[3]) < min(hi, t[5])
+                    and t[4] < ay < t[6])
+        if abs(ax - bx) < 1e-6:
+            lo, hi = sorted((ay, by))
+            return (max(lo, t[4]) < min(hi, t[6])
+                    and t[3] < ax < t[5])
+        return False
+
+    ti = text_items()
+    tc = {'text-text': 0, 'text-body': 0, 'text-wire': 0}
+    detail = []
+    for i, a in enumerate(ti):
+        for b in ti[i + 1:]:
+            if overlap(a, b):
+                tc['text-text'] += 1
+                detail.append(('tt', a[0], a[7], b[0], b[7]))
+        for ref, x0, y0, x1, y1 in bs:
+            if (min(a[5], x1) - max(a[3], x0) > 1e-6
+                    and min(a[6], y1) - max(a[4], y0) > 1e-6):
+                tc['text-body'] += 1
+                detail.append(('tb', a[0], a[7], ref))
+        for w in wires:
+            # a label anchored at a wire end is an intentional connection
+            if any(abs(a[7][0] - e[0]) < 0.2 and abs(a[7][1] - e[1]) < 0.2
+                   for e in (w['a'], w['b'])):
+                continue
+            if seg_hits_box(w, a):
+                tc['text-wire'] += 1
+                detail.append(('tw', a[0], a[7], str(w['a']), str(w['b'])))
+    total_tc = sum(tc.values())
+    print('text collisions: ' + ' '.join(f'{k} = {v}' for k, v in tc.items())
+          + f'; total = {total_tc}')
+    if total_tc:
+        for d in detail[:60]:
+            print('   ', d)
+    if total_tc:
+        bad.append('text collisions')
     print(f'VERIFY: {"FAIL" if bad else "PASS"} ({len(bad)} violation classes)')
     return len(bad)
 
@@ -721,6 +979,7 @@ def main():
         fn[z](rz)
         rz.save()
     rz.prune_dangling_labels()
+    finalize_property_text(rz)
     rz.normalize_text_sizes()
     rz.save()
     print(f'rezoned {args.sheet}: zones {",".join(zones)}')

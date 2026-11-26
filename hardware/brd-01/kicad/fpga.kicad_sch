@@ -6495,7 +6495,7 @@
 	)
 	(text "Clock branch termination and loading to be checked on BRD-01."
 		(exclude_from_sim no)
-		(at 335.28 140.97 0)
+		(at 295.91 140.97 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -8883,7 +8883,7 @@
 	)
 	
 	(label "FT_DP"
-		(at 289.56 274.32 180)
+		(at 276.86 274.32 180)
 		(effects
 			(font
 				(size 1 1)
@@ -8903,7 +8903,7 @@
 		(uuid "ce51e58c-1329-408d-9658-e7ee595fe22d")
 	)
 	(label "FT_DM"
-		(at 289.56 271.78 180)
+		(at 276.86 271.78 180)
 		(effects
 			(font
 				(size 1 1)
@@ -9052,12 +9052,12 @@
 	)
 	(global_label "+3.3V"
 		(shape passive)
-		(at 275.59 33.02 0)
+		(at 275.59 33.02 180)
 		(effects
 			(font
 				(size 1 1)
 			)
-			(justify left)
+			(justify right)
 		)
 		(uuid "0bcd31a3-3b71-42b8-9a77-aea07a9f1d7f")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
@@ -9514,12 +9514,12 @@
 	)
 	(global_label "+3.3V"
 		(shape passive)
-		(at 207.01 33.02 0)
+		(at 207.01 33.02 180)
 		(effects
 			(font
 				(size 1 1)
 			)
-			(justify left)
+			(justify right)
 		)
 		(uuid "35a3f6d3-5ccc-4815-a9bf-947061fd555b")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
@@ -10328,12 +10328,12 @@
 	)
 	(global_label "+3.3V"
 		(shape passive)
-		(at 201.93 33.02 0)
+		(at 201.93 33.02 180)
 		(effects
 			(font
 				(size 1 1)
 			)
-			(justify left)
+			(justify right)
 		)
 		(uuid "8385324e-d846-46a4-847c-d053e17a4d14")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
@@ -10482,12 +10482,12 @@
 	)
 	(global_label "+3.3V"
 		(shape passive)
-		(at 280.67 33.02 0)
+		(at 280.67 33.02 180)
 		(effects
 			(font
 				(size 1 1)
 			)
-			(justify left)
+			(justify right)
 		)
 		(uuid "99db2b77-e7f5-498e-a817-9f7f80534d3d")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
@@ -10813,12 +10813,12 @@
 	)
 	(global_label "+3.3V"
 		(shape passive)
-		(at 212.09 33.02 0)
+		(at 212.09 33.02 180)
 		(effects
 			(font
 				(size 1 1)
 			)
-			(justify left)
+			(justify right)
 		)
 		(uuid "c4d3a56a-67fe-4d21-b72a-9109b70b1d82")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
@@ -11231,12 +11231,12 @@
 	)
 	(global_label "+3.3V"
 		(shape passive)
-		(at 270.51 33.02 0)
+		(at 270.51 33.02 180)
 		(effects
 			(font
 				(size 1 1)
 			)
-			(justify left)
+			(justify right)
 		)
 		(uuid "eb1715ad-62dc-437c-9983-95d2b7672929")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
@@ -12304,7 +12304,7 @@
 		(dnp no)
 		(uuid "031988dc-ef7e-4649-94b1-9ba86a2793df")
 		(property "Reference" "C162"
-			(at 139.7 274.4 90)
+			(at 137.16 281.94 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -12314,7 +12314,7 @@
 			)
 		)
 		(property "Value" "100n"
-			(at 139.7 276.4 90)
+			(at 142.24 281.94 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -12324,7 +12324,7 @@
 			)
 		)
 		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
-			(at 139.7 279.4 90)
+			(at 139.7 279.4 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -12381,7 +12381,7 @@
 		(dnp no)
 		(uuid "06fa8490-03d6-4312-b3f3-4a968475bd13")
 		(property "Reference" "R150"
-			(at 365.76 172.8 90)
+			(at 365.76 176.53 270)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -12391,7 +12391,7 @@
 			)
 		)
 		(property "Value" "0"
-			(at 365.76 174.8 90)
+			(at 365.76 184.15 270)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -13299,7 +13299,7 @@
 		(dnp no)
 		(uuid "13277c39-98c0-4a2c-be0c-1c34d25f5ab9")
 		(property "Reference" "R153"
-			(at 411.48 188.04 90)
+			(at 411.48 191.77 270)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -13309,7 +13309,7 @@
 			)
 		)
 		(property "Value" "0"
-			(at 411.48 190.04 90)
+			(at 411.48 199.39 270)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -13376,7 +13376,7 @@
 		(dnp no)
 		(uuid "166d3827-6ece-41a3-986d-441a2b4f5f31")
 		(property "Reference" "R143"
-			(at 452.12 121.92 90)
+			(at 469.9 121.92 90)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -13386,7 +13386,7 @@
 			)
 		)
 		(property "Value" "4.7k"
-			(at 452.12 128.27 90)
+			(at 469.9 127 90)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -13463,7 +13463,7 @@
 			)
 		)
 		(property "Value" "W25Q64JVSSIQ"
-			(at 445.77 120.65 0)
+			(at 445.77 123.19 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -13548,7 +13548,7 @@
 		(dnp no)
 		(uuid "27cef7a1-0d2a-4551-b439-89d04dcdf1e1")
 		(property "Reference" "C142"
-			(at 388.62 237.57 90)
+			(at 388.62 241.3 270)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -13558,7 +13558,7 @@
 			)
 		)
 		(property "Value" "100n"
-			(at 388.62 239.57 90)
+			(at 388.62 248.92 270)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -13625,7 +13625,7 @@
 		(dnp no)
 		(uuid "29e620ba-a632-4e27-a44a-834ca163cc79")
 		(property "Reference" "C171"
-			(at 190.5 241.38 90)
+			(at 187.96 248.92 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -13635,7 +13635,7 @@
 			)
 		)
 		(property "Value" "10u"
-			(at 190.5 243.38 90)
+			(at 193.04 248.92 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -13645,7 +13645,7 @@
 			)
 		)
 		(property "Footprint" "Capacitor_SMD:C_0805_2012Metric"
-			(at 190.5 246.38 90)
+			(at 190.5 246.38 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -13702,7 +13702,7 @@
 		(dnp no)
 		(uuid "2a617183-01e4-46d3-8363-c0cca3a61ed3")
 		(property "Reference" "R152"
-			(at 365.76 188.04 90)
+			(at 365.76 191.77 270)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -13712,7 +13712,7 @@
 			)
 		)
 		(property "Value" "0"
-			(at 365.76 190.04 90)
+			(at 365.76 199.39 270)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -13779,7 +13779,7 @@
 		(dnp no)
 		(uuid "2a6e3226-8589-4860-85cd-d1f58e5ee69a")
 		(property "Reference" "C150"
-			(at 139.7 208.36 90)
+			(at 137.16 215.9 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -13789,7 +13789,7 @@
 			)
 		)
 		(property "Value" "100n"
-			(at 139.7 210.36 90)
+			(at 142.24 215.9 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -13799,7 +13799,7 @@
 			)
 		)
 		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
-			(at 139.7 213.36 90)
+			(at 139.7 213.36 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -13856,7 +13856,7 @@
 		(dnp no)
 		(uuid "2bb495d8-653c-4d1e-905b-24cc5fbaabca")
 		(property "Reference" "C167"
-			(at 190.5 274.4 90)
+			(at 187.96 281.94 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -13866,7 +13866,7 @@
 			)
 		)
 		(property "Value" "100n"
-			(at 190.5 276.4 90)
+			(at 193.04 281.94 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -13876,7 +13876,7 @@
 			)
 		)
 		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
-			(at 190.5 279.4 90)
+			(at 190.5 279.4 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -13933,7 +13933,7 @@
 		(dnp no)
 		(uuid "2cdc8ccb-74eb-48d5-a724-678400932fda")
 		(property "Reference" "C160"
-			(at 170.18 241.38 90)
+			(at 167.64 248.92 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -13943,7 +13943,7 @@
 			)
 		)
 		(property "Value" "100n"
-			(at 170.18 243.38 90)
+			(at 172.72 248.92 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -13953,7 +13953,7 @@
 			)
 		)
 		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
-			(at 170.18 246.38 90)
+			(at 170.18 246.38 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -14010,7 +14010,7 @@
 		(dnp no)
 		(uuid "2dd70b8b-bc94-40a7-acb8-dadfb1d7f0b6")
 		(property "Reference" "TP790"
-			(at 439.37 138.43 0)
+			(at 421.64 139.7 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -14021,7 +14021,7 @@
 			)
 		)
 		(property "Value" "TestPoint"
-			(at 439.37 142.24 0)
+			(at 421.64 142.24 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -14086,7 +14086,7 @@
 		(dnp no)
 		(uuid "2e085adb-b216-4338-8b00-9ea752c4d369")
 		(property "Reference" "C144"
-			(at 254 252.81 90)
+			(at 247.65 260.35 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -14096,7 +14096,7 @@
 			)
 		)
 		(property "Value" "100n"
-			(at 254 254.81 90)
+			(at 260.35 260.35 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -14106,7 +14106,7 @@
 			)
 		)
 		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
-			(at 254 257.81 90)
+			(at 254 257.81 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -14163,7 +14163,7 @@
 		(dnp no)
 		(uuid "35e89ad8-0d8a-4029-a87c-24af8f31976f")
 		(property "Reference" "C145"
-			(at 254 262.97 90)
+			(at 254 269.24 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -14173,7 +14173,7 @@
 			)
 		)
 		(property "Value" "4.7u"
-			(at 254 264.97 90)
+			(at 248.92 270.51 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -14183,7 +14183,7 @@
 			)
 		)
 		(property "Footprint" "Capacitor_SMD:C_0805_2012Metric"
-			(at 254 267.97 90)
+			(at 254 267.97 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -14240,7 +14240,7 @@
 		(dnp no)
 		(uuid "3af633e4-df8d-48e5-8537-c5022eb55c60")
 		(property "Reference" "C158"
-			(at 149.86 241.38 90)
+			(at 147.32 248.92 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -14250,7 +14250,7 @@
 			)
 		)
 		(property "Value" "100n"
-			(at 149.86 243.38 90)
+			(at 152.4 248.92 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -14260,7 +14260,7 @@
 			)
 		)
 		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
-			(at 149.86 246.38 90)
+			(at 149.86 246.38 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -14317,7 +14317,7 @@
 		(dnp no)
 		(uuid "3bf84521-1fec-4b8f-970c-fb9edb5f0f7c")
 		(property "Reference" "R148"
-			(at 466.09 119.38 0)
+			(at 477.52 119.38 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -14327,7 +14327,7 @@
 			)
 		)
 		(property "Value" "4.7k"
-			(at 466.09 132.08 0)
+			(at 477.52 132.08 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -14337,7 +14337,7 @@
 			)
 		)
 		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
-			(at 466.09 123.19 90)
+			(at 466.09 123.19 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -14394,7 +14394,7 @@
 		(dnp no)
 		(uuid "42f54eb3-01b7-4c7c-b80c-841aeb0a594c")
 		(property "Reference" "C141"
-			(at 321.31 122 90)
+			(at 314.96 129.54 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -14404,7 +14404,7 @@
 			)
 		)
 		(property "Value" "100n"
-			(at 321.31 124 90)
+			(at 327.66 129.54 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -14414,7 +14414,7 @@
 			)
 		)
 		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
-			(at 321.31 127 90)
+			(at 321.31 127 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -14471,7 +14471,7 @@
 		(dnp no)
 		(uuid "45426340-e6f4-4f12-badf-bcec5d0a22c8")
 		(property "Reference" "R145"
-			(at 21.59 52.15 90)
+			(at 27.94 58.42 90)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -14481,7 +14481,7 @@
 			)
 		)
 		(property "Value" "33"
-			(at 21.59 54.15 90)
+			(at 27.94 60.96 90)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -14491,7 +14491,7 @@
 			)
 		)
 		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
-			(at 21.59 57.15 90)
+			(at 21.59 57.15 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -14548,7 +14548,7 @@
 		(dnp no)
 		(uuid "499e9470-04a6-437f-8186-9b68253e2207")
 		(property "Reference" "C151"
-			(at 149.86 208.36 90)
+			(at 147.32 215.9 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -14558,7 +14558,7 @@
 			)
 		)
 		(property "Value" "100n"
-			(at 149.86 210.36 90)
+			(at 152.4 215.9 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -14568,7 +14568,7 @@
 			)
 		)
 		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
-			(at 149.86 213.36 90)
+			(at 149.86 213.36 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -15466,7 +15466,7 @@
 		(dnp no)
 		(uuid "4b6438b6-4e3b-43d3-b827-959f81757ad8")
 		(property "Reference" "C166"
-			(at 180.34 274.4 90)
+			(at 177.8 281.94 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -15476,7 +15476,7 @@
 			)
 		)
 		(property "Value" "100n"
-			(at 180.34 276.4 90)
+			(at 182.88 281.94 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -15486,7 +15486,7 @@
 			)
 		)
 		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
-			(at 180.34 279.4 90)
+			(at 180.34 279.4 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -15543,7 +15543,7 @@
 		(dnp no)
 		(uuid "51c20c37-4798-4b08-8d2d-5fd6960b85a4")
 		(property "Reference" "C155"
-			(at 190.5 208.36 90)
+			(at 187.96 215.9 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -15553,7 +15553,7 @@
 			)
 		)
 		(property "Value" "100n"
-			(at 190.5 210.36 90)
+			(at 193.04 215.9 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -15563,7 +15563,7 @@
 			)
 		)
 		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
-			(at 190.5 213.36 90)
+			(at 190.5 213.36 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -15620,7 +15620,7 @@
 		(dnp no)
 		(uuid "54b9b77e-ba62-4468-a7eb-81cdf983c846")
 		(property "Reference" "R158"
-			(at 342.9 280.75 90)
+			(at 336.55 288.29 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -15630,7 +15630,7 @@
 			)
 		)
 		(property "Value" "4.7k"
-			(at 342.9 282.75 90)
+			(at 349.25 288.29 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -15640,7 +15640,7 @@
 			)
 		)
 		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
-			(at 342.9 285.75 90)
+			(at 342.9 285.75 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -15697,7 +15697,7 @@
 		(dnp no)
 		(uuid "60d10020-e8a8-4cfb-bafa-c95f636a4620")
 		(property "Reference" "C159"
-			(at 160.02 241.38 90)
+			(at 157.48 248.92 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -15707,7 +15707,7 @@
 			)
 		)
 		(property "Value" "100n"
-			(at 160.02 243.38 90)
+			(at 162.56 248.92 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -15717,7 +15717,7 @@
 			)
 		)
 		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
-			(at 160.02 246.38 90)
+			(at 160.02 246.38 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -15774,7 +15774,7 @@
 		(dnp no)
 		(uuid "641563bb-9f1c-40aa-a4f2-d84b62d17f3a")
 		(property "Reference" "C174"
-			(at 281.94 262.89 0)
+			(at 274.32 266.7 180)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -15785,7 +15785,7 @@
 			)
 		)
 		(property "Value" "47p"
-			(at 281.94 265.43 0)
+			(at 279.4 266.7 180)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -15853,7 +15853,7 @@
 		(dnp no)
 		(uuid "67aa724a-800b-41dc-90e2-b9f977d32f6f")
 		(property "Reference" "R146"
-			(at 21.59 54.69 90)
+			(at 30.48 60.96 90)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -15863,7 +15863,7 @@
 			)
 		)
 		(property "Value" "33"
-			(at 21.59 56.69 90)
+			(at 30.48 63.5 90)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -15873,7 +15873,7 @@
 			)
 		)
 		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
-			(at 21.59 59.69 90)
+			(at 21.59 59.69 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -15930,7 +15930,7 @@
 		(dnp no)
 		(uuid "6921789e-7e72-4bce-a365-8059544868c9")
 		(property "Reference" "C154"
-			(at 180.34 208.36 90)
+			(at 177.8 215.9 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -15940,7 +15940,7 @@
 			)
 		)
 		(property "Value" "100n"
-			(at 180.34 210.36 90)
+			(at 182.88 215.9 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -15950,7 +15950,7 @@
 			)
 		)
 		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
-			(at 180.34 213.36 90)
+			(at 180.34 213.36 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -16007,7 +16007,7 @@
 		(dnp no)
 		(uuid "6d943231-36ba-4410-87a2-1c333daafbbf")
 		(property "Reference" "R165"
-			(at 317.5 97.79 0)
+			(at 328.93 97.79 90)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -16017,7 +16017,7 @@
 			)
 		)
 		(property "Value" "10k"
-			(at 317.5 105.41 0)
+			(at 328.93 100.33 90)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -16027,7 +16027,7 @@
 			)
 		)
 		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
-			(at 317.5 99.06 90)
+			(at 317.5 99.06 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -16084,7 +16084,7 @@
 		(dnp no)
 		(uuid "76313026-20ff-4441-9f33-c7fa555f17b5")
 		(property "Reference" "C165"
-			(at 170.18 274.4 90)
+			(at 167.64 281.94 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -16094,7 +16094,7 @@
 			)
 		)
 		(property "Value" "100n"
-			(at 170.18 276.4 90)
+			(at 172.72 281.94 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -16104,7 +16104,7 @@
 			)
 		)
 		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
-			(at 170.18 279.4 90)
+			(at 170.18 279.4 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -16161,7 +16161,7 @@
 		(dnp no)
 		(uuid "76d8fa8d-bdc0-400f-b40a-e5ca6d2c41e7")
 		(property "Reference" "R154"
-			(at 372.11 210.9 90)
+			(at 372.11 214.63 270)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -16171,7 +16171,7 @@
 			)
 		)
 		(property "Value" "0"
-			(at 372.11 212.9 90)
+			(at 372.11 222.25 270)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -16238,7 +16238,7 @@
 		(dnp no)
 		(uuid "7b578a1b-cbd1-45d4-8c9b-20c502e5b260")
 		(property "Reference" "R161"
-			(at 266.7 265.43 90)
+			(at 257.81 269.24 270)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -16248,7 +16248,7 @@
 			)
 		)
 		(property "Value" "27"
-			(at 266.7 267.97 90)
+			(at 257.81 271.78 270)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -16258,7 +16258,7 @@
 			)
 		)
 		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
-			(at 266.7 267.97 90)
+			(at 266.7 267.97 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -16315,7 +16315,7 @@
 		(dnp no)
 		(uuid "813ae652-c8ba-4626-b93d-7faf5eec97ca")
 		(property "Reference" "R160"
-			(at 266.7 278.13 90)
+			(at 257.81 274.32 270)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -16325,7 +16325,7 @@
 			)
 		)
 		(property "Value" "27"
-			(at 266.7 280.67 90)
+			(at 257.81 276.86 270)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -16335,7 +16335,7 @@
 			)
 		)
 		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
-			(at 266.7 273.05 90)
+			(at 266.7 273.05 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -16392,7 +16392,7 @@
 		(dnp no)
 		(uuid "83a061d8-a1c0-4db7-b950-7e478f582c1c")
 		(property "Reference" "C173"
-			(at 281.94 283.21 0)
+			(at 274.32 281.94 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -16403,7 +16403,7 @@
 			)
 		)
 		(property "Value" "47p"
-			(at 281.94 285.75 0)
+			(at 279.4 281.94 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -16471,7 +16471,7 @@
 		(dnp no)
 		(uuid "83a86f30-d7a5-45d2-96b9-5250a8a1f635")
 		(property "Reference" "C156"
-			(at 200.66 208.36 90)
+			(at 198.12 215.9 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -16481,7 +16481,7 @@
 			)
 		)
 		(property "Value" "100n"
-			(at 200.66 210.36 90)
+			(at 203.2 215.9 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -16491,7 +16491,7 @@
 			)
 		)
 		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
-			(at 200.66 213.36 90)
+			(at 200.66 213.36 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -16549,7 +16549,7 @@
 		(dnp no)
 		(uuid "86af88d2-9f8d-42bb-bd6e-968ce05118f7")
 		(property "Reference" "J140"
-			(at 518.16 92.79 0)
+			(at 518.16 93.98 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -16559,7 +16559,7 @@
 			)
 		)
 		(property "Value" "87831-1420"
-			(at 518.16 94.79 0)
+			(at 518.16 118.11 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -16662,7 +16662,7 @@
 		(dnp no)
 		(uuid "899d8d29-e1db-4b0e-b307-767fb9cd2941")
 		(property "Reference" "R155"
-			(at 427.99 210.9 90)
+			(at 427.99 214.63 270)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -16672,7 +16672,7 @@
 			)
 		)
 		(property "Value" "0"
-			(at 427.99 212.9 90)
+			(at 427.99 222.25 270)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -16739,7 +16739,7 @@
 		(dnp no)
 		(uuid "8a44735f-be5c-4442-85c5-aa26b44b1a60")
 		(property "Reference" "C157"
-			(at 139.7 241.38 90)
+			(at 137.16 248.92 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -16749,7 +16749,7 @@
 			)
 		)
 		(property "Value" "100n"
-			(at 139.7 243.38 90)
+			(at 142.24 248.92 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -16759,7 +16759,7 @@
 			)
 		)
 		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
-			(at 139.7 246.38 90)
+			(at 139.7 246.38 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -16816,7 +16816,7 @@
 		(dnp no)
 		(uuid "8e9298a9-7da0-4ef7-ade1-516025d05580")
 		(property "Reference" "C164"
-			(at 160.02 274.4 90)
+			(at 157.48 281.94 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -16826,7 +16826,7 @@
 			)
 		)
 		(property "Value" "100n"
-			(at 160.02 276.4 90)
+			(at 162.56 281.94 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -16836,7 +16836,7 @@
 			)
 		)
 		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
-			(at 160.02 279.4 90)
+			(at 160.02 279.4 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -16893,7 +16893,7 @@
 		(dnp no)
 		(uuid "90e411e2-33ab-42e3-8446-e37bbb616344")
 		(property "Reference" "R140"
-			(at 444.5 90.17 0)
+			(at 440.69 96.52 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -16903,7 +16903,7 @@
 			)
 		)
 		(property "Value" "4.7k"
-			(at 444.5 102.87 0)
+			(at 448.31 96.52 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -16913,7 +16913,7 @@
 			)
 		)
 		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
-			(at 444.5 93.98 90)
+			(at 444.5 93.98 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -16970,7 +16970,7 @@
 		(dnp no)
 		(uuid "9f03340f-e882-4c61-834c-8fb02fafc08c")
 		(property "Reference" "R141"
-			(at 172.72 68.66 90)
+			(at 172.72 72.39 270)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -16980,7 +16980,7 @@
 			)
 		)
 		(property "Value" "4.7k"
-			(at 172.72 70.66 90)
+			(at 172.72 80.01 270)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -17047,7 +17047,7 @@
 		(dnp no)
 		(uuid "9f07874b-14ed-4cee-9da0-0266d564a93b")
 		(property "Reference" "C140"
-			(at 435.61 120.73 90)
+			(at 435.61 127 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -17057,7 +17057,7 @@
 			)
 		)
 		(property "Value" "100n"
-			(at 435.61 122.73 90)
+			(at 447.04 132.08 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -17067,7 +17067,7 @@
 			)
 		)
 		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
-			(at 435.61 125.73 90)
+			(at 435.61 125.73 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -17124,7 +17124,7 @@
 		(dnp no)
 		(uuid "a2c30035-880f-4427-94ca-c544210069b8")
 		(property "Reference" "C161"
-			(at 180.34 241.38 90)
+			(at 177.8 248.92 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -17134,7 +17134,7 @@
 			)
 		)
 		(property "Value" "100n"
-			(at 180.34 243.38 90)
+			(at 182.88 248.92 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -17144,7 +17144,7 @@
 			)
 		)
 		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
-			(at 180.34 246.38 90)
+			(at 180.34 246.38 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -17201,7 +17201,7 @@
 		(dnp no)
 		(uuid "a670a3e5-ea10-47b2-9692-de0bf2d89c69")
 		(property "Reference" "R149"
-			(at 466.09 132.08 0)
+			(at 477.52 134.62 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -17211,7 +17211,7 @@
 			)
 		)
 		(property "Value" "4.7k"
-			(at 466.09 144.78 0)
+			(at 477.52 147.32 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -17221,7 +17221,7 @@
 			)
 		)
 		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
-			(at 466.09 135.89 90)
+			(at 466.09 135.89 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -17278,7 +17278,7 @@
 		(dnp no)
 		(uuid "a9479c74-05c9-4f0d-b08d-c18f17e4637c")
 		(property "Reference" "R163"
-			(at 317.5 87.63 0)
+			(at 328.93 92.71 90)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -17288,7 +17288,7 @@
 			)
 		)
 		(property "Value" "10k"
-			(at 317.5 95.25 0)
+			(at 328.93 95.25 90)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -17298,7 +17298,7 @@
 			)
 		)
 		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
-			(at 317.5 88.9 90)
+			(at 317.5 88.9 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -17355,7 +17355,7 @@
 		(dnp no)
 		(uuid "afc05880-0064-404b-b125-720f4d1467d2")
 		(property "Reference" "C163"
-			(at 149.86 274.4 90)
+			(at 147.32 281.94 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -17365,7 +17365,7 @@
 			)
 		)
 		(property "Value" "100n"
-			(at 149.86 276.4 90)
+			(at 152.4 281.94 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -17375,7 +17375,7 @@
 			)
 		)
 		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
-			(at 149.86 279.4 90)
+			(at 149.86 279.4 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -17432,7 +17432,7 @@
 		(dnp no)
 		(uuid "b3354b4e-25d1-40c1-a85c-778af50da595")
 		(property "Reference" "Y1"
-			(at 321.31 106.76 0)
+			(at 321.31 105.41 180)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -17442,7 +17442,7 @@
 			)
 		)
 		(property "Value" "CSX750FBC32.768M-UT"
-			(at 321.31 108.76 0)
+			(at 321.31 127 180)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -17515,7 +17515,7 @@
 		(dnp no)
 		(uuid "b4dea303-fe72-420c-b95b-c37ae2c32dd2")
 		(property "Reference" "U142"
-			(at 312.42 259.16 0)
+			(at 312.42 252.73 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -17525,7 +17525,7 @@
 			)
 		)
 		(property "Value" "FT231XQ"
-			(at 312.42 261.16 0)
+			(at 312.42 309.88 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -18490,7 +18490,7 @@
 		(dnp no)
 		(uuid "be467e7e-dd0c-4bcc-9379-2e87b8b0d78d")
 		(property "Reference" "R164"
-			(at 317.5 82.55 0)
+			(at 328.93 80.01 90)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -18500,7 +18500,7 @@
 			)
 		)
 		(property "Value" "10k"
-			(at 317.5 90.17 0)
+			(at 328.93 82.55 90)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -18510,7 +18510,7 @@
 			)
 		)
 		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
-			(at 317.5 83.82 90)
+			(at 317.5 83.82 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -18567,7 +18567,7 @@
 		(dnp no)
 		(uuid "c174a9c4-585e-4d94-962b-0355d045d14f")
 		(property "Reference" "R151"
-			(at 411.48 172.8 90)
+			(at 411.48 176.53 270)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -18577,7 +18577,7 @@
 			)
 		)
 		(property "Value" "0"
-			(at 411.48 174.8 90)
+			(at 411.48 184.15 270)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -18644,7 +18644,7 @@
 		(dnp no)
 		(uuid "c8fecc1d-0988-40af-a152-2485878a18e8")
 		(property "Reference" "C170"
-			(at 210.82 208.36 90)
+			(at 208.28 215.9 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -18654,7 +18654,7 @@
 			)
 		)
 		(property "Value" "10u"
-			(at 210.82 210.36 90)
+			(at 213.36 215.9 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -18664,7 +18664,7 @@
 			)
 		)
 		(property "Footprint" "Capacitor_SMD:C_0805_2012Metric"
-			(at 210.82 213.36 90)
+			(at 210.82 213.36 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -18721,7 +18721,7 @@
 		(dnp no)
 		(uuid "cac4b0c3-a1dc-4325-b743-6997478a5038")
 		(property "Reference" "C143"
-			(at 254 242.65 90)
+			(at 247.65 250.19 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -18731,7 +18731,7 @@
 			)
 		)
 		(property "Value" "100n"
-			(at 254 244.65 90)
+			(at 260.35 250.19 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -18741,7 +18741,7 @@
 			)
 		)
 		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
-			(at 254 247.65 90)
+			(at 254 247.65 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -18798,7 +18798,7 @@
 		(dnp no)
 		(uuid "cddd717f-e85c-4317-bab8-6ceeb68b247f")
 		(property "Reference" "C168"
-			(at 200.66 274.4 90)
+			(at 198.12 281.94 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -18808,7 +18808,7 @@
 			)
 		)
 		(property "Value" "100n"
-			(at 200.66 276.4 90)
+			(at 203.2 281.94 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -18818,7 +18818,7 @@
 			)
 		)
 		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
-			(at 200.66 279.4 90)
+			(at 200.66 279.4 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -18875,7 +18875,7 @@
 		(dnp no)
 		(uuid "d8984972-ec89-4bc2-9c8b-38bdc2e85e96")
 		(property "Reference" "TP791"
-			(at 439.37 130.81 0)
+			(at 421.64 132.08 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -18886,7 +18886,7 @@
 			)
 		)
 		(property "Value" "TestPoint"
-			(at 439.37 134.62 0)
+			(at 421.64 134.62 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -18951,7 +18951,7 @@
 		(dnp no)
 		(uuid "da823861-88ae-4234-9b04-5036a8af9519")
 		(property "Reference" "R159"
-			(at 342.9 288.37 90)
+			(at 336.55 295.91 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -18961,7 +18961,7 @@
 			)
 		)
 		(property "Value" "10k"
-			(at 342.9 290.37 90)
+			(at 349.25 295.91 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -18971,7 +18971,7 @@
 			)
 		)
 		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
-			(at 342.9 293.37 90)
+			(at 342.9 293.37 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -19028,7 +19028,7 @@
 		(dnp no)
 		(uuid "dd046215-d6f7-4a6d-8a59-c9e6eb134aa6")
 		(property "Reference" "R144"
-			(at 452.12 138.43 90)
+			(at 469.9 138.43 90)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -19038,7 +19038,7 @@
 			)
 		)
 		(property "Value" "4.7k"
-			(at 452.12 144.78 90)
+			(at 469.9 143.51 90)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -19105,7 +19105,7 @@
 		(dnp no)
 		(uuid "e2bfe6f5-2c42-42a7-901a-96de1b7c4c28")
 		(property "Reference" "R157"
-			(at 427.99 224.87 90)
+			(at 427.99 228.6 270)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -19115,7 +19115,7 @@
 			)
 		)
 		(property "Value" "0"
-			(at 427.99 226.87 90)
+			(at 427.99 236.22 270)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -19182,7 +19182,7 @@
 		(dnp no)
 		(uuid "e3ff3226-bc8e-45c0-b94e-8be3ebf5d6aa")
 		(property "Reference" "R790"
-			(at 431.8 109.22 90)
+			(at 431.8 109.22 270)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -19192,7 +19192,7 @@
 			)
 		)
 		(property "Value" "0"
-			(at 431.8 116.84 90)
+			(at 431.8 116.84 270)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -19202,7 +19202,7 @@
 			)
 		)
 		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
-			(at 284.48 425.45 90)
+			(at 284.48 425.45 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -19259,7 +19259,7 @@
 		(dnp no)
 		(uuid "e530a2fe-c2d1-43cb-b923-0c20da40bdcb")
 		(property "Reference" "C152"
-			(at 160.02 208.36 90)
+			(at 157.48 215.9 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -19269,7 +19269,7 @@
 			)
 		)
 		(property "Value" "100n"
-			(at 160.02 210.36 90)
+			(at 162.56 215.9 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -19279,7 +19279,7 @@
 			)
 		)
 		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
-			(at 160.02 213.36 90)
+			(at 160.02 213.36 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -19336,7 +19336,7 @@
 		(dnp no)
 		(uuid "e806238d-d8f7-4020-a001-a44d04bb77e4")
 		(property "Reference" "R156"
-			(at 372.11 224.87 90)
+			(at 372.11 228.6 270)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -19346,7 +19346,7 @@
 			)
 		)
 		(property "Value" "0"
-			(at 372.11 226.87 90)
+			(at 372.11 236.22 270)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -19413,7 +19413,7 @@
 		(dnp no)
 		(uuid "e8326ee4-4edc-422e-ac3c-b48674bb4c41")
 		(property "Reference" "TP792"
-			(at 439.37 123.19 0)
+			(at 421.64 124.46 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -19424,7 +19424,7 @@
 			)
 		)
 		(property "Value" "TestPoint"
-			(at 439.37 127 0)
+			(at 421.64 127 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -19489,7 +19489,7 @@
 		(dnp no)
 		(uuid "ea2c0a12-6451-467e-bb2a-8a3a82c0698e")
 		(property "Reference" "R166"
-			(at 317.5 92.71 0)
+			(at 340.36 95.25 90)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -19499,7 +19499,7 @@
 			)
 		)
 		(property "Value" "10k"
-			(at 317.5 100.33 0)
+			(at 340.36 97.79 90)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -19509,7 +19509,7 @@
 			)
 		)
 		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
-			(at 317.5 93.98 90)
+			(at 317.5 93.98 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -19566,7 +19566,7 @@
 		(dnp no)
 		(uuid "ebd00fd4-35fa-483f-889c-9e21ccee3cec")
 		(property "Reference" "R147"
-			(at 21.59 47.07 90)
+			(at 27.94 53.34 90)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -19576,7 +19576,7 @@
 			)
 		)
 		(property "Value" "33"
-			(at 21.59 49.07 90)
+			(at 27.94 55.88 90)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -19586,7 +19586,7 @@
 			)
 		)
 		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
-			(at 21.59 52.07 90)
+			(at 21.59 52.07 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -19643,7 +19643,7 @@
 		(dnp no)
 		(uuid "ec0d442b-4fbf-4e2f-9d90-beb0f0a55db1")
 		(property "Reference" "R162"
-			(at 15.24 40.72 90)
+			(at 15.24 44.45 270)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -19653,7 +19653,7 @@
 			)
 		)
 		(property "Value" "10k"
-			(at 15.24 42.72 90)
+			(at 15.24 52.07 270)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -19663,7 +19663,7 @@
 			)
 		)
 		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
-			(at 15.24 45.72 90)
+			(at 15.24 45.72 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -19720,7 +19720,7 @@
 		(dnp no)
 		(uuid "f413f8ef-cd0f-4545-87ea-61e8ea5a8c62")
 		(property "Reference" "C169"
-			(at 210.82 274.4 90)
+			(at 208.28 281.94 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -19730,7 +19730,7 @@
 			)
 		)
 		(property "Value" "100n"
-			(at 210.82 276.4 90)
+			(at 213.36 281.94 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -19740,7 +19740,7 @@
 			)
 		)
 		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
-			(at 210.82 279.4 90)
+			(at 210.82 279.4 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -19797,7 +19797,7 @@
 		(dnp no)
 		(uuid "f7b1665c-0852-447a-ba31-2f64344e4b7c")
 		(property "Reference" "C172"
-			(at 220.98 274.4 90)
+			(at 218.44 281.94 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -19807,7 +19807,7 @@
 			)
 		)
 		(property "Value" "10u"
-			(at 220.98 276.4 90)
+			(at 223.52 281.94 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -19817,7 +19817,7 @@
 			)
 		)
 		(property "Footprint" "Capacitor_SMD:C_0805_2012Metric"
-			(at 220.98 279.4 90)
+			(at 220.98 279.4 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -19874,7 +19874,7 @@
 		(dnp no)
 		(uuid "fca82d36-f837-48a7-b0e8-d856f6aa3c49")
 		(property "Reference" "R142"
-			(at 452.12 130.81 90)
+			(at 469.9 130.81 90)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -19884,7 +19884,7 @@
 			)
 		)
 		(property "Value" "4.7k"
-			(at 452.12 137.16 90)
+			(at 469.9 135.89 90)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -19951,7 +19951,7 @@
 		(dnp no)
 		(uuid "fdbab6c4-4f6d-4477-91fa-5581a1ed24f6")
 		(property "Reference" "C153"
-			(at 170.18 208.36 90)
+			(at 167.64 215.9 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -19961,7 +19961,7 @@
 			)
 		)
 		(property "Value" "100n"
-			(at 170.18 210.36 90)
+			(at 172.72 215.9 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -19971,7 +19971,7 @@
 			)
 		)
 		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
-			(at 170.18 213.36 90)
+			(at 170.18 213.36 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -20466,6 +20466,82 @@
 	
 	
 	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	(wire
 		(pts
 			(xy 25.4 54.61) (xy 26.67 54.61)
@@ -20638,14 +20714,14 @@
 	)
 	(global_label "+3.3V"
 		(shape passive)
-		(at 321.31 91.44 0)
+		(at 321.31 91.44 180)
 		(effects
 			(font
 				(size 1 1)
 			)
-			(justify left)
+			(justify right)
 		)
-		(uuid "1ccc3284-918f-5af8-a952-970abb8d3f55")
+		(uuid "438bdcc6-cadd-5669-bb06-c7b2a58fc934")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
 			(at 321.31 91.44 0)
 			(hide yes)
@@ -20680,14 +20756,14 @@
 	)
 	(global_label "+3.3V"
 		(shape passive)
-		(at 321.31 86.36 0)
+		(at 321.31 86.36 180)
 		(effects
 			(font
 				(size 1 1)
 			)
-			(justify left)
+			(justify right)
 		)
-		(uuid "0c569858-186f-576c-b2d5-402a76efc88f")
+		(uuid "de78eff3-74ea-55e2-83f3-cfbd2017111d")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
 			(at 321.31 86.36 0)
 			(hide yes)
@@ -20722,14 +20798,14 @@
 	)
 	(global_label "+3.3V"
 		(shape passive)
-		(at 321.31 101.6 0)
+		(at 321.31 101.6 180)
 		(effects
 			(font
 				(size 1 1)
 			)
-			(justify left)
+			(justify right)
 		)
-		(uuid "e675b391-e2db-5b22-8332-99f85c8333e6")
+		(uuid "20217422-973c-5d7b-a47b-5e119c90b606")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
 			(at 321.31 101.6 0)
 			(hide yes)
@@ -20764,14 +20840,14 @@
 	)
 	(global_label "+3.3V"
 		(shape passive)
-		(at 321.31 96.52 0)
+		(at 321.31 96.52 180)
 		(effects
 			(font
 				(size 1 1)
 			)
-			(justify left)
+			(justify right)
 		)
-		(uuid "6330e650-6e91-53c5-922a-9f042c09a297")
+		(uuid "91332ac8-8e6c-57e9-b576-fbb9610b851a")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
 			(at 321.31 96.52 0)
 			(hide yes)
@@ -20816,18 +20892,28 @@
 			)
 		)
 	)
+	(wire
+		(pts
+			(xy 330.2 116.84) (xy 335.28 116.84)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "9f048470-f1a7-535b-9261-09669f859c49")
+	)
 	(global_label "+3.3V"
 		(shape passive)
-		(at 330.2 116.84 0)
+		(at 335.28 116.84 0)
 		(effects
 			(font
 				(size 1 1)
 			)
 			(justify left)
 		)
-		(uuid "2bcdf067-8365-5e36-bcba-c26348b6b19e")
+		(uuid "9607e022-3916-56b5-8b40-ec000d313f70")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 330.2 116.84 0)
+			(at 335.28 116.84 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -20838,18 +20924,28 @@
 			)
 		)
 	)
+	(wire
+		(pts
+			(xy 330.2 114.3) (xy 335.28 114.3)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "384468ef-0e4d-56f7-8965-2c4e14cfb429")
+	)
 	(global_label "+3.3V"
 		(shape passive)
-		(at 330.2 114.3 0)
+		(at 335.28 114.3 0)
 		(effects
 			(font
 				(size 1 1)
 			)
 			(justify left)
 		)
-		(uuid "e126eb38-b59b-552a-a4c9-63c177a2f5fe")
+		(uuid "1faf89f8-23c1-5b0d-af1d-782b1cc3ceeb")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 330.2 114.3 0)
+			(at 335.28 114.3 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -20859,19 +20955,29 @@
 				)
 			)
 		)
+	)
+	(wire
+		(pts
+			(xy 330.2 111.76) (xy 335.28 111.76)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "604b7848-8753-53fb-b174-aea39bededfb")
 	)
 	(global_label "GND"
 		(shape passive)
-		(at 330.2 111.76 0)
+		(at 335.28 111.76 0)
 		(effects
 			(font
 				(size 1 1)
 			)
 			(justify left)
 		)
-		(uuid "45f8e8b3-f356-5858-807a-3ab2864cc1cb")
+		(uuid "e7e8c1c0-eceb-527a-b92b-6c8153db57e6")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 330.2 111.76 0)
+			(at 335.28 111.76 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -20946,68 +21052,128 @@
 		)
 		(uuid "6c084df8-55e2-545b-af16-50383bf4cd30")
 	)
+	(wire
+		(pts
+			(xy 436.88 110.49) (xy 431.8 110.49)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "946c0ec5-8353-5569-b56c-8bf8ca5a4014")
+	)
 	(label "QSPI_CS"
-		(at 436.88 110.49 0)
+		(at 431.8 110.49 180)
 		(effects
 			(font
 				(size 1 1)
 			)
-			(justify left)
+			(justify right)
 		)
-		(uuid "42e85104-10ce-56d6-b5fe-1a43f4f7ddb0")
+		(uuid "fd25db86-3da5-585c-95a6-7f694fdf3c7b")
+	)
+	(wire
+		(pts
+			(xy 454.66 110.49) (xy 459.74 110.49)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "e7932e52-897f-58fc-9eac-d94778ae6b5c")
 	)
 	(label "QSPI_D0"
-		(at 454.66 110.49 0)
+		(at 459.74 110.49 0)
 		(effects
 			(font
 				(size 1 1)
 			)
 			(justify left)
 		)
-		(uuid "15449b4b-d312-55fe-9a05-50693ecbfa78")
+		(uuid "3ad2c852-6ba8-5f2f-8c46-335cec9b0770")
+	)
+	(wire
+		(pts
+			(xy 454.66 113.03) (xy 459.74 113.03)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "1dcf1c7a-bac8-5ec2-942b-e0d97fe66849")
 	)
 	(label "QSPI_D1"
-		(at 454.66 113.03 0)
+		(at 459.74 113.03 0)
 		(effects
 			(font
 				(size 1 1)
 			)
 			(justify left)
 		)
-		(uuid "b9981ce9-9282-5e1f-af4a-2e00939012ff")
+		(uuid "fd51b6e3-a0f9-579f-b1f6-2503e4d576f9")
+	)
+	(wire
+		(pts
+			(xy 454.66 115.57) (xy 459.74 115.57)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "4ccf2c19-2140-5b1c-8d78-d2f4502966ad")
 	)
 	(label "QSPI_D2"
-		(at 454.66 115.57 0)
+		(at 459.74 115.57 0)
 		(effects
 			(font
 				(size 1 1)
 			)
 			(justify left)
 		)
-		(uuid "49c5b1e3-51f5-5cac-a5c3-b389c9ba561c")
+		(uuid "c8029e68-dbe2-55f2-a76e-481b8ce13308")
+	)
+	(wire
+		(pts
+			(xy 454.66 118.11) (xy 459.74 118.11)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "427c2604-de93-5cdc-8227-ec040499c207")
 	)
 	(label "QSPI_D3"
-		(at 454.66 118.11 0)
+		(at 459.74 118.11 0)
 		(effects
 			(font
 				(size 1 1)
 			)
 			(justify left)
 		)
-		(uuid "4eee1f6c-ecde-5368-8088-469c47091fc8")
+		(uuid "76a1389f-5f02-5318-8ece-f5638887d73a")
+	)
+	(wire
+		(pts
+			(xy 436.88 115.57) (xy 431.8 115.57)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "6bb25ed6-e175-5e43-8944-b1962a1b453e")
 	)
 	(global_label "+3.3V"
 		(shape passive)
-		(at 436.88 115.57 0)
+		(at 431.8 115.57 180)
 		(effects
 			(font
 				(size 1 1)
 			)
-			(justify left)
+			(justify right)
 		)
-		(uuid "83519293-bd97-59c2-85e7-a0dcddd07e40")
+		(uuid "743ad228-c2dc-577e-94cd-0fb1dc0749cb")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 436.88 115.57 0)
+			(at 431.8 115.57 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -21018,18 +21184,28 @@
 			)
 		)
 	)
+	(wire
+		(pts
+			(xy 436.88 118.11) (xy 431.8 118.11)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "61fab46b-bfd9-5d96-a798-80b4d5fddd74")
+	)
 	(global_label "GND"
 		(shape passive)
-		(at 436.88 118.11 180)
+		(at 431.8 118.11 180)
 		(effects
 			(font
 				(size 1 1)
 			)
 			(justify right)
 		)
-		(uuid "d9a6edbb-ebda-5cf0-a0b0-026a915a2139")
+		(uuid "e0856656-899d-5f89-af9c-1f16027de36c")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 436.88 118.11 0)
+			(at 431.8 118.11 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -21180,58 +21356,108 @@
 			)
 		)
 	)
+	(wire
+		(pts
+			(xy 508 102.87) (xy 502.92 102.87)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "c6be1e2f-ec5c-51ba-b9b4-28385f2fa1e1")
+	)
 	(label "JTAG_TCK"
-		(at 508 102.87 180)
+		(at 502.92 102.87 180)
 		(effects
 			(font
 				(size 1 1)
 			)
 			(justify right)
 		)
-		(uuid "6fb9e546-3fd2-559c-8e25-d3e807b25d83")
+		(uuid "9d12148b-b350-5a3e-8bb7-08399de010c6")
+	)
+	(wire
+		(pts
+			(xy 508 100.33) (xy 502.92 100.33)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "908de7d4-50ba-5827-8847-0c9e44246dec")
 	)
 	(label "JTAG_TMS"
-		(at 508 100.33 180)
+		(at 502.92 100.33 180)
 		(effects
 			(font
 				(size 1 1)
 			)
 			(justify right)
 		)
-		(uuid "9d360535-4ccd-53ec-a05b-eaada6067a63")
+		(uuid "1f4f633b-14ca-5ed5-8b89-1eefd4dd343d")
+	)
+	(wire
+		(pts
+			(xy 508 107.95) (xy 502.92 107.95)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "30ee22ee-fb3f-5fd1-b816-c1d1a84e111b")
 	)
 	(label "JTAG_TDI"
-		(at 508 107.95 180)
+		(at 502.92 107.95 180)
 		(effects
 			(font
 				(size 1 1)
 			)
 			(justify right)
 		)
-		(uuid "d784f4aa-846c-54b4-8223-5b62855a7d05")
+		(uuid "959f8c8d-763c-54a4-a8e8-2a832bb7caea")
+	)
+	(wire
+		(pts
+			(xy 508 105.41) (xy 502.92 105.41)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "964e9295-d3b1-5180-a744-98e40c4c8974")
 	)
 	(label "JTAG_TDO"
-		(at 508 105.41 180)
+		(at 502.92 105.41 180)
 		(effects
 			(font
 				(size 1 1)
 			)
 			(justify right)
 		)
-		(uuid "e5ef675f-3377-5a6f-9f6c-67a863a8f2ab")
+		(uuid "c2e30ceb-fa3d-5289-98cc-eb0b0632b0e6")
+	)
+	(wire
+		(pts
+			(xy 508 97.79) (xy 502.92 97.79)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "740591b0-d817-512c-996f-1d81e82b6f3f")
 	)
 	(global_label "+3.3V"
 		(shape passive)
-		(at 508 97.79 180)
+		(at 502.92 97.79 0)
 		(effects
 			(font
 				(size 1 1)
 			)
-			(justify right)
+			(justify left)
 		)
-		(uuid "f80e6334-1d71-515f-8ec8-2e04e7b55f58")
+		(uuid "62aceca0-99ca-540b-9075-58c4151ff8ae")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 508 97.79 0)
+			(at 502.92 97.79 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -21242,18 +21468,28 @@
 			)
 		)
 	)
+	(wire
+		(pts
+			(xy 528.32 100.33) (xy 533.4 100.33)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "8cb63945-52ed-5a0a-912c-016b131dd791")
+	)
 	(global_label "GND"
 		(shape passive)
-		(at 528.32 100.33 0)
+		(at 533.4 100.33 0)
 		(effects
 			(font
 				(size 1 1)
 			)
 			(justify left)
 		)
-		(uuid "c24e2eef-69f2-5840-97e5-812c42e3db98")
+		(uuid "f2d6414b-e6e1-5c98-88e6-33eb9023d4c7")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 528.32 100.33 0)
+			(at 533.4 100.33 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -21264,18 +21500,28 @@
 			)
 		)
 	)
+	(wire
+		(pts
+			(xy 528.32 102.87) (xy 533.4 102.87)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "25e5226e-f344-5428-a5ae-fd3a3459d934")
+	)
 	(global_label "GND"
 		(shape passive)
-		(at 528.32 102.87 0)
+		(at 533.4 102.87 0)
 		(effects
 			(font
 				(size 1 1)
 			)
 			(justify left)
 		)
-		(uuid "2bd828c8-2abe-55c3-979e-a19963fa91cc")
+		(uuid "23b29f27-951b-5090-9856-9f6a213b60c2")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 528.32 102.87 0)
+			(at 533.4 102.87 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -21286,18 +21532,28 @@
 			)
 		)
 	)
+	(wire
+		(pts
+			(xy 528.32 105.41) (xy 533.4 105.41)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "f6c5e159-c8ca-5ab7-b709-41613d4af3f5")
+	)
 	(global_label "GND"
 		(shape passive)
-		(at 528.32 105.41 0)
+		(at 533.4 105.41 0)
 		(effects
 			(font
 				(size 1 1)
 			)
 			(justify left)
 		)
-		(uuid "f7ba0fda-bb23-5273-a079-ed3d1b632af9")
+		(uuid "0a14d154-a80f-5da4-93b3-e8341313b2c8")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 528.32 105.41 0)
+			(at 533.4 105.41 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -21308,18 +21564,28 @@
 			)
 		)
 	)
+	(wire
+		(pts
+			(xy 528.32 107.95) (xy 533.4 107.95)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "cad72cb8-a0a0-5da5-a887-0e14ab17258d")
+	)
 	(global_label "GND"
 		(shape passive)
-		(at 528.32 107.95 0)
+		(at 533.4 107.95 0)
 		(effects
 			(font
 				(size 1 1)
 			)
 			(justify left)
 		)
-		(uuid "8b05b8d4-07db-5d84-ba56-fe40a6f2fc0e")
+		(uuid "4030b827-f1eb-5139-8b18-16fbc5a96490")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 528.32 107.95 0)
+			(at 533.4 107.95 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -21330,18 +21596,28 @@
 			)
 		)
 	)
+	(wire
+		(pts
+			(xy 528.32 110.49) (xy 533.4 110.49)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "34c27786-549b-56b5-a920-e7e932a2f0a3")
+	)
 	(global_label "GND"
 		(shape passive)
-		(at 528.32 110.49 0)
+		(at 533.4 110.49 0)
 		(effects
 			(font
 				(size 1 1)
 			)
 			(justify left)
 		)
-		(uuid "b9cb2f13-b98f-58ed-8e9f-935249721f04")
+		(uuid "f3c6daee-3cf3-54e5-80af-6f68ac6ab971")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 528.32 110.49 0)
+			(at 533.4 110.49 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -22296,15 +22572,25 @@
 			)
 		)
 	)
+	(wire
+		(pts
+			(xy 342.9 292.1) (xy 350.52 292.1)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "41e338df-ccd7-56e1-b0d0-c0f818903862")
+	)
 	(label "VBUS_SENSE"
-		(at 342.9 292.1 0)
+		(at 350.52 292.1 0)
 		(effects
 			(font
 				(size 1 1)
 			)
 			(justify left)
 		)
-		(uuid "0ec9af02-b7a4-5c2a-bac3-6e3c9da9ef67")
+		(uuid "0c64699e-3640-51d8-9f7b-eded015875b3")
 	)
 	(global_label "+3.3V"
 		(shape passive)
