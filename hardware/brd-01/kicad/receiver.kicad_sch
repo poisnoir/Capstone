@@ -3646,16 +3646,7 @@
 		)
 		(uuid "10745388-f6e3-4934-9399-59be589519cc")
 	)
-	(wire
-		(pts
-			(xy 433.07 415.29) (xy 438.15 415.29)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "10a882d3-4005-4e14-be84-874ae9384bb7")
-	)
+
 	(wire
 		(pts
 			(xy 190.5 231.14) (xy 185.42 231.14)
@@ -3886,16 +3877,7 @@
 		)
 		(uuid "24fabe24-670a-4a30-9677-1b5a064627f2")
 	)
-	(wire
-		(pts
-			(xy 425.45 415.29) (xy 427.99 415.29)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "252a60ed-5124-43df-8c64-5c0f7e10a24f")
-	)
+
 	(wire
 		(pts
 			(xy 688.34 228.6) (xy 683.26 228.6)
@@ -6747,16 +6729,7 @@
 		)
 		(uuid "e0ec2676-9c7e-480e-ba18-fb0597be1a3f")
 	)
-	(wire
-		(pts
-			(xy 420.37 415.29) (xy 422.91 415.29)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "e21eb38e-e325-4cd6-bf4e-d529b24c0360")
-	)
+
 	(wire
 		(pts
 			(xy 500.38 152.4) (xy 486.41 152.4)
@@ -7397,26 +7370,8 @@
 		)
 		(uuid "22e11c21-bc60-4a47-a601-9fd1c6a55c8f")
 	)
-	(label "ADC_VCM"
-		(at 452.12 408.94 0)
-		(effects
-			(font
-				(size 1 1)
-			)
-			(justify left)
-		)
-		(uuid "235670bb-cf43-4560-a4d6-e7b95f5b4e86")
-	)
-	(label "FDA3_N"
-		(at 438.15 415.29 0)
-		(effects
-			(font
-				(size 1 1)
-			)
-			(justify left)
-		)
-		(uuid "2b4c0c3b-d707-4e25-90bb-0184edf14a7b")
-	)
+
+
 	(label "MCLK"
 		(at 624.84 280.67 0)
 		(effects
@@ -12818,7 +12773,7 @@
 	)
 	(symbol
 		(lib_id "Device:R")
-		(at 429.26 415.29 90)
+		(at 504.19 419.1 90)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -12828,7 +12783,7 @@
 		(dnp no)
 		(uuid "20fe90ef-51e4-4523-ac2f-9c6a51444a93")
 		(property "Reference" "R571"
-			(at 429.26 407.75 90)
+			(at 504.19 415.32 90)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -12838,7 +12793,7 @@
 			)
 		)
 		(property "Value" "1k"
-			(at 429.26 409.75 90)
+			(at 504.19 417.32 90)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -21851,17 +21806,59 @@
 			)
 		)
 	)
-	(label "FDA3_N"
-		(at 420.37 415.29 180)
+
+
+	(wire
+		(pts
+			(xy 495.3 419.1) (xy 500.38 419.1)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "6171fa40-6d9f-4742-bda7-07d932073970")
+	)
+	(label "FDA3_OUT_P"
+		(at 495.3 419.1 180)
 		(effects
 			(font
 				(size 1 1)
 			)
 			(justify right)
 		)
-		(uuid "3511c8e7-5a07-4851-b0e5-7564e50bb41a")
+		(uuid "e2c97e1c-b7b9-4e86-9456-ba8d4fd874fa")
 	)
-	(label "FDA3_OUT_P"
+	(wire
+		(pts
+			(xy 508 419.1) (xy 513.08 419.1)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "5117e406-4fee-411a-ad20-fe4ef255c98c")
+	)
+	(label "FDA3_N"
+		(at 513.08 419.1 0)
+		(effects
+			(font
+				(size 1 1)
+			)
+			(justify left)
+		)
+		(uuid "249d7b0f-f0d8-432c-9744-f8138d9d2a9a")
+	)
+	(wire
+		(pts
+			(xy 422.91 415.29) (xy 427.99 415.29)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "28e89537-e298-4ba3-a6e5-47f6a42cd9e9")
+	)
+	(label "FDA3_N"
 		(at 427.99 415.29 0)
 		(effects
 			(font
@@ -21869,6 +21866,26 @@
 			)
 			(justify left)
 		)
-		(uuid "4b695d75-993f-4877-a42d-907803081c49")
+		(uuid "a9798bda-ee30-407a-81e4-706fd6b5dc60")
+	)
+	(wire
+		(pts
+			(xy 447.04 408.94) (xy 452.12 408.94)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "cb0661d6-0bcc-4c1f-9d92-6ed1cfe7d38f")
+	)
+	(label "ADC_VCM"
+		(at 447.04 408.94 180)
+		(effects
+			(font
+				(size 1 1)
+			)
+			(justify right)
+		)
+		(uuid "956c54fe-5a86-4214-8f1e-05f91151e916")
 	)
 )
