@@ -1,8 +1,13 @@
 # software/anser-matlab-ref — Anser MATLAB golden model (reference only)
 
-Unpacked from `vendor/anser-osf/P&O Code/Matlab/MatlabCode.zip` (30 files). **Do not
-develop here** — this is the functionally-correct baseline to port into `fpga/`.
-Upstream pointer: `https://github.com/BioDesignUCC/AnserEMT` (see `Latest Code.txt` in vendor).
+Unpacked from `vendor/anser-osf/P&O Code/Matlab/MatlabCode.zip` (30 files; `vendor/`
+is local-only, gitignored). **Do not develop here** — this is the functionally-correct
+baseline to port into `fpga/`. It is a **reference/golden model, not a live PC-side
+pose solver**: decision "Full-FPGA pose" in `AGENTS.md` puts DDS, demodulation and
+the LM/TRF solver in HDL/HLS with no MATLAB-in-loop. All module paths below exist
+in this folder; the equations are Jaeger 2018 (see `docs/extracts/README.md`).
+Upstream pointer: `https://github.com/BioDesignUCC/AnserEMT` (from `Latest Code.txt`
+in the vendor snapshot) — **UNVERIFIED; not fetched** per `AGENTS.md`.
 
 ## Port map (MATLAB → full-FPGA per AGENTS.md)
 - `model/spiralCoilFieldCalcMatrix.m` → filament Biot-Savart kernel (thesis Eq.3.17–3.18, Sonntag 2007). Golden B-field.
@@ -15,4 +20,5 @@ Upstream pointer: `https://github.com/BioDesignUCC/AnserEMT` (see `Latest Code.t
 - `igtlink/igtlinkAPI/` → host-viz link; stays in host tools, not FPGA.
 - `model/spiralCoilDimensionCalc.m` → coil-geometry helper for `hardware/`.
 
-Regen: `unzip -o -q "vendor/anser-osf/P&O Code/Matlab/MatlabCode.zip" -d software/anser-matlab-ref`
+Regen (from the repository root, requires the local-only vendor snapshot):
+`unzip -o -q "vendor/anser-osf/P&O Code/Matlab/MatlabCode.zip" -d software/anser-matlab-ref`

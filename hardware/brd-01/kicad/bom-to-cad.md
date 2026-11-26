@@ -1,6 +1,6 @@
 # BRD-01 BOM-to-CAD ledger
 
-**Scope:** [SYSTEM-01](../../bom/BOM_SYSTEM-01.xlsx) Rev 0.05, sheet **BOM**
+**Scope:** [SYSTEM-01](../../bom/BOM_SYSTEM-01.xlsx) Rev 0.06, sheet **BOM**
 (Excel row numbers below); [ADC-01](../../bom/BOM_ADC-01.xlsx), sheet
 `BOM_ADC-01`, rows 9–11 and note row 13; [PEN-ANA-01](../../bom/BOM_PEN-ANA-01.xlsx),
 sheet `BOM_PEN-ANA-01`, rows 9–12 and note row 15; and the
@@ -78,15 +78,18 @@ cartridge dissipation against that curve at the enclosure temperature.
 [Schurter cover drawing](https://nl.schurter.com/en/datasheet/typ_Accessories_for_OGN.pdf) ·
 [Schurter OGN ratings](https://www.schurter.com/en/datasheet/OGN)
 
-Keep `0031.8201` as the holder MPN, separate from the unselected 3 A
-time-delay cartridge MPN. **Candidates only; neither is approved for
-substitution:**
+The F1 schematic/BOM line is the **`0031.8201` holder**; the insert is a
+**separate BOM line**. Order the holder and the insert separately: the holder
+carries no fuse rating, and the **3.15 A rating belongs to the insert**,
+Schurter `0001.2509`. The schematic value `0031.8201` is therefore correct as
+captured. The remaining cartridge candidates are not approved for
+substitution:
 
-- Schurter `0001.2509` is a 5 × 20 mm time-delay cartridge with a
+- Schurter `0001.2509` is the selected 5 × 20 mm time-delay insert with a
   published 1.5 kA interrupt rating at 300 VDC. Its 3.15 A rating exceeds
-  the specified 3.00 A. Evaluate it only if the power owner accepts that
-  rating after checking inrush, conductor protection and adapter fault
-  behavior. [Schurter SPT data](https://www.schurter.com/en/datasheet/SPT%205x20)
+  the specified 3.00 A; the power owner accepted that deviation after
+  checking inrush, conductor protection and adapter fault behavior.
+  [Schurter SPT data](https://www.schurter.com/en/datasheet/SPT%205x20)
 - Eaton `GMD-3-R`: 3.00 A time-delay, 5 × 20 mm ferrule cartridge. The
   [Eaton catalog](https://www.eaton.com/content/dam/eaton/products/electrical-circuit-protection/fuses/bussmann-series-catalogs/bus-ele-cat-1007-flc-2018-sec-03-elx.pdf)
   GMD entry claims 32 VDC (self-certified); [Technical Data 2019](https://www.eaton.com/content/dam/eaton/products/electronic-components/resources/data-sheet/eaton-gmd-time-delay-glass-tube-fuses-data-sheet.pdf)
@@ -96,10 +99,10 @@ substitution:**
   [TSC datasheet](https://www.optifuse.com/optifuse_ecommerce_tools/datasheets/TSC.pdf)
   lists only AC voltage and interrupt ratings.
 
-Before cartridge selection, the hardware owner must establish the required
-DC breaking rating at the circuit voltage and prospective fault current,
-verify inrush against the fuse time-current behavior, and verify covered
-holder access and thermal derating in the enclosure.
+The hardware owner must still establish the required DC breaking rating at
+the circuit voltage and prospective fault current, verify inrush against the
+fuse time-current behavior, and verify covered holder access and thermal
+derating in the enclosure.
 
 **33 / PROT, D1 (§2): STMicroelectronics `SMBJ18A`, unidirectional.** Place
 `accubot:SMBJ18A`; it defaults to `accubot:ST_SMBJ_DO-214AA_DS1283`.
@@ -145,7 +148,7 @@ specifies 13.5–16.5 V input, dual ±15 V at up to 67 mA per rail, and
 pins 1 +VIN, 2 −VIN, 5 −VOUT, 6 COM and 7 +VOUT. The pads are numbered
 the same as the pins and match the stock MGJ2D footprint at 2.54 mm pitch.
 The [distributor listing](https://www.digikey.ca/en/products/detail/murata-power-solutions-inc/MGJ2D151515SC/5825461)
-marks the part obsolete. The user confirmed the existing budget-approved parts as the BRD-01 selections: U5 MGJ2D151515SC, U6 LT3045EDD-1#TRPBF and U2 LT3093EMSE#TRPBF. The KiCad schematic uses those parts. The legacy BOM and [decision #20](../../../contract/decisions_log.md) still list the earlier converter and LDOs and require separate reconciliation.
+marks the part obsolete. The user confirmed the existing budget-approved parts as the BRD-01 selections: U5 MGJ2D151515SC, U6 LT3045EDD-1#TRPBF and U2 LT3093EMSE#TRPBF. The KiCad schematic uses those parts. BOM Rev 0.06 lists them; [decision #20](../../../contract/decisions_log.md) still names the v1 parts until the draft contract change lands.
 
 #### ±12VA quiescent load check
 
@@ -171,6 +174,22 @@ populated, and check regulation with the resulting asymmetric loads.
 [ADI LT3093](https://www.analog.com/en/products/lt3093.html) ·
 [ADI ADR434](https://www.analog.com/en/products/ADR434.html)
 
+### Power tree v2: generated CAD to validate (2026-11-24)
+
+The power-tree v2 capture ([power_tree_v2.md](../../../docs/phase2/power_tree_v2.md))
+added parts whose symbol or footprint was **generated or assigned without a
+vendor or official KiCad model**. Validate each row against the vendor CAD
+(TI provides TPSM63604 models through its product page) or replace it with an
+existing library part before layout.
+
+| Item | Status | Source used | Validate |
+|---|---|---|---|
+| `accubot:TPSM63604RDLR` symbol (U147) | **Generated** | Pin numbers and names from TI SLVSGJ5 Table 6-1 (1 VIN1, 2 SW, 3 CBOOT, 4 RBOOT, 5 VLDOIN, 6/11 AGND, 7 VCC, 8/9 VOUT, 10 FB, 12 RT, 13 PG, 14 EN/SYNC, 15 NC, 16 VIN2, 17–20 PGND) | Pin numbers against the datasheet or TI's symbol; electrical types |
+| `accubot:TI_RDL0020A_B3QFN-20_5x5.5mm` footprint (U147) | **Generated** | SLVSGJ5 pp. 38–40 (RDL0020A, 4226416/B): corner pads 1.4 × 0.5 mm at x ±2.0, y ±2.15; signal pads 0.9 × 0.25 mm at x ±2.25, rows −1.225 … +1.275 mm (0.5 mm pitch, 25 µm off center as drawn); thermal pads 17–20, 1.58 × 0.875 mm at y ±0.5375/±1.6125; paste −0.025 mm per the stencil drawing | Pad positions and pin-1 orientation against TI's footprint; no 3D model; the optional Ø0.2 mm thermal vias are not placed |
+| L801, L802 `XFL4020-102MEC` (1 µH) | Footprint **assumed** | Copied from L140 (`XFL4020-222MEC`), same Coilcraft XFL4020 family | Confirm the 1 µH part uses the same land pattern and current rating |
+| C804 `EEU-FR1V680` (68 µF / 35 V) | Footprint **assumed** | `Capacitor_THT:CP_Radial_D6.3mm_P2.50mm` | Confirm the Panasonic FR case size (diameter and pitch) for 68 µF / 35 V |
+| C800–C820, R800–R809 | Generic packages | 0603 / 0805 / 1206 / 1210 by value and voltage | Pick orderable parts; check DC-bias derating on the 10 µF and 22 µF parts |
+
 ## Unresolved PCB rows
 
 | BOM row / refs | Rev 0.1 state |
@@ -181,8 +200,8 @@ populated, and check regulation with the resulting asymmetric loads.
 | 32 / K2 | Kept as `accubot:Draft_EStop_Relay_NO` for the coil and NO power contact intended to switch +15 V_DRV. The user confirmed the draft capture as the rev 0.1 state; K1/K2 stay excluded from the BOM and PCB. Relay selection is the one open hardware item. See [K1/K2 roles](#k1k2-intended-roles-and-capture-hold). |
 | 33 / PROT | [Protection inventory](#prot--input-protection): holder, cover, TVS, input filtering and reverse protection captured; Schurter `0001.2509` cartridge recorded with the 3.15 A deviation. |
 | 34 / PASS-A | [Driver inventory](#pass-a--driver-and-excitation): loop, filter, mid-rail, current-sense, fault and access parts captured; values are prototype and need bench verification. |
-| 45 / PASS-C | [Digital inventory](#pass-c--fpga-and-host): digital passives, JTAG, host USB support and test access captured; supervisor/watchdog open. |
-| 60 / PASS-B | [Receiver inventory](#pass-b--receiver-and-adc): four front ends, ADC support and sensor connectors captured on Ch1–Ch3 templates; population and gain reconciliation open. |
+| 45 / PASS-C | [Digital inventory](#pass-c--fpga-and-host): digital passives, JTAG, host USB support and test access captured; watchdog is an FPGA PL timer, no external part. |
+| 60 / PASS-B | [Receiver inventory](#pass-b--receiver-and-adc): four front ends, ADC support and sensor connectors captured on Ch1–Ch3 templates; Ch2 gain = Ch1, Ch3 front end DNP in the BOM. |
 
 ### K1/K2 intended roles and capture hold
 
@@ -397,8 +416,8 @@ above, and **BOM** for the linked SYSTEM-01 BOM sheet. Other sources:
 | Item / source | CAD state | Verification before release |
 |---|---|---|
 | J1 adapter jack | **Prototype** `PJ-079BH`, footprint `Connector_BarrelJack:BarrelJack_CUI_PJ-079BH_Horizontal` | 2.5 mm center pin, Ø5.5 mm mating plug, 5 A at 24 VDC. Pin 1 feeds F1 and pin 2 returns to the choke. Pin 3 and shield pads are open pending fit and shield review. [Same Sky drawing](https://www.sameskydevices.com/product/resource/pj-079bh.pdf) |
-| F1 open holder, Schurter `0031.8201` ([verified holder mapping](#partial-prot-lot-mappings); Schematic §2 identifies the F1 fuse function, not the holder part) | **Ready** for that exact open holder only | Power owner: verify fit, removal clearance and thermal derating with the assigned 0853.0551 cover. |
-| F1 replaceable time-delay cartridge (BOM 33; Schematic §2) | **Prototype** Schurter `0001.2509`, 3.15 A, 1.5 kA at 300 VDC | Recorded in the schematic as F1's MPN field; the PCB footprint stays the `0031.8201` holder. 3.15 A exceeds the 3.00 A spec by 5%; the power owner accepted that deviation. Verify inrush, prospective fault current and coordination with the holder and TVS. [Schurter SPT data](https://www.schurter.com/en/datasheet/SPT%205x20) |
+| F1 open holder, Schurter `0031.8201` ([verified holder mapping](#partial-prot-lot-mappings); Schematic §2 identifies the F1 fuse function, not the holder part) | **Ready** for that exact open holder only | This is the schematic/BOM line; order it separately from the `0001.2509` insert. Power owner: verify fit, removal clearance and thermal derating with the assigned 0853.0551 cover. |
+| F1 replaceable time-delay insert, separate BOM line (BOM 33; Schematic §2) | **Prototype** Schurter `0001.2509`, 3.15 A, 1.5 kA at 300 VDC | Ordered separately from the holder; the **3.15 A rating is the insert's**, not the holder's. The schematic value stays `0031.8201`. 3.15 A exceeds the 3.00 A spec by 5%; the power owner accepted that deviation. Verify inrush, prospective fault current and coordination with the holder and TVS. [Schurter SPT data](https://www.schurter.com/en/datasheet/SPT%205x20) |
 | D1 `SMBJ18A` TVS (BOM 33; Schematic §2; [verified pairings](#partial-prot-lot-mappings)) | **Ready** | Power owner: verify surge and clamp coordination; the CAD mapping does not close this test. |
 | Input common-mode choke L1 | **Prototype** Würth `7448225007`, 5 A at 70 °C | Supply winding 1–4 and return winding 2–3. Custom 5.0 × 7.7 mm pin pattern and Ø1.30 mm finished holes. Confirm attenuation and thermal rise with the installed harness. [Würth drawing](https://www.we-online.com/components/products/datasheet/7448225007.pdf) |
 | Input CLC filter | **Prototype** C770, L760 and C30 | L760 uses Würth `7447714047` with 3.5 × 2.0 mm pads at 9.0 mm pitch. Keep vias and sensitive routing out from under the part. Confirm damping, inrush and EMI on the assembled circuit. [Würth data sheet](https://www.we-online.com/components/products/datasheet/7447714047.pdf) |
@@ -423,7 +442,7 @@ PROT by the workbook. K2 remains separately held under row 32.
 | Vmid bypass, 100 nF in the shown circuit (Schematic §4.2) | **Captured** 100 nF, 0603 | Driver owner: confirm Vmid distribution and bypass population; the 1000 µF reservoir is tracked separately under row 29. |
 | Per-channel difference-amp sense resistor network, values open (Schematic §4.2; DRV-2 §4) | **Captured** 10 kΩ ±0.1%, 0603 | Verify channel gain matching and common-mode rejection on the assembled board.
 | Current-sense summer resistor network, scale 2.0103, component values open (Schematic §4.4; DRV-2 §4) | **Captured** 20 kΩ + 8 × 10 kΩ, ±0.1%, 0603 | Nominal scale −2.000 from each input; verify Ch0 gain and phase on the bench.
-| Comparator threshold/reference network, per-channel trip at 1.2 × maximum current with a 0.6 V shunt-reference source in the design record (Schematic §§4.2, 4.4) | **Captured** 52.3 kΩ/10 kΩ divider, 0603 | Nominal 253 mA positive-peak trip with the 1 Ω shunts; verify tolerance and ordering against the 280 mA buffer clamp.
+| Comparator threshold/reference network, per-channel trip at 1.2 × maximum current with a 0.6 V shunt-reference source in the design record (Schematic §§4.2, 4.4) | **Captured** `R710` 52.3 kΩ / `R711` 10 kΩ divider, 0603 | Bench-confirm, do not pick resistors: the captured divider gives **≈0.53 V**, unreconciled with the sheet's **"~253 mA at 3.3 V"** trip note and **"~280 mA nominal clamp"** note. Measure `TRIP_REF`, actual trip current and LMH6321 clamp before changing any value (power_tree_v2.md §9).
 | Comparator fault combining (Schematic §§4.2, 4.4; design gates DRV-07; TLV3201 row 26) | **Captured** 4 × SN74LVC2G07, SOT-23-6 | Open-drain buffers wire-OR the eight push-pull comparator outputs into `DRIVER_FAULT_N`. Verify pulse capture and the hardware latch.
 | Per-channel LMH6321 `CL` current-limit input and `EF` error-flag output (row 24; [TI LMH6321](https://www.ti.com/lit/ds/symlink/lmh6321.pdf) §§6.7, 6.9; DRV-2 §2 discusses 300 mA versus short-term 500 mA with the current limit disabled, not a requirement to disable it) | **Captured** 10.7 kΩ programming resistors, 0603 | CL is programmed for about 280 mA nominal peak at 15 V. EF is left unconnected; the TLV3201 comparators carry fault detection. Verify clamp tolerance and thermal rise.
 | Other driver/DAC supply bypass and decoupling, values open (BOM 34; DRV-2 §8) | **Captured** 100 nF, 0603 | Values follow the datasheet recommendations; verify rail impedance on the assembled board.
@@ -443,7 +462,7 @@ before any extra capacitor is assigned.
 | Item / source | CAD state | Verification before release |
 |---|---|---|
 | 2×7 JTAG header (BOM 45; [programmer and footprint hold](#jtag-programmer-and-footprint-hold)) | **Prototype** J140, `accubot:Molex_87831-1420` | Confirm cable fit, finished hole tolerance and +3.3 V rail headroom. |
-| Supervisor/watchdog (BOM 45; Schematic §4.5; M16 handoff §10) | **Open** | FPGA/power/follower owners: reconcile a discrete supervisor (TPS3823 mentioned, not selected) versus PL timer, and settle STOP/heartbeat responsibility without changing the independent hardware E-stop. |
+| Supervisor/watchdog (BOM 45; Schematic §4.5; M16 handoff §10) | **Captured** internal FPGA PL timer, no part or net | The watchdog asserts STOP only through the FPGA request into U755 and `PICO_STOP_N`. There is no hardware-independent watchdog path; verify timing and heartbeat responsibility in the FPGA build. |
 | Host USB receptacle ([provisional GCT mapping](#pass-c-host-usb-provisional-cad-mapping-only)) | **Provisional** | FPGA/host and mechanical owners: close the interface and footprint-variant holds listed in the mapping. |
 | Host USB support: CC, VBUS sense/backfeed, ESD and shield termination ([USB mapping hold](#pass-c-host-usb-provisional-cad-mapping-only); Schematic §6.0) | **Captured** 5.1 kΩ CC, 2 × TPD2EUSB30, VBUS-sense divider, 27 Ω/47 pF | Shield bonding and power-off backfeed behavior remain layout and test checks.
 | FPGA-side DAC SPI series termination, 33 Ω at the FPGA pin (DAC ICD §1; Schematic §6; M16 handoff §4.5) | **Prototype** R145–R147 with 0603 footprints | 33 Ω on CS, SCLK and SDI at the FPGA end. Verify layout and SPI edge integrity. DAC-side probe pads are tracked in PASS-A. |
@@ -512,7 +531,7 @@ not the number of populated front-end assemblies.
 | Other receiver/ADC supply decoupling (BOM 60; Schematic §5.3 identifies rails; ADC-01 note row 13 defers decoupling to schematic and lists no orderable MCLK part) | **Captured** 100 nF, 0603 | Receiver/ADC owners: assign rail bypass values and locations separately from reference decoupling. |
 | ADC MCLK series resistor, 33 Ω in the 32.768 MHz path (Schematic §5.1) | **Captured** 33 Ω, 0603 | ADC/FPGA owners: verify clock integrity with the actual clock tree. |
 | Buffered clock branch to the FPGA (Schematic §5.1 only; M16 handoff §2 defines the shared clock, not a discrete buffer) | **Captured** direct branch with 33 Ω series | No discrete buffer is used; the oscillator drives the ADC and FPGA through R100. Verify loading and integrity.
-| Remaining sensor-side connections: pen channels and fixed reference (BOM 60; Schematic §5.2; decision #15) | **Captured** J122/J127 pen headers and J128 reference header | Ch2 and Ch3 reuse the Ch1 front end provisionally; reconcile INA163 and ADA4940-2 quantities with the BOM.
+| Remaining sensor-side connections: pen channels and fixed reference (BOM 60; Schematic §5.2; decision #15) | **Captured** J122/J127 pen headers and J128 reference header | Ch2 uses the Ch1 gain (closed). The Ch3 reference-coil front end stays in the board design, but all its parts are **DNP lines in the BOM** — do not order or fit them. Verify Ch1/Ch2 gain and phase on the bench.
 | Possible current-sense BNC: PEN-ANA-01 note row 15 and connector requirements `Locked-CONN` row 7 reference it but exclude it from the pen BOM; Schematic §§4.4, 5.2 show on-board Ch0, not a BNC selection | **Open** | Receiver/driver owners: decide whether an external BNC is still needed. No BNC population, location or footprint assigned. |
 
 The 2×8/custom connector in the ADC ICD is not counted or placed here;

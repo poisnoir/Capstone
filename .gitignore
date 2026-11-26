@@ -67,3 +67,10 @@ fp-info-cache
 /docs/phase1/Phase 1 Report - Team 25 (ELEC-COEN 490).docx
 /docs/setup/CLIENT_SETUP.md
 /docs/extracts/*.txt
+
+# Course/safety material and coursework docs — never commit (student ID + third-party PDFs)
+/40113603_October_Team25_Done.docx
+/Quiz 08 (30_ of the grade) - legal _ Moodle.pdf
+/Quiz 09 (70_ of the grade) - CCOHS & WHMIS _ Moodle.pdf
+/Safety FCTC 08 - legal.pdf
+/Safety FCTC 09 - CCOHS.pdf

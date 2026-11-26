@@ -13,7 +13,8 @@ Rules:
 - No BOM row ships with a placeholder supplier P/N (decisions log, procurement
   checks).
 - Re-quote the locked parts before ordering: DAC80508MRTET, LTC1563-2IGN#PBF,
-  LMH6321MR/NOPB, AD7768-4, ADR434, INA163, ADA4940-2, ME60A1503F01, RV-1515D,
+  LMH6321MR/NOPB, AD7768-4, ADR434, INA163, ADA4940-2, ME60A1503F01,
+  TPSM63604RDLR, MGJ2D151515SC, LT3045-1, LT3093, TPS7A4701, TPS62130A,
   XC7A35T-1FTG256C.
 - `.xlsx` is binary; git cannot diff it. Keep the file small and export CSV when
   a diff matters.

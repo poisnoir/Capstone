@@ -22,7 +22,10 @@ team branch.
   256 kSPS (`SC-05`).
 - DAC: DAC80508, SPI 49.152 MHz, 216-bit frame, software TRIGGER
   (`contract/decisions_log.md` #19).
-- Clock: one TCXO → PLL → clk_dds + MCLK_adc; single sync reset (`SC-07`).
+- Clock: XO-direct — one 32.768 MHz XO (CSX750FBC32.768M-UT) drives the FPGA
+  clock input directly and ADC MCLK through 33 Ω; PLL ×3 feeds only ÷2 =
+  49.152 MHz DAC SPI; DAC update ÷164, ADC ODR ÷128; single sync reset
+  (decision #28, `SC-07`).
 - Pose output: x, y, z, θ, φ + validity/status + age; ≥100 Hz
   (`contract/icd/pico_link.md`).
 - Budget: 2.000 ms acquisition + 0.133 ms ADC delay + 0.5 ms demod + 5.0 ms

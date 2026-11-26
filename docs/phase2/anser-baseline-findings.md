@@ -7,6 +7,14 @@ Working extracts: `docs/extracts/Jaeger2018_bespoke-sensor_Ch7_extract.txt`,
 `docs/extracts/Jaeger2018_filament-sensor-model_Ch3_extract.txt`.
 Golden code: `software/anser-matlab-ref/` (port map in its README).
 
+> **Status (2026-11-25):** this is the **upstream Anser/Jaeger baseline** as
+> analysed on 2026-10-13, kept for history. It is **not** our locked BRD-01 design.
+> In particular §6's "one TCXO → FPGA PLL → clk_dds + clk_adc (CONVST/SCLK)"
+> describes the baseline/common-clock concept and its parts list, not the
+> XO-direct tree now locked in `contract/system_contract.md` SC-07 / decision #28
+> (single 32.768 MHz XO driving ADC MCLK and FPGA clock; no PLL-generated MCLK).
+> Where the baseline and the contract disagree, the contract wins.
+
 ## 1. Coil sensors: Jaeger Ch.7 vs OSF
 
 Ch.7 is the coil itself; OSF is amp + solver that assumes a coil.

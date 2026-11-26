@@ -1,11 +1,15 @@
 # BRD-01 power tree v2: requirements and component values
 
-**Status: PROPOSED (2026-11-24).** This replaces the OKI-78SR-5 and the
-TPS7A2033 in the BRD-01 power tree. It changes locked decision #20 in
-[decisions_log.md](../../contract/decisions_log.md), so it needs a
-`contract-change` issue and PR before the schematic is redrawn. The current
-as-captured tree is in
-[power-tree.md](../../hardware/brd-01/kicad/power-tree.md).
+**Status: LOCKED (2026-11-25, decision #31). Adopted as the BRD-01 power tree;
+supersedes the part list of decision #20.** The captured schematic (§9, ERC 0/0)
+and the committed netlist in
+[brd01_wiring_manifest.md](brd01_wiring_manifest.md) implement these rails
+(`+6V`, `+3.3V`, `+5V_EXC`, `+5VA`, MGJ2D151515SC). This file is the power
+authority for the as-built board; the older v1 tree in
+[power-tree.md](../../hardware/brd-01/kicad/power-tree.md) is historical.
+The only remaining **design-wording** point is the §7 D2 arithmetic wording
+(centre of the 0.3–4.6 V band); the §7 bench checks C1/C5/C6/C7 and the §9
+`TRIP_REF` reconciliation remain open. No rail or value is changed here.
 
 Each number is tagged:
 
@@ -35,15 +39,16 @@ Each number is tagged:
             └─ U147 TPSM63604, 6.0 V, 1.024 MHz synced ─► +6V ── PG_6V
                   ├─ U144 TPS62130A ─► +1V0_FPGA   EN ← PG_6V    ┐
                   ├─ U145 TPS62130A ─► +1V8_FPGA   EN ← PG_1V0   ├ FPGA rails
-                  ├─ U148 TPS62130A ─► +3.3V       EN ← PG_1V8   ┘
+                  ├─ U7 TPS62130A ─► +3.3V       EN ← PG_1V8   ┘
                   ├─ FL1 damped LC ─ U149 TPS7A4701 ─► +5V_EXC  (DAC80508, 8× LTC1563-2)
                   └─ FL2 damped LC ─ U146 TPS7A4701 ─► +5VA     (AD7768-4, 2× ADA4940-2)
 
 FPGA pin BUCK_SYNC (1.024 MHz = 32.768 MHz ÷ 32) ─ 1 nF ─► U147 EN/SYNC
 ```
 
-The reference designators U147–U149, FL1/FL2 and `PG_6V`/`BUCK_SYNC` are
-proposals.
+The passives, the FL1/FL2 filter labels and the `PG_6V`/`BUCK_SYNC` names were
+proposals. Regulator designators follow the captured schematic (§9): U147
+(6 V), U7 (3.3 V), U149 (`+5V_EXC`), U146 (`+5VA`) and U5 (±12VA).
 
 Removed: U3 OKI-78SR-5, U1 TPS7A2033, net `+5V`.
 
@@ -205,12 +210,12 @@ switches to the sync clock after 2048 cycles [DS]. The datasheet gives a sync
 range of 200 kHz–2.2 MHz and no limit relative to the RT setting; confirm the
 lock on the bench.
 
-### U144, U145, U148: FPGA rail bucks, TPS62130ARGTR
+### U144, U145, U7: FPGA rail bucks, TPS62130ARGTR
 
 The existing U144/U145 parts already follow TI's typical application
 (Table 9-1). Only their input rail, EN source and pull-up rail change.
 
-| Function                          | U144 +1V0_FPGA                          | U145 +1V8_FPGA                      | U148 +3.3V (new)                  | Source                                             |
+| Function                          | U144 +1V0_FPGA                          | U145 +1V8_FPGA                      | U7 +3.3V (new)                    | Source                                             |
 | --------------------------------- | --------------------------------------- | ----------------------------------- | --------------------------------- | -------------------------------------------------- |
 | PVIN, AVIN                        | +6V                                     | +6V                                 | +6V                               |                                                    |
 | PVIN cap                          | C180 10 µF → **specify 25 V X7R 1206**  | C184 → same                         | 10 µF 25 V X7R 1206               | [DS] §9.2.2.2.2.2; value field today is only "10u" |
@@ -233,14 +238,14 @@ controlled. At 1.25 MHz the on-time is 133 ns. The datasheet requires
 starting with FSW low to limit inrush and suggests tying FSW to VOUT or PG
 [DS]. Tying it to `PG_1V0` (already pulled to +6V, under the 7 V pin limit)
 starts at 2.5 MHz and switches to 1.25 MHz once the rail is good. The 2.2 µH
-inductor is the minimum for 1.25 MHz [DS]. U145 (120 ns) and U148 (220 ns)
+inductor is the minimum for 1.25 MHz [DS]. U145 (120 ns) and U7 (220 ns)
 are fine at 2.5 MHz. Neither 1.25 MHz nor 2.5 MHz puts a harmonic up to the
 30th into the ADC band [calc].
 
-U148 can reuse the TPS62130A, or use the fixed 3.3 V TPS62132 with no divider.
-The TPS62132's PG floats high when off [DS], which only matters if something
-is chained after it. Nothing is, so either works. Reusing the TPS62130A keeps
-one part number.
+U7 uses the captured TPS62130A. The fixed 3.3 V TPS62132 with no divider is an
+alternative. The TPS62132's PG floats high when off [DS], which only matters if
+something is chained after it. Nothing is, so either works. Keeping the
+TPS62130A keeps one part number.
 
 ### U149 +5V_EXC and U146 +5VA: TPS7A4701RGWR
 
@@ -352,7 +357,7 @@ Checks against the Artix-7 data sheet (DS181):
 - Each FPGA rail ramps in 1.65 ms, inside the 0.2–50 ms ramp-time window ✓.
 - VCCO − VCCAUX may exceed 2.625 V for at most 500 ms per power cycle. On
   power-up VCCAUX comes first. On power-down, U145's PG drops when +1V8 falls
-  below 90%, and that disables U148, so +3.3V follows within milliseconds ✓.
+  below 90%, and that disables U7, so +3.3V follows within milliseconds ✓.
 - The TPS62130A holds PG low while off [DS], so a downstream rail never
   enables early.
 
@@ -387,17 +392,17 @@ return currents out of the receiver ground.
 
 ## 7. Decisions and checks
 
-Every paper item is resolved. What remains needs either team approval (the
-contract change) or the bench.
+Every paper item is resolved under decision #31. What remains is bench
+verification (§7 checks) and the D2 wording point.
 
-### Decisions (go into the contract change)
+### Decisions (locked with decision #31)
 
 | # | Item | Resolution |
 |---|---|---|
-| D1 | 6 V pre-regulator | **TPSM63604RDLR at 5.99 V, RT 1.000 MHz, synced to 1.024 MHz**, replacing the OKI-78SR-5 (decision #20) |
-| D2 | `+5V_EXC` voltage | **5.0 V.** FPGA keeps the DDS tone within 0.3–4.6 V, centered on 2.5 V (≤ 92% of full scale). Changes the M16 handoff's "0–5 V full scale" |
+| D1 | 6 V pre-regulator | **TPSM63604RDLR at 5.99 V, RT 1.000 MHz, synced to 1.024 MHz**, replacing the OKI-78SR-5 (supersedes the decision #20 part list) |
+| D2 | `+5V_EXC` voltage | **5.0 V.** FPGA keeps the DDS tone within 0.3–4.6 V (≤ 92% of full scale); the band is described elsewhere here as centered on 2.5 V, but (0.3+4.6)/2 = 2.45 V — **OPEN (wording only): restate the centre as 2.45 V or as nominal 2.5 V; no rail or value changes**. Changes the M16 handoff's "0–5 V full scale" |
 | D3 | FT231X supply | **U142 VCC (12) and ~RESET (11) move to `+3.3V`; 3V3OUT (10, net `FT_3V3`) ties to `+3.3V`.** VCC range 2.97–5.5 V; with VCC at 3.3 V, 3V3OUT must be driven with 3.3 V [DS] |
-| D4 | Pico power | **BRD-01 does not power the Pico.** J123 pin 1 becomes a no-connect on BRD-01, so the two 3.3 V supplies are never tied together. The ICD (`contract/icd/pico_link.md`) lists pin 1 as "3V3", so it changes in the same contract PR |
+| D4 | Pico power | **BRD-01 does not power the Pico.** J123 pin 1 becomes a no-connect on BRD-01, so the two 3.3 V supplies are never tied together. The ICD (`contract/icd/pico_link.md`) lists pin 1 as "3V3"; the ICD update is handled in the parallel contract stream |
 | D5 | `BUCK_SYNC` pin | **FPGA ball R3** (IO_L8P_T1_34, Bank 34 at 3.3 V, a plain I/O next to R1/R2), 32.768 MHz ÷ 32, through 1 nF to U147 EN/SYNC |
 
 ### Checks
@@ -410,14 +415,14 @@ contract change) or the bench.
 | C4 | FT231X VCC range | **closed**: see D3 |
 | C5 | MGJ2 load margin and 45 kHz | **closed on paper**: ~7–8 mA margin per rail (bom-to-cad.md). **Bench:** look for a 45 kHz spur and its drift; place U5 away from the pen input (§6) |
 | C6 | FPGA running currents | **estimated** (§3): 0.37 / 0.10 / 0.015 A typical, 0.8 / 0.2 / 0.03 A design max. FPGA team confirms with the Power Estimator after synthesis |
-| C7 | AD7768-4 supply limits at power-up/down | **closed with a fix**: no limit between its own supplies [DS], but REF+ ≤ AVDD1 + 0.3 V is violated at v2 power-down. Add D_REF (§4) |
+| C7 | AD7768-4 supply limits at power-up/down | **closed with a fix, one margin open**: no limit between its own supplies [DS], but REF+ ≤ AVDD1 + 0.3 V is violated at v2 power-down. `D_REF` = `D534` (BAS70H,115) is placed (§4). Abs-max is AVDD1 + 0.3 V (`AD7768-4` Rev D, Table 7, p. 23, "Reference Input Voltage to AVSS"); a Schottky clamp holds ADC_REF at AVDD1 + Vf, so the clamp is compliant only while Vf ≤ 0.3 V at the actual fault current. **Bench:** measure V(ADC_REF) − V(+5VA) while cycling +15 V with a 4.096 V reference applied; if it exceeds 0.3 V, fit a lower-Vf part or add a series resistor ahead of D534 |
 | C8 | C180/C184 voltage rating | **closed**: specify 10 µF 25 V X7R 1206 (§4); the schematic value field only says "10u" today |
 
 ### Schematic changes this implies
 
 | Sheet | Change |
 |---|---|
-| power | remove U3, U1; add U147 + passives, U148 + passives, U149 + passives, FL1/FL2; move U144/U145/U146 inputs to +6V; U144 EN ← `PG_6V`, U144 FSW ← `PG_1V0`; R192/R195 pull-ups to +6V; U146 EN to +6V; C188 → 2.2 µF; C180/C184 → 25 V |
+| power | remove U3, U1; add U147 + passives, U7 + passives, U149 + passives, FL1/FL2; move U144/U145/U146 inputs to +6V; U144 EN ← `PG_6V`, U144 FSW ← `PG_1V0`; R192/R195 pull-ups to +6V; U146 EN to +6V; C188 → 2.2 µF; C180/C184 → 25 V |
 | power | delete net `+5V`; new nets `+6V`, `+5V_EXC`, `PG_6V`, `BUCK_SYNC` |
 | driver | U10 VDD and U80–U87 V+/LP from `+5V` → `+5V_EXC` |
 | fpga | U142 VCC, ~RESET, 3V3OUT → `+3.3V`; ball R3 → `BUCK_SYNC` |
@@ -440,3 +445,57 @@ contract change) or the bench.
 | MGJ2D151515SC | Murata KDC_MGJ2 |
 | OKI-78SR | Murata |
 | Artix-7 | AMD DS181 v1.27.1, July 2024 |
+
+## 9. Schematic implementation (power sheet, 2026-11-24)
+
+The power sheet is captured and wired. The §7 cross-sheet changes are done:
+
+- driver: 27 `+5V` labels became `+5V_EXC` (U10 VDD and the eight LTC1563
+  V+/LP pins). The `+5V` net no longer exists anywhere.
+- fpga: `U142` VCC and `~RESET` and its two decoupling capacitors moved to
+  `+3.3V`; `3V3OUT` is tied to `+3.3V` as D3 requires, with that pin typed
+  passive so ERC does not read two sources on one rail; ball `R3` is wired
+  to `BUCK_SYNC`.
+- connectors: `J123.1` is a no-connect (D4).
+- receiver: `D_REF` (§4, C7) is placed as `D534` (`BAS70H,115`,
+  `Diode_SMD:D_SOD-123F`, the part already on the receiver BOM). Anode on
+  `/receiver/ADC_REF` after `R184`, cathode on `+5VA`; ADC_REF is 6 pins and
+  +5VA 30 pins in the netlist.
+
+ERC on the full hierarchy is **0 errors / 0 warnings**.
+
+Reference designators as captured; these are the refs used throughout §2–§7:
+
+| Function | Captured refs |
+|---|---|
+| 6 V module | U147; C800–C804 input; R803/R804 UVLO; C809 sync; R802 RT; R800/R801/C805 feedback; C806–C808, C810 output; R805 PG pull-up |
+| 3.3 V buck | **U7**; C811/C812 input; C814 soft start; L800; R806/R807 feedback; C813 output |
+| +5V_EXC LDO | U149; FL1 = L801, C817, R808 + C818; C815 NR; C816 output |
+| +5VA input filter | FL2 = L802, C188 (moved, now 2.2 µF), R809 + C820 → U146 |
+| ±12VA module | U5 MGJ2D151515SC → U6 LT3045-1 (+12VA) / U2 LT3093 (−12VA) |
+| Removed | U3 (OKI-78SR), U8, U9, U1 (removed earlier) |
+
+Joins into the older label-based FPGA buck area use labels: `PG_6V` (U144
+EN), `PG_1V0` (U144 FSW, now 1.25 MHz after start-up), `PG_1V8` (U7 EN), and
+the former `+5V` global labels there renamed to `+6V`. Generated CAD that
+still needs validation is listed in
+[bom-to-cad.md](../../hardware/brd-01/kicad/bom-to-cad.md#power-tree-v2-generated-cad-to-validate-2026-11-24).
+
+The `U144.7` FSW strap was briefly regressed to GND in `193f280` (taken from
+`b72cffd`) and restored to `PG_1V0` here: 1.0 V from 6 V gives a 67 ns on-time
+at 2.5 MHz, under the 80 ns minimum [DS], so the part would fold down to an
+uncontrolled ~2.1 MHz, whereas `PG_1V0` starts at 2.5 MHz and switches to
+1.25 MHz (133 ns) once the rail is good.
+
+### Open bench item — `TRIP_REF`
+
+The comparator trip numbers are **unreconciled**; do not pick new resistors
+before measuring. Three figures are on the table and do not agree:
+
+- `R710` 52.3 kΩ / `R711` 10 kΩ divider: \(V_{REF}\approx0.53\) V at `TRIP_REF`.
+- Driver sheet note: **~253 mA at 3.3 V** positive-peak trip with the 1 Ω shunts.
+- Driver sheet note: **~280 mA nominal LMH6321 clamp**.
+
+Bench item: measure `TRIP_REF`, the per-channel trip current and the actual
+LMH6321 clamp, then reconcile the divider against both notes. No resistor
+value changes are authorized by this decision.

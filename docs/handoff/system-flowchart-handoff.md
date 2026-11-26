@@ -1,5 +1,14 @@
 # EM AccuBot — Standalone Flowchart Handoff (Systems & Subsystems, Detailed)
 
+**Status (2026-11-25): historical point-in-time handoff, superseded by locked
+decisions #19 (M16 DAC/filter), #25 (one 4-layer BRD-01), #26 (PS-less
+XC7A35T-1FTG256C), #28 (XO-direct clock) and #31 (BRD-01 power tree).** The
+recommended design below is
+kept as written for the Phase 2 record; do not build from its TCXO→PLL clock,
+TBD FPGA, CONVST/2×6 Pmod or board-partitioning statements. Current facts:
+`contract/system_contract.md` SC-07, `docs/phase2/power_tree_v2.md` and the
+committed netlist in `docs/phase2/brd01_wiring_manifest.md`.
+
 **STANDALONE NOTICE:** This document is self-contained. The flowchart author has NO access to the project folder, repo, PDFs, or spreadsheets. Everything needed to draw the charts is embedded below. Original file paths are noted in parentheses for traceability only — do not require them to complete the work.
 
 - **Project:** EM AccuBot, Team 25 (ELEC/COEN 490 Capstone). FPGA-based electromagnetic motion controller for precision teleoperation.
@@ -88,7 +97,7 @@ Draw these 7 boxes. Arrows show the primary signal direction:
 | 1 | Field-generator coil array + placement | 8-coil planar PCB, filament-model placement sim, ICNIRP field check | #3–4 volume/angle, #20 field |
 | 1b | Closed-loop current driver + excitation DDS | Constant-current AC driver, FPGA multichannel DDS, current sense-back | kappa stability gate for #5–6 |
 | 2 | Pen coil + receiver frontend | Hand-wound 5-DOF coil, INA128-class preamp, connector + whip cable | #1–2 pens/5-DOF, #5–6, #19 mass |
-| 3 | ADC + clock/sync | External simultaneous ADC, TCXO-to-PLL common clock, integer-J framing | #5–6/#9–13 spur+phase, #14–16 rate/latency |
+| 3 | ADC + clock/sync | External simultaneous AD7768-4, one 32.768 MHz XO (CSX750FBC32.768M-UT) direct to FPGA and ADC MCLK via 33 Ω, integer-J framing (#28) | #5–6/#9–13 spur+phase, #14–16 rate/latency |
 | 4 | FPGA core | DDS, ADC-sync, Goertzel demod, filament kernel, LM/TRF solver, Kalman filter, scaling, robot command | #5–6/#9–13, #12–13 filter, #14–16 |
 | 5 | Follower + firmware + magnified view | PMS XYZ stage, Pico motor boards, homing/limits, engage/stop, camera/display | #7–11, #14–15, #17–18 |
 | 6 | Host tools only | Logging, calibration UI, visualization link (NO pose solve here) | >=100 Hz log, >=50x view |
@@ -112,7 +121,7 @@ Draw these 7 boxes. Arrows show the primary signal direction:
 ### 4b. Driver + DDS (load-bearing — draw prominently)
 
 - **Why it matters:** constant-current drive is load-bearing. Temperature and inductance drift break the per-coil calibration scalar kappa. Reference design: `ac_driver_coil_circuit_Rev_A.sch` + `.pcb` (DesignSpark) + Coil Driver Board Gerber archive; datasheets for LM7171 (current-feedback amp), LM311, TL081, MCP23008, MCP4562, IDT74FCT807BT, 74HC/HCT4051, SN74LVC1G3157, plus crystal, diode, switch, heatsink, and wire sheets. **Constant-current verification is a must-pass gate before any accuracy claim is written.**
-- **FPGA DDS + common clock:** one TCXO feeds an FPGA PLL that produces clk_dds and clk_adc (CONVST/SCLK) frequency-locked. DDS formula: fout = tuning_word * fclk / 2^N; example 32-bit accumulator at 100 MHz gives 0.023 Hz steps. Chain: 12–14-bit LUT + 12–16-bit DAC + 50–100 kHz RC + coil inductance + narrowband DFT meets the spur budget. Use one sync reset for DDS and ADC dividers, then calibrate once. Analog group delay in microseconds is constant, so absorb it into one DAQ_phase_offset plus per-coil kappa. Do NOT generate-then-read per cycle; stream both continuously (example: 1000 master ticks per ADC sample at 100 MHz / 100 kHz).
+- **FPGA DDS + common clock (historical proposal; locked tree is #28/XO-direct):** the text below described one TCXO feeding an FPGA PLL that produces clk_dds and clk_adc (CONVST/SCLK). The selected BRD-01 tree is one 32.768 MHz XO driving the FPGA directly and ADC MCLK through 33 Ω; the PLL ×3 only feeds ÷2 = 49.152 MHz DAC SPI, with DAC update ÷164 and ADC ODR ÷128. No CONVST/SCLK pair or TCXO is on the board. DDS formula: fout = tuning_word * fclk / 2^N; example 32-bit accumulator at 100 MHz gives 0.023 Hz steps. Chain: 12–14-bit LUT + 12–16-bit DAC + 50–100 kHz RC + coil inductance + narrowband DFT meets the spur budget. Use one sync reset for DDS and ADC dividers, then calibrate once. Analog group delay in microseconds is constant, so absorb it into one DAQ_phase_offset plus per-coil kappa. Do NOT generate-then-read per cycle; stream both continuously (example: 1000 master ticks per ADC sample at 100 MHz / 100 kHz).
 - **Flows to draw:** tuning words -> DAC -> driver -> coil current -> sense-resistor sense-back (ADC channel 1, about 1 V, stationary) -> closed loop. Sense-resistor FFT check: harmonics more than 60 dB below the tone. The driver-summer current spectrum is the phase reference Y_I for demodulation. Jitter need is nanosecond level, not picosecond. ADC and DAC must accept external clock; prefer simultaneous-sampling over multiplexed (removes inter-channel skew); one sync reset then calibrate; verify constant current FIRST, coherence second.
 - **Golden sense values (embed so the chart has numbers):** sense resistors R_store = [1.239, 1.02, 0.957, 0.995, 1.183, 0.983, 0.991, 0.989] ohms; Helmholtz calibrator current estimates I_temp = [2.3115, 2.3106, 2.3043, 2.3039, 2.3035, 2.3028, 2.3025, 2.3021]/99.96 A; B_temp = 321e-6 * I_temp T; sensor-plus-amp scale Asens = [7.8227, 8.1754, 8.4482, 8.7949, 9.1415, 9.4907, 9.8349, 10.1804] ./ B_temp (V/T per tone, Helmholtz + gain-phase analyser); summer scale I_summer_scale = 2.0103.
 
@@ -163,7 +172,7 @@ Draw these 7 boxes. Arrows show the primary signal direction:
 - **Sigma-delta costs, bounded (draw as notes):** group delay D = Ntaps/ODR (example 64 taps at 400 kSPS = 160 us) shifts every frame equally and is subtracted once as a fixed timestamp offset; require D under 0.5 ms so acquisition plus D stays inside the under-10 ms budget. ODR floor is hard: passband must cover 27.5 kHz with margin, so ODR at least about 4*27.5 = 110 kSPS; parts capped at 32 kSPS are rejected without review. Lane floor rises with word length: 2 ch x 32-bit frames (24 data + status) x ODR over 2 lanes gives SCLK_min = 400 k*32*2/2 = 12.8 MHz; run 25–50 MHz on Pmod over under 10 cm with series-R and a ground per signal. Power/price fit the 1000 CAD/pair envelope at prototype quantity and do not touch the pen mass budget (preamp-box parts). Prefer the lowest-delay filter mode whose droop is stable over temperature; stable droop is absorbed into per-tone kappa.
 - **Vetting gate before any sigma-delta BOM row:** simultaneous modulators with shared START/CLK; ODR at least 250 kSPS preferred (110 k hard floor); D under 0.5 ms in the selected filter mode; droop at 27.5 kHz stable within 0.05 dB over 18–28 C (else it escapes kappa); Cin at most 20 pF into the 94 pF budget; SPI lanes sustaining the lane rate; in stock at an approved supplier. Shortlist: 2x ADS127L11 synced (24-bit, to 400 kSPS) or 1x ADS1278 (8-ch simultaneous, to 144 kSPS, marginal headroom). Locked file choice per BOM: AD7768-4 primary as above.
 - **Pmod/SPI physical note:** Pmod = physical 2x6 100 mil, host-female / peripheral-male, 3.3 V (Digilent Type-2A SPI: SCLK/MOSI/MISO/CS plus CONVST plus DRDY plus RESET plus GND/VCC). Logic implements a CONVST generator phase-locked to DDS, SPI master at the ADC clock polarity/phase, DRDY-gated capture, ping-pong BRAM to AXI DMA. Processor configures and consumes frames; nothing bit-banged at rate. FMC/LVDS enters only for parallel over 10 MSPS x 16 bit x 2 ch — not needed at filed rates.
-- **Timing core (draw prominently):** integer-J frames — frame = J DDS cycles, Fs = Fclk/N from one TCXO-to-PLL. PL-generated CONVST phase-locked to DDS. TL = L/Fs where TL is acquisition time, L is frame length in samples, Fs is sampling rate. (Note: one thesis print shows Fs*L — that is an OCR drop; 5000/100 kHz = 50 ms proves division.) Fs is hardware (DAQ/ADC max plus Nyquist 68 kHz for 34 kHz). L is the choice (bin width w = Fs/L under half the 1 kHz tone spacing, coherence with J integer, Hamming 780 Hz lobes non-overlapping). TL is the consequence. Maximum system rate = 1/TL; measured rate is lower. Filed budget with filter OFF, worst case: Tpose = Tacq + Tdemod + Tsolv under 10 ms, with Tacq = N/Fs (1000/500 k = 2.0 ms; 500/1 M = 0.5 ms), leaving about 8 ms for streaming Goertzel demod (parallel per tone, in logic) plus bounded LM/TRF (relaxed tolerance, warm-started from a moving-average filter, ping-ponged with acquisition). Choose L by sweeping L = 50–2000 and plotting SFDR, Brms, |J|, position sigma, and rate; smallest L with sigma at most 0.15 mm plus spur under tone plus Tacq+Tsolv under 10 ms moving wins. If no such L exists, fix current/noise/clock/ADC, not L.
+- **Timing core (draw prominently):** integer-J frames — frame = J DDS cycles, Fs = Fclk/N. **Historical proposal:** "from one TCXO-to-PLL"; the locked source (#28) is one XO with integer divides, no PLL-generated ADC clock. PL-generated CONVST phase-locked to DDS. TL = L/Fs where TL is acquisition time, L is frame length in samples, Fs is sampling rate. (Note: one thesis print shows Fs*L — that is an OCR drop; 5000/100 kHz = 50 ms proves division.) Fs is hardware (DAQ/ADC max plus Nyquist 68 kHz for 34 kHz). L is the choice (bin width w = Fs/L under half the 1 kHz tone spacing, coherence with J integer, Hamming 780 Hz lobes non-overlapping). TL is the consequence. Maximum system rate = 1/TL; measured rate is lower. Filed budget with filter OFF, worst case: Tpose = Tacq + Tdemod + Tsolv under 10 ms, with Tacq = N/Fs (1000/500 k = 2.0 ms; 500/1 M = 0.5 ms), leaving about 8 ms for streaming Goertzel demod (parallel per tone, in logic) plus bounded LM/TRF (relaxed tolerance, warm-started from a moving-average filter, ping-ponged with acquisition). Choose L by sweeping L = 50–2000 and plotting SFDR, Brms, |J|, position sigma, and rate; smallest L with sigma at most 0.15 mm plus spur under tone plus Tacq+Tsolv under 10 ms moving wins. If no such L exists, fix current/noise/clock/ADC, not L.
 
 ---
 
@@ -189,7 +198,7 @@ Draw these 7 boxes. Arrows show the primary signal direction:
 9. **Tremor filter + scaling (draw as post-solve blocks):** Kalman filter (Oct–Mar owner); requirements at least 20 dB cut at 6–12 Hz and at most 3 dB loss below 1 Hz (verify with sine sweep 6–12 Hz plus 0.5/1 Hz); scaling 20:1–1000:1, default 100:1; tool_error = hand_error / S (2 mm hand /100 = 20 um tool, passes 25 um; /20 = 100 um, borderline; visual-servoed 200 um targets tolerate smooth 2–3 mm bias the operator adapts to, but NOT non-linear distortion changing over 0.5–1 mm over a few mm travel, nor jitter/drift/latency). Resolution note: no smallest-step spec was published; jitter is the floor. Heritage jitter with the NDI probe (150 samples at 15 Hz): bottom 0.13 +/-0.11 mm, middle 0.15 +/-0.10 mm, top 0.29 +/-0.34 mm; accuracy 0.82/1.14/1.98 mm bottom/mid/top; rotation 0.04 deg perpendicular / 0.09 deg coplanar. Tool-side at 100:1, 0.15 mm maps to 1.5 um jitter, fine versus 10 um repeatability and 25 um budget. Tremor needs resolution, not absolute accuracy: a 2 mm DC offset plus 0.5 mm 10 Hz wobble is filterable, but 2 mm random 10 Hz jumps are not; need in-band (6–12 Hz) jitter about 0.1–0.2 mm RMS hand-side at 100 Hz or more. Heritage had tremor = none (only moving-average length 5).
 10. **Outputs:** x/y/z plus pitch/yaw plus status go to the follower command, the timestamped pose log, and the visualization link.
 
-**FPGA board note:** board and HDL partitioning are NOT frozen — leave a generic "FPGA (TBD)" box and do not pin drivers or constraints.
+**FPGA board note (historical):** the drawing brief said board/HDL partitioning was not frozen and asked for a generic "FPGA (TBD)" box. Decision #26 locks a PS-less XC7A35T-1FTG256C on one four-layer BRD-01 (#25); label the FPGA with that part if the chart is redrawn. Do not add a PS, DDR3, Linux or a second board.
 
 ---
 
@@ -257,16 +266,23 @@ Triggers, all leading to halt within 100 ms with status reported: stop command; 
 
 ## 12. Open decisions / traps (show as diamonds or notes, do not resolve silently)
 
-- FPGA part and HDL partitioning not frozen — leave a generic "FPGA (TBD)" box.
-- Final field-generator placement plus drive current (ICNIRP 27 uT check pending sim).
-- Final ADC part pending the §9e vetting gate (simultaneous sigma-delta locked, SAR fallback documented, single/muxed/32 kSPS rejected).
-- Final pen coil (A–E plus air/ferrite) pending kappa-grid plus jitter measurement; assume bespoke worse than NDI until measured.
+**Status note (2026-11-25): point-in-time charting list, kept as history.** Locked
+since: #19 (DAC80508 + 8× LTC1563-2, 216-bit burst), #21/#28 (one 32.768 MHz XO,
+XO-direct), #25 (one four-layer BRD-01), #26 (PS-less XC7A35T-1FTG256C), #27
+(eight vendor FG coils), #30 (arm-only STOP, no panel E-stop) and #31 (BRD-01
+power tree). Annotations below mark the settled parts; the remaining items are
+genuinely open verification gates, not choices to re-open.
+
+- FPGA part and HDL partitioning not frozen — leave a generic "FPGA (TBD)" box. **Historical guidance only:** #26 locks a PS-less XC7A35T-1FTG256C on one four-layer BRD-01 (#25). Draw that part; do not add a PS, DDR3/Linux, second board or "TBD" box.
+- Final field-generator placement plus drive current (ICNIRP 27 uT check pending sim). **Assembly locked by #27/#11:** eight vendor coils at the `fSysSetup.m` centres, 150 mA prototype first / 250 mA nominal / 500 mA max. The trace-based field/ICNIRP report is still absent — that verification stays open.
+- Final ADC part pending the §9e vetting gate (simultaneous sigma-delta locked, SAR fallback documented, single/muxed/32 kSPS rejected). **Part locked:** AD7768-4 (`SC-05`, design_order); the §9 vetting gate applies only to fallbacks, not to the selected part.
+- Final pen coil (A–E plus air/ferrite) pending kappa-grid plus jitter measurement; assume bespoke worse than NDI until measured. **Choice locked by #4:** coil B, air core; A/E alternates, C air out. Only the kappa-grid/jitter measurement (PEN-3) stays open.
 - Dipole model invalid near large/planar coils — always draw filament (3.17), never (3.15).
 - Never put the pose solver on PC/MATLAB in the chart (stale Phase 1); host is logging/calibration/visualization only.
 - Never edit vendor snapshots or frozen reference PDFs; regenerate extracts with document tools, do not hand-edit outputs.
-- Single-channel or multiplexed ADC variants reintroduce mux-skew and crosstalk verbatim and do NOT qualify as fallback; only simultaneous parts count.
+- Single-channel or multiplexed ADC variants reintroduce mux-skew and crosstalk verbatim and do NOT qualify as fallback; only simultaneous parts count. **Locked:** AD7768-4 is the selected simultaneous part (`SC-05`); this is a rejected-path rule, not an open selection.
 - `TolX = 1e-6` is an optimizer step (1 um), not system resolution.
-- Metal within 150 mm invalidates all accuracy claims; ferrite gain is not free accuracy (linearity/noise tradeoff).
+- Metal within 150 mm invalidates all accuracy claims (`SC-04b`); ferrite gain is not free accuracy (linearity/noise tradeoff, #4 air-core pen lock).
 
 ---
 

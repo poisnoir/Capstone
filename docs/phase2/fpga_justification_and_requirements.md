@@ -1,5 +1,7 @@
 # Phase 2 — FPGA core justification and technical requirements
 
+**Status (2026-11-25):** Board/part locked to BRD-01 / XC7A35T-1FTG256C (decision #26) and excitation locked to M16 (DAC80508 + 8× LTC1563-2, #19); clock tree is XO-direct per SC-07/#28. ADC lane numbers updated to 4 channels / 32.768 Mbit/s (SC-05b/D3-A); placed-and-routed utilisation stays TBD until synthesis.
+
 **Purpose.** This is the Phase 2 report section for the FPGA core: the component-level
 alternative analysis, the full-FPGA decision, the technical requirements, the design
 development plan, verification, schedule/budget impact, risks, and open items. It expands
@@ -17,8 +19,9 @@ the Pico 2 boards is a separate subsystem.
 `HAJ_Thesis_2018.pdf` §3–4; `AnserEMT-onlineversion.pdf`;
 `Catheter Position Tracking ... ODonoghue et al.pdf`; AD7768/AD7768-4 Rev.D datasheet.
 
-**Status.** Phase 2 design baseline. The FPGA board/part is **not frozen** (per
-`AGENTS.md`); resource and timing numbers are estimates until synthesis/place-and-route.
+**Status.** Phase 2 design baseline. The FPGA board/part is **locked**: PS-less
+XC7A35T-1FTG256C on BRD-01 (decision #26; XC7A50T same-footprint escape). Resource and
+timing utilisation remain estimates until synthesis/place-and-route.
 
 ---
 
@@ -50,8 +53,9 @@ DDS, ADC capture, demodulation, filament model, and LM/TRF solver. The host is l
 logging, calibration UI, and visualization. The motor/Pico firmware consumes the pose and
 status.
 
-The FPGA board/part remains **TBD**. Do not pin drivers, constraints, or a specific device
-until the team freezes the board (`AGENTS.md`).
+The FPGA board/part is **locked**: PS-less XC7A35T-1FTG256C on BRD-01
+(decision #26; XC7A50T-1FTG256C is the same-footprint upgrade). Excitation is locked to
+M16 — DAC80508 + 8× LTC1563-2 (#19). Only synthesis-dependent numbers stay open.
 
 ---
 
@@ -92,7 +96,7 @@ is the **solver**, not the ADC.
 
 | Ancestor limitation | Consequence | Our fix |
 |---|---|---|
-| Separate DDS and ADC clocks | spectral leakage; practical L≥250; no exact integer-J | one TCXO → PLL → clk_dds + MCLK_adc |
+| Separate DDS and ADC clocks | spectral leakage; practical L≥250; no exact integer-J | one 32.768 MHz XO → MCLK (33 Ω) + FPGA/DDS clock; integer divides (SC-07/#28) |
 | Muxed 16-bit NI-6216 | mux skew; phase calibration; 100 kS/s/ch | AD7768-4 simultaneous 24-bit, 256 kSPS/ch |
 | Bulk matrix demodulation | memory/MAC heavy; L×8 | streaming Goertzel per tone |
 | No parallel filament kernel | ~800 segments/eval serial | 800-segment parallel/pipelined kernel |
@@ -120,11 +124,11 @@ The 133 µs digital-filter group delay is latency, not the frame cadence. The FP
 | ADC group delay | 133 µs |
 | Raw frame rate | 500 frames/s |
 | DAQ heritage | 16-bit muxed, 100 kS/s/ch; 512 samples = 5.12 ms; L=250 = 2.5 ms |
-| ADC vs DAQ | 24-bit simultaneous; 3-channel aggregate 768 kSPS; 2 ms frame |
+| ADC vs DAQ | 24-bit simultaneous; 4-channel aggregate 1.024 MSPS; 2 ms frame |
 
 N=256 would give a 1 ms frame, but only 2 bins between tones and no Hamming fallback;
 N=1024 would give 4 ms. The 2 ms is a **tone-plan choice**, not an ADC limit. The ADC is
-faster than the heritage DAQ in the actual 3-channel simultaneous case.
+faster than the heritage DAQ in the actual 4-channel simultaneous case.
 
 ### 2.5 Raw frames versus poses
 
@@ -257,8 +261,9 @@ raise throughput but cannot reduce latency.
 ## 5. FPGA architecture
 
 ```
-TCXO ──→ PLL ──→ clk_dds ──→ 8-tone DDS ──→ DAC ──→ reconstruction ──→ coil driver
-  │                └──→ MCLK_adc ──→ AD7768-4 ──→ DCLK/DOUT capture
+32.768 MHz XO ──→ FPGA clock / DDS clock ──→ 8-tone DDS ──→ DAC80508 ──→ 8× LTC1563-2 ──→ driver
+  │                                            (SPI = XO ×3 ÷2 = 49.152 MHz)
+  ├──33 Ω──→ MCLK_adc ──→ AD7768-4 ──→ DCLK/DOUT capture
   │                                      │
   │                                      └──→ 8-tone Goertzel ──→ B vector
   │                                                               │
@@ -278,16 +283,16 @@ TCXO ──→ PLL ──→ clk_dds ──→ 8-tone DDS ──→ DAC ──�
 
 | Module | Function |
 |---|---|
-| Clock/reset | TCXO → PLL → `clk_dds`, `MCLK_adc`; one-time ADC sync; integer-J frame counter |
+| Clock/reset | One 32.768 MHz XO → MCLK via 33 Ω + FPGA/DDS clock; PLL ×3 only to DAC SPI; one-time ADC sync; integer-J frame counter (SC-07/#28) |
 | DDS/excitation | 8 tones, 20–34 kHz @2 kHz, 32-bit accumulator, amplitude/phase control |
-| DAC/reconstruction | 8-tone analog excitation; part/filter TBD |
-| ADC capture | 3 active channels, 24-bit, DCLK/DOUT, 256 kSPS, 512-sample frames, ping-pong BRAM/DMA |
+| DAC/reconstruction | 8-tone analog excitation; **DAC80508 + 8× LTC1563-2 locked (#19)**, update 199.805 kSPS, SPI 49.152 MHz |
+| ADC capture | 4 active channels (D3-A), 24-bit data in 32-bit frames, DCLK/DOUT, 256 kSPS, 512-sample frames, ping-pong BRAM/DMA |
 | Demod | 8 Goertzel tones; rectangular primary, Hamming fallback; \(Y_I/Y_V\), phase sign, fixed group-delay offset |
 | Filament model | 8 coils, 100 segments/coil, Eq.3.17–3.18; parallel/pipelined B and Jacobian |
 | Solver | LM/TRF, 5 DOF, bounds, warm start, retry, residual gate |
 | Calibration | κ per coil/tone, 7×7 grid, 98 points, per-sensor switch |
 | Output/status | 5-DOF pose + timestamp + tracking status; host and motor links |
-| Safety/watchdog | tracking-lost, out-of-volume, fault, comm-loss; stop ≤100 ms |
+| Safety/watchdog | tracking-lost, out-of-volume, fault, comm-loss; arm-motion STOP ≤100 ms, field/DDS/DAC/pose continue (#30); genuine FPGA/ADC/driver fault → separate tracker-side safe state |
 
 ### 5.2 Data flow and timing
 
@@ -310,8 +315,8 @@ Status tags: `LOCKED` (source-backed), `PROPOSED` (needs approval/test), `TBD`.
 | ID | Requirement | Threshold | Rationale | Verification |
 |---|---|---|---|---|
 | FPGA-F01 | 8-tone DDS | 20–34 kHz, 2 kHz spacing, 32-bit accumulator, continuous phase, amplitude control | `docs/phase2/tone_plan.md` | 8-tone FFT; phase continuity |
-| FPGA-F02 | Common clock | One TCXO → PLL → `clk_dds` + `MCLK_adc`; integer-J; one-time sync | Removes DDS/ADC leakage; common-clock architecture | Clock-phase sweep; integer-J leakage |
-| FPGA-F03 | ADC capture | 3 active channels; 24-bit; DCLK/DOUT; 256 kSPS; 512 samples/frame; DRDY; ping-pong; zero drops | AD7768-4; frame timing | 1-hour capture; drop counter |
+| FPGA-F02 | Common clock | One 32.768 MHz XO → `MCLK_adc` via 33 Ω + FPGA/DDS clock; PLL ×3 → ÷2 DAC SPI only; integer-J; one-time sync (SC-07/#28) | Removes DDS/ADC leakage; common-clock architecture | Clock-phase sweep; integer-J leakage |
+| FPGA-F03 | ADC capture | 4 active channels (D3-A); 24-bit data in 32-bit frames; DCLK/DOUT; 256 kSPS; 512 samples/frame; DRDY; ping-pong; zero drops | AD7768-4; frame timing | 1-hour capture; drop counter |
 | FPGA-F04 | Demod | 8 Goertzel tones; rectangular primary, Hamming fallback; \(Y_I/Y_V\); phase sign; fixed group-delay offset | Tone plan; `fSysGetField.m` | MATLAB golden comparison |
 | FPGA-F05 | Filament model | 8 coils × 100 segments; Eq.3.17–3.18; parallel; B and Jacobian | Thesis §3; `spiralCoilFieldCalcMatrix.m` | Golden comparison; field probe |
 | FPGA-F06 | Solver | LM/TRF; 5 DOF; bounds; warm start; retry; residual gate | Thesis Eq.3.26–3.27; `fSysDecodeField.m` | Golden; 98-point accuracy |
@@ -323,27 +328,27 @@ Status tags: `LOCKED` (source-backed), `PROPOSED` (needs approval/test), `TBD`.
 | ID | Requirement | Threshold | Rationale | Verification |
 |---|---|---|---|---|
 | FPGA-P01 | Pose rate | **≥100 poses/s worst-case**, including `MaxFunEvals`/retry; 500 raw frames/s; 500 Hz pose stretch | Phase 1 #16 | Worst-case timed run; drop counter |
-| FPGA-P02 | Latency/stop | Filter-off ≤20 ms; filter-on ≤100 ms; stop ≤100 ms | Phase 1 #14–15, #17 | Onset/stop timing |
+| FPGA-P02 | Latency/stop | Filter-off ≤20 ms; filter-on ≤100 ms; arm-motion STOP ≤100 ms (field/DDS/DAC/pose continue, #30) | Phase 1 #14–15, #17; #30 | Onset/stop timing |
 | FPGA-P03 | Timing budget | Acquisition 2.000 ms; group delay 0.133 ms; demod+solve <7.87 ms sequential | `docs/phase2/tone_plan.md`; 10 ms budget | Timed measurement |
 | FPGA-P04 | Solver throughput | 2.5–5.8 GFLOP/s worst-case at 100 Hz; FPGA margin | `fpga_vs_mcu_compute_budget.md` | HLS/benchmark |
-| FPGA-P05 | Tone accuracy/stability | TCXO ppm; integer-J; phase noise within budget | Tone plan | Spectrum/phase test |
+| FPGA-P05 | Tone accuracy/stability | XO ppm (CSX750FBC32.768M-UT); integer-J; phase noise within budget | Tone plan; SC-07 | Spectrum/phase test |
 | FPGA-P06 | Spur/leakage | 60–70 dB below tone; rectangular/Hamming | `docs/phase2/anser-baseline-findings.md` | 8-tone FFT |
 
 ### 6.3 Interface
 
 | ID | Requirement | Threshold | Rationale | Verification |
 |---|---|---|---|---|
-| FPGA-I01 | ADC header | 3 active channels; 4/2 DOUT lanes; DCLK 6.144/12.288 MHz; 2×8/custom header, not 2×6 Pmod | AD7768-4 pin count | Pin-budget review; capture |
+| FPGA-I01 | ADC interface | 4 active channels; 4/2 DOUT lanes; DCLK 8.192/16.384 MHz; **board nets on BRD-01, no external 2×8/custom header** | SC-05b/`icd/adc_fpga.md`; a 2×6 Pmod is insufficient — rationale for on-board nets | FPGA pin/bank assignment review; capture |
 | FPGA-I02 | DAC/excitation | 8 tones; M16 DAC80508 (16-bit, 8 ch, 200 kSPS) + 8× LTC1563-2 (4th-order, 60 kHz); SPI 49.152 MHz; DAC update 199.805 kSPS | Driver interface | Two-tone/8-tone FFT; filter/image/EVM |
 | FPGA-I03 | Host link | ≥100 Hz pose log; calibration UI; no pose solve on host | Full-FPGA decision | Log rate; host review |
-| FPGA-I04 | Motor/Pico link | Pose/status; engage/stop; ≤100 ms | Phase 1 #17 | Integration test |
+| FPGA-I04 | Motor/Pico link | Pose/status; engage/arm-motion STOP; ≤100 ms; no field or rail switching (#30) | Phase 1 #17; #30 | Integration test |
 | FPGA-I05 | Clock/jitter | MCLK 32.768 MHz; jitter ≤30 ps for 104 dB (or system target) | RQ-A4 correction | Jitter measurement |
 
 ### 6.4 Resource and implementation
 
 | ID | Requirement | Threshold | Rationale | Verification |
 |---|---|---|---|---|
-| FPGA-R01 | DSP/BRAM/LUT | 800-segment kernel + 8-tone Goertzel + solver; ≤70% utilisation; board TBD | Compute budget | Synthesis/place-and-route |
+| FPGA-R01 | DSP/BRAM/LUT | 800-segment kernel + 8-tone Goertzel + solver; ≤70% utilisation on XC7A35T-1FTG256C (50T escape); utilisation TBD until P&R | Compute budget; #26 | Synthesis/place-and-route |
 | FPGA-R02 | Memory | Frames, geometry, calibration; ping-pong BRAM/DDR; no drops | 500 frames/s | Resource report; soak test |
 | FPGA-R03 | Timing closure | 100–200 MHz PL clock; CDC clean; deterministic | Real-time pipeline | Static timing analysis |
 | FPGA-R04 | Toolchain | HLS/HDL flow; float/fixed decision; reproducible build | Development plan | Build log; review |
@@ -352,7 +357,7 @@ Status tags: `LOCKED` (source-backed), `PROPOSED` (needs approval/test), `TBD`.
 
 | ID | Requirement | Threshold | Rationale | Verification |
 |---|---|---|---|---|
-| FPGA-S01 | Fault/tracking loss | Status + stop ≤100 ms | Phase 1 #17 | Fault injection |
+| FPGA-S01 | Fault/tracking loss | Status + arm-motion STOP ≤100 ms (#30); genuine FPGA/ADC/driver fault → separate tracker-side safe state | Phase 1 #17; #30 | Fault injection |
 | FPGA-S02 | Watchdog/comm loss | Safe state; no motion on loss | Phase 1 non-functional | Fault injection |
 | FPGA-S03 | Pose-path integrity | No single point of failure; self-test/CRC | Safety review | Review/test |
 
@@ -360,7 +365,7 @@ Status tags: `LOCKED` (source-backed), `PROPOSED` (needs approval/test), `TBD`.
 
 - ≥100 poses/s **worst-case**, including `MaxFunEvals` and retry.
 - 2.000 ms frame; 500 raw frames/s; zero dropped frames over 1 hour.
-- Filter-off latency ≤20 ms; filter-on ≤100 ms; stop ≤100 ms.
+- Filter-off latency ≤20 ms; filter-on ≤100 ms; arm-motion STOP ≤100 ms (#30; field/DDS/DAC/pose continue).
 - 5-DOF accuracy/repeatability per Phase 1 #5–6, #11; 98-point RMS Eq.7.10.
 - ICNIRP ≤27 µT at accessible points; thermal/EMC per Phase 1 #20–25.
 - 500 Hz pose is a stretch goal, not the baseline.
@@ -373,8 +378,8 @@ Status tags: `LOCKED` (source-backed), `PROPOSED` (needs approval/test), `TBD`.
 
 | WP | Deliverable | Depends on | Status |
 |---|---|---|---|
-| WP-1 | System contract (SC-0): frame/volume, tone plan, ADC contract, budget | — | Tone plan locked; ADC datasheet in place; contract TBD |
-| WP-2 | DDS + clock/PLL + DAC interface | SC-0, board | TBD |
+| WP-1 | System contract (SC-0): frame/volume, tone plan, ADC contract, budget | — | Locked: tone plan, ADC contract, contract v1.0.0 |
+| WP-2 | DDS + XO clock/PLL-to-SPI + M16 DAC interface | SC-0, BRD-01 | TBD (implementation) |
 | WP-3 | ADC capture (DCLK/DOUT, DRDY, ping-pong) | ADC-5, board | TBD |
 | WP-4 | Goertzel demod + \(Y_I/Y_V\) + golden comparison | WP-3, tone plan | TBD |
 | WP-5 | Parallel filament kernel (B, J) | FG-1 model | TBD |
@@ -410,7 +415,7 @@ Status tags: `LOCKED` (source-backed), `PROPOSED` (needs approval/test), `TBD`.
 | Filament B/J | Model correctness | ≤20% vs field probe / golden |
 | Worst-case solver | 100 Hz guarantee | ≥100 poses/s with retry |
 | 1-hour moving run | Determinism | Zero dropped frames |
-| Latency/stop | Real-time safety | ≤20/100 ms; stop ≤100 ms |
+| Latency/stop | Real-time safety | ≤20/100 ms; arm-motion STOP ≤100 ms (#30) |
 | 98-point RMS | Accuracy | Eq.7.10 target |
 | ICNIRP/thermal/EMC | Safety/environment | Phase 1 #20–25 |
 
@@ -462,12 +467,12 @@ parallel-kernel rationale.
 
 | Risk | Impact | Mitigation |
 |---|---|---|
-| FPGA board/part not frozen | resource/timing unknown; schedule | freeze board early; keep RTL/HLS portable; ask before pinning |
+| FPGA resource/timing not yet synthesized | utilisation/timing unknown; fit risk | part/board locked (#26/#25); keep RTL/HLS portable; 50T same-footprint escape; synthesis early |
 | HLS resource/timing | may not fit or close timing | parallel/pipelined kernel; float/fixed study; synthesis early |
 | Solver worst-case/retry | misses 100 Hz | warm start; analytic Jacobian; relaxed tolerance; cap retries; MATLAB golden |
-| ADC header/pin count | 2×6 Pmod insufficient | use 2×8/custom header; verify pin budget |
-| Clock jitter | SNR/phase degradation | TCXO/PLL selection; measure; 30 ps target for 104 dB |
-| DAC part/reconstruction | excitation/spur | early DAC selection; 8-tone FFT |
+| ADC lane/pin count | 2×6 Pmod insufficient | lanes are board nets on BRD-01, not an external header (SC-05b); verify FPGA pin/bank budget |
+| Clock jitter | SNR/phase degradation | XO part locked (CSX750FBC32.768M-UT); measure on BRD-01; 30 ps target for 104 dB |
+| DAC part/reconstruction | excitation/spur | DAC80508 + 8× LTC1563-2 locked (#19); bench 8-tone EVM/FFT |
 | Thermal/power | board/enclosure | thermal test; power budget |
 | Schedule/learning curve | integration slip | early prototype; simulation; staged gates |
 
@@ -479,11 +484,11 @@ product fallback; it is only a development reference.
 
 ## 11. Open items
 
-1. FPGA board/part and toolchain (do not pin until frozen).
+1. FPGA toolchain/build flow (part locked #26; board BRD-01).
 2. HLS versus RTL split; float versus fixed point.
-3. DAC part and reconstruction filter.
-4. ADC header/pin budget (2×8/custom; not 2×6 Pmod).
-5. TCXO/PLL jitter measurement and clock tree.
+3. M16 bench: DAC80508 SPI/LDAC and 8-tone EVM (part/filter locked #19).
+4. ADC lane/bank pinout on BRD-01 (on-board nets; a 2×6 Pmod would be insufficient).
+5. XO jitter measurement on BRD-01 (clock tree locked by SC-07/#28).
 6. Resource/timing estimate and place-and-route.
 7. Solver precision/tolerance and worst-case retry policy.
 8. Host link/protocol and pose-log format.
@@ -547,6 +552,6 @@ Detailed derivation: `docs/phase2/fpga_vs_mcu_compute_budget.md`.
 | #9–10 tool accuracy | FPGA-P01/P03; solver |
 | #12–13 tremor | FPGA-P01; 100 Hz pose |
 | #14–16 latency/rate | FPGA-P01/P02/P03 |
-| #17 stop | FPGA-S01/S02 |
+| #17 arm-motion stop | FPGA-S01/S02 (#30) |
 | #20 ICNIRP | FG-1; INT-7 |
 | #24 cost | §9.2 |

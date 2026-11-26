@@ -10,6 +10,11 @@ requirement without a test is not frozen.
 `docs/handoff/system-flowchart-handoff.md`; `HAJ_Thesis_2018.pdf` §4.2–4.8; Jaeger Ch.3/Ch.7
 (Eq.3.17–3.27, 7.1–7.9); `simulations/field_jacobian.py`.
 
+**Contract alignment (2026-11-25).** Gate rows follow contract 1.1.0 (pending tag):
+adopted power tree v2 (#31 supersedes #20's part list), arm-only STOP (#30),
+XO-direct clock (#28), FG-01 vendor coils (#27), BRD-01 one-board/PS-less FPGA
+(#25/#26).
+
 **Status tags.**
 
 - `LOCKED` — source-backed decision; do not reopen without a written deviation.
@@ -58,10 +63,10 @@ only after ADC-5.
 |---|---|---|---|
 | **SC-0** | Frame, volume, tone plan, ICNIRP rule, ADC contract, clock tree, budget | Nothing | `contract/system_contract.md` signed; D1-B/D3-A/D4 locked; tone plan SC-03; ADC input/clock/lane contract; budget |
 | **FG-1** | Coil geometry, current, field, ICNIRP, thermal, current-sense, κ | SC-0 | Field map + ICNIRP closure + Jacobian conditioning + thermal + current-sense; `docs/phase2/fg_requirements.md` |
-| **DRV-2** | DAC/reconstruction, driver topology, power/PSU, protection | FG-1 (R/L, current, current-sense) | Driver **A** locked; power **C1** locked; current-sense **A+** locked; **DAC/filter M16 locked (DAC80508 + 8× LTC1563-2)**; one box + E-stop locked; 150 mA first; **BOM/schematic Rev 0.02 issued**; **Pmod DA4 allowed as a 12-bit functional stand-in (182 kSPS, different 32-bit protocol), not for accuracy**; **16-bit bench option: TI DAC80508-04EVM (~$59 USD), functional/INL only, not 49 MHz timing**; **DAC placement CLOSED: DAC and FPGA are both on BRD-01 (#25/#26); 49 MHz SPI is a ≤50 mm board trace with the +2.5 ns SDI delay (`contract/icd/dac_fpga.md`, frozen 2026-11-02)** |
+| **DRV-2** | DAC/reconstruction, driver topology, power/PSU, protection | FG-1 (R/L, current, current-sense) | Driver **A** locked; power **C1** locked; current-sense **A+** locked; **DAC/filter M16 locked (DAC80508 + 8× LTC1563-2)**; one box + arm-only STOP locked (#30); 150 mA first; **BOM/schematic Rev 0.02 issued**; **Pmod DA4 allowed as a 12-bit functional stand-in (182 kSPS, different 32-bit protocol), not for accuracy**; **16-bit bench option: TI DAC80508-04EVM (~$59 USD), functional/INL only, not 49 MHz timing**; **DAC placement CLOSED: DAC and FPGA are both on BRD-01 (#25/#26); 49 MHz SPI is a ≤50 mm board trace with the +2.5 ns SDI delay (`contract/icd/dac_fpga.md`, frozen 2026-11-02)** |
 | **PEN-3** | \(N\), \(A\), \(\mu_a\), air vs ferrite, source impedance, \(\sigma_B\)/CRLB | FG-1 (field at pen) | **B air-core LOCKED**; INA163 recommended; `A_sens(f)`; \(\sigma_B\)/weighted CRLB; `pen_link_budget.md` |
 | **FE-4** | Gain, noise, CMRR, input protection, differential output stage | PEN-3 + SC-0 (ADC contract) | AD7768-4 locked; **INA163 + ADA4940-2 locked**; gain/CMRR/σ_B/phase verified; output drives AD7768 RC/input |
-| **ADC-5** | Input network, drive, reference, clocking, lane rate, pin count | FE-4 + SC-0 (ADC contract) | 4 ch/4 lanes/8.192 MHz/2×8 header proposed; code density, FFT/SINAD/THD, CMRR, ref noise, lane capture, zero dropped frames |
+| **ADC-5** | Input network, drive, reference, clocking, lane rate, pin count | FE-4 + SC-0 (ADC contract) | 4 ch/4 lanes/8.192 MHz on BRD-01 board nets (#21/#25); code density, FFT/SINAD/THD, CMRR, ref noise, lane capture, zero dropped frames |
 | **DIG-6** | SYNC/START/DRDY, integer-J, Goertzel, solver, latency/rate | ADC-5 + SC-0 (tone plan) | M16 clock/SPI locked; requirements proposed; 8.633 ms/115.8 Hz budget; integer-J leakage, golden comparison, 1-hour run at test |
 | **INT-7** | κ calibration, 98-point accuracy, tremor, latency, stop, ICNIRP scan | All upstream | Phase 1 specs #1–25; test report; Phase 2 report |
 
@@ -84,7 +89,7 @@ tone plan ↔ integer-J/frame length.
 | SC-04b | ICNIRP guard: **non-metal access barrier, not an EMF shield**; open-top ring/fence/spacer at the ~57 mm contour, no metal within 150 mm, plastic fasteners, removable; does not reduce the 150 mm volume (28.6 mm below the B cube bottom) | D2 decision 2026-10-27; Phase 1 #20; 150 mm metal-free rule | LOCKED | Field probe at accessible boundary + guard check |
 | SC-05 | ADC contract: AD7768-4, differential ±VREF (±4.096 V), VCM output, input network (precharge buffer, external RC/charge reservoirs, drive/settling); preamp input capacitance ≤20 pF in the coil budget; ADR434 4.096 V reference, MCLK ≤32.768 MHz, ODR 256 kSPS, DCLK/DOUT lanes, SYNC/START/DRDY, SPI configuration only | AD7768 datasheet; `BOM_ADC-01`; correct stale RQ-A4/A5/A6 | LOCKED part, PROPOSED interface corrections | Datasheet + bench (ADC-5) |
 | SC-06 | Channel map = **D3-A**: Ch0 current-sense, Ch1 pen 1, Ch2 pen 2, Ch3 reference; Ch2 wired but enabled when pen 2 is built | `adc_justification.md`; `fSysSetup.m`; D3 decision | LOCKED (D3-A) | Schematic review |
-| SC-07 | Clock tree: one TCXO → PLL → clk_dds + MCLK_adc; single sync reset; integer-J frames | AGENTS full-FPGA decision | LOCKED architecture, TBD part | Clock-phase sweep; leakage test |
+| SC-07 | Clock tree: one 32.768 MHz XO → ADC MCLK (33 Ω) + FPGA clock input; DDS 32.768 MHz; PLL ×3 → ÷2 = 49.152 MHz DAC SPI; ÷164 DAC; ÷128 ADC; no buffer; single sync reset; integer-J frames | Decision #21; contract SC-07 | LOCKED architecture + part | Clock-phase sweep; leakage test |
 | SC-08 | Budget gate: \(T_{pose}=T_{acq}+T_{demod}+T_{solv}<10\) ms; pose rate ≥100 Hz; latency ≤20 ms off / ≤100 ms on; lane rate and pin budget | Phase 1 #14–16; `adc_justification.md` §5 | PROPOSED | Budget spreadsheet + timed loop |
 | SC-09 | Units/naming: RMS unless stated; dBc; T/A; mm; sample/frame definitions | Team convention | PROPOSED | Document review |
 | SC-10 | Change control: one owner per interface; freeze date; written deviation for any reopen | Team process | PROPOSED | Signed table |
@@ -102,7 +107,7 @@ and conditioning map that the pen coil and solver consume.
 
 | ID | Requirement | Source / rationale | Status | Verification |
 |---|---|---|---|---|
-| FG-01 | **Trace-based geometry check done — `simulations/fg1/REPORT.md`** (per-coil field 0.83× the generic model at 150 mm; array 0.97×; ICNIRP 18.7 µT at 250 mA). **8 vendor AnserEMT Rev C emitter coils**, one per position, no stack; 25 turns dual-layer, 70 mm outer, 0.5/0.25 mm, 1.6 mm, L 79 µH / R 2.9 Ω; 2 machined plates at the `fSysSetup.m` centres (±93.543/±68.55 mm, 2,4,5,7 at 45°); regenerated Gerbers; tolerance ±0.2 mm | AnserEMT 2017 Table 2; `fSysSetup.m:90-105`; decision #27 | **Assembly LOCKED (2026-11-02)**; plate tolerance at FG-1 | CMM/optical check of the 8 centres |
+| FG-01 | **8 vendor AnserEMT Rev C emitter coils**, one per position, no stack; 25 turns dual-layer, 70 mm outer, 0.5/0.25 mm, 1.6 mm, L 79 µH / R 2.9 Ω; 2 machined plates at the `fSysSetup.m` centres (±93.543/±68.55 mm, 2,4,5,7 at 45°); regenerated Gerbers; tolerance ±0.2 mm | AnserEMT 2017 Table 2; `fSysSetup.m:90-105`; decision #27 | **Assembly LOCKED (2026-11-02)**; plate tolerance at FG-1 | CMM/optical check of the 8 centres |
 | FG-02 | Electrical: vendor coil **R 2.9 Ω, L 79 µH** (AnserEMT 2017 Table 2; thesis §4.8 quotes 2 Ω / 70 µH) ±20%, mutual-coupling matrix at 20–30 kHz; measure every board | AnserEMT 2017; Thesis §4.8; decision #27 | PROPOSED — measure at FG-1 | LCR + impedance analyser, 8 boards |
 | FG-03 | Current: 250 mA nominal heritage, **150 mA prototype first**, 500 mA max; RMS-vs-peak convention frozen at SC-09; programmable 150–500 mA; continuous max = min(FG-06, FG-07); tolerance ±1%; drift ≤0.1% over 18–28 °C; THD ≤−60 dBc | Thesis §4.2–4.3; `driver_power_requirements.md` thermal note | PROPOSED; 150 mA first | Sense-resistor FFT + thermal soak |
 | FG-04 | Field map: B per tone at 98 points; worst-case minimum per tone; inter-coil balance; no tone below the noise floor anywhere in the volume | Jaeger Ch.3; `simulations/field_jacobian.py` | PROPOSED | Filament-model map + field probe |
@@ -112,6 +117,12 @@ and conditioning map that the pen coil and solver consume.
 | FG-08 | Current-sense: \(R_{store}\) per coil, summer scale, V/I transfer, bandwidth ≥? kHz, phase, common-mode, ADC Ch0 interface | `fSysSetup.m` `R_store`, `I_summer_scale` | PROPOSED | Inject known current; measure Ch0 |
 | FG-09 | Calibration: κ per coil/tone; 7×7 grid; drift budget; geometry tolerance included | Jaeger §7.2.2; Eq.7.10 | LOCKED method, PROPOSED numbers | 7×7 κ fit + repeat run |
 | FG-10 | Test plan: field map, ICNIRP scan, current-loop step, thermal soak, harmonic FFT | Phase 1 test plan | PROPOSED | Test report |
+
+**OPEN output of FG-1:** the trace-based geometry/ICNIRP report is **outstanding — it is not in
+this repository**. Earlier notes quoted 0.83× per-coil field at 150 mm, 0.97× array factor and
+18.7 µT at 250 mA from that report, but those numbers are **not evidenced here**; regenerate the
+report before relying on any ICNIRP geometry claim. The `simulations/field_jacobian.py`
+first-pass scan below is the only traceable in-repo field evidence.
 
 **Known closure to resolve at this gate (filed filament sim, equal 250 mA per coil):**
 
@@ -153,9 +164,9 @@ after FG-1. First-pass requirements: `docs/phase2/driver_power_requirements.md`.
 | DRV-02 | Output: 250 mA nominal / 500 mA max; **150 mA prototype first**; programmable 150–500 mA; load **79 µH + 2.9 Ω** (paper; thesis 70 µH/2 Ω); at 34 kHz \(\lvert Z\rvert\approx16.9\ \Omega\); 250 mA → 4.2 V peak; 500 mA → 8.4 V peak, **above the 7.5 V rail** (500 mA only below ~30 kHz); 20–34 kHz | AnserEMT 2017 Table 2; Thesis §4.2–4.3; `tone_plan.md` | PROPOSED; 150 mA first | Load-step test |
 | DRV-03 | Constant-current: phase margin ≥45° at 34 kHz; output impedance high; current error ≤0.1%; drift ≤0.1% over 18–28 °C | Thesis §4.3.3; O'Donoghue §II | PROPOSED | Step/load response; current log |
 | DRV-04 | Distortion: THD ≤−60 dBc at 250 mA; **all-tone IMD** below the spur budget (3rd-order products fall on tone bins); crosstalk ≤−60 dB; noise | Docs spur budget; `tone_plan.md` IMD note | PROPOSED | Sense-resistor FFT + 8-tone IMD |
-| DRV-05 | Power: **C1 + medical-grade locked** — one external 15 V/60 W-class medical-grade adapter (no on-board mains stage) + on-board DC-DC/LDO tree; +15 V, −15 V, +5 V, +3.3 V; FPGA core via board regulator (+1.8 V only if final board needs it) | `driver_power_requirements.md` §3 | LOCKED C1 + medical-grade | Rail noise/load test |
+| DRV-05 | Power: **C1 + medical-grade locked** — one external ME60A1503F01 15 V/60 W adapter (no on-board mains stage); BRD-01 rails per **adopted v2 (#31)**: `+15V_FUSED` → `+6V` (TPSM63604) → `+1V0_FPGA` / `+1V8_FPGA` / `+3.3V` (TPS62130A) and `+5V_EXC` / `+5VA` (TPS7A4701); `±12VA` via MGJ2D151515SC + LT3045-1/LT3093; OKI/RV/TPS7A20 removed | `driver_power_requirements.md` §3; #20 superseded in part by #31; `docs/phase2/power_tree_v2.md` | LOCKED adapter + v2 rails (#31) | Rail noise/load test |
 | DRV-06 | Thermal: 8 channels at 250 mA; coil \(I^2R\) ≈0.125 W/coil, sense ≈0.06 W each, LMH6321 dissipation; no 3 kg heatsink; ~180 cm² board; **one-box enclosure with internal shield partition** | Thesis §4.3; measured R/L; D5 decision | LOCKED one-box; thermal test PROPOSED | Thermal soak |
-| DRV-07 | Protection: overcurrent, overtemp, disable, fault, stop ≤100 ms; no DC current in coil (100 µF AC coupling); **hardware E-stop: NC mushroom button in driver enable chain, independent of FPGA; opto status; software watchdog; A+ per-coil peak comparators** | Phase 1 #17; thesis §4.3.1; D5 decision | LOCKED E-stop; other protection PROPOSED | Fault injection; E-stop timing |
+| DRV-07 | Protection: overcurrent, overtemp, disable, fault, **arm-motion STOP ≤100 ms (#30)**; no DC current in coil (100 µF AC coupling); **no panel E-stop/K1/K2 on BRD-01** — `PICO_STOP_N` = `PICO_STOP_REQ_N` (`U4.P4` + `R754`) AND arm latch `U753.5 (Q)`; `U753.3 (~Q)` NC; A+ per-coil peak comparators; genuine faults still stop the DDS | Phase 1 #17; thesis §4.3.1; #30; `estop_scope_change.md` §D | LOCKED arm-only STOP; other protection PROPOSED | Fault injection; arm STOP timing with field on |
 | DRV-08 | Current-sense **A+ locked**: per-coil \(R_{store}\) + analog summer → ADC Ch0; individual peak/overcurrent comparators; no mux/extra ADC; V/I/phase at 34 kHz; keep \(R_{store}\) 0.957–1.239 Ω / summer 2.0103 baseline | `fSysSetup.m`; `driver_power_requirements.md` | LOCKED A+ | Known-current injection; phase check |
 | DRV-09 | Test: constant-current step/load, THD/IMD, thermal, fault/disable | Phase 1 test plan | PROPOSED | Test report |
 
@@ -172,9 +183,10 @@ justify a change; record the deviation. The vendor Rev A discrete class-AB board
 LMH6321 crossover, EMI/thermal). The DAC/filter is locked: **DAC80508 + 8×
 LTC1563-2**, 199.805 kSPS, SPI 49.152 MHz. Current-sense **A+** is locked (summed Ch0 +
 individual peak/overcurrent taps). Power is **C1 + medical-grade** (external
-15 V/60 W medical adapter + on-board DC-DC/LDO tree; FPGA core via its board
-regulator). Enclosure is **one box with internal shield**; hardware **E-stop**
-is a NC mushroom button in the driver enable chain, independent of the FPGA.
+15 V/60 W adapter + on-board v2 rails per #31). Enclosure is **one box with
+internal shield**; the stop is **arm-only** (#30): no panel mushroom, unswitched
+`+15V_FUSED`, and the field/pose continue through a STOP. The last
+hardware-independent stop path was removed by explicit decision.
 
 **Exit gate.** One channel constant-current verified before any accuracy claim; THD/IMD,
 thermal, protection, current-sense V/I/phase, DAC part, power rails, schematic/BOM
@@ -249,7 +261,7 @@ SAR-oriented assumptions in the earlier requirements.
 | ADC-02 | Input network: precharge buffer, input current, settling, external RC/charge reservoirs; the 73 pF coil budget covers cable + connector + **preamp input**, not the ADC switched-cap network | Datasheet; `BOM_ADC-01` open item; §4 topology correction | LOCKED contract, TBD measurement | Input-current + settling test; preamp-input capacitance check |
 | ADC-03 | Reference: ADR434 4.096 V, noise, decoupling, reference buffer | `BOM_ADC-01` | LOCKED part, PROPOSED network | Reference noise/FFT |
 | ADC-04 | Clock: MCLK ≤32.768 MHz, ODR 256 kSPS, DCLK, SYNC/START/DRDY; integer-J; jitter ≤30 ps for 104 dB at 34 kHz (1 ns only gives 73.4 dB) | Datasheet; SC-07; RQ-A4 correction | PROPOSED | Clock-phase sweep + jitter measurement |
-| ADC-05 | Lane/pin: **4 active channels**; 4 DOUT lanes; DCLK 8.192 MHz; 32-bit frames; 2×8/custom header. 2×6 Pmod is insufficient for 4 DOUT + control + MCLK | Datasheet; D3-A; Pmod 2×6 = 8 I/O | PROPOSED interface | Pin-budget review + capture |
+| ADC-05 | Lane/pin: **4 active channels**; 4 DOUT lanes; DCLK 8.192 MHz; 32-bit frames; on BRD-01 these are board nets (#21/#25), not a 2×8/custom header. A 2×6 Pmod remains insufficient for 4 DOUT + control + MCLK | Datasheet; D3-A; Pmod 2×6 = 8 I/O | PROPOSED interface | Pin-budget review + capture |
 | ADC-06 | Data path: DCLK-synchronous DOUT lanes, not SPI; SPI is configuration only | Datasheet | LOCKED correction | Logic-analyser capture |
 | ADC-07 | Test: code density, FFT/SINAD/THD, CMRR, reference noise, lane capture, zero dropped frames | `adc_justification.md` §8 | PROPOSED | Test report |
 
@@ -273,7 +285,7 @@ not patch the front end around a failing ADC.
 
 | ID | Requirement | Source / rationale | Status | Verification |
 |---|---|---|---|---|
-| DIG-01 | DDS: 8 tones, 32-bit accumulator, 4096-entry LUT, **1 SPI at 49.152 MHz (8×24-bit = 192 bits)**, phase coherence | AGENTS; `docs/phase2/anser-baseline-findings.md` §6; `dig6_requirements.md` | PROPOSED requirements | Two-tone FFT + phase |
+| DIG-01 | DDS: 8 tones, 32-bit accumulator, 4096-entry LUT, **1 SPI at 49.152 MHz (8×24-bit data + 24-bit TRIGGER = 216 bits, `icd/dac_fpga.md`)**, phase coherence | AGENTS; `docs/phase2/anser-baseline-findings.md` §6; `dig6_requirements.md` | PROPOSED requirements | Two-tone FFT + phase |
 | DIG-02 | Capture: DCLK/DOUT lanes, DRDY, ping-pong BRAM/DMA, no missed frames | ADC-5; `dig6_requirements.md` | PROPOSED requirements | 1-hour capture |
 | DIG-03 | Demod: Goertzel per tone; rectangular + integer-J primary, Hamming fallback; phase sign, \(Y_I/Y_V\), fixed group-delay offset | `fSysGetField.m`; `docs/phase2/tone_plan.md` | PROPOSED requirements | Golden comparison; rectangular vs Hamming |
 | DIG-04 | Solver: LM/TRF, bounds, warm start, retry, relaxed tolerance | `fSysDecodeField.m` | PROPOSED requirements | Golden comparison |
@@ -341,5 +353,5 @@ report.
 1. Review the Rev A draft system flow chart, board-level schematic, and system BOM; the team decides the open items before sign-off.
 2. Bench-close ADC-5: 4-channel/4-lane capture, RC settling, FFT/SINAD, zero dropped frames.
 3. Run the FG-1 closure at the 150 mm/B baseline: full CRLB/jitter, ICNIRP/current/thermal; final volume by SC-01d.
-4. Bench-close DRV-2 one channel at 150 mA: constant-current, THD/IMD, thermal, E-stop/overcurrent, EMI with the one-box shield.
+4. Bench-close DRV-2 one channel at 150 mA: constant-current, THD/IMD, thermal, arm STOP (field/pose continue) and overcurrent, EMI with the one-box shield.
 5. Bench-close DIG-6: integer-J leakage, golden demod/solver, 8.633 ms worst-case timing, 1-hour moving run.

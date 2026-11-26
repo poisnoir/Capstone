@@ -1,0 +1,257 @@
+fpga_pin,net_name,category,group,direction,io_standard,other_end,other_sheet,meaning,include_in_section3
+C11,ADC_DCLK,signal,clocking,clock in,3.3 V LVCMOS (HR bank; VCCO=3.3 V); no per-pin IOSTANDARD in schematic,U101.28 (receiver),receiver,8.192 MHz ADC serial clock from AD7768-4 U101.28; 4-lane data strobe,yes
+D13,CLOCK_32M768,signal,clocking,clock in,3.3 V LVCMOS (HR bank; VCCO=3.3 V); no per-pin IOSTANDARD in schematic,R100.1 (receiver); Y1.3 (fpga),"fpga, receiver",32.768 MHz XO Y1.3; also fanned to AD7768-4 MCLK via R100 33 ohm on receiver sheet,yes
+E7,/fpga/CFGBVS,signal,config/QSPI/JTAG,config in,3.3 V config/strapping (VCCO_0/VCCO_14 = 3.3 V); no per-pin IOSTANDARD in schematic,R154.2 (fpga),fpga,bank voltage select strap via R154 0 ohm to +3.3 V,yes
+E8,/fpga/CCLK_SRC,signal,config/QSPI/JTAG,config out,3.3 V config/strapping (VCCO_0/VCCO_14 = 3.3 V); no per-pin IOSTANDARD in schematic,R790.1 (fpga),fpga,source clock for QSPI flash U141.6 via R790 0 ohm at the FPGA; tune source termination,yes
+H10,/fpga/DONE,signal,config/QSPI/JTAG,config out,3.3 V config/strapping (VCCO_0/VCCO_14 = 3.3 V); no per-pin IOSTANDARD in schematic,R143.2 (fpga); TP792.1 (fpga),fpga,configuration-done open-drain status with R143 4.7 kohm pull-up and test point TP792,yes
+J13,/fpga/QSPI_D0,signal,config/QSPI/JTAG,config bidir,3.3 V config/strapping (VCCO_0/VCCO_14 = 3.3 V); no per-pin IOSTANDARD in schematic,U141.5 (fpga),fpga,QSPI data 0 / MOSI to config flash U141.5,yes
+J14,/fpga/QSPI_D1,signal,config/QSPI/JTAG,config bidir,3.3 V config/strapping (VCCO_0/VCCO_14 = 3.3 V); no per-pin IOSTANDARD in schematic,U141.2 (fpga),fpga,QSPI data 1 / MISO from config flash U141.2,yes
+K10,/fpga/INIT_N,signal,config/QSPI/JTAG,config bidir,3.3 V config/strapping (VCCO_0/VCCO_14 = 3.3 V); no per-pin IOSTANDARD in schematic,R142.2 (fpga); TP791.1 (fpga),fpga,INIT_B open-drain status/strap with R142 4.7 kohm pull-up and test point TP791,yes
+K15,/fpga/QSPI_D2,signal,config/QSPI/JTAG,config bidir,3.3 V config/strapping (VCCO_0/VCCO_14 = 3.3 V); no per-pin IOSTANDARD in schematic,R148.2 (fpga); U141.3 (fpga),fpga,QSPI data 2 / WP_N from config flash U141.3; R148 4.7 kohm pull-up,yes
+K16,/fpga/QSPI_D3,signal,config/QSPI/JTAG,config bidir,3.3 V config/strapping (VCCO_0/VCCO_14 = 3.3 V); no per-pin IOSTANDARD in schematic,R149.2 (fpga); U141.7 (fpga),fpga,QSPI data 3 from config flash U141.7; R149 4.7 kohm pull-up,yes
+L12,/fpga/QSPI_CS,signal,config/QSPI/JTAG,config out,3.3 V config/strapping (VCCO_0/VCCO_14 = 3.3 V); no per-pin IOSTANDARD in schematic,R140.2 (fpga); U141.1 (fpga),fpga,chip select to config flash U141.1; R140 4.7 kohm pull-up,yes
+L15,/fpga/PUDC_N,signal,config/QSPI/JTAG,config in,3.3 V config/strapping (VCCO_0/VCCO_14 = 3.3 V); no per-pin IOSTANDARD in schematic,R141.2 (fpga),fpga,pull-up enable during configuration via R141 4.7 kohm to +3.3 V,yes
+L7,/fpga/JTAG_TCK,signal,config/QSPI/JTAG,config in,3.3 V config/strapping (VCCO_0/VCCO_14 = 3.3 V); no per-pin IOSTANDARD in schematic,J140.6 (fpga),fpga,JTAG clock from header J140.6,yes
+L9,/fpga/PROGRAM_N,signal,config/QSPI/JTAG,config bidir,3.3 V config/strapping (VCCO_0/VCCO_14 = 3.3 V); no per-pin IOSTANDARD in schematic,R144.2 (fpga); TP790.1 (fpga),fpga,"reprogram request, open-drain, with R144 4.7 kohm pull-up and test point TP790",yes
+M10,/fpga/MODE1,signal,config/QSPI/JTAG,config in,3.3 V config/strapping (VCCO_0/VCCO_14 = 3.3 V); no per-pin IOSTANDARD in schematic,R156.2 (fpga),fpga,QSPI boot mode strap M1 via R156 0 ohm,yes
+M11,/fpga/MODE2,signal,config/QSPI/JTAG,config in,3.3 V config/strapping (VCCO_0/VCCO_14 = 3.3 V); no per-pin IOSTANDARD in schematic,R157.2 (fpga),fpga,QSPI boot mode strap M2 via R157 0 ohm,yes
+M7,/fpga/JTAG_TMS,signal,config/QSPI/JTAG,config in,3.3 V config/strapping (VCCO_0/VCCO_14 = 3.3 V); no per-pin IOSTANDARD in schematic,J140.4 (fpga),fpga,JTAG mode select from header J140.4,yes
+M9,/fpga/MODE0,signal,config/QSPI/JTAG,config in,3.3 V config/strapping (VCCO_0/VCCO_14 = 3.3 V); no per-pin IOSTANDARD in schematic,R155.2 (fpga),fpga,QSPI boot mode strap M0 via R155 0 ohm,yes
+N7,/fpga/JTAG_TDI,signal,config/QSPI/JTAG,config in,3.3 V config/strapping (VCCO_0/VCCO_14 = 3.3 V); no per-pin IOSTANDARD in schematic,J140.10 (fpga),fpga,JTAG data in from header J140.10,yes
+N8,/fpga/JTAG_TDO,signal,config/QSPI/JTAG,config out,3.3 V config/strapping (VCCO_0/VCCO_14 = 3.3 V); no per-pin IOSTANDARD in schematic,J140.8 (fpga),fpga,JTAG data out to header J140.8,yes
+N1,HOST_TX,signal,host UART,out,3.3 V LVCMOS (HR bank; VCCO=3.3 V); no per-pin IOSTANDARD in schematic,U142.1 (fpga),fpga,FPGA UART TX to FT231XQ U142.1 RXD; host pose log / calibration link,yes
+P1,HOST_RX,signal,host UART,in,3.3 V LVCMOS (HR bank; VCCO=3.3 V); no per-pin IOSTANDARD in schematic,U142.17 (fpga),fpga,FPGA UART RX from FT231XQ U142.17 TXD; host config/commands,yes
+L4,/fpga/DAC_SDI_SRC,signal,DAC control (SPI),out,3.3 V LVCMOS (HR bank; VCCO=3.3 V); no per-pin IOSTANDARD in schematic,R147.1 (fpga),fpga,"DAC MOSI, R147 33 ohm at the FPGA then global DAC_SDI to U10.14 on driver sheet",yes
+M1,/fpga/DAC_SCLK_SRC,signal,DAC control (SPI),out,3.3 V LVCMOS (HR bank; VCCO=3.3 V); no per-pin IOSTANDARD in schematic,R146.1 (fpga),fpga,"49.152 MHz DAC SPI clock, R146 33 ohm at the FPGA then global DAC_SCLK to U10.13 on driver sheet",yes
+M2,/fpga/DAC_CS_SRC,signal,DAC control (SPI),out,3.3 V LVCMOS (HR bank; VCCO=3.3 V); no per-pin IOSTANDARD in schematic,R145.1 (fpga),fpga,"DAC chip select, R145 33 ohm at the FPGA then global DAC_CS to U10.12 on driver sheet; R162 10 kohm pull-up",yes
+M4,DAC_SDO,signal,DAC control (SPI),in,3.3 V LVCMOS (HR bank; VCCO=3.3 V); no per-pin IOSTANDARD in schematic,TP203.1 (driver); U10.15 (driver),driver,optional DAC80508 readback from U10.15 / TP203; diagnostic only,yes
+A10,ADC_DOUT3,signal,ADC control and data,in,3.3 V LVCMOS (HR bank; VCCO=3.3 V); no per-pin IOSTANDARD in schematic,U101.24 (receiver),receiver,"ADC lane 3, Ch3 fixed reference coil, from U101.24",yes
+A12,ADC_SDI,signal,ADC control and data,out,3.3 V LVCMOS (HR bank; VCCO=3.3 V); no per-pin IOSTANDARD in schematic,U101.18 (receiver),receiver,AD7768-4 configuration SPI data in U101.18,yes
+A13,ADC_SCLK,signal,ADC control and data,out,3.3 V LVCMOS (HR bank; VCCO=3.3 V); no per-pin IOSTANDARD in schematic,U101.17 (receiver),receiver,AD7768-4 configuration SPI clock U101.17,yes
+A14,ADC_RESET_N,signal,ADC control and data,out,3.3 V LVCMOS (HR bank; VCCO=3.3 V); no per-pin IOSTANDARD in schematic,R163.2 (fpga); U101.30 (receiver),"fpga, receiver",AD7768-4 active-low reset U101.30; R163 10 kohm pull-up,yes
+A15,ADC_SYNC_OUT,signal,ADC control and data,in,3.3 V LVCMOS (HR bank; VCCO=3.3 V); no per-pin IOSTANDARD in schematic,U101.38 (receiver),receiver,ADC sync echo U101.38,yes
+A8,ADC_DOUT0,signal,ADC control and data,in,3.3 V LVCMOS (HR bank; VCCO=3.3 V); no per-pin IOSTANDARD in schematic,U101.27 (receiver),receiver,"ADC lane 0, Ch0 current-sense summer, from U101.27",yes
+A9,ADC_DOUT1,signal,ADC control and data,in,3.3 V LVCMOS (HR bank; VCCO=3.3 V); no per-pin IOSTANDARD in schematic,U101.26 (receiver),receiver,"ADC lane 1, Ch1 pen 1, from U101.26",yes
+B10,ADC_DRDY_N,signal,ADC control and data,in,3.3 V LVCMOS (HR bank; VCCO=3.3 V); no per-pin IOSTANDARD in schematic,U101.29 (receiver),receiver,AD7768-4 active-low data-ready U101.29; count after one-time sync,yes
+B11,ADC_SDO,signal,ADC control and data,in,3.3 V LVCMOS (HR bank; VCCO=3.3 V); no per-pin IOSTANDARD in schematic,U101.19 (receiver),receiver,AD7768-4 configuration SPI data out U101.19,yes
+B12,ADC_CS,signal,ADC control and data,out,3.3 V LVCMOS (HR bank; VCCO=3.3 V); no per-pin IOSTANDARD in schematic,R164.2 (fpga); U101.16 (receiver),"fpga, receiver",AD7768-4 SPI chip select U101.16; R164 10 kohm pull-up,yes
+B14,ADC_START_N,signal,ADC control and data,out,3.3 V LVCMOS (HR bank; VCCO=3.3 V); no per-pin IOSTANDARD in schematic,R165.2 (fpga); U101.37 (receiver),"fpga, receiver",one-time ADC start U101.37; R165 10 kohm pull-up,yes
+B9,ADC_DOUT2,signal,ADC control and data,in,3.3 V LVCMOS (HR bank; VCCO=3.3 V); no per-pin IOSTANDARD in schematic,U101.25 (receiver),receiver,"ADC lane 2, Ch2 pen 2, from U101.25",yes
+C14,ADC_SYNC_IN,signal,ADC control and data,out,3.3 V LVCMOS (HR bank; VCCO=3.3 V); no per-pin IOSTANDARD in schematic,R166.2 (fpga); U101.36 (receiver),"fpga, receiver",one-time ADC sync U101.36; R166 10 kohm pull-up,yes
+H7,/fpga/XADC_VNREF,signal,E-stop/status,analog in,analog XADC input; no digital I/O standard,R150.1 (fpga),fpga,XADC negative reference via R150 0 ohm; no source stated in the repo,yes
+H8,/fpga/XADC_VP,signal,E-stop/status,analog in,analog XADC input; no digital I/O standard,R151.1 (fpga),fpga,XADC analog positive input via R151 0 ohm; no source/sensor stated in the repo,yes
+J7,/fpga/XADC_VN,signal,E-stop/status,analog in,analog XADC input; no digital I/O standard,R152.1 (fpga),fpga,XADC analog negative input via R152 0 ohm; no source/sensor stated in the repo,yes
+J8,/fpga/XADC_VPREF,signal,E-stop/status,analog in,analog XADC input; no digital I/O standard,R153.1 (fpga),fpga,XADC positive reference via R153 0 ohm; no source stated in the repo,yes
+R1,/DRIVER_FAULT_N,signal,E-stop/status,in,3.3 V LVCMOS (HR bank; VCCO=3.3 V); no per-pin IOSTANDARD in schematic,R712.2 (driver); U600.4 (driver); U600.6 (driver); U601.4 (driver); U601.6 (driver); U602.4 (driver); U602.6 (driver); U603.4 (driver); U603.6 (driver); U752.2 (power),"driver, power","active-low wired-OR coil overcurrent bus from open-drain U600-U603, also clears the K2 arm latch at U752.2",yes
+R2,unconnected-(U4B-IO_L7P_T1_34-PadR2),no_connect,no_connect,nc,nc,,,"no_connect marker: Bank 34 spare; ESTOP_ASSERTED removed by the E-stop scope change; U4 no longer monitors the panel E-stop",no
+R3,/BUCK_SYNC,signal,power-good/sync,out,3.3 V LVCMOS (HR bank; VCCO=3.3 V); no per-pin IOSTANDARD in schematic,C809.1 (power),power,1.024 MHz sync (32.768/32) via C809 1 nF to U147 TPSM63604 EN/SYNC; no power-good net reaches U4,yes
+N2,PICO_TX,signal,Pico link,out,3.3 V LVCMOS (HR bank; VCCO=3.3 V); no per-pin IOSTANDARD in schematic,J123.3 (connectors),connectors,UART TX to Pico follower header J123.3,yes
+N3,PICO_RX,signal,Pico link,in,3.3 V LVCMOS (HR bank; VCCO=3.3 V); no per-pin IOSTANDARD in schematic,J123.4 (connectors),connectors,UART RX from Pico follower header J123.4,yes
+P3,PICO_HEARTBEAT,signal,Pico link,out,3.3 V LVCMOS (HR bank; VCCO=3.3 V); no per-pin IOSTANDARD in schematic,J123.6 (connectors),connectors,100 Hz heartbeat toggle to Pico header J123.6,yes
+P4,PICO_STOP_REQ_N,signal,Pico link,out,3.3 V LVCMOS (HR bank; VCCO=3.3 V); no per-pin IOSTANDARD in schematic,U755.1 (power); R754.1 (power),power,"active-low STOP request to U755.1 (74LVC1G08); R754 100 kohm pull-down holds the request low while the FPGA is unconfigured; U755.4 drives PICO_STOP_N to J123.5",yes
+A1,GND,ground,power,power,power,GND (all sheets),all,ground / VCCBATT tied to ground,no
+A11,GND,ground,power,power,power,GND (all sheets),all,ground / VCCBATT tied to ground,no
+B8,GND,ground,power,power,power,GND (all sheets),all,ground / VCCBATT tied to ground,no
+C15,GND,ground,power,power,power,GND (all sheets),all,ground / VCCBATT tied to ground,no
+C5,GND,ground,power,power,power,GND (all sheets),all,ground / VCCBATT tied to ground,no
+D12,GND,ground,power,power,power,GND (all sheets),all,ground / VCCBATT tied to ground,no
+D2,GND,ground,power,power,power,GND (all sheets),all,ground / VCCBATT tied to ground,no
+E9,GND,ground,power,power,power,GND (all sheets),all,ground / VCCBATT tied to ground,no
+F10,GND,ground,power,power,power,GND (all sheets),all,ground / VCCBATT tied to ground,no
+F16,GND,ground,power,power,power,GND (all sheets),all,ground / VCCBATT tied to ground,no
+F6,GND,ground,power,power,power,GND (all sheets),all,ground / VCCBATT tied to ground,no
+F8,GND,ground,power,power,power,GND (all sheets),all,ground / VCCBATT tied to ground,no
+G13,GND,ground,power,power,power,GND (all sheets),all,ground / VCCBATT tied to ground,no
+G3,GND,ground,power,power,power,GND (all sheets),all,ground / VCCBATT tied to ground,no
+G7,GND,ground,power,power,power,GND (all sheets),all,ground / VCCBATT tied to ground,no
+G9,GND,ground,power,power,power,GND (all sheets),all,ground / VCCBATT tied to ground,no
+H6,GND,ground,power,power,power,GND (all sheets),all,ground / VCCBATT tied to ground,no
+J11,GND,ground,power,power,power,GND (all sheets),all,ground / VCCBATT tied to ground,no
+J9,GND,ground,power,power,power,GND (all sheets),all,ground / VCCBATT tied to ground,no
+K14,GND,ground,power,power,power,GND (all sheets),all,ground / VCCBATT tied to ground,no
+K4,GND,ground,power,power,power,GND (all sheets),all,ground / VCCBATT tied to ground,no
+K6,GND,ground,power,power,power,GND (all sheets),all,ground / VCCBATT tied to ground,no
+L1,GND,ground,power,power,power,GND (all sheets),all,ground / VCCBATT tied to ground,no
+L11,GND,ground,power,power,power,GND (all sheets),all,ground / VCCBATT tied to ground,no
+M8,GND,ground,power,power,power,GND (all sheets),all,ground / VCCBATT tied to ground,no
+N15,GND,ground,power,power,power,GND (all sheets),all,ground / VCCBATT tied to ground,no
+N5,GND,ground,power,power,power,GND (all sheets),all,ground / VCCBATT tied to ground,no
+P12,GND,ground,power,power,power,GND (all sheets),all,ground / VCCBATT tied to ground,no
+P2,GND,ground,power,power,power,GND (all sheets),all,ground / VCCBATT tied to ground,no
+R9,GND,ground,power,power,power,GND (all sheets),all,ground / VCCBATT tied to ground,no
+T16,GND,ground,power,power,power,GND (all sheets),all,ground / VCCBATT tied to ground,no
+T6,GND,ground,power,power,power,GND (all sheets),all,ground / VCCBATT tied to ground,no
+A2,unconnected-(U4B-IO_L8N_T1_AD14N_35-PadA2),no_connect,no_connect,nc,nc,,,"no_connect marker: Bank 35 unused; project README says user signals and QSPI use HR banks 14, 15 and 34",no
+A3,unconnected-(U4B-IO_L4N_T0_35-PadA3),no_connect,no_connect,nc,nc,,,"no_connect marker: Bank 35 unused; project README says user signals and QSPI use HR banks 14, 15 and 34",no
+A4,unconnected-(U4B-IO_L3N_T0_DQS_AD5N_35-PadA4),no_connect,no_connect,nc,nc,,,"no_connect marker: Bank 35 unused; project README says user signals and QSPI use HR banks 14, 15 and 34",no
+A5,unconnected-(U4B-IO_L3P_T0_DQS_AD5P_35-PadA5),no_connect,no_connect,nc,nc,,,"no_connect marker: Bank 35 unused; project README says user signals and QSPI use HR banks 14, 15 and 34",no
+A7,unconnected-(U4B-IO_L1N_T0_AD4N_35-PadA7),no_connect,no_connect,nc,nc,,,"no_connect marker: Bank 35 unused; project README says user signals and QSPI use HR banks 14, 15 and 34",no
+B1,unconnected-(U4B-IO_L9N_T1_DQS_AD7N_35-PadB1),no_connect,no_connect,nc,nc,,,"no_connect marker: Bank 35 unused; project README says user signals and QSPI use HR banks 14, 15 and 34",no
+B15,unconnected-(U4A-IO_L9P_T1_DQS_AD3P_15-PadB15),no_connect,no_connect,nc,nc,,,no_connect marker: pin unassigned in the captured schematic; reason not stated in the repo,no
+B16,unconnected-(U4A-IO_L10N_T1_AD11N_15-PadB16),no_connect,no_connect,nc,nc,,,no_connect marker: pin unassigned in the captured schematic; reason not stated in the repo,no
+B2,unconnected-(U4B-IO_L8P_T1_AD14P_35-PadB2),no_connect,no_connect,nc,nc,,,"no_connect marker: Bank 35 unused; project README says user signals and QSPI use HR banks 14, 15 and 34",no
+B4,unconnected-(U4B-IO_L4P_T0_35-PadB4),no_connect,no_connect,nc,nc,,,"no_connect marker: Bank 35 unused; project README says user signals and QSPI use HR banks 14, 15 and 34",no
+B5,unconnected-(U4B-IO_L2N_T0_AD12N_35-PadB5),no_connect,no_connect,nc,nc,,,"no_connect marker: Bank 35 unused; project README says user signals and QSPI use HR banks 14, 15 and 34",no
+B6,unconnected-(U4B-IO_L2P_T0_AD12P_35-PadB6),no_connect,no_connect,nc,nc,,,"no_connect marker: Bank 35 unused; project README says user signals and QSPI use HR banks 14, 15 and 34",no
+B7,unconnected-(U4B-IO_L1P_T0_AD4P_35-PadB7),no_connect,no_connect,nc,nc,,,"no_connect marker: Bank 35 unused; project README says user signals and QSPI use HR banks 14, 15 and 34",no
+C1,unconnected-(U4B-IO_L9P_T1_DQS_AD7P_35-PadC1),no_connect,no_connect,nc,nc,,,"no_connect marker: Bank 35 unused; project README says user signals and QSPI use HR banks 14, 15 and 34",no
+C12,unconnected-(U4A-IO_L11N_T1_SRCC_15-PadC12),no_connect,no_connect,nc,nc,,,no_connect marker: pin unassigned in the captured schematic; reason not stated in the repo,no
+C13,unconnected-(U4A-IO_L12N_T1_MRCC_15-PadC13),no_connect,no_connect,nc,nc,,,no_connect marker: pin unassigned in the captured schematic; reason not stated in the repo,no
+C16,unconnected-(U4A-IO_L10P_T1_AD11P_15-PadC16),no_connect,no_connect,nc,nc,,,no_connect marker: pin unassigned in the captured schematic; reason not stated in the repo,no
+C2,unconnected-(U4B-IO_L7N_T1_AD6N_35-PadC2),no_connect,no_connect,nc,nc,,,"no_connect marker: Bank 35 unused; project README says user signals and QSPI use HR banks 14, 15 and 34",no
+C3,unconnected-(U4B-IO_L7P_T1_AD6P_35-PadC3),no_connect,no_connect,nc,nc,,,"no_connect marker: Bank 35 unused; project README says user signals and QSPI use HR banks 14, 15 and 34",no
+C4,unconnected-(U4B-IO_L12N_T1_MRCC_35-PadC4),no_connect,no_connect,nc,nc,,,"no_connect marker: Bank 35 unused; project README says user signals and QSPI use HR banks 14, 15 and 34",no
+C6,unconnected-(U4B-IO_L5N_T0_AD13N_35-PadC6),no_connect,no_connect,nc,nc,,,"no_connect marker: Bank 35 unused; project README says user signals and QSPI use HR banks 14, 15 and 34",no
+C7,unconnected-(U4B-IO_L5P_T0_AD13P_35-PadC7),no_connect,no_connect,nc,nc,,,"no_connect marker: Bank 35 unused; project README says user signals and QSPI use HR banks 14, 15 and 34",no
+C8,unconnected-(U4A-IO_L1P_T0_AD0P_15-PadC8),no_connect,no_connect,nc,nc,,,no_connect marker: pin unassigned in the captured schematic; reason not stated in the repo,no
+C9,unconnected-(U4A-IO_L1N_T0_AD0N_15-PadC9),no_connect,no_connect,nc,nc,,,no_connect marker: pin unassigned in the captured schematic; reason not stated in the repo,no
+D1,unconnected-(U4B-IO_L10N_T1_AD15N_35-PadD1),no_connect,no_connect,nc,nc,,,"no_connect marker: Bank 35 unused; project README says user signals and QSPI use HR banks 14, 15 and 34",no
+D10,unconnected-(U4A-IO_0_15-PadD10),no_connect,no_connect,nc,nc,,,no_connect marker: pin unassigned in the captured schematic; reason not stated in the repo,no
+D11,unconnected-(U4A-IO_L14N_T2_SRCC_15-PadD11),no_connect,no_connect,nc,nc,,,no_connect marker: pin unassigned in the captured schematic; reason not stated in the repo,no
+D14,unconnected-(U4A-IO_L15P_T2_DQS_15-PadD14),no_connect,no_connect,nc,nc,,,no_connect marker: pin unassigned in the captured schematic; reason not stated in the repo,no
+D15,unconnected-(U4A-IO_L15N_T2_DQS_ADV_B_15-PadD15),no_connect,no_connect,nc,nc,,,no_connect marker: pin unassigned in the captured schematic; reason not stated in the repo,no
+D16,unconnected-(U4A-IO_L17N_T2_A25_15-PadD16),no_connect,no_connect,nc,nc,,,no_connect marker: pin unassigned in the captured schematic; reason not stated in the repo,no
+D3,unconnected-(U4B-IO_L11N_T1_SRCC_35-PadD3),no_connect,no_connect,nc,nc,,,"no_connect marker: Bank 35 unused; project README says user signals and QSPI use HR banks 14, 15 and 34",no
+D4,unconnected-(U4B-IO_L12P_T1_MRCC_35-PadD4),no_connect,no_connect,nc,nc,,,"no_connect marker: Bank 35 unused; project README says user signals and QSPI use HR banks 14, 15 and 34",no
+D5,unconnected-(U4B-IO_L6N_T0_VREF_35-PadD5),no_connect,no_connect,nc,nc,,,"no_connect marker: Bank 35 unused; project README says user signals and QSPI use HR banks 14, 15 and 34",no
+D6,unconnected-(U4B-IO_L6P_T0_35-PadD6),no_connect,no_connect,nc,nc,,,"no_connect marker: Bank 35 unused; project README says user signals and QSPI use HR banks 14, 15 and 34",no
+D8,unconnected-(U4A-IO_L6P_T0_15-PadD8),no_connect,no_connect,nc,nc,,,no_connect marker: pin unassigned in the captured schematic; reason not stated in the repo,no
+D9,unconnected-(U4A-IO_L6N_T0_VREF_15-PadD9),no_connect,no_connect,nc,nc,,,no_connect marker: XADC VREF pin not used; no reason stated in the repo,no
+E1,unconnected-(U4B-IO_L15N_T2_DQS_35-PadE1),no_connect,no_connect,nc,nc,,,"no_connect marker: Bank 35 unused; project README says user signals and QSPI use HR banks 14, 15 and 34",no
+E11,unconnected-(U4A-IO_L14P_T2_SRCC_15-PadE11),no_connect,no_connect,nc,nc,,,no_connect marker: pin unassigned in the captured schematic; reason not stated in the repo,no
+E12,unconnected-(U4A-IO_L13P_T2_MRCC_15-PadE12),no_connect,no_connect,nc,nc,,,no_connect marker: pin unassigned in the captured schematic; reason not stated in the repo,no
+E13,unconnected-(U4A-IO_L13N_T2_MRCC_15-PadE13),no_connect,no_connect,nc,nc,,,no_connect marker: pin unassigned in the captured schematic; reason not stated in the repo,no
+E15,unconnected-(U4A-IO_L18N_T2_A23_15-PadE15),no_connect,no_connect,nc,nc,,,no_connect marker: pin unassigned in the captured schematic; reason not stated in the repo,no
+E16,unconnected-(U4A-IO_L17P_T2_A26_15-PadE16),no_connect,no_connect,nc,nc,,,no_connect marker: pin unassigned in the captured schematic; reason not stated in the repo,no
+E2,unconnected-(U4B-IO_L10P_T1_AD15P_35-PadE2),no_connect,no_connect,nc,nc,,,"no_connect marker: Bank 35 unused; project README says user signals and QSPI use HR banks 14, 15 and 34",no
+E3,unconnected-(U4B-IO_L11P_T1_SRCC_35-PadE3),no_connect,no_connect,nc,nc,,,"no_connect marker: Bank 35 unused; project README says user signals and QSPI use HR banks 14, 15 and 34",no
+E5,unconnected-(U4B-IO_L13N_T2_MRCC_35-PadE5),no_connect,no_connect,nc,nc,,,"no_connect marker: Bank 35 unused; project README says user signals and QSPI use HR banks 14, 15 and 34",no
+E6,unconnected-(U4B-IO_0_35-PadE6),no_connect,no_connect,nc,nc,,,"no_connect marker: Bank 35 unused; project README says user signals and QSPI use HR banks 14, 15 and 34",no
+F12,unconnected-(U4A-IO_L16P_T2_A28_15-PadF12),no_connect,no_connect,nc,nc,,,no_connect marker: pin unassigned in the captured schematic; reason not stated in the repo,no
+F13,unconnected-(U4A-IO_L16N_T2_A27_15-PadF13),no_connect,no_connect,nc,nc,,,no_connect marker: pin unassigned in the captured schematic; reason not stated in the repo,no
+F14,unconnected-(U4A-IO_L21N_T3_DQS_A18_15-PadF14),no_connect,no_connect,nc,nc,,,no_connect marker: pin unassigned in the captured schematic; reason not stated in the repo,no
+F15,unconnected-(U4A-IO_L18P_T2_A24_15-PadF15),no_connect,no_connect,nc,nc,,,no_connect marker: pin unassigned in the captured schematic; reason not stated in the repo,no
+F2,unconnected-(U4B-IO_L15P_T2_DQS_35-PadF2),no_connect,no_connect,nc,nc,,,"no_connect marker: Bank 35 unused; project README says user signals and QSPI use HR banks 14, 15 and 34",no
+F3,unconnected-(U4B-IO_L14N_T2_SRCC_35-PadF3),no_connect,no_connect,nc,nc,,,"no_connect marker: Bank 35 unused; project README says user signals and QSPI use HR banks 14, 15 and 34",no
+F4,unconnected-(U4B-IO_L14P_T2_SRCC_35-PadF4),no_connect,no_connect,nc,nc,,,"no_connect marker: Bank 35 unused; project README says user signals and QSPI use HR banks 14, 15 and 34",no
+F5,unconnected-(U4B-IO_L13P_T2_MRCC_35-PadF5),no_connect,no_connect,nc,nc,,,"no_connect marker: Bank 35 unused; project README says user signals and QSPI use HR banks 14, 15 and 34",no
+G1,unconnected-(U4B-IO_L17N_T2_35-PadG1),no_connect,no_connect,nc,nc,,,"no_connect marker: Bank 35 unused; project README says user signals and QSPI use HR banks 14, 15 and 34",no
+G11,unconnected-(U4A-IO_25_15-PadG11),no_connect,no_connect,nc,nc,,,no_connect marker: pin unassigned in the captured schematic; reason not stated in the repo,no
+G12,unconnected-(U4A-IO_L19N_T3_A21_VREF_15-PadG12),no_connect,no_connect,nc,nc,,,no_connect marker: XADC VREF pin not used; no reason stated in the repo,no
+G14,unconnected-(U4A-IO_L21P_T3_DQS_15-PadG14),no_connect,no_connect,nc,nc,,,no_connect marker: pin unassigned in the captured schematic; reason not stated in the repo,no
+G15,unconnected-(U4A-IO_L24N_T3_RS0_15-PadG15),no_connect,no_connect,nc,nc,,,no_connect marker: pin unassigned in the captured schematic; reason not stated in the repo,no
+G16,unconnected-(U4A-IO_L22N_T3_A16_15-PadG16),no_connect,no_connect,nc,nc,,,no_connect marker: pin unassigned in the captured schematic; reason not stated in the repo,no
+G2,unconnected-(U4B-IO_L17P_T2_35-PadG2),no_connect,no_connect,nc,nc,,,"no_connect marker: Bank 35 unused; project README says user signals and QSPI use HR banks 14, 15 and 34",no
+G4,unconnected-(U4B-IO_L16N_T2_35-PadG4),no_connect,no_connect,nc,nc,,,"no_connect marker: Bank 35 unused; project README says user signals and QSPI use HR banks 14, 15 and 34",no
+G5,unconnected-(U4B-IO_L16P_T2_35-PadG5),no_connect,no_connect,nc,nc,,,"no_connect marker: Bank 35 unused; project README says user signals and QSPI use HR banks 14, 15 and 34",no
+H1,unconnected-(U4B-IO_L20N_T3_35-PadH1),no_connect,no_connect,nc,nc,,,"no_connect marker: Bank 35 unused; project README says user signals and QSPI use HR banks 14, 15 and 34",no
+H11,unconnected-(U4A-IO_L19P_T3_A22_15-PadH11),no_connect,no_connect,nc,nc,,,no_connect marker: pin unassigned in the captured schematic; reason not stated in the repo,no
+H12,unconnected-(U4A-IO_L20P_T3_A20_15-PadH12),no_connect,no_connect,nc,nc,,,no_connect marker: pin unassigned in the captured schematic; reason not stated in the repo,no
+H13,unconnected-(U4A-IO_L20N_T3_A19_15-PadH13),no_connect,no_connect,nc,nc,,,no_connect marker: pin unassigned in the captured schematic; reason not stated in the repo,no
+H14,unconnected-(U4A-IO_L24P_T3_RS1_15-PadH14),no_connect,no_connect,nc,nc,,,no_connect marker: pin unassigned in the captured schematic; reason not stated in the repo,no
+H16,unconnected-(U4A-IO_L22P_T3_A17_15-PadH16),no_connect,no_connect,nc,nc,,,no_connect marker: pin unassigned in the captured schematic; reason not stated in the repo,no
+H2,unconnected-(U4B-IO_L20P_T3_35-PadH2),no_connect,no_connect,nc,nc,,,"no_connect marker: Bank 35 unused; project README says user signals and QSPI use HR banks 14, 15 and 34",no
+H3,unconnected-(U4B-IO_L21N_T3_DQS_35-PadH3),no_connect,no_connect,nc,nc,,,"no_connect marker: Bank 35 unused; project README says user signals and QSPI use HR banks 14, 15 and 34",no
+H4,unconnected-(U4B-IO_L18N_T2_35-PadH4),no_connect,no_connect,nc,nc,,,"no_connect marker: Bank 35 unused; project README says user signals and QSPI use HR banks 14, 15 and 34",no
+H5,unconnected-(U4B-IO_L18P_T2_35-PadH5),no_connect,no_connect,nc,nc,,,"no_connect marker: Bank 35 unused; project README says user signals and QSPI use HR banks 14, 15 and 34",no
+J1,unconnected-(U4B-IO_L22N_T3_35-PadJ1),no_connect,no_connect,nc,nc,,,"no_connect marker: Bank 35 unused; project README says user signals and QSPI use HR banks 14, 15 and 34",no
+J15,unconnected-(U4A-IO_L23P_T3_FOE_B_15-PadJ15),no_connect,no_connect,nc,nc,,,no_connect marker: pin unassigned in the captured schematic; reason not stated in the repo,no
+J16,unconnected-(U4A-IO_L23N_T3_FWE_B_15-PadJ16),no_connect,no_connect,nc,nc,,,no_connect marker: pin unassigned in the captured schematic; reason not stated in the repo,no
+J3,unconnected-(U4B-IO_L21P_T3_DQS_35-PadJ3),no_connect,no_connect,nc,nc,,,"no_connect marker: Bank 35 unused; project README says user signals and QSPI use HR banks 14, 15 and 34",no
+J4,unconnected-(U4B-IO_L19N_T3_VREF_35-PadJ4),no_connect,no_connect,nc,nc,,,"no_connect marker: Bank 35 unused; project README says user signals and QSPI use HR banks 14, 15 and 34",no
+J5,unconnected-(U4B-IO_L19P_T3_35-PadJ5),no_connect,no_connect,nc,nc,,,"no_connect marker: Bank 35 unused; project README says user signals and QSPI use HR banks 14, 15 and 34",no
+K1,unconnected-(U4B-IO_L22P_T3_35-PadK1),no_connect,no_connect,nc,nc,,,"no_connect marker: Bank 35 unused; project README says user signals and QSPI use HR banks 14, 15 and 34",no
+K12,unconnected-(U4A-IO_0_14-PadK12),no_connect,no_connect,nc,nc,,,no_connect marker: pin unassigned in the captured schematic; reason not stated in the repo,no
+K13,unconnected-(U4A-IO_L5P_T0_D06_14-PadK13),no_connect,no_connect,nc,nc,,,no_connect marker: pin unassigned in the captured schematic; reason not stated in the repo,no
+K2,unconnected-(U4B-IO_L24N_T3_35-PadK2),no_connect,no_connect,nc,nc,,,"no_connect marker: Bank 35 unused; project README says user signals and QSPI use HR banks 14, 15 and 34",no
+K3,unconnected-(U4B-IO_L24P_T3_35-PadK3),no_connect,no_connect,nc,nc,,,"no_connect marker: Bank 35 unused; project README says user signals and QSPI use HR banks 14, 15 and 34",no
+K5,unconnected-(U4B-IO_25_35-PadK5),no_connect,no_connect,nc,nc,,,"no_connect marker: Bank 35 unused; project README says user signals and QSPI use HR banks 14, 15 and 34",no
+K7,unconnected-(U4C-DXN_0-PadK7),no_connect,no_connect,nc,nc,,,no_connect marker: XADC external temperature diode not used; no reason stated in the repo,no
+K8,unconnected-(U4C-DXP_0-PadK8),no_connect,no_connect,nc,nc,,,no_connect marker: XADC external temperature diode not used; no reason stated in the repo,no
+L13,unconnected-(U4A-IO_L5N_T0_D07_14-PadL13),no_connect,no_connect,nc,nc,,,no_connect marker: pin unassigned in the captured schematic; reason not stated in the repo,no
+L14,unconnected-(U4A-IO_L4P_T0_D04_14-PadL14),no_connect,no_connect,nc,nc,,,no_connect marker: pin unassigned in the captured schematic; reason not stated in the repo,no
+L2,unconnected-(U4B-IO_L23N_T3_35-PadL2),no_connect,no_connect,nc,nc,,,"no_connect marker: Bank 35 unused; project README says user signals and QSPI use HR banks 14, 15 and 34",no
+L3,unconnected-(U4B-IO_L23P_T3_35-PadL3),no_connect,no_connect,nc,nc,,,"no_connect marker: Bank 35 unused; project README says user signals and QSPI use HR banks 14, 15 and 34",no
+L5,unconnected-(U4B-IO_0_34-PadL5),no_connect,no_connect,nc,nc,,,no_connect marker: pin unassigned in the captured schematic; reason not stated in the repo,no
+M12,unconnected-(U4A-IO_L6N_T0_D08_VREF_14-PadM12),no_connect,no_connect,nc,nc,,,no_connect marker: XADC VREF pin not used; no reason stated in the repo,no
+M14,unconnected-(U4A-IO_L4N_T0_D05_14-PadM14),no_connect,no_connect,nc,nc,,,no_connect marker: pin unassigned in the captured schematic; reason not stated in the repo,no
+M15,unconnected-(U4A-IO_L3N_T0_DQS_EMCCLK_14-PadM15),no_connect,no_connect,nc,nc,,,no_connect marker: pin unassigned in the captured schematic; reason not stated in the repo,no
+M16,unconnected-(U4A-IO_L7P_T1_D09_14-PadM16),no_connect,no_connect,nc,nc,,,no_connect marker: pin unassigned in the captured schematic; reason not stated in the repo,no
+M5,unconnected-(U4B-IO_L6P_T0_34-PadM5),no_connect,no_connect,nc,nc,,,no_connect marker: pin unassigned in the captured schematic; reason not stated in the repo,no
+M6,unconnected-(U4A-IO_L19P_T3_A10_D26_14-PadM6),no_connect,no_connect,nc,nc,,,no_connect marker: pin unassigned in the captured schematic; reason not stated in the repo,no
+N11,unconnected-(U4A-IO_L13P_T2_MRCC_14-PadN11),no_connect,no_connect,nc,nc,,,no_connect marker: pin unassigned in the captured schematic; reason not stated in the repo,no
+N12,unconnected-(U4A-IO_L13N_T2_MRCC_14-PadN12),no_connect,no_connect,nc,nc,,,no_connect marker: pin unassigned in the captured schematic; reason not stated in the repo,no
+N13,unconnected-(U4A-IO_L11P_T1_SRCC_14-PadN13),no_connect,no_connect,nc,nc,,,no_connect marker: pin unassigned in the captured schematic; reason not stated in the repo,no
+N14,unconnected-(U4A-IO_L12P_T1_MRCC_14-PadN14),no_connect,no_connect,nc,nc,,,no_connect marker: pin unassigned in the captured schematic; reason not stated in the repo,no
+N16,unconnected-(U4A-IO_L7N_T1_D10_14-PadN16),no_connect,no_connect,nc,nc,,,no_connect marker: pin unassigned in the captured schematic; reason not stated in the repo,no
+N4,unconnected-(U4B-IO_L6N_T0_VREF_34-PadN4),no_connect,no_connect,nc,nc,,,no_connect marker: XADC VREF pin not used; no reason stated in the repo,no
+N6,unconnected-(U4A-IO_L19N_T3_A09_D25_VREF_14-PadN6),no_connect,no_connect,nc,nc,,,no_connect marker: XADC VREF pin not used; no reason stated in the repo,no
+N9,unconnected-(U4A-IO_L18P_T2_A12_D28_14-PadN9),no_connect,no_connect,nc,nc,,,no_connect marker: pin unassigned in the captured schematic; reason not stated in the repo,no
+P10,unconnected-(U4A-IO_L14P_T2_SRCC_14-PadP10),no_connect,no_connect,nc,nc,,,no_connect marker: pin unassigned in the captured schematic; reason not stated in the repo,no
+P11,unconnected-(U4A-IO_L14N_T2_SRCC_14-PadP11),no_connect,no_connect,nc,nc,,,no_connect marker: pin unassigned in the captured schematic; reason not stated in the repo,no
+P13,unconnected-(U4A-IO_L11N_T1_SRCC_14-PadP13),no_connect,no_connect,nc,nc,,,no_connect marker: pin unassigned in the captured schematic; reason not stated in the repo,no
+P14,unconnected-(U4A-IO_L12N_T1_MRCC_14-PadP14),no_connect,no_connect,nc,nc,,,no_connect marker: pin unassigned in the captured schematic; reason not stated in the repo,no
+P15,unconnected-(U4A-IO_L8P_T1_D11_14-PadP15),no_connect,no_connect,nc,nc,,,no_connect marker: pin unassigned in the captured schematic; reason not stated in the repo,no
+P16,unconnected-(U4A-IO_L8N_T1_D12_14-PadP16),no_connect,no_connect,nc,nc,,,no_connect marker: pin unassigned in the captured schematic; reason not stated in the repo,no
+P5,unconnected-(U4B-IO_L10P_T1_34-PadP5),no_connect,no_connect,nc,nc,,,no_connect marker: pin unassigned in the captured schematic; reason not stated in the repo,no
+P6,unconnected-(U4A-IO_25_14-PadP6),no_connect,no_connect,nc,nc,,,no_connect marker: pin unassigned in the captured schematic; reason not stated in the repo,no
+P8,unconnected-(U4A-IO_L20P_T3_A08_D24_14-PadP8),no_connect,no_connect,nc,nc,,,no_connect marker: pin unassigned in the captured schematic; reason not stated in the repo,no
+P9,unconnected-(U4A-IO_L18N_T2_A11_D27_14-PadP9),no_connect,no_connect,nc,nc,,,no_connect marker: pin unassigned in the captured schematic; reason not stated in the repo,no
+R10,unconnected-(U4A-IO_L17P_T2_A14_D30_14-PadR10),no_connect,no_connect,nc,nc,,,no_connect marker: pin unassigned in the captured schematic; reason not stated in the repo,no
+R11,unconnected-(U4A-IO_L17N_T2_A13_D29_14-PadR11),no_connect,no_connect,nc,nc,,,no_connect marker: pin unassigned in the captured schematic; reason not stated in the repo,no
+R12,unconnected-(U4A-IO_L15P_T2_DQS_RDWR_B_14-PadR12),no_connect,no_connect,nc,nc,,,no_connect marker: pin unassigned in the captured schematic; reason not stated in the repo,no
+R13,unconnected-(U4A-IO_L16P_T2_CSI_B_14-PadR13),no_connect,no_connect,nc,nc,,,no_connect marker: pin unassigned in the captured schematic; reason not stated in the repo,no
+R15,unconnected-(U4A-IO_L9P_T1_DQS_14-PadR15),no_connect,no_connect,nc,nc,,,no_connect marker: pin unassigned in the captured schematic; reason not stated in the repo,no
+R16,unconnected-(U4A-IO_L9N_T1_DQS_D13_14-PadR16),no_connect,no_connect,nc,nc,,,no_connect marker: pin unassigned in the captured schematic; reason not stated in the repo,no
+R5,unconnected-(U4A-IO_L23P_T3_A03_D19_14-PadR5),no_connect,no_connect,nc,nc,,,no_connect marker: pin unassigned in the captured schematic; reason not stated in the repo,no
+R6,unconnected-(U4A-IO_L24P_T3_A01_D17_14-PadR6),no_connect,no_connect,nc,nc,,,no_connect marker: pin unassigned in the captured schematic; reason not stated in the repo,no
+R7,unconnected-(U4A-IO_L24N_T3_A00_D16_14-PadR7),no_connect,no_connect,nc,nc,,,no_connect marker: pin unassigned in the captured schematic; reason not stated in the repo,no
+R8,unconnected-(U4A-IO_L20N_T3_A07_D23_14-PadR8),no_connect,no_connect,nc,nc,,,no_connect marker: pin unassigned in the captured schematic; reason not stated in the repo,no
+T10,unconnected-(U4A-IO_L22N_T3_A04_D20_14-PadT10),no_connect,no_connect,nc,nc,,,no_connect marker: pin unassigned in the captured schematic; reason not stated in the repo,no
+T12,unconnected-(U4A-IO_L15N_T2_DQS_DOUT_CSO_B_14-PadT12),no_connect,no_connect,nc,nc,,,no_connect marker: pin unassigned in the captured schematic; reason not stated in the repo,no
+T13,unconnected-(U4A-IO_L16N_T2_A15_D31_14-PadT13),no_connect,no_connect,nc,nc,,,no_connect marker: pin unassigned in the captured schematic; reason not stated in the repo,no
+T14,unconnected-(U4A-IO_L10P_T1_D14_14-PadT14),no_connect,no_connect,nc,nc,,,no_connect marker: pin unassigned in the captured schematic; reason not stated in the repo,no
+T15,unconnected-(U4A-IO_L10N_T1_D15_14-PadT15),no_connect,no_connect,nc,nc,,,no_connect marker: pin unassigned in the captured schematic; reason not stated in the repo,no
+T2,unconnected-(U4B-IO_L8N_T1_34-PadT2),no_connect,no_connect,nc,nc,,,no_connect marker: pin unassigned in the captured schematic; reason not stated in the repo,no
+T3,unconnected-(U4B-IO_L9N_T1_DQS_34-PadT3),no_connect,no_connect,nc,nc,,,no_connect marker: pin unassigned in the captured schematic; reason not stated in the repo,no
+T4,unconnected-(U4B-IO_L9P_T1_DQS_34-PadT4),no_connect,no_connect,nc,nc,,,no_connect marker: pin unassigned in the captured schematic; reason not stated in the repo,no
+T5,unconnected-(U4A-IO_L23N_T3_A02_D18_14-PadT5),no_connect,no_connect,nc,nc,,,no_connect marker: pin unassigned in the captured schematic; reason not stated in the repo,no
+T7,unconnected-(U4A-IO_L21P_T3_DQS_14-PadT7),no_connect,no_connect,nc,nc,,,no_connect marker: pin unassigned in the captured schematic; reason not stated in the repo,no
+T8,unconnected-(U4A-IO_L21N_T3_DQS_A06_D22_14-PadT8),no_connect,no_connect,nc,nc,,,no_connect marker: pin unassigned in the captured schematic; reason not stated in the repo,no
+T9,unconnected-(U4A-IO_L22P_T3_A05_D21_14-PadT9),no_connect,no_connect,nc,nc,,,no_connect marker: pin unassigned in the captured schematic; reason not stated in the repo,no
+A16,+3.3V,power,power,power,power,C111.1 (receiver); C140.1 (fpga); C141.1 (fpga); C142.1 (fpga); C143.1 (fpga); C144.1 (fpga),"fpga, receiver",supply rail / decoupling (excluded from signal table),no
+A6,+3.3V,power,power,power,power,C111.1 (receiver); C140.1 (fpga); C141.1 (fpga); C142.1 (fpga); C143.1 (fpga); C144.1 (fpga),"fpga, receiver",supply rail / decoupling (excluded from signal table),no
+B13,+3.3V,power,power,power,power,C111.1 (receiver); C140.1 (fpga); C141.1 (fpga); C142.1 (fpga); C143.1 (fpga); C144.1 (fpga),"fpga, receiver",supply rail / decoupling (excluded from signal table),no
+B3,+3.3V,power,power,power,power,C111.1 (receiver); C140.1 (fpga); C141.1 (fpga); C142.1 (fpga); C143.1 (fpga); C144.1 (fpga),"fpga, receiver",supply rail / decoupling (excluded from signal table),no
+C10,+3.3V,power,power,power,power,C111.1 (receiver); C140.1 (fpga); C141.1 (fpga); C142.1 (fpga); C143.1 (fpga); C144.1 (fpga),"fpga, receiver",supply rail / decoupling (excluded from signal table),no
+D7,+3.3V,power,power,power,power,C111.1 (receiver); C140.1 (fpga); C141.1 (fpga); C142.1 (fpga); C143.1 (fpga); C144.1 (fpga),"fpga, receiver",supply rail / decoupling (excluded from signal table),no
+E10,+1V0_FPGA,power,power,power,power,C150.1 (fpga); C151.1 (fpga); C152.1 (fpga); C153.1 (fpga); C154.1 (fpga); C155.1 (fpga),fpga,supply rail / decoupling (excluded from signal table),no
+E14,+3.3V,power,power,power,power,C111.1 (receiver); C140.1 (fpga); C141.1 (fpga); C142.1 (fpga); C143.1 (fpga); C144.1 (fpga),"fpga, receiver",supply rail / decoupling (excluded from signal table),no
+E4,+3.3V,power,power,power,power,C111.1 (receiver); C140.1 (fpga); C141.1 (fpga); C142.1 (fpga); C143.1 (fpga); C144.1 (fpga),"fpga, receiver",supply rail / decoupling (excluded from signal table),no
+F1,+3.3V,power,power,power,power,C111.1 (receiver); C140.1 (fpga); C141.1 (fpga); C142.1 (fpga); C143.1 (fpga); C144.1 (fpga),"fpga, receiver",supply rail / decoupling (excluded from signal table),no
+F11,+1V0_FPGA,power,power,power,power,C150.1 (fpga); C151.1 (fpga); C152.1 (fpga); C153.1 (fpga); C154.1 (fpga); C155.1 (fpga),fpga,supply rail / decoupling (excluded from signal table),no
+F7,+1V0_FPGA,power,power,power,power,C150.1 (fpga); C151.1 (fpga); C152.1 (fpga); C153.1 (fpga); C154.1 (fpga); C155.1 (fpga),fpga,supply rail / decoupling (excluded from signal table),no
+F9,+1V0_FPGA,power,power,power,power,C150.1 (fpga); C151.1 (fpga); C152.1 (fpga); C153.1 (fpga); C154.1 (fpga); C155.1 (fpga),fpga,supply rail / decoupling (excluded from signal table),no
+G10,+1V8_FPGA,power,power,power,power,C157.1 (fpga); C158.1 (fpga); C159.1 (fpga); C160.1 (fpga); C161.1 (fpga); C171.1 (fpga),fpga,supply rail / decoupling (excluded from signal table),no
+G6,+1V0_FPGA,power,power,power,power,C150.1 (fpga); C151.1 (fpga); C152.1 (fpga); C153.1 (fpga); C154.1 (fpga); C155.1 (fpga),fpga,supply rail / decoupling (excluded from signal table),no
+G8,+1V8_FPGA,power,power,power,power,C157.1 (fpga); C158.1 (fpga); C159.1 (fpga); C160.1 (fpga); C161.1 (fpga); C171.1 (fpga),fpga,supply rail / decoupling (excluded from signal table),no
+H15,+3.3V,power,power,power,power,C111.1 (receiver); C140.1 (fpga); C141.1 (fpga); C142.1 (fpga); C143.1 (fpga); C144.1 (fpga),"fpga, receiver",supply rail / decoupling (excluded from signal table),no
+H9,+1V0_FPGA,power,power,power,power,C150.1 (fpga); C151.1 (fpga); C152.1 (fpga); C153.1 (fpga); C154.1 (fpga); C155.1 (fpga),fpga,supply rail / decoupling (excluded from signal table),no
+J10,+1V8_FPGA,power,power,power,power,C157.1 (fpga); C158.1 (fpga); C159.1 (fpga); C160.1 (fpga); C161.1 (fpga); C171.1 (fpga),fpga,supply rail / decoupling (excluded from signal table),no
+J12,+3.3V,power,power,power,power,C111.1 (receiver); C140.1 (fpga); C141.1 (fpga); C142.1 (fpga); C143.1 (fpga); C144.1 (fpga),"fpga, receiver",supply rail / decoupling (excluded from signal table),no
+J2,+3.3V,power,power,power,power,C111.1 (receiver); C140.1 (fpga); C141.1 (fpga); C142.1 (fpga); C143.1 (fpga); C144.1 (fpga),"fpga, receiver",supply rail / decoupling (excluded from signal table),no
+J6,+1V0_FPGA,power,power,power,power,C150.1 (fpga); C151.1 (fpga); C152.1 (fpga); C153.1 (fpga); C154.1 (fpga); C155.1 (fpga),fpga,supply rail / decoupling (excluded from signal table),no
+K11,+1V8_FPGA,power,power,power,power,C157.1 (fpga); C158.1 (fpga); C159.1 (fpga); C160.1 (fpga); C161.1 (fpga); C171.1 (fpga),fpga,supply rail / decoupling (excluded from signal table),no
+K9,+1V0_FPGA,power,power,power,power,C150.1 (fpga); C151.1 (fpga); C152.1 (fpga); C153.1 (fpga); C154.1 (fpga); C155.1 (fpga),fpga,supply rail / decoupling (excluded from signal table),no
+L10,+1V8_FPGA,power,power,power,power,C157.1 (fpga); C158.1 (fpga); C159.1 (fpga); C160.1 (fpga); C161.1 (fpga); C171.1 (fpga),fpga,supply rail / decoupling (excluded from signal table),no
+L16,+3.3V,power,power,power,power,C111.1 (receiver); C140.1 (fpga); C141.1 (fpga); C142.1 (fpga); C143.1 (fpga); C144.1 (fpga),"fpga, receiver",supply rail / decoupling (excluded from signal table),no
+L6,+3.3V,power,power,power,power,C111.1 (receiver); C140.1 (fpga); C141.1 (fpga); C142.1 (fpga); C143.1 (fpga); C144.1 (fpga),"fpga, receiver",supply rail / decoupling (excluded from signal table),no
+L8,+1V0_FPGA,power,power,power,power,C150.1 (fpga); C151.1 (fpga); C152.1 (fpga); C153.1 (fpga); C154.1 (fpga); C155.1 (fpga),fpga,supply rail / decoupling (excluded from signal table),no
+M13,+3.3V,power,power,power,power,C111.1 (receiver); C140.1 (fpga); C141.1 (fpga); C142.1 (fpga); C143.1 (fpga); C144.1 (fpga),"fpga, receiver",supply rail / decoupling (excluded from signal table),no
+M3,+3.3V,power,power,power,power,C111.1 (receiver); C140.1 (fpga); C141.1 (fpga); C142.1 (fpga); C143.1 (fpga); C144.1 (fpga),"fpga, receiver",supply rail / decoupling (excluded from signal table),no
+N10,+3.3V,power,power,power,power,C111.1 (receiver); C140.1 (fpga); C141.1 (fpga); C142.1 (fpga); C143.1 (fpga); C144.1 (fpga),"fpga, receiver",supply rail / decoupling (excluded from signal table),no
+P7,+3.3V,power,power,power,power,C111.1 (receiver); C140.1 (fpga); C141.1 (fpga); C142.1 (fpga); C143.1 (fpga); C144.1 (fpga),"fpga, receiver",supply rail / decoupling (excluded from signal table),no
+R14,+3.3V,power,power,power,power,C111.1 (receiver); C140.1 (fpga); C141.1 (fpga); C142.1 (fpga); C143.1 (fpga); C144.1 (fpga),"fpga, receiver",supply rail / decoupling (excluded from signal table),no
+R4,+3.3V,power,power,power,power,C111.1 (receiver); C140.1 (fpga); C141.1 (fpga); C142.1 (fpga); C143.1 (fpga); C144.1 (fpga),"fpga, receiver",supply rail / decoupling (excluded from signal table),no
+T1,+3.3V,power,power,power,power,C111.1 (receiver); C140.1 (fpga); C141.1 (fpga); C142.1 (fpga); C143.1 (fpga); C144.1 (fpga),"fpga, receiver",supply rail / decoupling (excluded from signal table),no
+T11,+3.3V,power,power,power,power,C111.1 (receiver); C140.1 (fpga); C141.1 (fpga); C142.1 (fpga); C143.1 (fpga); C144.1 (fpga),"fpga, receiver",supply rail / decoupling (excluded from signal table),no

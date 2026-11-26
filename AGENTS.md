@@ -104,8 +104,8 @@ in its README).
   sync + demodulation + LM/TRF pose solver all in HDL/HLS on the FPGA. No
   PC-side pose solver; no MATLAB-in-loop. The Phase 1 report says "pose on PC"
   — stale; follow this file.
-- **Electronics = one board (BRD-01, 2026-10-28):** power entry/E-stop/DC-DC,
-  FPGA + clock, DAC80508 + 8× LTC1563-2 + 8 current loops + current sense,
+- **Electronics = one board (BRD-01, 2026-10-28):** power entry/DC-DC/arm-only
+  STOP (no panel E-stop; #30), FPGA + clock, DAC80508 + 8× LTC1563-2 + 8 current loops + current sense,
   receiver (INA163 + ADA4940-2 + AD7768-4), and the FG/pen connectors are zones
   of one 4-layer board. FG-01 stays a separate passive coil PCB; the pen stays
   passive.
@@ -117,8 +117,8 @@ in its README).
   `docs/phase2/system_schematic.md` §6.0.
 - **Excitation selected 2026-10-27 (M16):** 1× DAC80508 (16-bit, 8 ch,
   200 kSPS) + 8× LTC1563-2 (4th-order Butterworth, 60 kHz); DAC update
-  199.805 kSPS (32.768 MHz ÷164), SPI 49.152 MHz, 8×24-bit (192 bits); 8 tones
-  20–34 kHz. See `contract/decisions_log.md` #19,
+  199.805 kSPS (32.768 MHz ÷164), SPI 49.152 MHz, 8×24-bit data + TRIGGER
+  (216 bits); 8 tones 20–34 kHz. See `contract/decisions_log.md` #19,
   `simulations/m16/FINAL_REPORT.md`, `docs/handoff/m16-fpga-handoff.md`,
   `docs/handoff/m16-section-diagram.png`.
 - **Follower = separate repo:** the Pico 2 firmware, motor config and arm
