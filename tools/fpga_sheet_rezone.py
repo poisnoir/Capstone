@@ -468,15 +468,30 @@ def zone_a(rz: Rezone):
         rz.junction((jx, py))
         rz.junction((jx, jog_y))
         rz.wire((jx, jog_y), p1, ref + 'top')
-        lab = (15.24, p2[1]) if ref != 'R147' else (8.89, p2[1])
-        rz.wire(p2, lab, ref + 'labstub')
-        rz.glabel(net, lab, 180 if ref in ('R145', 'R146') else 0)
+        # label rows in the clear band below the pin block; each net gets its
+        # own left-hand drop column, so no wire crosses another net's run
+        lrow, lx = {'R145': (72.39, 13.97),
+                    'R147': (77.47, 15.24),
+                    'R146': (82.55, 16.51)}[ref]
+        rz.wire(p2, (lx, p2[1]), ref + 'labh')
+        rz.wire((lx, p2[1]), (lx, lrow), ref + 'labv')
+        rz.glabel(net, (lx, lrow), 0)
         rz.prop_pos(ref, 'Reference', (15.24, row), 0)
         rz.prop_pos(ref, 'Value', (22.86, row), 0)
     # keep the pre-existing DAC_SDO flag on its own pin, off the new jog wire
     rz.label_at('global_label', 'DAC_SDO', (21.59, 57.15), (21.59, 57.15), 180)
     rz.label_at('global_label', 'PICO_RX', (21.59, 64.77), (21.59, 64.77), 0)
     rz.label_at('global_label', 'PICO_TX', (21.59, 67.31), (21.59, 67.31), 0)
+    # pull the two long left-pointing baseline flags back inside the frame
+    rz.del_wire((26.67, 74.93), (21.59, 74.93))
+    rz.del_wire((26.67, 77.47), (21.59, 77.47))
+    rz.wire((26.67, 74.93), (27.94, 74.93), 'pico_stop_stub')
+    rz.label_at('global_label', 'PICO_STOP_REQ_N', (21.59, 74.93),
+                (27.94, 74.93), 180)
+    rz.label_at('global_label', 'PICO_HEARTBEAT', (21.59, 77.47),
+                (26.67, 77.47), 270)
+    rz.del_wire((26.67, 72.39), (21.59, 72.39))
+    rz.label_at('global_label', 'HOST_RX', (21.59, 72.39), (26.67, 72.39), 270)
     rz.move('R162', (15.24, 31.75), rot=0)
     p1, p2 = rz.pin('R162', '1'), rz.pin('R162', '2')
     rz.glabel('+3.3V', (p1[0], p1[1] - 3.81), 90)
@@ -668,9 +683,10 @@ def finalize_property_text(rz: Rezone):
         'U141': ((445.77, 105.41), (445.77, 123.19)),
         'J140': ((518.16, 93.98), (518.16, 118.11)),
         'Y1': ((321.31, 105.41), (321.31, 126.365)),
-        'R142': ((469.90, 130.81), (469.90, 135.89)),
-        'R143': ((469.90, 116.84), (469.90, 127.635)),
-        'R144': ((469.90, 138.43), (469.90, 143.51)),
+        'R142': ((443.23, 130.81), (443.23, 135.89)),
+        'R143': ((443.23, 122.555), (443.23, 127.635)),
+        'R144': ((443.23, 138.43), (443.23, 143.51)),
+        'R146': ((24.13, 60.96), (24.13, 66.04)),
         'TP790': ((421.65, 139.70), (421.65, 142.24)),
         'TP791': ((421.65, 132.08), (421.65, 134.62)),
         'TP792': ((421.65, 124.46), (421.65, 127.00)),
@@ -683,7 +699,7 @@ def finalize_property_text(rz: Rezone):
         'R149': ((477.50, 134.62), (477.50, 147.32)),
     }
     fixed['R162'] = ((15.24, 27.94), (20.32, 27.94))
-    for ref in ('R145', 'R146', 'R147'):
+    for ref in ('R145', 'R147'):
         for sym in K.children(root, 'symbol'):
             r = next((p[2] for p in K.children(sym, 'property')
                       if p[1] == 'Reference'), None)
@@ -902,7 +918,8 @@ def text_collision_data(path: str):
     return records
 
 
-LABEL_ZONES = {'A': (8, 42, 44, 68), 'B': (283, 74, 330, 122)}
+LABEL_ZONES = {'A': (8, 42, 44, 88), 'B': (283, 74, 330, 122),
+               'C': (430, 88, 505, 150)}
 
 
 def label_bbox(text: str, at, size: float, angle: float):
@@ -1101,6 +1118,19 @@ def check_label_rules(path: str):
     for p in r5[:25]:
         print('   ', p)
 
+    # R6 -- frame margin: text boxes and bodies inside the inset frame
+    fx0, fy0, fx1, fy1 = 10.16, 10.16, 583.84, 409.84
+    gaps = []
+    for name, box in ([(t, b) for t, b, _a in others]
+                      + [(l['text'], l['bb']) for l in labels]
+                      + [(b[0], (b[1], b[2], b[3], b[4])) for b in bodies]):
+        gaps.append((name, min(box[0] - fx0, box[1] - fy0,
+                               fx1 - box[2], fy1 - box[3])))
+    r6 = [(n, d) for n, d in gaps if d < 1.27]
+    print(f'R6 objects inside 1.27 mm frame margin = {len(r6)}')
+    for n, d in r6[:20]:
+        print(f'    {n:24s} {d:6.2f} mm')
+
     # per-label clearance table for zones A and B, including nearest pin number
     for zname, (x0, y0, x1, y1) in LABEL_ZONES.items():
         sel = [l for l in labels if x0 <= l['anchor'][0] <= x1 and y0 <= l['anchor'][1] <= y1]
@@ -1128,8 +1158,9 @@ def check_label_rules(path: str):
                 if d < pgap:
                     pgap, pbest = d, pt['owner']
             print(f"   {l['text']:18s} | {l['anchor']} | {b[2]-b[0]:5.2f} x {b[3]-b[1]:4.2f}"
-                  f" | {best:18s} | {gap:5.2f} | pin: {pbest:16s} {pgap:5.2f}")
-    return len(r1) + len(r2) + len(r3) + len(r4) + len(r5)
+                  f" | {best:18s} | {gap:5.2f} | pin: {pbest:16s} {pgap:5.2f}"
+                  f" | frame: {b[0]-fx0:5.2f}")
+    return len(r1) + len(r2) + len(r3) + len(r4) + len(r5) + len(r6)
 
 
 def verify(path: str, baseline: str | None = None) -> int:
