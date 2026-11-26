@@ -9,8 +9,19 @@ wire end is read from the sheet's embedded ``(lib_symbols …)`` pin table via
 
 Re-runnable: moves are absolute; deletions are by content/geometry; every new
 object carries a deterministic UUID derived from its own geometry, so a second
-run adds nothing.  Unrelated formatting, ``lib_symbols``, component properties,
-``instances`` and ``sheet_instances`` are untouched.
+run adds nothing.
+
+Preserved: component property *strings* (Reference, Value, Footprint, ...),
+all uuids, ``(instances …)``, ``lib_symbols`` and ``sheet_instances``.
+Not preserved: property *text placement*.  ``finalize_property_text()`` and
+``move()`` rewrite Reference/Value ``(at x y angle)`` for every symbol on the
+sheet, moved or not (e.g. R141 changes from angle 90 to 270), so property text
+always renders horizontally at the placement the transform chose.
+
+Reuse caveat: ``detach()`` and ``prune_dangling_labels()`` delete wires and
+labels by geometry (coincident endpoints / mid-span), not by ownership.  On a
+sheet where a label sits on a wire endpoint shared by another net, re-run the
+full gate suite (netlist, ERC, geometry) before trusting the result.
 """
 from __future__ import annotations
 
@@ -105,6 +116,9 @@ class Rezone:
     # ---- raw block manipulation --------------------------------------
     def del_span(self, start: int, end: int):
         self.text = self.text[:start] + self.text[end:]
+        # Removing an S-expression block can leave whitespace-only lines at
+        # the seam; drop them so repeated deletions do not accumulate blanks.
+        self.text = re.sub(r'(?m)^[ \t]+$\n?', '', self.text)
 
     def del_uuid(self, uid: str) -> bool:
         if f'(uuid "{uid}")' not in self.text:
