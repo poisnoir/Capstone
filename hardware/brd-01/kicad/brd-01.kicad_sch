@@ -58,16 +58,56 @@
 		)
 		(uuid "fbe62a26-a845-4eb6-9a35-03093381e153")
 	)
-
-
-
-
-
-
-
-
-
-
+	(label "DRIVER_FAULT_N"
+		(at 110.49 80.01 0)
+		(effects
+			(font
+				(size 1 1)
+			)
+			(justify left)
+		)
+		(uuid "5c1e59f8-8e52-4876-bc6e-487d2462b451")
+	)
+	(label "BUCK_SYNC"
+		(at 190.5 80.01 0)
+		(effects
+			(font
+				(size 1 1)
+			)
+			(justify left)
+		)
+		(uuid "7191b9e6-463d-44a7-b936-f172ac8699a7")
+	)
+	(label "DRIVER_FAULT_N"
+		(at 185.42 80.01 0)
+		(effects
+			(font
+				(size 1 1)
+			)
+			(justify left)
+		)
+		(uuid "88e2dba2-ba6e-4226-a683-ff64d66f8d1d")
+	)
+	(label "DRIVER_FAULT_N"
+		(at 76.2 80.01 0)
+		(effects
+			(font
+				(size 1 1)
+			)
+			(justify left)
+		)
+		(uuid "b5dca5cb-0bd1-45ae-a3db-94584bf84c26")
+	)
+	(label "BUCK_SYNC"
+		(at 81.28 80.01 0)
+		(effects
+			(font
+				(size 1 1)
+			)
+			(justify left)
+		)
+		(uuid "d71bece5-cbfe-467e-bc5c-3d266a5724ed")
+	)
 	(sheet
 		(at 138.37 80.01)
 		(size 20.32 21.59)
@@ -352,54 +392,4 @@
 		)
 	)
 	(embedded_fonts no)
-	(label "BUCK_SYNC"
-		(at 81.28 80.01 0)
-		(effects
-			(font
-				(size 1 1)
-			)
-			(justify left)
-		)
-		(uuid "d71bece5-cbfe-467e-bc5c-3d266a5724ed")
-	)
-	(label "BUCK_SYNC"
-		(at 190.5 80.01 0)
-		(effects
-			(font
-				(size 1 1)
-			)
-			(justify left)
-		)
-		(uuid "7191b9e6-463d-44a7-b936-f172ac8699a7")
-	)
-	(label "DRIVER_FAULT_N"
-		(at 76.2 80.01 0)
-		(effects
-			(font
-				(size 1 1)
-			)
-			(justify left)
-		)
-		(uuid "b5dca5cb-0bd1-45ae-a3db-94584bf84c26")
-	)
-	(label "DRIVER_FAULT_N"
-		(at 110.49 80.01 0)
-		(effects
-			(font
-				(size 1 1)
-			)
-			(justify left)
-		)
-		(uuid "5c1e59f8-8e52-4876-bc6e-487d2462b451")
-	)
-	(label "DRIVER_FAULT_N"
-		(at 185.42 80.01 0)
-		(effects
-			(font
-				(size 1 1)
-			)
-			(justify left)
-		)
-		(uuid "88e2dba2-ba6e-4226-a683-ff64d66f8d1d")
-	)
 )
