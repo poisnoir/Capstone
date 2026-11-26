@@ -7,8 +7,9 @@ and the committed netlist in
 (`+6V`, `+3.3V`, `+5V_EXC`, `+5VA`, MGJ2D151515SC). This file is the power
 authority for the as-built board; the older v1 tree in
 [power-tree.md](../../hardware/brd-01/kicad/power-tree.md) is historical.
-The only remaining open point is the §7 D2 arithmetic wording (centre of the
-0.3–4.6 V band); it does not change any rail or value here.
+The only remaining **design-wording** point is the §7 D2 arithmetic wording
+(centre of the 0.3–4.6 V band); the §7 bench checks C1/C5/C6/C7 and the §9
+`TRIP_REF` reconciliation remain open. No rail or value is changed here.
 
 Each number is tagged:
 

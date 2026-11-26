@@ -2,9 +2,9 @@
 
 **Status (2026-11-25): plan, not executed.** The inherited-state line below
 (`HEAD 4952526`, five commits behind `lamdesktop/main`, reference `d0d2c48`) is
-historical; neither commit is on current `main` (`HEAD ef04f63`), so the
-`git rebase lamdesktop/main` steps are stale — re-check HEAD before running
-them. The proposed SVG linter (`kicad_sch_audit.py` under `tools/`) is **not written**: use
+historical; neither commit is on current `main` (`HEAD ef04f63`). The sync
+steps have been replaced with read-only `git fetch`/log inspection from HEAD
+`ef04f63`; do **not** rebase onto those stale bases. The proposed SVG linter (`kicad_sch_audit.py` under `tools/`) is **not written**: use
 `tools/kicad_sch_helper.py audit`, `tools/kicad_span_report.py` and
 `tools/kicad_netlist_compare.py` for deterministic gates, plus a 200 dpi render
 for visual overlap checks. Netlist truth is
@@ -19,12 +19,12 @@ for visual overlap checks. Netlist truth is
 
 ## 1. Pre-Flight Setup (Mandatory Before Choosing an Option)
 
-1. **Sync upstream & reconcile `d0d2c48`:**
+1. **Read-only sync from HEAD `ef04f63` (no rebase):**
    ```bash
    git status -sb
+   git log --oneline -1        # base is ef04f63
    git fetch lamdesktop
    git log --oneline HEAD..lamdesktop/main
-   git rebase lamdesktop/main
    ```
 2. **Fix `opencode.json` tracking:** Move machine-local paths (`~/.local/bin/konnect`) into `.gitignore` (commit `opencode.example.json` instead) so hardware PRs stay clean.
 3. **Pin golden baseline before any edit:**
@@ -114,7 +114,9 @@ for visual overlap checks. Netlist truth is
 You are the orchestrator (DeepSeek-V4.1-Flash-1017) in OpenCode for removing label islands on BRD-01 (starting with receiver.kicad_sch PEN1 lane). Do NOT use Konnect MCP for schematic drafting (headless GetOpenDocuments is unhandled).
 
 PRE-FLIGHT:
-1. Stale rebase instruction (see Status): re-check HEAD against `lamdesktop/main` before any sync; keep machine-local opencode.json paths out of hardware commits.
+1. Base is HEAD `ef04f63`. Run `git fetch lamdesktop` and inspect the log
+   (read-only); do **not** rebase. Keep machine-local opencode.json paths out
+   of hardware commits.
 2. Pin golden baseline before editing: export /tmp/opencode/before.xml and /tmp/opencode/erc_before.json via `kicad-cli`.
 3. Set up subagent roles (via oh-my-opencode-slim / .opencode/agents/):
    - Geometry Worker: Python + kiutils (+ elkjs if needed).

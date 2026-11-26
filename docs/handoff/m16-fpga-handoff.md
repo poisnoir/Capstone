@@ -65,7 +65,7 @@ directly from the XO.
 | FTW | \(k \times 262144\), k = 10…17 (exact) |
 | LUT | 4096 × 16 sine, 12-bit phase truncation |
 | Per-tone | 16-bit amplitude, 16-bit phase offset |
-| DAC word | 16-bit unsigned, 0–5 V full scale, midscale 2.5 V |
+| DAC word | 16-bit unsigned; **part** full scale 0–5 V, midscale 2.5 V (decision #19). **FPGA tone clamp 0.3–4.6 V** per `power_tree_v2.md` §7 D2; the band-centre wording (2.45 V vs 2.5 V) is open |
 | Update | every 164 XO clocks; latch 8 words; SPI out |
 
 FTW table:
@@ -95,7 +95,7 @@ The DDS phase is **not** reset per frame. The current-sense Ch0 is the phase ref
 
 ## 4. DAC80508 interface
 
-**Part:** DAC80508MRTET (WQFN-16), 16-bit, 8 channels, SPI, internal 2.5 V reference, gain 2 → 0–5 V, 5 µs settling.
+**Part:** DAC80508MRTET (WQFN-16), 16-bit, 8 channels, SPI, internal 2.5 V reference, gain 2 → 0–5 V, 5 µs settling. That 0–5 V is the **part** range; the commanded tone is clamped in firmware to **0.3–4.6 V** (`power_tree_v2.md` §7 D2).
 
 ### 4.1 Pins (FPGA side)
 
@@ -114,7 +114,8 @@ The same SPI bus carries it as a 9th 24-bit frame.
 1. SYNC register (0x02) = `0x00FF` → set SYNC-EN = 1 for DAC0…DAC7 (frame `0x0200FF`). The reset
    value `0xFF00` is asynchronous mode, where each channel updates on its own CS rising edge.
 2. Gain 2 (0–5 V) is the **M-variant default** (CONFIG 0x03 BUFF-GAIN = 1); no write needed
-   unless you change the range or power down a channel.
+   unless you change the range or power down a channel. This is the DAC hardware
+   range, not the FPGA tone clamp (0.3–4.6 V, decision #31 / D2).
 3. Per update: write the 8 data frames, then write TRIGGER = `0x0010` (frame `0x050010`).
 
 **SPI mode:** CPOL = 0, CPHA = 1 (idle low, SDI changes on the rising edge, latched on the
@@ -157,7 +158,7 @@ divisor. Plan on a small protocol adapter, not a drop-in.
 | | Pmod DA4 (AD5628-1) | M16 (DAC80508MRTET) |
 |---|---|---|
 | Resolution | 12 bit | 16 bit |
-| Full scale | 0–2.5 V (1.25 V ref ×2) | 0–5 V |
+| Full scale (part) | 0–2.5 V (1.25 V ref ×2) | 0–5 V (FPGA tone clamp 0.3–4.6 V, D2) |
 | Frame | **32 bit**: 4 don't-care + C[3:0] + A[3:0] + 12-bit data + 8 don't-care | **24 bit**: RW + 000 + A[3:0] + 16-bit data |
 | Frames per update | **8** (7 data + 1 update-all) | **9** (8 data + TRIGGER) |
 | Update-all | command `0010` (write input n, update all) on the 8th frame | TRIGGER 0x05 bit 4, 9th frame |
@@ -302,8 +303,14 @@ clock that supports 200 kSPS.
 
 ### 4.6 Output scaling
 
-- 0–5 V maps to 0–500 mA in the current loop; 150 mA = 1.5 V.
-- The sine is around 2.5 V; the 100 µF coupling blocks DC.
+- The 0–5 V → 0–500 mA loop mapping (150 mA = 1.5 V) is the **pre-D2 design
+  assumption**; decision #31 / `power_tree_v2.md` §7 D2 now clamps the FPGA tone
+  to 0.3–4.6 V. **OPEN:** the exact current-loop mapping (offset/gain) under that
+  clamp is not settled in the repo — do not assume a linear end-point mapping;
+  confirm on the bench before setting amplitude.
+- The sine is nominally midscale of the DAC part range; the 100 µF coupling
+  blocks DC. The exact centre of the clamped band is the D2 wording item
+  (2.45 V arithmetic vs 2.5 V nominal).
 - Per-tone amplitude is a 16-bit word; the 8 tones are **not** summed in one DAC — each channel carries one tone. The current-sense summer sums the eight coil currents; the ADC Ch0 sees eight tones.
 
 ---
@@ -347,7 +354,15 @@ clock that supports 200 kSPS.
 
 ## 8. FPGA pin assignment (M16)
 
-| Pin | Signal | Direction | Notes |
+**Historical point-in-time table (2026-10-27), not the captured pinout.** The
+abstract pins 1–40 below were the M16 proposal; BRD-01 uses real FTG256 balls and
+netlist names — use `docs/handoff/brd01_io_handoff.md` §3 for the authoritative
+map. Examples: `CLOCK_32M768` = ball D13 (not "pin 5 MCLK_ADC"), `ADC_DCLK` C11,
+`ADC_DOUT0…3` A8/A9/B9/A10, `DRIVER_FAULT_N` R1, `PICO_STOP_REQ_N` P4,
+`BUCK_SYNC` R3, host UART N1/P1, Pico TX/RX/HEARTBEAT N2/N3/P3. Rows 37–39 are
+obsolete as written; the captured equivalents are given in those rows and in §10.
+
+| Pin (historical) | Signal | Direction | Notes |
 |---|---|---|---|
 | 1–2 | +3.3 V | power |  |
 | 3–4 | GND | power |  |
@@ -368,12 +383,15 @@ clock that supports 200 kSPS.
 | 22 | DAC_SDO | in | optional |
 | 23–35 | spare | — | **13** pins freed (no LDAC pin; 8-lane DAC removed) |
 | 36 | GND | power |  |
-| 37 | ESTOP_STATUS | in | opto-isolated |
-| 38 | WATCHDOG_KICK | out | to Pico/relay |
-| 39 | FAULT_IRQ | in | wired-OR fault |
+| 37 | ~~ESTOP_STATUS~~ | — | obsolete: no such net; `U4.R2` is a no-connect |
+| 38 | ~~WATCHDOG_KICK~~ | — | obsolete: no relay net; follower watchdog uses HEARTBEAT (`U4.P3`) and the stale-pose rule |
+| 39 | ~~FAULT_IRQ~~ | in | captured as `DRIVER_FAULT_N`, ball `R1`; wired-OR overcurrent bus + arm-latch clear |
 | 40 | GND | power |  |
 
-These are on-board nets on BRD-01 (option D), not a header. The 13 spare pins are available for the host UART, Pico UART, config flash and debug. Do not repurpose the ADC/DAC pins without a schematic revision.
+The original numbering was on-board (option D), not a header; the captured
+schematic leaves 139 U4 pins no-connect, so the 13-spare-pin count is a M16
+migration figure, not the present tally. Do not repurpose the ADC/DAC balls
+without a schematic revision.
 
 ---
 

@@ -64,8 +64,10 @@ transient response against the implemented FPGA rail loads.
 
 Capture is complete: every on-board symbol carries a value and a footprint.
 The [BOM-to-CAD ledger](bom-to-cad.md) records the part evidence and the
-release verification left on each lot. The [power tree](power-tree.md)
-documents every rail, the arm STOP latch and every net that crosses sheets.
+release verification left on each lot. The rail authority is
+[power_tree_v2.md](../../../docs/phase2/power_tree_v2.md) (decision #31); netlist
+truth is [brd01_wiring_manifest.md](../../../docs/phase2/brd01_wiring_manifest.md).
+[power-tree.md](power-tree.md) is the SUPERSEDED v1 record, not a rail authority.
 
 | Page | Sheet | Contents |
 |---|---|---|

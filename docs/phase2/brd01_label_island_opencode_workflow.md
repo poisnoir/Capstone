@@ -1,9 +1,9 @@
 # BRD-01 Label-Island Rewiring: Breakthrough & OpenCode + DeepSeek + Subagent Workflow
 
 **Status (2026-11-25): plan, not executed.** This was written against base commits
-`4952526` / `d0d2c48`; neither is on current `main` (`HEAD ef04f63`), so the
-`git rebase lamdesktop/main` instructions below are stale — re-check the current
-HEAD and netlist before acting on them. An SVG text-on-wire bbox linter
+`4952526` / `d0d2c48`; neither is on current `main` (`HEAD ef04f63`). Old
+rebase instructions have been replaced with read-only `git fetch`/log inspection
+from HEAD `ef04f63`; do **not** rebase onto those stale bases. An SVG text-on-wire bbox linter
 (`kicad_sch_audit.py`, proposed under `tools/`) is **not written**; the deterministic gates that do
 exist are `tools/kicad_sch_helper.py audit`, `tools/kicad_span_report.py`
 (`--compare --fail-on-regression`) and `tools/kicad_netlist_compare.py`, with a
@@ -37,9 +37,9 @@ Run these once before touching `receiver.kicad_sch`:
 1. **Sync upstream first:**
    ```bash
    git status -sb
-   git fetch lamdesktop
-   git log --oneline HEAD..lamdesktop/main   # inspect the 5 upstream commits
-   git rebase lamdesktop/main               # reconcile with d0d2c48 before rewiring
+   git log --oneline -1                     # base is ef04f63
+   git fetch lamdesktop                     # read-only sync; do NOT rebase
+   git log --oneline HEAD..lamdesktop/main   # inspect any upstream commits
    ```
 2. **Handle `opencode.json`:** Do **not** commit machine-local binary paths (`~/.local/bin/konnect`) into `main`. Either add `opencode.json` to `.gitignore` and keep `opencode.example.json` tracked, or verify `opencode.json` uses relative/env paths only before committing it separately.
 3. **Graduate `/tmp/bgen.py` → `tools/kicad_sch_helper.py`:** Move the S-expression parser and pin-coordinate solver out of `/tmp/` into `tools/` alongside `tools/kicad_netlist_compare.py` (as specified in the `power_v2` and `full_board` handoffs) so every subagent uses one shared, versioned geometry library.
@@ -94,7 +94,8 @@ Only after Tier 1 passes all 4 checks:
 ## 5. OpenCode + DeepSeek + Subagent Execution Waves
 
 ### Wave 0 — Setup & Sync (`DeepSeek` Orchestrator)
-1. Rebase onto `lamdesktop/main` (5 commits) and resolve `opencode.json` tracking.
+1. Read-only sync from `ef04f63` (`git fetch lamdesktop` + log inspection);
+   **no rebase**. Resolve `opencode.json` tracking.
 2. Pin golden baseline (`before_receiver.xml`, `erc_before.json`).
 3. Build `tools/kicad_sch_helper.py` (with Section 3 style rules + occupancy grid). The SVG bbox linter (`kicad_sch_audit.py`) is not written: use helper `audit`, `tools/kicad_span_report.py` and a rendered PNG for the equivalent gates.
 
@@ -120,7 +121,9 @@ Once the current flat sheets are clean and committed, consider two structural up
 You are the orchestrator (DeepSeek-V4.1-Flash-1017) for removing label islands on BRD-01 (starting with receiver.kicad_sch PEN1 lane) using OpenCode and parallel subagents. Do NOT use Konnect MCP for schematic layout (headless GetOpenDocuments is unhandled).
 
 PRE-FLIGHT:
-1. Run `git fetch lamdesktop && git rebase lamdesktop/main` to pull the 5 upstream commits and reconcile with d0d2c48. Keep opencode.json out of hardware commits (gitignore or separate config commit).
+1. Base is HEAD `ef04f63`. Run `git fetch lamdesktop` and inspect the log
+   (read-only); do **not** rebase onto stale commits. Keep opencode.json out of
+   hardware commits (gitignore or separate config commit).
 2. Pin golden netlist & ERC from HEAD before editing: export /tmp/opencode/before.xml and /tmp/opencode/erc_before.json via `kicad-cli`.
 3. Graduate /tmp/bgen.py into `tools/kicad_sch_helper.py` with: (a) 1.27 mm grid snapping, (b) >=10.16 mm differential-pair row separation via 5.08 mm dog-leg fan-out from U104, (c) single horizontal +12VA/-12VA clamp rails (1 label per rail), (d) role-typed world-space angle=0 field placement on a 1.27 mm occupancy grid (diodes hide Value, Ref 5.08 mm outside), and (e) semantic label justification pointing away from the block.
 4. The SVG bbox linter (`kicad_sch_audit.py`) is **not written**. Before any PNG render, use the existing `tools/kicad_sch_helper.py audit`, `tools/kicad_span_report.py` and a `kicad-cli sch export svg` render inspected visually.

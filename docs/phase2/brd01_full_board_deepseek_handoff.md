@@ -11,7 +11,8 @@ replacement (the netlist still carries TLV3201 comparators feeding U600–U603
 open-drain buffers). The coil value locked by decision #27 is 79 µH / 2.9 Ω;
 the "70 µH / 2 Ω" figure quoted below is a driver-budget starting point, not
 the locked coil. The BRD-01 power tree is locked as decision #31 (2026-11-25),
-superseding the #20 part list; the captured schematic and BOM implement it.
+superseding the #20 part list; the captured schematic implements it. BOM
+reconciliation is not evidenced.
 Keep the stages below as the original proposal; do not treat their checklists
 as completed gates.
 
