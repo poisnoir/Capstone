@@ -14,17 +14,21 @@ AD7768-4 Rev.D datasheet; `simulations/field_jacobian.py`.
 
 ## 1. Clock tree (one clock, integer divides)
 
-One 32.768 MHz CMOS XO (Citizen CSX750FBC32.768M-UT, 3.3 V) feeds the ADC
-MCLK and the FPGA. The ADC/DAC rates are integer divides; the SPI is a
-3/2 PLL ratio (98.304 MHz ÷2):
+One 32.768 MHz XO (Citizen CSX750FBC32.768M-UT) drives the AD7768-4 MCLK
+through 33 Ω and the FPGA clock input directly (SC-07, decision #28); there is
+no discrete clock buffer and no PLL-generated MCLK. The FPGA DDS clock is the
+same 32.768 MHz; the PLL ×3 = 98.304 MHz feeds **only** ÷2 = 49.152 MHz DAC SPI.
+All rate divides are exact integers:
 
 | Rate | Divide | Value | Use |
 |---|---|---|---|
-| XO / ADC MCLK | ÷1 | 32.768 MHz | AD7768-4 MCLK; FPGA DDS clock |
-| DAC SPI SCLK | ×3/2 (98.304 ÷2) | **49.152 MHz** | DAC80508 SCLK; 216-bit burst |
+| XO | ÷1 | 32.768 MHz | AD7768-4 MCLK via 33 Ω; FPGA clock and DDS clock |
+| DAC SPI SCLK | ×3 then ÷2 (98.304 ÷2) | **49.152 MHz** | DAC80508 SCLK only; 216-bit burst |
 | DAC update | ÷164 | **199.805 kSPS** | 8 DAC words per 5.005 µs period |
 | ADC ODR | ÷128 | 256 kSPS | 4-channel frames |
 | Frame | N=512 | 2.000 ms | integer-J observation window |
+
+One sync reset for the DDS/ADC dividers; no per-frame phase reset.
 
 Why this is exact: the tones are \(f_k=2\,\mathrm{kHz}\cdot k\), \(k=10\ldots17\).
 With a 32.768 MHz clock,
@@ -62,7 +66,7 @@ sample clock is 32.768 MHz/128 = 256 kSPS; the ADC frame is 512 DRDY pulses =
 | DIG-01b | One shared 4096×16 sine LUT; 12-bit phase truncation; 16-bit amplitude multiplier per tone | 12-bit truncation gives ≈72 dBc phase-truncation spurs, below the −60 dBc spur budget; 4096×16 = 64 kb = 2 BRAM36 | Spur FFT; LUT utilization |
 | DIG-01c | DDS update at **199.805 kSPS (÷164)**; one SPI at **49.152 MHz**, 24-bit frame per channel, 8 data frames + 24-bit TRIGGER (0x05 bit 4) = **216 bits** | 216 bits at 49.152 MHz = **4.394 µs** < 5.005 µs; the software LDAC removes inter-channel skew; ≥1 µs between output updates is met | Logic-analyser capture; DAC update rate |
 | DIG-01d | Amplitude/phase words double-buffered; update on frame boundary, not mid-frame | No phase discontinuity or amplitude step in the observation window | Frame-boundary scope/FFT |
-| DIG-01e | DDS output disabled/zero on fault or E-stop, independent of the solver | Fail-safe stop; no residual field | Fault injection |
+| DIG-01e | DDS suppression **only** on a genuine FPGA/ADC/driver fault (tracker-side safe state), **not** on STOP; STOP is arm-motion only and leaves DDS/DAC/field/pose running (#30) | Arm STOP must not disturb the field or the pose stream | Fault injection + STOP-then-field check |
 
 **DAC interface.** 1× DAC80508 (16-bit, 8 channels, 200 kSPS, SPI) + 8×
 LTC1563-2 (4th-order Butterworth, 60 kHz, one resistor per channel). One 24-bit
@@ -134,8 +138,9 @@ covers this; the earlier 2.5–5.8 GFLOP/s estimate is the conservative bound.
 | **Pose period** | **8.633 ms** | **115.8 Hz** |
 | Filter-off latency | ≈9.1 ms | Pose period + 0.5 ms output |
 | Filter-on latency | ≤100 ms | Kalman group delay; measure |
-| Stop (E-stop) | <1 ms hardware | NC button cuts driver enable |
-| Stop (tracking lost/fault) | ≤100 ms | Watchdog + follower |
+| STOP (arm motion only) | <1 ms hardware | NC mushroom button; no K1/K2, `+15V_FUSED` field rail unswitched; field, DDS/DAC and pose continue (#30) |
+| STOP on tracking loss (arm) | ≤100 ms | Watchdog + follower; field, DDS/DAC and pose continue (#30) |
+| Tracker-side safe state | on genuine FPGA/ADC/driver fault only | Separate from arm STOP; tracker enters safe state (#30) |
 
 The 10 ms / 100 Hz requirement has 1.367 ms margin. If the solver exceeds 5 ms,
 the fallbacks are: reduce LM iterations with warm start, relax tolerance, or
@@ -155,5 +160,5 @@ without re-running SC-03/SC-01d.
    and phase within tolerance.
 5. Golden solver: pose vs MATLAB for the 98-point grid; worst-case retry count.
 6. Timed loop: 8.633 ms worst case at 115.8 Hz; latency filter-off ≤20 ms;
-   filter-on ≤100 ms; stop ≤100 ms.
+   filter-on ≤100 ms; arm-motion STOP ≤100 ms with field/DDS/pose continuing (#30).
 7. 1-hour moving-sensor run: no lock loss, no retry storm, no dropped frame.

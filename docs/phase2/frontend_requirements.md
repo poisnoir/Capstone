@@ -21,9 +21,10 @@ recommended RC/amplifiers); E301 schematic/parts list (reference only);
 - Differential output stage: **ADA4940-2** (LOCKED) (fully differential, AD7768
   fast-mode recommended); ADA4896-2 is the alternate. VCM from the ADC;
   inter-channel phase match ≤0.1°.
-- Supplies: INA163 on **±12 V** (from the isolated RV-1515D + TPS7A47/TPS7A33
-  LDOs); ADA4940-2 and AD7768 on **+5 V**; IOVDD **+3.3 V**; ADR434 4.096 V
-  reference shared with a buffer.
+- Supplies: INA163 on **±12VA** (from MGJ2D151515SC → LT3045-1 / LT3093);
+  ADA4940-2 and AD7768 on **+5VA**; IOVDD **+3.3 V**; ADR434 4.096 V reference
+  shared with a buffer. Rails per decision #31 (v2); FE-4 itself generates no
+  clocks or rails.
 - The E301 AD620/AD627 + AD711 heritage is **not sufficient for 200/B and only
   marginal for 150/B** (B/E at 34 kHz); it is a 100 mm fallback / reference only.
 - The **AD7768-4 is the locked ADC** for FE-4; this front end is designed to its
