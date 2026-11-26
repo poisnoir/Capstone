@@ -1,13 +1,14 @@
 # contract-change: decision #20 power parts superseded by power-tree v2
 
-**Status: DRAFT, not filed — OPEN (2026-11-25).** This draft has **not** been
-executed: no `contract-change` issue, PR or approvals, and the power parts in
-locked decision #20 are unchanged. `contract/VERSION` is now 1.1.0 for other
-additive decisions, **not** for this change. The as-built board already
-implements the v2 parts (`hardware/brd-01/kicad/brd-01.kicad_sch` at `ef04f63`;
-`hardware/brd-01/kicad/bom-to-cad.md:151`; `docs/phase2/brd01_component_reference.md:357`),
-so the user must decide whether to ratify this draft or reconcile the board to
-#20; see `contract/decisions_log.md` → "Open contract changes".
+**Status: APPLIED by decision #31 (2026-11-25).** The user adopted the v2 power
+tree; `contract/decisions_log.md` #31 is LOCKED, `contract/icd/power.md` and
+`docs/phase2/system_schematic.md` §2 carry the adopted rails, and
+`contract/VERSION` remains 1.1.0 (additive). The approval checklist below is
+retained as the original draft's history, not as pending work; #20's part list
+is superseded, while its adapter and one-board intent stand. The as-built board
+already implemented these parts (`hardware/brd-01/kicad/brd-01.kicad_sch` at
+`ef04f63`; `hardware/brd-01/kicad/bom-to-cad.md:151`;
+`docs/phase2/brd01_component_reference.md:357`).
 Prepared 2026-11-24; evidence is on branch `main` at `387f90e`.
 
 ## What changes and why

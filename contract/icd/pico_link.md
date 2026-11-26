@@ -2,7 +2,7 @@
 
 **Canonical location:** `contract/icd/pico_link.md` · **Contract version:** 1.1.0 (tag pending review)
 **Status:** Rev A, 2026-10-28; STOP scope clarified 2026-11-25 (#30). The
-pin-1 power change proposed in `power_tree_v2.md` is not in the contract (OPEN).
+pin-1 ICD change is an OPEN follow-up to the v2 rails adopted by #31.
 Applies to BRD-01 (PL) ↔ Pico 2 (follower).
 **Owners:** PL side = FPGA engineer; Pico side = follower firmware.
 **Scope:** the minimum contract. Encoding, framing and timing details are the implementers' choice
@@ -33,11 +33,12 @@ The PL also keeps the ADC capture and Goertzel regardless — raw ADC would be ~
 
 RP2350 I/O is **not** 5 V tolerant. Keep everything 3.3 V.
 
-> **OPEN — pin 1 power.** The committed netlist has `J123.1` as a no-connect
-> (`docs/phase2/brd01_wiring_manifest.md` §5 item 6; `docs/handoff/brd01_io_handoff.md` §1;
-> `power_tree_v2.md` §7 D4 proposes BRD-01 not powering the Pico). Rev A and this ICD
-> still list pin 1 as 3V3. Changing the pinout is part of the unfiled power-tree contract
-> change, so no change is made here; resolve before wiring the follower harness.
+> **OPEN follow-up — pin 1 power.** The committed netlist has `J123.1` as a
+> no-connect (`docs/phase2/brd01_wiring_manifest.md` §5 item 6;
+> `docs/handoff/brd01_io_handoff.md` §1; `power_tree_v2.md` §7 D4 gives BRD-01
+> not powering the Pico). Decision #31 adopted the v2 rails but not this frozen
+> ICD's pinout, so Rev A still lists pin 1 as 3V3; align it before wiring the
+> follower harness.
 
 ## 3. Information that must cross
 

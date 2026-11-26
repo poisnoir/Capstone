@@ -39,9 +39,9 @@ M16 SPICE evidence.
 1. Write SYNC `0x02` = `0x00FF` once (frame `0x0200FF`) to put all 8 channels in
    synchronous mode. Reset value `0xFF00` is asynchronous.
 2. Gain 2 (0–5 V) is the M-variant default; no CONFIG write needed.
-   **OPEN, not a contract change:** `power_tree_v2.md` §7 D2 proposes holding the
-   DDS command within 0.3–4.6 V on its proposed `+5V_EXC` rail; the draft power
-   contract change is unfiled, so this ICD keeps the 0–5 V default.
+   **OPEN follow-up:** `power_tree_v2.md` §7 D2 gives a 0.3–4.6 V DDS limit on
+   `+5V_EXC`; decision #31 adopted the rails, not this frozen ICD's amplitude
+   clause, so this ICD keeps the 0–5 V default pending a follow-up ICD change.
 3. Power-on reset is **midscale** (2.5 V), matching the AC-coupled current loop.
 4. **Genuine FPGA/ADC/driver fault:** stop the DDS, write zero-scale to all 8
    channels, then one TRIGGER. **Arm-only STOP (#30):** no DDS/DAC/coil effect —

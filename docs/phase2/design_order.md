@@ -11,7 +11,7 @@ requirement without a test is not frozen.
 (Eq.3.17–3.27, 7.1–7.9); `simulations/field_jacobian.py`.
 
 **Contract alignment (2026-11-25).** Gate rows follow contract 1.1.0 (pending tag):
-locked power parts #20 (the v2 proposal is OPEN and unfiled), arm-only STOP (#30),
+adopted power tree v2 (#31 supersedes #20's part list), arm-only STOP (#30),
 XO-direct clock (#28), FG-01 vendor coils (#27), BRD-01 one-board/PS-less FPGA
 (#25/#26).
 
@@ -164,7 +164,7 @@ after FG-1. First-pass requirements: `docs/phase2/driver_power_requirements.md`.
 | DRV-02 | Output: 250 mA nominal / 500 mA max; **150 mA prototype first**; programmable 150–500 mA; load **79 µH + 2.9 Ω** (paper; thesis 70 µH/2 Ω); at 34 kHz \(\lvert Z\rvert\approx16.9\ \Omega\); 250 mA → 4.2 V peak; 500 mA → 8.4 V peak, **above the 7.5 V rail** (500 mA only below ~30 kHz); 20–34 kHz | AnserEMT 2017 Table 2; Thesis §4.2–4.3; `tone_plan.md` | PROPOSED; 150 mA first | Load-step test |
 | DRV-03 | Constant-current: phase margin ≥45° at 34 kHz; output impedance high; current error ≤0.1%; drift ≤0.1% over 18–28 °C | Thesis §4.3.3; O'Donoghue §II | PROPOSED | Step/load response; current log |
 | DRV-04 | Distortion: THD ≤−60 dBc at 250 mA; **all-tone IMD** below the spur budget (3rd-order products fall on tone bins); crosstalk ≤−60 dB; noise | Docs spur budget; `tone_plan.md` IMD note | PROPOSED | Sense-resistor FFT + 8-tone IMD |
-| DRV-05 | Power: **C1 + medical-grade locked** — one external 15 V/60 W-class medical-grade adapter (no on-board mains stage) + on-board DC-DC/LDO tree; +15 V, −15 V, +5 V, +3.3 V; FPGA core via board regulator (+1.8 V only if final board needs it) — **locked #20 parts; the v2 proposal is OPEN** | `driver_power_requirements.md` §3; #20; `docs/phase2/power_tree_v2.md` (PROPOSED) | LOCKED C1 + medical-grade; rail parts per #20 | Rail noise/load test |
+| DRV-05 | Power: **C1 + medical-grade locked** — one external ME60A1503F01 15 V/60 W adapter (no on-board mains stage); BRD-01 rails per **adopted v2 (#31)**: `+15V_FUSED` → `+6V` (TPSM63604) → `+1V0_FPGA` / `+1V8_FPGA` / `+3.3V` (TPS62130A) and `+5V_EXC` / `+5VA` (TPS7A4701); `±12VA` via MGJ2D151515SC + LT3045-1/LT3093; OKI/RV/TPS7A20 removed | `driver_power_requirements.md` §3; #20 superseded in part by #31; `docs/phase2/power_tree_v2.md` | LOCKED adapter + v2 rails (#31) | Rail noise/load test |
 | DRV-06 | Thermal: 8 channels at 250 mA; coil \(I^2R\) ≈0.125 W/coil, sense ≈0.06 W each, LMH6321 dissipation; no 3 kg heatsink; ~180 cm² board; **one-box enclosure with internal shield partition** | Thesis §4.3; measured R/L; D5 decision | LOCKED one-box; thermal test PROPOSED | Thermal soak |
 | DRV-07 | Protection: overcurrent, overtemp, disable, fault, **arm-motion STOP ≤100 ms (#30)**; no DC current in coil (100 µF AC coupling); **no panel E-stop/K1/K2 on BRD-01** — `PICO_STOP_N` = `PICO_STOP_REQ_N` (`U4.P4` + `R754`) AND arm latch `U753.5 (Q)`; `U753.3 (~Q)` NC; A+ per-coil peak comparators; genuine faults still stop the DDS | Phase 1 #17; thesis §4.3.1; #30; `estop_scope_change.md` §D | LOCKED arm-only STOP; other protection PROPOSED | Fault injection; arm STOP timing with field on |
 | DRV-08 | Current-sense **A+ locked**: per-coil \(R_{store}\) + analog summer → ADC Ch0; individual peak/overcurrent comparators; no mux/extra ADC; V/I/phase at 34 kHz; keep \(R_{store}\) 0.957–1.239 Ω / summer 2.0103 baseline | `fSysSetup.m`; `driver_power_requirements.md` | LOCKED A+ | Known-current injection; phase check |
@@ -183,7 +183,7 @@ justify a change; record the deviation. The vendor Rev A discrete class-AB board
 LMH6321 crossover, EMI/thermal). The DAC/filter is locked: **DAC80508 + 8×
 LTC1563-2**, 199.805 kSPS, SPI 49.152 MHz. Current-sense **A+** is locked (summed Ch0 +
 individual peak/overcurrent taps). Power is **C1 + medical-grade** (external
-15 V/60 W adapter + on-board DC-DC/LDO tree, locked parts per #20). Enclosure is **one box with
+15 V/60 W adapter + on-board v2 rails per #31). Enclosure is **one box with
 internal shield**; the stop is **arm-only** (#30): no panel mushroom, unswitched
 `+15V_FUSED`, and the field/pose continue through a STOP. The last
 hardware-independent stop path was removed by explicit decision.

@@ -1,8 +1,7 @@
 # Phase 2 — System schematic (Rev A, board level)
 
-**Status:** Rev A draft, 2026-10-27; updated 2026-11-25 for arm-only STOP (#30)
-and option-D FPGA (#26). The committed board uses power tree v2, but locked
-decision #20 still governs the contract rails — see the OPEN note in §2. This is the
+**Status:** Rev A draft, 2026-10-27; updated 2026-11-25 for arm-only STOP (#30),
+power tree v2 (#31) and option-D FPGA (#26). This is the
 board-level schematic and interface document for the Phase 2 design review. It
 states the rails, connectors, channel map, and signal nets; the contract is the
 approval gate. The EDA capture (KiCad) adds symbols, footprints, and pin numbers;
@@ -38,8 +37,10 @@ integration is **option D: PS-less FPGA on BRD-01** (decision #26, 2026-10-28) �
  │ BRD-01 — one 4-layer board, ~250 × 200 mm                             │
  │                                                                       │
  │  power entry F1/TVS/L1 ──► +15V_FUSED ──► 8× LMH6321 (unswitched)     │
- │        ├─► OKI 5 V ─► 3.3 V LDO ─► FPGA (locked #20 rails)            │
- │        └─► RV-1515D ±15 V iso ─► TPS7A47/33 ─► ±12 V_A                │
+ │        ├─► U147 TPSM63604 +6V ─► U144/U145/U7 ─► FPGA rails +3.3V     │
+ │        │        ├─► U149 +5V_EXC ─► DAC80508 + 8× LTC1563-2           │
+ │        │        └─► U146 +5VA ─► AD7768-4 + 2× ADA4940-2              │
+ │        └─► U5 MGJ2 ±15V ─► U6/U2 LT3045-1/LT3093 ─► ±12VA             │
  │                                                                       │
  │   ┌────────────┐    SPI 49.152 MHz    ┌───────────────┐               │
  │   │ FPGA       │─────────────────────►│ DAC80508      │               │
@@ -78,37 +79,33 @@ Ch1–3 → FPGA.
 
 ## 2. Power tree
 
-**Contract-governing table: locked decision #20.** The +15 V rail is labelled
-`+15V_FUSED` at the BRD-01 input after F1/TVS/L1; the obsolete `+15V_DRV` name
-is gone and no E-stop contact interrupts the driver rail (#30).
+**Contract-governing table: decision #31, power tree v2 adopted by the user on
+2026-11-25.** It supersedes the part list of #20; the ME60A1503F01 adapter and
+one-board intent of #20 stand. `+15V_FUSED` is the unswitched driver rail after
+F1/TVS/L1; the obsolete `+15V_DRV` name is gone and no E-stop contact interrupts
+the field path (#30).
 
 | Rail | Source | Load | Current (typ/max) | Notes |
 |---|---|---|---|---|
-| +15 V_RAW | ME60A1503F01 | input protection, OKI, RV | 1.5 A / 3.0 A | 60 W adapter; fuse 3 A |
-| +15 V_FUSED | F1/TVS/L1, unswitched | 8× LMH6321 | 1.2 A / 2.0 A | was +15 V_DRV; no E-stop contact remains |
-| +5 V_D | OKI-78SR-5/1.5 | FPGA board, DACs, ADC, LDOs | 0.8 A / 1.5 A | buck module; LDO after for analog |
-| +3.3 V_D | TPS7A20 from +5 V_D | FPGA I/O, ADC IOVDD | 0.2 A / 0.3 A | digital |
-| +15 V_A_ISO | RV-1515D | TPS7A47 | 30 mA / 66 mA | isolated analog module |
-| −15 V_A_ISO | RV-1515D | TPS7A33 | 30 mA / 66 mA | isolated analog module |
-| +12 V_A | TPS7A4701 | INA163, OPA192 | 25 mA / 50 mA | low-noise LDO |
-| −12 V_A | TPS7A33 | INA163, OPA192 | 25 mA / 50 mA | low-noise LDO |
-| +5 V_A | TPS7A4701 from +5 V_D | ADC AVDD1/2, ADA4940, ADR434 | 80 mA / 150 mA | low-noise LDO |
+| `+15V_FUSED` | ME60A1503F01 via F1/TVS/L1 | 8× LMH6321, U147, U5 | 1.2 A / 2.0 A (driver) | unswitched; no E-stop contact remains |
+| `+6V` | U147 TPSM63604, 6.0 V at 1.024 MHz, synced to `BUCK_SYNC` | U144/U145/U7, U149/U146 via FL1/FL2 | 0.33 A / 0.71 A | `PG_6V` starts the downstream sequence |
+| `+1V0_FPGA` | U144 TPS62130A | FPGA VCCINT/VCCBRAM | 0.37 A / 0.8 A | EN ← `PG_6V` |
+| `+1V8_FPGA` | U145 TPS62130A | FPGA VCCAUX | 0.10 A / 0.2 A | EN ← `PG_1V0` |
+| `+3.3V` | U7 TPS62130A | FPGA VCCO, AD7768 IOVDD, FT231X, logic | 0.13 A / 0.26 A (power-on surge) | EN ← `PG_1V8` |
+| `+5V_EXC` | U149 TPS7A4701 | DAC80508, 8× LTC1563-2 | 0.095 A / 0.155 A | excitation rail |
+| `+5VA` | U146 TPS7A4701 | AD7768-4, 2× ADA4940-2 | 0.043 A / 0.060 A | receiver rail; `D_REF` clamps ADC_REF |
+| `±12VA` | U5 MGJ2D151515SC → U6 LT3045-1 / U2 LT3093 | INA163, OPA192, ADR434 buffer | see `power_tree_v2.md` §3/§9 | isolated analog; bench-check 45 kHz spur |
 
-> **OPEN — power tree conflict, not a contract change.** `docs/phase2/power_tree_v2.md:3`
-> is **PROPOSED (2026-11-24)** and says it changes locked decision #20;
-> `docs/phase2/contract_change_20_draft.md:3` is **DRAFT, not filed**. #20 above
-> (#20 = ME60A1503F01, OKI-78SR-5, RV-1515D, TPS7A4701/TPS7A33, TPS7A20)
-> **governs the contract**. The committed board/netlist already implements v2:
-> `hardware/brd-01/kicad/brd-01.kicad_sch` at `ef04f63` contains `MGJ2D151515SC`
-> and no `OKI-78SR`, `RV-1515`, `TPS7A20` or `TPS7A4701` strings;
-> `hardware/brd-01/kicad/bom-to-cad.md:151` records the user's part confirmation
-> (U5 MGJ2D151515SC, U6 LT3045EDD-1#TRPBF, U2 LT3093EMSE#TRPBF) and that the
-> legacy BOM and #20 still list the earlier parts pending separate reconciliation;
+> **Conflict closed by #31 (2026-11-25).** `docs/phase2/power_tree_v2.md` and
+> `docs/phase2/contract_change_20_draft.md` were the basis for the adoption.
+> OKI-78SR-5, RV-1515D and TPS7A20 / TPS7A2033 are removed from the contract
+> part list. The captured BRD-01 schematic and BOM Rev 0.06 already implement
+> v2: `hardware/brd-01/kicad/brd-01.kicad_sch` at `ef04f63` contains
+> `MGJ2D151515SC` and no `OKI-78SR`, `RV-1515`, `TPS7A20` or `TPS7A4701`
+> strings; `hardware/brd-01/kicad/bom-to-cad.md:151` records the user's part
+> confirmation (U5 MGJ2D151515SC, U6 LT3045EDD-1#TRPBF, U2 LT3093EMSE#TRPBF);
 > `docs/phase2/brd01_component_reference.md:357` lists U5 as MGJ2D151515SC;
 > `docs/phase2/brd01_wiring_manifest.md` §5 item 3 confirms the captured rails.
-> This schematic must state which tree it implements: the table is #20; the
-> as-captured board is v2. The user must decide whether to ratify v2 into the
-> contract or reconcile the board/BOM to #20. No rail values were changed here.
 
 **Protection at the adapter input:** F1 3 A slow-blow, D1 TVS (SMBJ18A),
 L1 common-mode choke, C1 1000 µF/25 V, reverse-polarity MOSFET or ideal diode.
@@ -426,9 +423,9 @@ may swap coil→tone assignment; the tone set and 2 kHz spacing are fixed.
 
 ## 9. Bring-up order
 
-1. **Power only:** adapter, +15 V_RAW / +15 V_FUSED, +5 V_D, ±12 V_A, +3.3 V_D
-   (locked #20 tree in §2; the as-built board uses the PROPOSED v2 tree — see the
-   OPEN note); check rails, ripple, no load; then verify the unswitched driver rail.
+1. **Power only:** adapter, +15V_FUSED, +6V, +1V0_FPGA / +1V8_FPGA / +3.3V,
+   +5V_EXC, +5VA, ±12VA (v2 tree, decision #31, §2); check rails, ripple, no
+   load; then verify the unswitched driver rail.
 2. **FG continuity:** 8 vendor coils, R ≈ 2.9 Ω, L ≈ 79 µH (AnserEMT Table 2,
    decision #27; thesis heritage 2 Ω / 70 µH), no shorts; measure each board.
 3. **Driver one channel:** 150 mA into a 2.9 Ω / 79 µH load; step response, phase

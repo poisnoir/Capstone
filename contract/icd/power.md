@@ -1,10 +1,11 @@
 # ICD — Power, rails and grounding
 
 **Status:** stub, not frozen. **Owner:** Tung. **Canonical sources:**
-`contract/decisions_log.md` #7, #10, #11, #20, #25, #30;
-`docs/phase2/driver_power_requirements.md`; `docs/phase2/system_schematic.md` §2.
-The STOP scope below follows #30; the rail list follows **locked #20** (see the
-conflict note at the end).
+`contract/decisions_log.md` #7, #10, #11, #20, #25, #30, #31;
+`docs/phase2/power_tree_v2.md`; `docs/phase2/system_schematic.md` §2.
+The STOP scope follows #30; the rail list follows **decision #31, power tree v2
+adopted 2026-11-25** (#20's part list is superseded; its adapter and one-board
+intent stand).
 
 This stub does not add requirements. Until frozen, the decisions log and the
 schematic are authoritative.
@@ -13,12 +14,24 @@ schematic are authoritative.
 
 - One external medical-grade 15 V / 60 W adapter (ME60A1503F01); no on-board
   mains stage.
-- Rails per locked #20: +15 V, −15 V, +5 V, +3.3 V; isolated ±15 V module
-  (RV-1515D); OKI-78SR-5/1.5 +5 V; TPS7A4701/TPS7A33 LDOs to ±12 V analog;
-  TPS7A20 +3.3 V; FPGA core from its board regulator.
+
+| Rail | Source | Load | Notes |
+|---|---|---|---|
+| `+15V_FUSED` | ME60A1503F01 via F1/TVS/L1 | 8× LMH6321 driver rail, U147, U5 | unswitched; no E-stop contact in the field path (#30) |
+| `+6V` | U147 TPSM63604, 6.0 V at 1.024 MHz synced to `BUCK_SYNC` | U144/U145/U7, U149/U146 via FL1/FL2 | `PG_6V` starts the downstream sequence |
+| `+1V0_FPGA` | U144 TPS62130A | FPGA VCCINT/VCCBRAM | EN ← `PG_6V` |
+| `+1V8_FPGA` | U145 TPS62130A | FPGA VCCAUX | EN ← `PG_1V0` |
+| `+3.3V` | U7 TPS62130A | FPGA VCCO, AD7768 IOVDD, FT231X, logic | EN ← `PG_1V8` |
+| `+5V_EXC` | U149 TPS7A4701 | DAC80508, 8× LTC1563-2 | excitation rail |
+| `+5VA` | U146 TPS7A4701 | AD7768-4, 2× ADA4940-2 | receiver rail; `D_REF` clamps ADC_REF |
+| `±12VA` | U5 MGJ2D151515SC → U6 LT3045-1 / U2 LT3093 | INA163, OPA192, ADR434 buffer | isolated analog |
+
+- Removed by #31: OKI-78SR-5 (`+5V`), RV-1515D and TPS7A20 / TPS7A2033. The
+  captured BRD-01 schematic and BOM Rev 0.06 already implement these rails;
+  #31 closes the former contract-vs-board part conflict.
 - One box with an internal shield partition. There is **no panel E-stop, K1 or
-  K2** on BRD-01; the driver rail `+15V_FUSED` is unswitched and a STOP never
-  removes the field (#30). Arm STOP is active low `PICO_STOP_N` from the U755
+  K2** on BRD-01; `+15V_FUSED` feeds the eight LMH6321 continuously and a STOP
+  never removes the field (#30). Arm STOP is active low `PICO_STOP_N` from the U755
   AND of the FPGA request (`PICO_STOP_REQ_N`, `U4.P4` + `R754` pull-down) and
   the arm latch `U753.5 (Q)` via `/power/ARM_Q`; `U753.3 (~Q)` is NC.
 - Power-up/brownout (U751) and `/DRIVER_FAULT_N` (U752) clear the latch and
@@ -31,18 +44,6 @@ schematic are authoritative.
 
 ## Open
 
-- **Power tree conflict (needs a user decision):** #20 above is **LOCKED**, but
-  `docs/phase2/power_tree_v2.md:3` is **PROPOSED (2026-11-24)** and
-  `docs/phase2/contract_change_20_draft.md:3` is **DRAFT, not filed**. The
-  committed board implements the v2 topology (`MGJ2D151515SC` present;
-  `OKI-78SR`, `RV-1515`, `TPS7A20` and `TPS7A4701` strings absent; `+5V`
-  deleted, rails per `power_tree_v2.md` §9): see
-  `hardware/brd-01/kicad/brd-01.kicad_sch` at `ef04f63`,
-  `hardware/brd-01/kicad/bom-to-cad.md:151`,
-  `docs/phase2/brd01_component_reference.md:357` and
-  `docs/phase2/brd01_wiring_manifest.md` §5. No rail in this ICD is changed to
-  v2 until the draft contract change lands; decide whether to ratify v2 or
-  reconcile the board to #20.
 - Exact connector, fuse, TVS and inrush protection part numbers.
 - Chassis bonding point and single-point ground.
 - Shield-can footprint and partitioning on BRD-01.

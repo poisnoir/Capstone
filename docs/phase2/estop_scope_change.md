@@ -190,6 +190,8 @@ that is the explicit safety consequence of deleting the button; (2) `J123.1` is 
 the netlist but `pico_link.md` §2 lists pin 1 as 3V3, and
 `brd01_full_board_deepseek_handoff.md` line 85 records D4 as "J123.1 → no_connect". That
 pre-existing mismatch is noted but needs no change under the no-button decision.
+**Follow-up (2026-11-25):** decision #31 adopted the v2 rails; the frozen
+`pico_link.md` pinout is still being aligned (OPEN note before its §3).
 
 ---
 

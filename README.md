@@ -66,8 +66,7 @@ obtain it. Run `python3 tools/check_references.py` to verify coverage.
 
 Phase 2 design. Full-FPGA pose locked 2026-10-12; one-board BRD-01 and PS-less
 Artix-7 locked 2026-10-28; M16 DAC/filter selected 2026-10-27; arm-only STOP
-recorded 2026-11-25 (#30, contract 1.1.0 pending tag). The power-tree v2
-proposal is OPEN — locked #20 still governs (see `contract/decisions_log.md`).
+(#30) and power tree v2 (#31) recorded 2026-11-25 (contract 1.1.0 pending tag).
 See `contract/decisions_log.md` for the full record.
 
 ## Working rules

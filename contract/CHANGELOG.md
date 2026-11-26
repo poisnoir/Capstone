@@ -24,11 +24,15 @@ arm-repo sync have not happened**; they follow PR approval and the two required 
   via `/power/ARM_Q`; `U753.3 (~Q)` is NC. STOP is arm motion only, ≤100 ms; field and pose
   continue. The last hardware-independent stop path is removed; genuine faults still stop the
   DDS. #10/#21/#22/#25 are superseded in part.
-- `icd/power.md`, `icd/pico_link.md`, `icd/adc_fpga.md`, `icd/README.md` — STOP split and
-  on-board ADC nets instead of an external 2×8 header. Locked power parts (#20) are not
-  changed by this release. Consumers: `Capstone` monorepo (fpga, hardware, software) and
-  the robot-arm repo (pin `contract-v1.0.0` until this tag is published, then move to
-  `contract-v1.1.0`).
+- **Decision #31 (power):** power tree v2 adopted — `+6V` from U147 TPSM63604 (1.024 MHz,
+  synced to `BUCK_SYNC`), `+1V0_FPGA`/`+1V8_FPGA`/`+3.3V` from TPS62130A,
+  `+5V_EXC`/`+5VA` from TPS7A4701, `±12VA` from MGJ2D151515SC + LT3045-1/LT3093.
+  The OKI-78SR-5 / RV-1515D / TPS7A20 parts of #20 are removed; the adapter and
+  one-board intent of #20 stand. The board/BOM already implemented v2.
+- `icd/power.md`, `icd/pico_link.md`, `icd/adc_fpga.md`, `icd/README.md` — v2 rails
+  (#31), STOP split and on-board ADC nets instead of an external 2×8 header. Consumers:
+  `Capstone` monorepo (fpga, hardware, software) and the robot-arm repo (pin
+  `contract-v1.0.0` until this tag is published, then move to `contract-v1.1.0`).
 
 ## 1.0.0 — 2026-10-29
 

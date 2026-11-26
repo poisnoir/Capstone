@@ -134,5 +134,5 @@ File the issue and PR for exactly these items; do not edit `contract/` from this
    must be accepted by the interface owner and integrator.
 5. `J123.1` is NC in the netlist but `pico_link.md` §2 calls pin 1 3V3 (D4 records no_connect);
    a pre-existing mismatch, untouched by this change. **Still OPEN (2026-11-25):** the
-   pinout change belongs to the unfiled power-tree contract change, so the ICD keeps 3V3
-   with an OPEN note before §3.
+   v2 rails were adopted by decision #31, but the frozen ICD pinout was not changed;
+   `pico_link.md` keeps 3V3 with an OPEN note before §3.

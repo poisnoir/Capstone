@@ -8,11 +8,10 @@ D1/D3/D4/FE-4 and the M16 DAC/filter are locked; the remaining rows state their
 own status. Each row links the decision to its justification and source.
 Hardware-dependent items are listed separately as **verification gates** (tests,
 not open design choices). Order-time items are under **procurement checks**.
-#30 (arm-only STOP) is recorded in the 1.1.0 contract PR on
-`docs/spine-consistency`; the tag and arm-repo sync are pending. Rows superseded
-in part keep their original text as history. An unfiled power-tree proposal is
-listed under **Open contract changes** — it is not a decision, so decision number
-29 was withdrawn and no #29 row exists.
+#30 (arm-only STOP) and #31 (power tree v2) are recorded in the 1.1.0 contract PR
+on `docs/spine-consistency`; the tag and arm-repo sync are pending. Rows superseded
+in part keep their original text as history. Decision number 29 was withdrawn and
+no #29 row exists.
 
 | # | Date | Decision | Justification | Status | Source |
 |---|---|---|---|---|---|
@@ -35,7 +34,7 @@ listed under **Open contract changes** — it is not a decision, so decision num
 | 17 | 2026-10-27 | **FE-4 amplifier chain = INA163 + ADA4940-2**, gain 35× + 2×, AC-coupled coil input, ±12 V analog for INA163, +5 V for ADA4940; ADA4896-2 alternate | INA163 1.1 nV/√Hz meets 150/200 pT; ADA4940-2 is the AD7768 fast-mode recommended fully differential driver; E301 AD620/AD627 is 100 mm fallback only | LOCKED | `frontend_requirements.md` |
 | 18 | 2026-10-27 | **ADC-5 interface:** 4 channels, 4 DOUT lanes, DCLK 8.192 MHz, 32-bit frames, 2×8/custom header; RC start values \(R_{IN}=20\ \Omega\), \(C_1=C_2=470\ pF\), \(C_3=100\ pF\); ADR434 shared with a buffer | 4 ch × 32 bit × 256 kSPS = 32.768 Mbit/s; 4 lanes → 8.192 MHz; AN-1384/eval values span 10–82 Ω and 470–680 pF, so start mid-range and tune at the bench; 2×6 Pmod is insufficient | **LOCKED (2026-11-02)** — RC values bench-tune within the stated range | `adc_interface_closure.md`; `contract/icd/adc_fpga.md` |
 | 19 | 2026-10-27 | **DAC/filter = M16 (SELECTED):** 1× DAC80508 (16-bit, 8 ch, 200 kSPS, SPI, internal 2.5 V ref) + 8× LTC1563-2 (4th-order Butterworth, 60 kHz, one resistor/channel). DAC update **199.805 kSPS** = 32.768 MHz ÷164; SPI **49.152 MHz**, 8×24-bit data + 24-bit TRIGGER = **216 bits = 4.394 µs**; the LDAC is a **software trigger (TRIGGER 0x05 bit 4)** — the part has no LDAC pin. | Filter AC: −35.3 dB at 165.8 kHz, −0.05 dB/34 kHz. Summer 8-tone EVM −67.1 dBc (7.1 dB margin at −110 dB THD); DAC crosstalk/INL ≤−85 dBc; OPA2192/AD7768 not the limit. Cost ~$73 less than the 8× AD5541A board (DAC80508 $42.52 CAD at Digi-Key; earlier $5 estimate was wrong); one SPI, 13 fewer FPGA pins. SPICE report `simulations/m16/FINAL_REPORT.md`. | **LOCKED (selected 2026-10-27)** | `simulations/m16/FINAL_REPORT.md`; BOM_SYSTEM-01 |
-| 20 | 2026-10-27 | **Power parts = ME60A1503F01** 15 V/60 W medical adapter; **OKI-78SR-5/1.5** +5 V; **RV-1515D** ±15 V isolated; **TPS7A4701/TPS7A33** LDOs to ±12 V analog; **TPS7A20** +3.3 V | 60 W covers 150 mA (≈18 W driver) + FPGA/analog; isolated analog module keeps driver switching off the FE; LDOs clean the rails; no on-board mains | **LOCKED (2026-11-02)** | `driver_power_requirements.md` §3; BOM |
+| 20 | 2026-10-27 | **Power parts = ME60A1503F01** 15 V/60 W medical adapter; **OKI-78SR-5/1.5** +5 V; **RV-1515D** ±15 V isolated; **TPS7A4701/TPS7A33** LDOs to ±12 V analog; **TPS7A20** +3.3 V | 60 W covers 150 mA (≈18 W driver) + FPGA/analog; isolated analog module keeps driver switching off the FE; LDOs clean the rails; no on-board mains | parts superseded by #31 (adapter and one-board intent stand) | `driver_power_requirements.md` §3; BOM |
 | 21 | 2026-10-27 | **FPGA/clock interface (M16):** 32.768 MHz XO (Citizen CSX750FBC32.768M); **PS-less Artix-7 XC7A35T on BRD-01 (#26), all signals are board nets — no 2×20 IDC**; 32.768 MHz → PLL ×3 → ÷2 = **49.152 MHz SPI**; ÷164 = **199.805 kSPS DAC**; ÷128 = 256 kSPS ADC. ADC, DAC, E-stop, watchdog are zone A/B/C nets; 13 pins spare. | Exact integer tones: 2 kHz × k = 32.768 MHz × k/16384, k=10…17; one clock for DDS and ADC removes leakage; M16 DAC at 200 kSPS; pinout in `system_schematic.md` | LOCKED interface (M16); **FPGA = PS-less Artix-7, see #26**; E-stop zone wording superseded by #30 | `system_schematic.md`; `dig6_requirements.md` |
 | 22 | 2026-10-27 | **Enclosure/E-stop parts:** one aluminum box with internal shield; Schneider XB4BS8444 or AutomationDirect GCX1131 NC mushroom; fan/filter; no metal within 150 mm of the volume | One-box decision; NC fail-safe; 22 mm panel mount; the guard is non-metal per SC-04b | **LOCKED box/fan/filter; mushroom part no longer on BRD-01 (#30)** | BOM; `docs/phase2/estop_scope_change.md` §D |
 | 23 | 2026-10-27 | **DIG-6 requirements accepted:** 32-bit DDS, 4096-entry LUT, 4-channel capture, Goertzel, 8×5 LM/TRF, 8.633 ms pipeline, 115.8 Hz, filter-off latency 8.6 ms | 2.000 ms acquisition + 0.133 ms ADC delay + 0.5 ms demod + 5.0 ms solve + 1.0 ms overhead = 8.633 ms; ≥100 Hz; ≤20 ms off / ≤100 ms on | **LOCKED (2026-11-02)** — bench evidence stays open | `dig6_requirements.md` |
@@ -45,6 +44,7 @@ listed under **Open contract changes** — it is not a decision, so decision num
 | 27 | 2026-11-02 | **FG-01 = 8 vendor AnserEMT emitter coils, one per position, no stacking, on two in-house machined plates.** Coil: 25 turns split across two layers, 70 mm outer, 0.5 mm track / 0.25 mm gap, 1.6 mm FR4, L ≈ 79 µH, R ≈ 2.9 Ω (AnserEMT 2017, Table 2). 8 PCBs at the `fSysSetup.m` centres (±93.543/±68.55 mm; coils 2,4,5,7 at 45°). | Matches the locked model (N = 25, 70 mm) — my earlier ~20-turn read counted one layer only. No coil layout work; ~$118 cheaper than one 300 × 300 board; $4 spares. Stacking rejected: L ∝ N² would need >7.5 V swing at 250 mA on the +15 V driver. Gerbers must be re-exported from the DesignSpark `.pcb` (2013 export has no outline layer and 10× drill coordinates). | **LOCKED (2026-11-02)**; contract PR in review — VERSION bumped to 1.1.0 in this PR, tag `contract-v1.1.0` pending | `hardware/fg-01/README.md`; `docs/phase2/design_order.md` FG-01; BOM FG-01 |
 | 28 | 2026-11-25 | **Clock tree clarification:** SC-07 corrected to match locked decision #21. One 32.768 MHz XO (CSX750FBC32.768M-UT) drives ADC MCLK through 33 Ω and the FPGA clock input directly; DDS clock = 32.768 MHz; PLL ×3 = 98.304 MHz only feeds ÷2 = 49.152 MHz DAC SPI; DAC update ÷164; ADC ODR ÷128; no discrete buffer. | The previous SC-07 text (“TCXO → FPGA PLL → clk_dds + MCLK_adc”) described a PLL-generated MCLK that does not exist on BRD-01 and a TCXO that is not the selected part. The XO-direct tree preserves the SC-07 invariant: one clock, exact integer divides, integer-J, no DDS/ADC beat. | **LOCKED (clarification, 2026-11-25)** | `system_contract.md` SC-07; `system_schematic.md` §5.1/§6.0; `hardware/brd-01/kicad/power-tree.md`; `dig6_requirements.md` §1 |
 | 30 | 2026-11-25 | **STOP scope = manipulator only.** No panel mushroom / K1 / K2 / opto status on BRD-01; `+15V_FUSED` feeds the eight LMH6321 unswitched and a STOP never removes the field. `PICO_STOP_N` (`U755.4` → `J123.5`) is the AND of `PICO_STOP_REQ_N` (`U4.P4` + `R754` pull-down) and the arm latch `U753.5 (Q)` on `/power/ARM_Q`; `U753.3 (~Q)` is NC. Power-up/+3.3 V brownout (U751) and `/DRIVER_FAULT_N` (U752) clear the latch and assert STOP; SW750 arms it. STOP is arm motion only, ≤100 ms; field, DDS/DAC and pose continue. A genuine FPGA/ADC/driver fault still stops the DDS (zero-scale + one TRIGGER). | User decision recorded in `estop_scope_change.md` §D; netlist/wiring manifest confirm the Q/~Q pin usage. The last hardware-independent stop path on the board is removed — accepted explicitly: STOP now depends on host link, FPGA, cable and Pico firmware. ICNIRP field sum is unchanged. | **RECORDED IN THIS PR (2026-11-25); ratification/tag pending review** — supersedes #10/#21/#22/#25 in part; SC-08 stop scope and three ICDs updated | `docs/phase2/estop_scope_change.md` §§C–D; `docs/phase2/brd01_wiring_manifest.md` §5 items 1–5; `docs/phase2/system_schematic.md` §4.5 |
+| 31 | 2026-11-25 | **Power tree = v2 (adopted).** 15 V / 60 W ME60A1503F01 adapter unchanged. U147 TPSM63604 6.0 V buck at 1.024 MHz (= 32.768 MHz / 32), synced to BUCK_SYNC, feeds +6V; U144/U145/U7 TPS62130A give +1V0_FPGA / +1V8_FPGA / +3.3V; U149 TPS7A4701 gives +5V_EXC (DAC80508 + 8x LTC1563-2); U146 TPS7A4701 gives +5VA (AD7768-4 + 2x ADA4940-2); U5 MGJ2D151515SC -> U6 LT3045-1 / U2 LT3093 gives +/-12VA. Removed: OKI-78SR-5 (+5V) and TPS7A2033. Supersedes the part list of #20; #20's adapter and one-board intent stand. | The v1 tree cannot hold 5.0 V from the OKI's 4.8-5.2 V output, puts 50-75 mV switching ripple on the DAC/filter rails, and burns 0.8-1.5 W in U146. The captured BRD-01 schematic and BOM Rev 0.06 already implement v2, so adopting it removes the contract-vs-board conflict. | **LOCKED (user decision, 2026-11-25)** | `power_tree_v2.md`; `contract_change_20_draft.md`; `system_schematic.md` §2; `icd/power.md`; BOM Rev 0.06 |
 
 ## Verification gates (hardware-dependent; not open design decisions)
 
@@ -69,8 +69,9 @@ of the locked interface.
 ## Procurement checks (order-time, not design)
 
 - Re-quote DAC80508MRTET, LTC1563-2IGN#PBF, LMH6321MR/NOPB, AD7768-4,
-  ADR434, INA163, ADA4940-2, ME60A1503F01, RV-1515D; confirm stock and lifecycle.
-  Do not order the PROPOSED v2 power parts before the contract change lands (see below).
+  ADR434, INA163, ADA4940-2, ME60A1503F01 and the adopted v2 power parts
+  (TPSM63604, TPS62130A, TPS7A4701, MGJ2D151515SC, LT3045-1, LT3093);
+  confirm stock and lifecycle. RV-1515D and OKI-78SR-5 are removed by #31.
 - LMH6321: TI product page says ACTIVE; distributor stock is thin, so buy
   8 + 2 spares now. Fallback: vendor Rev A discrete stage or a comparable
   high-current buffer with a recorded deviation.
@@ -80,27 +81,24 @@ of the locked interface.
 - Exact enclosure, fan, heatsink, and panel connectors are order-time choices.
 - No BOM row may ship with a placeholder supplier P/N.
 
-## Open contract changes (not decisions — user decision pending)
+## Closed / follow-up interface items
 
-- **Power tree v1 (#20) vs as-built v2 — OPEN.** Contract #20 is **LOCKED** to
-  OKI-78SR-5, RV-1515D, TPS7A4701/TPS7A33 and TPS7A20 (adapter ME60A1503F01
-  unchanged). `docs/phase2/power_tree_v2.md:3` is **PROPOSED (2026-11-24)** and
-  says it changes #20; `docs/phase2/contract_change_20_draft.md:3` is **DRAFT,
-  not filed**. The committed schematic/BOM already implement v2:
-  `hardware/brd-01/kicad/brd-01.kicad_sch` at `ef04f63` contains
+- **Power tree v1 vs board — CLOSED by #31 (2026-11-25).** The user adopted the
+  v2 tree; the earlier contract-vs-board conflict no longer stands. Evidence at
+  the time: `hardware/brd-01/kicad/brd-01.kicad_sch` at `ef04f63` contains
   `MGJ2D151515SC` and no `OKI-78SR`, `RV-1515`, `TPS7A20` or `TPS7A4701`
   strings; `hardware/brd-01/kicad/bom-to-cad.md:151` records the user's part
-  confirmation (U5 MGJ2D151515SC, U6 LT3045EDD-1#TRPBF, U2 LT3093EMSE#TRPBF)
-  and that the legacy BOM and #20 still list the earlier parts pending separate
-  reconciliation; `docs/phase2/brd01_component_reference.md:357` lists U5 as
-  MGJ2D151515SC. No contract change is made here — #20 governs the contract
-  until the draft PR is filed and approved. The user must choose: ratify v2
-  into the contract, or reconcile the board/BOM to #20.
-- **Pico `J123.1` — OPEN.** Rev A ICD lists pin 1 as `3V3`; the committed
-  netlist has `J123.1` as a no-connect (`docs/phase2/brd01_wiring_manifest.md`
-  §5 item 6; `docs/handoff/brd01_io_handoff.md` §1; power_tree_v2 §7 D4).
-  This pinout change is part of the same unfiled power proposal; no ICD pinout
-  change is made here.
-- **DAC DDS amplitude — OPEN.** `icd/dac_fpga.md` §3 item 2 keeps the M-variant
-  gain-2 0–5 V default; power_tree_v2 §7 D2 *proposes* 0.3–4.6 V on `+5V_EXC`.
-  Treat the clamp as a proposal until the contract change lands.
+  confirmation (U5 MGJ2D151515SC, U6 LT3045EDD-1#TRPBF, U2 LT3093EMSE#TRPBF);
+  `docs/phase2/brd01_component_reference.md:357` lists U5 as MGJ2D151515SC.
+  The part list of #20 is superseded by #31; its 15 V/60 W adapter and
+  one-board intent stand.
+- **Pico `J123.1` — OPEN follow-up.** The ICD still lists pin 1 as `3V3`; the
+  committed netlist has `J123.1` as a no-connect
+  (`docs/phase2/brd01_wiring_manifest.md` §5 item 6;
+  `docs/handoff/brd01_io_handoff.md` §1; `power_tree_v2.md` §7 D4). The pinout
+  change is not written into the frozen Rev A ICD by #31's part-list row; align
+  it before wiring the follower harness.
+- **DAC DDS amplitude — OPEN follow-up.** `icd/dac_fpga.md` §3 item 2 keeps the
+  M-variant gain-2 0–5 V default; `power_tree_v2.md` §7 D2 gives a 0.3–4.6 V
+  limit on `+5V_EXC`. That limit is not written into the frozen DAC ICD by
+  #31's part-list row.
