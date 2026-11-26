@@ -74,7 +74,7 @@ body.js .slide.on{display:flex}
  <div class="body intro">
   <p class="lead" style="font-size:26px;color:var(--ink)">The 5-DOF estimator chain</p>
   <div class="rule"></div>
-  <p class="system">8-coil planar field generator · one hand-wound 5-DOF pen coil · 100:1 scaling.</p>
+  <p class="system">8-coil planar field generator · one hand-wound 5-DOF pen coil · 100:1 scaling (AGENTS.md).</p>
   <p class="src">Source: signal_chain_math.md §0 (end-to-end map, conventions)</p>
  </div>
  <footer class="foot"><span>From excitation to pose</span><span class="dots" id="dots"></span><span id="count">1 / 9</span></footer>
@@ -86,13 +86,13 @@ body.js .slide.on{display:flex}
   <div class="chain">
    <div class="card"><div class="label">Tone plan</div><div class="eqwrap"><div class="eq">&Delta;&Phi;<sub>i</sub> = 2<sup>W</sup> f<sub>i</sub> / f<sub>DDS</sub></div></div><div class="cap">20&ndash;34 kHz &middot; N = 512</div><div class="cite">§0 · §1</div></div>
    <div class="arrow">&rarr;</div>
-   <div class="card"><div class="label">Field</div><div class="eqwrap"><div class="eq"><b class="vec">B</b>(<b>p</b>) = &Sigma;<sub>i</sub> <i>I</i><sub>i</sub> <b>b</b><sub>i</sub>(<b>p</b>)</div></div><div class="cap">8 coils &middot; 800 segments</div><div class="cite">§0 · §2</div></div>
+   <div class="card"><div class="label">Field</div><div class="eqwrap"><div class="eq"><b class="vec">B</b>(<b>p</b>) = &Sigma;<sub>i</sub> <i>I</i>&#770;<sub>i</sub> <b>b</b><sub>i</sub>(<b>p</b>)</div></div><div class="cap">8 coils &middot; 800 segments</div><div class="cite">§0 · §2</div></div>
    <div class="arrow">&rarr;</div>
    <div class="card"><div class="label">Sensing</div><div class="eqwrap"><div class="eq">Ṽ<sub>i</sub> = &minus;j&omega;<sub>i</sub> &mu;<sub>a</sub> N A <b>B</b><sub>i</sub>&middot;<i>n</i>&#770;</div></div><div class="cap">projection onto <i>n</i>&#770;</div><div class="cite">§0 · §3</div></div>
    <div class="arrow">&rarr;</div>
-   <div class="card"><div class="label">Front end / ADC</div><div class="eqwrap"><div class="eq">k<sub>ADC</sub> = round(V<sub>ADC</sub> 2<sup>24</sup> / 8.192)</div></div><div class="cap">24-bit &plusmn;4.096 V ADC</div><div class="cite">§0 · §4</div></div>
+   <div class="card"><div class="label">Front end / ADC</div><div class="eqwrap"><div class="eq">V<sub>ADC</sub> = G<sub>FE</sub> V&#771;<sub>i</sub></div></div><div class="cap">24-bit &plusmn;4.096 V ADC</div><div class="cite">§0 · §4</div></div>
    <div class="arrow">&rarr;</div>
-   <div class="card"><div class="label">Demod</div><div class="eqwrap"><div class="eq">B<sub>i</sub> = sign(&Delta;&phi;<sub>i</sub>) |Y<sub>V,i</sub>| / A<sub>sens,i</sub></div></div><div class="cap">8 signed amplitudes</div><div class="cite">§0 · §5</div></div>
+   <div class="card"><div class="label">Demod</div><div class="eqwrap"><div class="eq">|Y|=&radic;<span class="radical">(I<sup>2</sup>+Q<sup>2</sup>)</span></div></div><div class="cap">8 signed amplitudes</div><div class="cite">§0 · §5</div></div>
    <div class="arrow">&rarr;</div>
    <div class="card"><div class="label">Solve</div><div class="eqwrap"><div class="eq">min<sub><b>p</b></sub> &parallel;<b>V</b><sub>d</sub> &minus; &kappa;&odot;<b>V</b><sub>m</sub>(<b>p</b>)&parallel;<sup>2</sup></div></div><div class="cap">5 bounded variables</div><div class="cite">§0 · §6</div></div>
   </div>
@@ -105,7 +105,7 @@ body.js .slide.on{display:flex}
  <div class="body grid2 quad">
   <div class="card"><div class="label">Tone plan</div><div class="eqwrap"><div class="eq">f<sub>i</sub> = 2 kHz &middot; k, k = 10&hellip;17 &rarr; 20&ndash;34 kHz<br>J<sub>i</sub> = f<sub>i</sub> N / F<sub>s</sub> = 40, 44, &hellip;, 68</div></div><div class="cite">§1 · tone_plan §1, §4 · SC-03</div></div>
   <div class="card"><div class="label">DDS and DAC mapping</div><div class="eqwrap"><div class="eq">&Delta;&Phi;<sub>i</sub> = round(2<sup>W</sup> f<sub>i</sub>/f<sub>DDS</sub>) = k &middot; 262144<br>c<sub>16</sub> = round(V 2<sup>16</sup>/5), clamp 0.3&ndash;4.6 V</div></div><div class="cite">§1 · dig6 §1 · decision #33</div></div>
-  <div class="card"><div class="label">Reconstruction</div><div class="eqwrap"><div class="eq">|H(f)| = [1 + (f/f<sub>c</sub>)<sup>8</sup>]<sup>&minus;1/2</sup><br>f<sub>c</sub> = 60 kHz (R = 42.7 k&Omega;), 4th-order Butterworth</div></div><div class="cite">§1 · m16 handoff §5</div></div>
+  <div class="card"><div class="label">Reconstruction</div><div class="eqwrap"><div class="eq">|H(f)| = [1 + (f/f<sub>c</sub>)<sup>8</sup>]<sup>&minus;1/2</sup><br>f<sub>c</sub> &asymp; 60 kHz nominal (42.7 k&Omega; &rarr; 59.95 kHz)<br>4th-order Butterworth</div></div><div class="cite">§1 · m16 handoff §5</div></div>
   <div class="card"><div class="label">Closed-loop current</div><div class="eqwrap"><div class="eq"><i>I</i>&#770;<sub>i</sub> = |<i>I</i><sub>i</sub>| e<sup>j&phi;<sub>i</sub></sup><br>250 mA nominal &middot; error &le; 0.1 %</div></div><div class="cite">§1 · driver_power §1&ndash;2 · #11, #27</div></div>
  </div>
  <footer class="foot"><span>From excitation to pose</span><span class="dots"></span><span>3 / 9</span></footer>
@@ -164,7 +164,7 @@ body.js .slide.on{display:flex}
  <div class="body stack">
   <div class="grid2" style="flex:0 0 228px">
    <div class="card"><div class="label">Golden reduction</div><div class="eqwrap"><div class="eq">B<sub>i</sub> = sign(&Delta;&phi;<sub>i</sub>) |Y<sub>V,i</sub>| / A<sub>sens,i</sub><br>&Delta;&phi;<sub>i</sub> = &angle;Y<sub>I,i</sub> &minus; &angle;Y<sub>V,i</sub> &minus; DAQ_phase<sub>i</sub></div></div><div class="cite">§5 · fSysGetField.m:22&ndash;48 (wrapped to [&minus;&pi;,&pi;])</div></div>
-   <div class="card"><div class="label">Sign without atan2</div><div class="eqwrap"><div class="eq sm">sign(&Delta;&phi;<sub>i</sub>) = sign[ Im(Y<sub>I,i</sub> <span style="text-decoration:overline">Y<sub>V,i</sub></span> e<sup>&minus;j&phi;<sub>cal</sub></sup>) ]<br>= sign <span class="det"><span><i>I</i>&#771;<sub>V,i</sub> &nbsp; <i>Q</i>&#771;<sub>V,i</sub></span><span>I<sub>I,i</sub> &nbsp; Q<sub>I,i</sub></span></span></div></div><div class="cite">§5 (derived 2&times;2 determinant; no CORDIC)</div></div>
+   <div class="card"><div class="label">Sign without atan2</div><div class="eqwrap"><div class="eq sm">sign(&Delta;&phi;<sub>i</sub>) = sign[ Im(Y<sub>I,i</sub> <span style="text-decoration:overline">Y<sub>V,i</sub></span> e<sup>&minus;j&phi;<sub>cal</sub></sup>) ]<br>= sign <span class="det"><span><i>I</i>&#771;<sub>V,i</sub> &nbsp; <i>Q</i>&#771;<sub>V,i</sub></span><span>I<sub>I,i</sub> &nbsp; Q<sub>I,i</sub></span></span></div></div><div class="cite">§5 (derived 2&times;2 determinant; no atan2)</div></div>
   </div>
   <div class="note">Reversing <b class="vec">B</b>&middot;<i>n</i>&#770; reverses Y<sub>V</sub> by &pi; and flips the sign while leaving |Y<sub>V</sub>| unchanged — phase carries the sign.<span class="src">§3, §5</span></div>
   <div class="card" style="flex:1"><div class="label">&kappa; normalisation — 7&times;7 grid fit</div><div class="eqwrap"><div class="eq sm">r<sub>c,q</sub>(&delta;z,&kappa;<sub>c</sub>) = B<sup>meas</sup><sub>c,q</sub> &minus; &kappa;<sub>c</sub> (I<sub>out,c</sub>/R<sub>store,c</sub>) &mu;<sub>0</sub> H<sub>z,c</sub>(x<sub>q</sub>,y<sub>q</sub>,z<sub>q</sub>&minus;&delta;z)<br>min<sub>&delta;z,&kappa;<sub>c</sub></sub> &Sigma;<sub>q=1</sub><sup>49</sup> r<sub>c,q</sub><sup>2</sup>; 49 points &times; 85.6/152 mm = 98 points</div></div><div class="cite">§5 · calibration_tooling §2, §7 · fCalibrate.m:20&ndash;50 · numeric &kappa; not yet fixed (§10 #8)</div></div>
