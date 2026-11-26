@@ -14,8 +14,8 @@ Sheet names below are KiCad sheet names: `power`, `driver`, `receiver`, `fpga`, 
 | Designator | Physical type (value in netlist) | Carries | Direction | Sheet |
 |---|---|---|---|---|
 | `J1` | DC barrel jack, PJ-079BH | 15 V DC from the external medical 60 W adapter; pins 1 (+), 2 (return); pin 3 and shield are **no-connect** | in | `power` |
-| `J750` | 2-pin terminal block, 1715721 | panel mushroom **K1** normally-closed contact loop (`+15V_FUSED` out on pin 1, `/power/ESTOP_NC_15V` back on pin 2) | out + in (NC loop) | `power` |
-| `K1` | latching NC mushroom, draft symbol (`Draft_EStop_Mushroom_NC`, off the BOM) | hard interrupt of K2 coil feed; operator stop | in (panel device through `J750`) | `power` |
+| `J750` | 2-pin terminal block, 1715721 | pin 1 on `+15V_FUSED`; **pin 2 is a no-connect** (no panel E-stop relay loop is wired) | in | `power` |
+| `SW750` | on-board rearm pushbutton, B3F-1002-G | arm latch clock through R752/C755 → U754 → U753.C | in (local) | `power` |
 | `J20`–`J27` | 2-pin keyed FG headers, Molex 39-30-1020 | one coil pair each: `FG0_OUT`…`FG7_OUT` (drive, pin 1) and `FG0_RETURN`…`FG7_RETURN` (sense return, pin 2) to/from FG-01 | out + in (bidirectional pair) | `connectors` |
 | `J120`, `J125` | panel mini-XLR, IO-TXLR3-M-PS-1 | pen 1 / pen 2 coil pair on pins 2/3; pin 1 and shell to `/connectors/CHASSIS` | in (analog), shield out | `connectors` |
 | `J121`, `J126` | JST PHR-2 harness plugs | internal harness from the panel XLRs; `PEN1_PANEL_P/N`, `PEN2_PANEL_P/N` | in (harness) | `connectors` |
@@ -39,9 +39,11 @@ shells/pin 1; **it has no connection to `GND` on any sheet** — see §7.
 The 15 V path is `J1` → `F1` (Schurter 0031.8201 holder with 3.15 A time-delay cartridge — a
 recorded 5 % deviation from the 3.00 A spec) → `L1` common-mode choke → `Q760` reverse-polarity
 PMOS → `L760` + `C770` filter → `+15V_FUSED`, with `D1` SMBJ18A TVS and `C30` reservoir to GND.
-`+15V_FUSED` feeds the panel E-stop chain (`J750`/`K1` NC → `K2` coil via `Q750` arm latch),
-the `+6V` pre-regulator `U147` TPSM63604, the isolated `U5` MGJ2D151515SC (±15 V) and `U146`.
-`K2`'s NO contact makes `+15V_DRV` for the eight LMH6321 loops. The FPGA cannot arm `K2`.
+`+15V_FUSED` feeds the `+6V` pre-regulator `U147` TPSM63604, the isolated
+`U5` MGJ2D151515SC (±15 V) and the eight LMH6321 coil loops **directly** — the
+field rail is unswitched. The arm latch (U751–U755, rearm via `SW750`) gates only
+`PICO_STOP_N` to the follower; `J750.2` is a no-connect. There is no K1/K2 relay
+and no panel E-stop on BRD-01.
 
 | Rail | Made by | Feeds (relevant to I/O) |
 |---|---|---|
@@ -50,9 +52,9 @@ the `+6V` pre-regulator `U147` TPSM63604, the isolated `U5` MGJ2D151515SC (±15 
 | `+1V8_FPGA` | `U145` from `+6V`, EN = `PG_1V0` | U4 VCCAUX/VCCADC |
 | `+3.3V` | `U7` TPS62130 from `+6V`, EN = `PG_1V8` | U4 VCCO (banks 14/15/34/35), `U141`, `U142`, `Y1`, `J140` VREF, DAC VIO, ADC IOVDD, ESD/latch logic |
 | `+5V_EXC` | `U149` TPS7A4701 from `+6V` | DAC80508 VDD, 8× LTC1563-2 |
-| `+5VA` | `U146` TPS7A4701 | AD7768-4 AVDD, ADA4940-2, analog front ends |
+| `+5VA` | `U146` TPS7A4701 from `+6V` via FL2 | AD7768-4 AVDD, ADA4940-2, analog front ends |
 | `+15V`/`−15V` | `U5` MGJ2 from `+15V_FUSED` | `U6` LT3045-1 → `+12VA`, `U2` LT3093 → `−12VA` (op-amps, INA163, ADR434) |
-| `+15V_DRV` | `K2` NO contact | eight LMH6321 coil drivers, driver bias |
+| `+15V_FUSED` | J1 → F1 → L1 → Q760 → L760 | unswitched: eight LMH6321 coil drivers, driver bias, `U147` → +6V (→ U146/U149), `U5` MGJ2 |
 | `GND` | one net everywhere | all returns, including U4 VCCBATT |
 
 `U5`'s COM and −VIN are tied to `GND`, so the isolated module does **not** create a separate
@@ -145,11 +147,11 @@ constraint file in this repo.
 | `H8` | `/fpga/XADC_VP` | analog in | analog XADC | R151.1 (fpga) | XADC analog positive input via R151 0 ohm; no source/sensor stated in the repo |
 | `J7` | `/fpga/XADC_VN` | analog in | analog XADC | R152.1 (fpga) | XADC analog negative input via R152 0 ohm; no source/sensor stated in the repo |
 | `J8` | `/fpga/XADC_VPREF` | analog in | analog XADC | R153.1 (fpga) | XADC positive reference via R153 0 ohm; no source stated in the repo |
-| `R1` | `/DRIVER_FAULT_N` | in | 3.3 V LVCMOS (HR) | R712.2 (driver); U600.4 (driver); U600.6 (driver); U601.4 (driver); U601.6 (driver); U602.4 (driver); U602.6 (driver); U603.4 (driver); U603.6 (driver); U752.2 (power) | active-low wired-OR coil overcurrent bus from open-drain U600-U603, also clears the K2 arm latch at U752.2 |
+| `R1` | `/DRIVER_FAULT_N` | in | 3.3 V LVCMOS (HR) | R712.2 (driver); U600.4 (driver); U600.6 (driver); U601.4 (driver); U601.6 (driver); U602.4 (driver); U602.6 (driver); U603.4 (driver); U603.6 (driver); U752.2 (power) | active-low wired-OR coil overcurrent bus from open-drain U600-U603, also clears the arm latch at U752.2 |
 
-No E-stop signal reaches U4: `U4.R2` is now the no-connect
-`unconnected-(U4B-IO_L7P_T1_34-PadR2)`. The panel E-stop acts on the hardware arm latch, which
-gates the STOP level to the Pico through `U755`; see §7.B.
+No E-stop status signal reaches U4: `U4.R2` is the no-connect
+`unconnected-(U4B-IO_L7P_T1_34-PadR2)`. The hardware arm latch gates the STOP
+level to the Pico through `U755`; see §7.B.
 
 #### power-good/sync
 
@@ -215,10 +217,11 @@ root sheet wires the two sheet pins between `power`, `fpga` and `driver`.
 | `DRIVER_FAULT_N` | `driver`: open-drain `U600`–`U603`, `R712` pull-up | `power`: `U752.2` (clears arm latch); `fpga`: `U4.R1` | driver out ↔ power in ↔ fpga in |
 | `BUCK_SYNC` | `fpga`: `U4.R3` | `power`: `C809` 1 nF into `U147.14` EN/SYNC | fpga out ↔ power in |
 
-`ESTOP_ASSERTED` is gone from the netlist and `U4.R2` is a no-connect; the E-stop path now acts
-on the arm latch and gates `PICO_STOP_N` through `U755` (see §7.B).
+`ESTOP_ASSERTED` is gone from the netlist and `U4.R2` is a no-connect; the arm
+STOP latch gates `PICO_STOP_N` through `U755` (see §7.B).
 
-**Global labels that land on more than one sheet (57 nets, grouped by boundary).**
+**Global labels that land on more than one sheet (59 global nets plus the two
+hierarchical signals = 61 crossing nets, grouped by boundary; see §7.B.9).**
 
 | Sheets | Nets | Owner / direction |
 |---|---|---|
@@ -229,7 +232,7 @@ on the arm latch and gates `PICO_STOP_N` through `U755` (see §7.B).
 | `receiver` ↔ `connectors` | `PEN1_P`, `PEN1_N`, `PEN2_P`, `PEN2_N`, `REF_COIL_P`, `REF_COIL_N` | `J122`/`J127`/`J128` into the INA163 front ends |
 | `fpga` ↔ `connectors` | `PICO_TX`, `PICO_RX`, `PICO_HEARTBEAT`, `USB_DP`, `USB_DM`, `USB_VBUS` | `U4` ↔ `J123`; USB between `J124` and `U142` |
 | `power` ↔ `connectors` | `PICO_STOP_N` | `U755.4` → `J123.5`; gated STOP level to the follower |
-| `power` ↔ `driver` | `+15V_DRV` | K2 NO contact → eight coil drivers |
+| `power` ↔ `driver` | `+15V_FUSED`, `+5V_EXC` | unswitched field rail → eight coil drivers; `U149` → DAC80508 + 8× LTC1563-2 |
 | `power` ↔ `receiver` | `+5VA` | `U146` → ADC/analog |
 | `power` ↔ `fpga` | `+1V0_FPGA`, `+1V8_FPGA`, `PICO_STOP_REQ_N` | `U144`/`U145` → `U4` core rails; `U4.P4` request → `U755.1` |
 | `power`, `driver`, `receiver` | `+12VA`, `−12VA` | `U6`/`U2` → op-amps on both sheets |
@@ -254,10 +257,10 @@ flowchart LR
   PC -->|JTAG TCK/TMS/TDI/TDO| JTAG["J140 JTAG"]
   JTAG --> FPGA
   FPGA <-->|QSPI_CS / D0-D3 / CCLK| FLASH["U141 W25Q64"]
-  PWR["J1 15 V + F1 + K1/K2"] -->|+15V_FUSED| BUCK["U147 +6V"]
+  PWR["J1 15 V + F1 + L1 + Q760"] -->|+15V_FUSED| BUCK["U147 +6V"]
   FPGA -->|BUCK_SYNC| BUCK
   PWR -->|DRIVER_FAULT_N| FPGA
-  PWR -->|+15V_DRV| DRV
+  PWR -->|+15V_FUSED| DRV
   FPGA -->|DAC_SCLK/CS/SDI, DAC_SDO| DAC["U10 DAC80508"]
   DAC -->|8 filtered commands| DRV["8x LTC1563-2 + LMH6321"]
   DRV -->|FG0..7_OUT / RETURN| FG["J20-J27 FG coils"]
@@ -293,8 +296,8 @@ unassigned, but the remaining bank 14/15/34 spares and the XADC pins have no doc
    §8 use abstract sequential pins 1–40 (e.g. "pin 5 MCLK_ADC", "pin 37 ESTOP_STATUS"). The
    schematic uses real FTG256 balls: `D13` for `CLOCK_32M768`, `R1` for `DRIVER_FAULT_N`,
    `R3` for `BUCK_SYNC`, `P4` for `PICO_STOP_REQ_N`. Use the ball names in this document.
-2. **E-stop/status naming.** The M16 handoff calls them `ESTOP_STATUS`, `WATCHDOG_KICK` and
-   `FAULT_IRQ`. The netlist has no `ESTOP_ASSERTED` net at all: `U4.R2` is now the no-connect
+2. **E-stop/status naming.** Older M16 handoff text called them `ESTOP_STATUS`,
+   `WATCHDOG_KICK` and `FAULT_IRQ`. The netlist has no `ESTOP_ASSERTED` net at all: `U4.R2` is now the no-connect
    `unconnected-(U4B-IO_L7P_T1_34-PadR2)`. `DRIVER_FAULT_N` (`R1`) remains and there is no
    `WATCHDOG_KICK` at U4. The Pico stop is split: `U4.P4` drives `PICO_STOP_REQ_N` into
    `U755.1` (with `R754` 100 kΩ pull-down to GND), and `PICO_STOP_N` is only `U755.4` →
@@ -308,8 +311,8 @@ unassigned, but the remaining bank 14/15/34 spares and the XADC pins have no doc
 4. **Power rails.** `hardware/brd-01/kicad/power-tree.md` (banner: as-captured at `4da4e95`) shows
    `U3` OKI-78SR → `+5V`, `U1` TPS7A2033 → `+3.3V`, `U146` fed from `+15V_FUSED`, and RV-1515D
    ±15 V. The present netlist has `U147` TPSM63604 → `+6V`, `U7` TPS62130 → `+3.3V`, `U149`
-   → `+5V_EXC`, `U146`/`U149` fed from `+6V`, and `U5` MGJ2D151515SC. `power_tree_v2.md` matches
-   the new parts but proposes `U148` for 3.3 V where the netlist has `U7`.
+   → `+5V_EXC`, `U146`/`U149` fed from `+6V`, and `U5` MGJ2D151515SC. `power_tree_v2.md` §2
+   once proposed `U148` for 3.3 V; §9 and the netlist use `U7`.
 5. **13-spare-pin claim.** `m16-fpga-handoff.md` §8 and `system_schematic.md` §6 list 13 spare
    pins from the M16 migration; the captured schematic leaves 139 U4 pins no-connect (many are
    unused Bank 35, not "freed by M16").
@@ -317,12 +320,13 @@ unassigned, but the remaining bank 14/15/34 spares and the XADC pins have no doc
    and pin 1 to chassis "at the feedthrough", but `/connectors/CHASSIS` has no bond to `GND` or
    any other net on any sheet; the actual chassis bond point is not captured.
 7. **JTAG HALT.** `J140.14` (HALT) is no-connect; documents do not mention it.
-8. **Switched driver rail.** §2, §5 and §6 still describe `+15V_DRV` from the K2 NO contact.
-   The netlist has no `+15V_DRV` net: `+15V_FUSED` reaches the driver sheet directly and feeds
-   `U20.7` (LMH6321 V+) and `U39.5` (OPA192 V+). The driver rail is unswitched after the E-stop
-   scope change (`docs/phase2/estop_scope_change.md`); the panel E-stop gates only the arm latch
-   and `PICO_STOP_N`. These sections are left as historical text pending a decision on whether
-   to rewrite the power-tree narrative.
+8. **Switched driver rail — corrected.** §2, §5 and §6 now describe the captured
+   `+15V_FUSED`: there is no `+15V_DRV` net. `+15V_FUSED` reaches the driver sheet
+   directly and feeds `U20.7` (LMH6321 V+) and `U39.5` (OPA192 V+). The arm STOP
+   latch gates only `PICO_STOP_N` (E-stop scope change). No K1/K2 relay remains.
+9. **Cross-sheet net count.** The old §5 heading said 57 global cross-sheet nets.
+   The netlist has 59 global plus 2 hierarchical labels (`DRIVER_FAULT_N`,
+   `BUCK_SYNC`) = 61, and the old list omitted `+5V_EXC`; §5 is corrected.
 
 **C. Specified but not wired / not determined.**
 
@@ -343,9 +347,10 @@ unassigned, but the remaining bank 14/15/34 spares and the XADC pins have no doc
   handoff.
 - No power-good net reaches U4: `PG_6V`/`PG_1V0`/`PG_1V8` are local to the `power` sheet and
   only feed regulator enables. The "power-good/sync" row is the `BUCK_SYNC` clock only.
-- E-stop relay selection is still open: the draft mushroom and relay symbols are in the shared
-  library but no `K1`/`K2` parts are instantiated in the netlist (`SW750` is the panel contact;
-  `J750.2` is no-connect).
+- K1/K2 were removed from BRD-01: draft mushroom/relay symbols remain in the
+  shared library but no relay is instantiated; `SW750` is the on-board rearm
+  contact and `J750.2` is a no-connect. This is a closed scope change, not a
+  relay-selection decision.
 
 ---
 

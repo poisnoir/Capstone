@@ -12,7 +12,7 @@ following release holds.
 
 | Page | Sheet | Captured | Open |
 |---|---|---|---|
-| 2 | Power | Fused entry and corrected TVS polarity, unswitched +15 V_FUSED driver rail and hardware overcurrent latch retargeted to arm STOP, FPGA rail sequencing, +5VA regulator fed from fused 15 V, and the approved MGJ2D151515SC/LT3045EDD-1#TRPBF/LT3093EMSE#TRPBF ±12VA chain | Verify converter headroom and combined receiver and driver load against the 67 mA per-rail rating. Verify startup, rail load and dissipation against the 67 mA per-rail rating, clamp/release time, restart behavior and input protection. The 3.15 A fuse cartridge is a recorded deviation from the 3.00 A spec. |
+| 2 | Power | Fused entry and corrected TVS polarity, unswitched +15 V_FUSED driver rail and hardware overcurrent latch retargeted to arm STOP, FPGA rail sequencing, +5VA regulator fed from +6 V via FL2, and the approved MGJ2D151515SC/LT3045EDD-1#TRPBF/LT3093EMSE#TRPBF ±12VA chain | Verify converter headroom and combined receiver and driver load against the 67 mA per-rail rating. Verify startup, rail load and dissipation against the 67 mA per-rail rating, clamp/release time, restart behavior and input protection. The 3.15 A fuse cartridge is a recorded deviation from the 3.00 A spec. |
 | 3 | Driver | DAC80508, eight 60 kHz reconstruction filters, coil outputs and sense returns, sense summer, individual comparator test nets, nominal 253 mA prototype trip, nominal 280 mA peak LMH6321 clamps and a shared active-low fault output to the FPGA | Measure prototype command scaling and loop compensation with the coil and cable, verify coil-return midpoint impedance, LMH6321 clamp tolerance and thermal validation, trip threshold tolerance, and hardware latch pulse capture with arm STOP assertion. Confirm the summer scale and phase on the bench. **TRIP_REF is open:** the `R710` 52.3 kΩ / `R711` 10 kΩ divider gives ≈0.53 V, which is unreconciled with the sheet's "~253 mA at 3.3 V" trip note and "~280 mA nominal clamp" note; do not pick resistors before measuring (power_tree_v2.md §9). |
 | 4 | Receiver | AD7768-4 in four-lane SPI-control configuration, ADR434 reference, Ch0 current sense, Ch1 pen 1, Ch2 pen 2 and Ch3 fixed-reference paths; three INA163UA (U104/U106/U107) and two dual ADA4940-2ACPZ (U105/U108), matching the BOM-to-CAD ±12VA load check | Ch2 gain equals Ch1's (closed); the Ch3 reference-coil front end stays in the board design but its parts are **DNP lines in the BOM** — not ordered or assembled. Verify ADC settling, reference buffer stability and phase matching. |
 | 5 | FPGA | FTG256 ball assignments, QSPI and JTAG, shared clock, USB-UART and Pico signals | Verify timing, power and bypass allocation on the target device. Program FT231X CBUS2 for VBUS sensing and verify USB ESD and power-off behavior. |
@@ -69,7 +69,7 @@ documents every rail, the arm STOP latch and every net that crosses sheets.
 
 | Page | Sheet | Contents |
 |---|---|---|
-| 2 | Power | Adapter entry, protection and EMI filter, unswitched driver rail, arm STOP latch, FPGA rail sequencing, +5VA regulator and the approved ±12VA chain |
+| 2 | Power | Adapter entry, protection and EMI filter, unswitched `+15V_FUSED` driver rail, arm STOP latch, FPGA rail sequencing, +5VA from `+6V` and the approved ±12VA chain |
 | 3 | Driver | DAC80508, eight 60 kHz filters, eight current loops, sense summer, comparators and open-drain fault bus |
 | 4 | Receiver | AD7768-4, ADR434 reference, Ch0 current sense and Ch1–Ch3 sensor front ends |
 | 5 | FPGA | FTG256 ball map, QSPI, JTAG, clock, USB-UART and Pico signals |
@@ -104,12 +104,15 @@ KiCad ERC reports zero violations on rev 0.1. F1 carries the Schurter `0001.2509
 3.15 A time-delay cartridge as its MPN field; the 3.15 A rating is a recorded
 deviation from the 3.00 A spec that the power owner accepted. The active-low
 overcurrent bus reaches both the FPGA and the hardware latch (U752). The latch
-clears on fault or supervisor reset; `U753.~Q` then drives U755 so STOP is
-asserted to the arm. U753.Q is an intentional no-connect, and the field rail
+clears on fault or supervisor reset; **`U753.5 (Q)` drives `/power/ARM_Q` →
+`U755.2`**, and `U755.4` asserts `PICO_STOP_N` to the arm. **`U753.3 (~Q)` is the
+intentional no-connect** (netlist proof:
+`docs/phase2/brd01_wiring_manifest.md`, §5 consistency note 1). The field rail
 stays live. The interlock still needs fault-injection validation. The prototype loop uses AC-coupled command scaling, a DC feedback path and provisional PI compensation. The summer uses a nominal gain of −2.000 from each input. Measure phase margin, tracking gain and polarity before operating the full array.
 A nominal small-signal check used the captured 10 kΩ/100 nF sense path,
 parallel 10 MΩ feedback and 330 kΩ/150 pF compensation, a one-pole 10 MHz
-gain-bandwidth OPA192 model, an ideal buffer, and 70 µH + 2 Ω coil with
+gain-bandwidth OPA192 model, an ideal buffer, and a legacy 70 µH + 2 Ω coil
+approximation with
 1 Ω shunt and 100 µF series coupling. The reduced closed-loop polynomial
 has no right-half-plane poles. Its upper unity crossover is about 70 kHz
 with about 80° nominal phase margin. The calculated shunt-current gain
@@ -117,7 +120,9 @@ from the filter output is 0.118 A/V at 20 kHz and 0.114 A/V at 34 kHz, so
 150 mA RMS requires about 1.80–1.86 V peak at that node. Set initial DDS
 amplitude below the nominal trip and trim against the shunt measurement.
 Cable parasitics, real buffer and sense-amplifier dynamics, saturation,
-capacitor ESR and rail transients are outside this reduced model.
+capacitor ESR and rail transients are outside this reduced model. **Re-run this
+check with the locked FG coil (79 µH / 2.9 Ω, decision #27) before using its
+crossover numbers for component selection.**
 
 The blank PCB
 reports `invalid_outline` until layout adds a real outline. Put only the

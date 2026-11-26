@@ -36,12 +36,18 @@ with a hardware STOP and a heartbeat.
 
 | Clock | Source | Value | Use |
 |---|---|---|---|
-| XO | 32.768 MHz TCXO | 32.768 MHz | ADC MCLK; DDS clock; counter reference |
+| XO | 32.768 MHz XO, Citizen CSX750FBC32.768M-UT | 32.768 MHz | ADC MCLK (via R100 33 Ω); FPGA clock input; DDS clock; counter reference |
 | PLL | XO ×3 | 98.304 MHz | SPI source |
 | SPI SCLK | 98.304 ÷2 | **49.152 MHz** | DAC80508 SCLK (max 50 MHz) |
 | DAC update | XO ÷164 | **199.805 kSPS** | DAC word latch; period 5.00488 µs |
 | ADC ODR | XO ÷128 | 256 kSPS | AD7768-4 |
 | Frame | N = 512 | 2.000 ms | integer-J demod |
+
+**Topology (locked 2026-11-25, decision #28 / SC-07):** XO-direct — one 32.768 MHz XO
+drives the FPGA clock input directly and ADC MCLK through a 33 Ω series resistor;
+there is no discrete buffer and no TCXO. The PLL ×3 = 98.304 MHz feeds only the
+÷2 = 49.152 MHz DAC SPI; the DDS, DAC update (÷164) and ADC ODR (÷128) all come
+directly from the XO.
 
 **Rules:**
 - One XO, one reset. The DDS phase accumulator runs continuously; do **not** reset it at the ADC frame boundary.
@@ -391,9 +397,14 @@ Calibration flow: Helmholtz \(A_{sens}(f)\) → 7×7 κ/zOffset → per-tone amp
 
 ## 10. Fault / stop
 
-- **E-stop:** NC mushroom cuts the +15 V driver enable; the FPGA gets an opto-isolated `ESTOP_STATUS`; it cannot re-enable the driver.
-- **Watchdog:** `WATCHDOG_KICK` to the Pico/relay; a missing kick stops the follower.
-- **Overcurrent:** per-coil peak comparators wire-OR to `FAULT_IRQ`; the FPGA disables the DAC channels and flags.
+- **Stop (BRD-01, netlist):** there is no relay E-stop and no `ESTOP_STATUS` net.
+  The hardware arm latch `U753.Q`/`U755` drives `PICO_STOP_N` to J123.5; the
+  FPGA drives only `PICO_STOP_REQ_N` (ball P4) into U755.1 and reads the shared
+  `DRIVER_FAULT_N` (ball R1). The `+15V_FUSED` field rail is unswitched.
+- **Watchdog:** the follower/Pico side stops locally on missing heartbeat or stale
+  pose (`contract/icd/pico_link.md`); no `WATCHDOG_KICK` pin exists at the FPGA.
+- **Overcurrent:** per-coil peak comparators wire-OR via U600–U603 open-drain
+  buffers to `DRIVER_FAULT_N`; the FPGA flags the fault and clears the latch.
 - **Status:** tracking / clamped / stopped / fault; the Pico stops ≤100 ms.
 
 ---
@@ -419,9 +430,10 @@ Calibration flow: Helmholtz \(A_{sens}(f)\) → 7×7 κ/zOffset → per-tone amp
 - LTC1563-2 fc/phase (analog, fixed resistor).
 - Current-loop stability/compensation (analog/bench).
 - LMH6321 crossover distortion (bench).
-- EMI/layout/thermal (board/bench).
+- EMI/layout/thermal (on-board shield can, ground partitioning, bench).
 - The final 8-tone FFT and jitter measurement (bench).
-- Pico 2 motor control (step/dir, encoder loop, homing/limits/local stop) is a separate MCU; the PS is the host/coordinator, not the motor controller.
+- Pico 2 motor control (step/dir, encoder loop, homing/limits/local stop) is a
+  separate MCU; there is no PS. The host PC is log/calibration/viz only.
 
 ---
 
@@ -430,14 +442,14 @@ Calibration flow: Helmholtz \(A_{sens}(f)\) → 7×7 κ/zOffset → per-tone amp
 | Item | Risk | Action |
 |---|---|---|
 | DAC80508 SPI mode/TRIGGER/address map | Wrong frame → no output or no simultaneous update | Read the datasheet; logic-analyser the first 216-bit burst |
-| 49.152 MHz PLL/CDC | Setup/hold, jitter | Constrain the PLL; verify with the scope; keep the SPI away from the analog |
+| 49.152 MHz PLL/CDC | Setup/hold, jitter | Constrain the PLL ×3 → ÷2 (SPI only); verify with the scope; keep the SPI away from the analog |
 | **SPI hold 0.17 ns** | Data hold at the DAC pin; header/cable skew | Delay SDI ~2.5 ns; keep the DAC on the FPGA board; probe SCLK/SDI at the DAC |
 | 199.805 kSPS ÷164 | Non-200k update; DDS phase | Verify the ÷164 counter and the DAC word latch |
 | 13 spare pins | Board mapping | Freeze the FTG256 pin assignment before layout |
 | Filter phase/κ | Phase error | Calibrate per tone; 0.1% R; 1% C0G |
 | Loop PM/step | Oscillation | Bench; lead network; 150 mA first |
 | DAC INL/IMD | 8-tone products | Bench one channel; crosstalk screen |
-| EMI | In-band spurs | One-box shield; star ground; bench FFT |
+| EMI | In-band spurs | On-board shield can; ground partitioning; bench FFT |
 
 ---
 

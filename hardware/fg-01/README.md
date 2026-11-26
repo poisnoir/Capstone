@@ -11,8 +11,12 @@ Upstream (pristine, do not edit): `vendor/anser-osf/Design Files/`
 - `Emitter Coil/CAD/Gerbers/Transmitter Coil PCB Gerber.zip` — **one** emitter coil PCB (`spiral_coil_stackable_Rev_C`): Gerbers + DesignSpark `.pcb` + plot report. The field generator is **eight** of these on two machined plates, not one large PCB
 
 **Assembly (decision #27, 2026-11-02):** 8 vendor coils, one per position, **no stacking**;
-2 machined plates at the `fSysSetup.m` centres. Coil: 25 turns dual-layer, 70 mm outer,
-0.5/0.25 mm, 1.6 mm FR4, L ≈ 79 µH, R ≈ 2.9 Ω (AnserEMT 2017, Table 2).
+2 machined plates at the `fSysSetup.m` centres: x = [−93.543, 0, 93.543,
+−68.55, 68.55, −93.543, 0, 93.543], y = [93.543, 68.55, 93.543, 0, 0,
+−93.543, −68.55, −93.543] mm; coils 2, 4, 5, 7 at 45°, the rest at 90°. Coil:
+**25 turns split across two layers** (not 20), 70 mm outer, 0.5 mm track /
+0.25 mm gap, 1.6 mm FR4, L ≈ 79 µH, R ≈ 2.9 Ω (AnserEMT 2017, Table 2;
+decision #27).
 
 **Gerbers must be re-exported** from `spiral_coil_stackable_Rev_C.pcb` in DesignSpark PCB.
 The 2013 export has no outline layer and 10× drill coordinates (the plot report says mm, the

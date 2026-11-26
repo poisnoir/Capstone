@@ -1,5 +1,16 @@
 # BRD-01 Power v2 & Cross-Sheet Redraw: DeepSeek-V4.1-Flash-1017 Orchestrator & Hy4 Flash Worker Plan
 
+**Status (2026-11-25): executed plan, kept as history.** What landed on `main`
+is recorded in `docs/phase2/power_tree_v2.md` §9 and confirmed by the committed
+netlist in `docs/phase2/brd01_wiring_manifest.md`: `+6V`/`+3.3V`/`+5V_EXC`/`+5VA`,
+`U147`/`U7`/`U149`/`U146`/`U5`, `D_REF` = `D534`, `J123.1` no-connect, `U142`
+on `+3.3V`, ball `R3` → `BUCK_SYNC`, full-hierarchy ERC 0 errors / 0 warnings.
+**Still open:** the `contract-change` PR for locked decision #20 (the contract
+still lists OKI-78SR-5 / RV-1515D / TPS7A20), the `pico_link.md` pin-1 ICD
+change, the M16 DDS-swing centre (2.45 V vs 2.5 V), and the bench items in
+`power_tree_v2.md` §7 C1/C5/C7. The instructions below are the original plan,
+not current work orders.
+
 **Orchestrator:** `DeepSeek-V4.1-Flash-1017` (state, `git`, `tools/kicad_sch_helper.py`, `power.kicad_sch`, `brd-01.kicad_sch` root wiring, `kicad-cli` gates)  
 **Parallel Workers:** `Tencent Hy4 Flash` (read-only audits, SVG/PNG vision checks, disjoint child-sheet edits via helper, docs/issue drafting)  
 **Golden Baseline:** `ec88cd1` (`pwr2`) — **pinned explicitly**, never `HEAD`  

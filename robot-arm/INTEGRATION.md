@@ -17,10 +17,10 @@ you prefer a single workspace. It does not copy firmware into this repo.
 
 | Signal | Direction | Notes |
 |---|---|---|
-| 3V3 | PL → Pico | 3.3 V LVCMOS; RP2350 is not 5 V tolerant |
+| 3V3 (`contract/icd/pico_link.md` §2) | **not connected on BRD-01** | J123.1 is a no-connect in the committed netlist; BRD-01 does not power the Pico. Contract ICD change pending — do not assume a 3V3 source on this board. RP2350 is not 5 V tolerant |
 | GND | common | signal ground only; motor return bonded at the Pico |
 | TX / RX | PL ↔ Pico | 1 Mbaud default (0.5–3 Mbaud acceptable) |
-| STOP | PL → Pico | active-low level, pull-down at the Pico; unplugged = stop |
+| STOP | arm latch → Pico | `PICO_STOP_N` is driven by U755.4 on the BRD-01 power sheet to J123.5 (active-low level, pull-down at the Pico; unplugged = stop). The FPGA drives the separate request `PICO_STOP_REQ_N` (U4.P4 → U755.1); both sides must be tested |
 | HEARTBEAT | PL → Pico | 100 Hz toggle; absent for 100 ms → Pico stops locally |
 
 Cable: 1 m shielded, signal ground only, no motor current. Fallback: RS-485 on
@@ -41,7 +41,9 @@ the same TX/RX pins if the ground test shows >200 mV.
 ## Safety
 
 - STOP is a hardware level, not a message. The UART is never the safety path.
-- The hardware E-stop drops the driver enable independently of both processors.
+- The BRD-01 arm STOP latch drives `PICO_STOP_N` independently of both
+  processors; there is no relay E-stop and the `+15V_FUSED` driver rail is
+  unswitched. The ICD's older E-stop wording is pending a contract change.
 - A pose older than 50 ms is not acted on; the Pico stops.
 - Motor current must not share the signal ground.
 

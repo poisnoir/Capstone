@@ -1,5 +1,5 @@
 # BRD-01 component reference — component → pins → wires
-
+**Provenance (2026-11-25, base commit `ef04f63`):** generated with `kicad-cli sch export netlist --format kicadxml -o net.xml hardware/brd-01/kicad/brd-01.kicad_sch` (KiCad 10.0.8); regenerate after any BRD-01 netlist change — regeneration pends the uncommitted KiCad WIP, so these tables describe the committed netlist only.
 This is the **component-centric** reference for BRD-01. Its companion,
 `brd01_wiring_manifest.md` (and `brd01_wiring_manifest.csv`), is **net-centric**:
 net → pins. This document starts at a component and follows each pin to the other

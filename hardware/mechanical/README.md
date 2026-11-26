@@ -5,8 +5,8 @@ the 150 mm metal-free rule and the non-metal ICNIRP guard.
 
 ## What lives here
 
-- Enclosure for BRD-01, FG-01 and the power entry; internal shield partition
-  (the one-box decision, #10/#25).
+- Enclosure for BRD-01, FG-01 and the power entry. Under #25 the shield is an
+  **on-board shield can** on BRD-01, replacing the earlier internal box partition.
 - Non-metal ICNIRP guard: open-top ring/fence at the ~57 mm / 27 µT contour at
   250 mA. It is an **access barrier, not an EMF shield** (SC-04b, D2). Plastic
   fasteners; removable for the 7×7 calibration grid and field mapping.

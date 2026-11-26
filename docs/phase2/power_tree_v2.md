@@ -1,11 +1,18 @@
 # BRD-01 power tree v2: requirements and component values
 
-**Status: PROPOSED (2026-11-24).** This replaces the OKI-78SR-5 and the
-TPS7A2033 in the BRD-01 power tree. It changes locked decision #20 in
-[decisions_log.md](../../contract/decisions_log.md), so it needs a
-`contract-change` issue and PR before the schematic is redrawn. The current
-as-captured tree is in
-[power-tree.md](../../hardware/brd-01/kicad/power-tree.md).
+**Status: PROPOSED contract change (2026-11-24); implemented on BRD-01 as of
+2026-11-25.** This replaces the OKI-78SR-5 and the TPS7A2033 in the BRD-01 power
+tree. It changes locked decision #20 in
+[decisions_log.md](../../contract/decisions_log.md), so it still needs a
+`contract-change` issue and PR: decision #20 is unchanged in `contract/` and
+remains the contract authority. §9 records the v2 tree as captured and wired on
+the BRD-01 sheet (ERC 0/0), and the committed netlist in
+[brd01_wiring_manifest.md](brd01_wiring_manifest.md) confirms the v2 rails
+(`+6V`, `+3.3V`, `+5V_EXC`, `+5VA`, MGJ2D151515SC). This file is the power
+authority for the as-built board; the older v1 tree in
+[power-tree.md](../../hardware/brd-01/kicad/power-tree.md) is historical.
+**OPEN:** the #20 contract change has not been merged; see §7 D2 for a second
+open arithmetic point (centre of 0.3–4.6 V).
 
 Each number is tagged:
 
@@ -396,7 +403,7 @@ contract change) or the bench.
 | # | Item | Resolution |
 |---|---|---|
 | D1 | 6 V pre-regulator | **TPSM63604RDLR at 5.99 V, RT 1.000 MHz, synced to 1.024 MHz**, replacing the OKI-78SR-5 (decision #20) |
-| D2 | `+5V_EXC` voltage | **5.0 V.** FPGA keeps the DDS tone within 0.3–4.6 V, centered on 2.5 V (≤ 92% of full scale). Changes the M16 handoff's "0–5 V full scale" |
+| D2 | `+5V_EXC` voltage | **5.0 V.** FPGA keeps the DDS tone within 0.3–4.6 V (≤ 92% of full scale); the band is described elsewhere here as centered on 2.5 V, but (0.3+4.6)/2 = 2.45 V — **OPEN: choose 2.45 V or restate the centre as nominal 2.5 V before the contract PR**. Changes the M16 handoff's "0–5 V full scale" |
 | D3 | FT231X supply | **U142 VCC (12) and ~RESET (11) move to `+3.3V`; 3V3OUT (10, net `FT_3V3`) ties to `+3.3V`.** VCC range 2.97–5.5 V; with VCC at 3.3 V, 3V3OUT must be driven with 3.3 V [DS] |
 | D4 | Pico power | **BRD-01 does not power the Pico.** J123 pin 1 becomes a no-connect on BRD-01, so the two 3.3 V supplies are never tied together. The ICD (`contract/icd/pico_link.md`) lists pin 1 as "3V3", so it changes in the same contract PR |
 | D5 | `BUCK_SYNC` pin | **FPGA ball R3** (IO_L8P_T1_34, Bank 34 at 3.3 V, a plain I/O next to R1/R2), 32.768 MHz ÷ 32, through 1 nF to U147 EN/SYNC |
