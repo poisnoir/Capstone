@@ -468,30 +468,15 @@ def zone_a(rz: Rezone):
         rz.junction((jx, py))
         rz.junction((jx, jog_y))
         rz.wire((jx, jog_y), p1, ref + 'top')
-        # label rows in the clear band below the pin block; each net gets its
-        # own left-hand drop column, so no wire crosses another net's run
-        lrow, lx = {'R145': (72.39, 13.97),
-                    'R147': (77.47, 15.24),
-                    'R146': (82.55, 16.51)}[ref]
-        rz.wire(p2, (lx, p2[1]), ref + 'labh')
-        rz.wire((lx, p2[1]), (lx, lrow), ref + 'labv')
-        rz.glabel(net, (lx, lrow), 0)
+        lab = (15.24, p2[1]) if ref != 'R147' else (8.89, p2[1])
+        rz.wire(p2, lab, ref + 'labstub')
+        rz.glabel(net, lab, 180 if ref in ('R145', 'R146') else 0)
         rz.prop_pos(ref, 'Reference', (15.24, row), 0)
         rz.prop_pos(ref, 'Value', (22.86, row), 0)
     # keep the pre-existing DAC_SDO flag on its own pin, off the new jog wire
     rz.label_at('global_label', 'DAC_SDO', (21.59, 57.15), (21.59, 57.15), 180)
     rz.label_at('global_label', 'PICO_RX', (21.59, 64.77), (21.59, 64.77), 0)
     rz.label_at('global_label', 'PICO_TX', (21.59, 67.31), (21.59, 67.31), 0)
-    # pull the two long left-pointing baseline flags back inside the frame
-    rz.del_wire((26.67, 74.93), (21.59, 74.93))
-    rz.del_wire((26.67, 77.47), (21.59, 77.47))
-    rz.wire((26.67, 74.93), (27.94, 74.93), 'pico_stop_stub')
-    rz.label_at('global_label', 'PICO_STOP_REQ_N', (21.59, 74.93),
-                (27.94, 74.93), 180)
-    rz.label_at('global_label', 'PICO_HEARTBEAT', (21.59, 77.47),
-                (26.67, 77.47), 270)
-    rz.del_wire((26.67, 72.39), (21.59, 72.39))
-    rz.label_at('global_label', 'HOST_RX', (21.59, 72.39), (26.67, 72.39), 270)
     rz.move('R162', (15.24, 31.75), rot=0)
     p1, p2 = rz.pin('R162', '1'), rz.pin('R162', '2')
     rz.glabel('+3.3V', (p1[0], p1[1] - 3.81), 90)
