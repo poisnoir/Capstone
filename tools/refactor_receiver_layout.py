@@ -159,26 +159,33 @@ PLACE.update({
     'R100': (620.00, 271.78, 90),
     'R180': (609.60, 285.75, 0),
     'R181': (609.60, 311.15, 180),
-    'C106': (737.87, 350.52, 0),
-    'C103': (750.57, 251.46, 90),
-    'C104': (750.57, 264.16, 90),
-    'C105': (750.57, 276.86, 90),
-    'C107': (750.57, 289.56, 90),
-    'C108': (776.22, 251.46, 90),
-    'C109': (776.22, 264.16, 90),
-    'C110': (776.22, 276.86, 90),
-    'C111': (776.22, 289.56, 90),
+    'C106': (741.68, 68.58, 90),
+    'C103': (722.38, 259.08, 90),
+    'C104': (722.38, 271.78, 90),
+    'C105': (722.38, 284.48, 90),
+    'C107': (722.38, 297.18, 90),
+    'C108': (747.66, 259.08, 90),
+    'C109': (747.66, 271.78, 90),
+    'C110': (747.66, 284.48, 90),
+    'C111': (747.66, 297.18, 90),
 })
 
-# Decoupling bay: 5 columns x 3 rows, 25.4 mm x 15.24 mm pitch.
-BAY = dict(x0=609.60, y0=25.40, x1=736.60, y1=76.20)
-BAY_PARTS = ['C100', 'C112', 'C115', 'C116', 'C123', 'C128', 'C130',
-             'C542', 'C543', 'C547', 'C562', 'C563', 'C567',
-             'U105:3', 'U108:3']
-for i, ref in enumerate(BAY_PARTS):
-    col, row = divmod(i, 5)
-    PLACE[ref] = (g(BAY['x0'] + 12.70 + col * 25.40),
-                  g(BAY['y0'] + 10.16 + row * 15.24), 90)
+# Decoupling bay: one vertical rail ladder per rail, GND along the bottom.
+BAY = dict(x0=609.60, y0=25.40, x1=759.45, y1=121.92)
+GND_BUS_Y = 106.68
+BAY_X0, BAY_X1 = 635.00, 745.49  # 500 G, 586 G
+RAIL_COLS = {'+12VA': 627.38, '-12VA': 665.48, '+5VA': 703.26}
+RAIL_ROWS = [43.18, 55.88, 68.58, 81.28, 93.98]
+BAY_GROUPS = {
+    '+12VA': ['C100', 'C115', 'C130', 'C542', 'C562'],
+    '-12VA': ['C116', 'C543', 'C563'],
+    '+5VA': ['C112', 'C123', 'C128', 'C547', 'C567'],
+}
+for rail, refs in BAY_GROUPS.items():
+    for ref, y in zip(refs, RAIL_ROWS):
+        PLACE[ref] = (RAIL_COLS[rail], y, 90)
+PLACE['U105:3'] = (741.68, 43.18, 0)
+PLACE['U108:3'] = (741.68, 55.88, 0)
 
 
 # ---------------------------------------------------------------------------
@@ -257,7 +264,7 @@ class Editor:
                + blk[m.end():])
         self.t = self.t[:s] + blk + self.t[e:]
 
-    def move_prop(self, uuid, prop, x, y, justify=None, hide=None):
+    def move_prop(self, uuid, prop, x, y, justify=None, hide=None, angle=0):
         s, e = H.block_span(self.t, uuid)
         blk = self.t[s:e]
         i = blk.find(f'(property "{prop}"')
@@ -274,7 +281,7 @@ class Editor:
             j += 1
         sub = blk[i:j + 1]
         sub = re.sub(r'\(at [\d.-]+ [\d.-]+ [\d.-]+\)',
-                     f'(at {f(x)} {f(y)} 0)', sub, count=1)
+                     f'(at {f(x)} {f(y)} {angle})', sub, count=1)
         sub = re.sub(r'\(justify [^)]*\)', '', sub)
         if justify:
             sub = sub.replace('\t\t\t)',
@@ -497,7 +504,8 @@ def fda_section(r, p, f, lanecfg, refcfg, plus_src, minus_src, dplus, dminus,
     r.poly([f2p, (g(f2p[0] + 19.05), f2p[1]),
             (g(f2p[0] + 19.05), P(p['Op'], 1)[1]), P(p['Op'], 1)])
 
-    # -OUT: four short labels, no wire around the interleaved output pins
+    # -OUT: short local labels at each of the net's pins (the ADA4940 output
+    # pins interleave +OUT/-OUT/+FB/-FB; wiring between them would cross).
     netn = refcfg['outn'] + '_OUT_N'
     out_keys = [(p['FDA'], f['out_n']), (p['FDA'], f['fb_n']),
                 (p['F1'], fi['minus']), (p['On'], 1)]
@@ -611,8 +619,8 @@ def route_adc(r):
         tip = (g(a[0] - 5.08), a[1])
         r.poly([a, tip])
         r.label('label', 'ADC_REF', tip)
-    for num, ref, xt in ((34, 'C103', 711.20), (61, 'C104', 716.28),
-                         (52, 'C105', 722.63)):
+    r.w(P('U101', 34), P('C103', 1))
+    for num, ref, xt in ((61, 'C104', 713.74), (52, 'C105', 706.12)):
         a, b = P('U101', num), P(ref, 1)
         r.poly([a, (xt, a[1]), (xt, b[1]), b])
     # control resistors sit on the ADC's left edge, next to their pins
@@ -625,44 +633,35 @@ def route_adc(r):
 # Power symbols, labels, no-connects
 # ---------------------------------------------------------------------------
 def place_power(r, ed, sh, pinmap, ncbase, sh0):
-    """Put a power symbol on every rail pin, reusing the baseline GND UUIDs."""
+    """Rail symbols on clean buses: one per rail per bay/FDA/ADC cluster.
+
+    A short bus wire joins every supply pin of a cluster; a single power
+    symbol sits on that bus.  All symbols are unrotated so their value text
+    stays horizontal and clear of neighbours.
+    """
     reuse = [u for u, lib in sh.lib.items() if lib.startswith('power:')]
-    jobs = []
-    for key in sorted(sh.inst):
-        if sh.lib[sh.uuid_of[key]].startswith('power:'):
-            continue
-        ref = key.split(':')[0]
-        for num, p in sorted(sh.unit_pins(key).items(), key=lambda kv: int(kv[0])):
-            net = pinmap.get((ref, num))
-            if net not in RAILS:
-                continue
-            ox, oy, _ = sh.origin(key)
-            dx, dy = p[0] - ox, p[1] - oy
-            if abs(dx) >= abs(dy):
-                sgn = 1 if dx >= 0 else -1
-                rot = 90 if sgn > 0 else 270
-                tx, ty = g(p[0] + sgn * 5.08), p[1]
-            else:
-                sgn = 1 if dy >= 0 else -1
-                rot = 0 if sgn > 0 else 180
-                tx, ty = p[0], g(p[1] + sgn * 5.08)
-            jobs.append((net, RAILS[net], p, rot, (tx, ty)))
-    # first serve GND pins with the baseline symbols (all are power:GND)
-    jobs.sort(key=lambda j: j[0] != 'GND')
-    n = 0
-    for net, lib, p, rot, text_at in jobs:
-        n += 1
-        pwrref = f'#PWR{n:03d}'
+    counter = [0]
+
+    placed = set()
+
+    def sym(net, p, text_at):
+        sig = (net, round(p[0], 4), round(p[1], 4))
+        if sig in placed:
+            return
+        placed.add(sig)
+        counter[0] += 1
+        ref = f'#PWR{counter[0]:03d}'
+        lib = RAILS[net]
         if reuse and lib == 'power:GND':
             u = reuse.pop()
-            s, e = H.block_span(ed.t, u)
-            blk = ed.t[s:e]
+            a, b = H.block_span(ed.t, u)
+            blk = ed.t[a:b]
             blk = re.sub(r'\t\t\(at [\d.-]+ [\d.-]+ [\d.-]+\)',
                          f'\t\t(at {f(p[0])} {f(p[1])} 0)', blk, count=1)
             blk = re.sub(r'\(property "Reference" "[^"]*"',
-                         f'(property "Reference" "{pwrref}"', blk, count=1)
+                         f'(property "Reference" "{ref}"', blk, count=1)
             blk = re.sub(r'\(reference "[^"]*"',
-                         f'(reference "{pwrref}"', blk, count=1)
+                         f'(reference "{ref}"', blk, count=1)
             m = re.search(r'\(property "Value" "GND"\s*\n\s*\(at [\d.-]+ [\d.-]+ [\d.-]+\)',
                           blk)
             if m:
@@ -670,11 +669,98 @@ def place_power(r, ed, sh, pinmap, ncbase, sh0):
                     r'\(at [\d.-]+ [\d.-]+ [\d.-]+\)',
                     f'(at {f(text_at[0])} {f(text_at[1])} 0)', m.group(0)) \
                     + blk[m.end():]
-            ed.t = ed.t[:s] + blk + ed.t[e:]
+            ed.t = ed.t[:a] + blk + ed.t[b:]
         else:
-            ed.append(power_block(lib, pwrref, p, rot, text_at))
+            ed.append(power_block(lib, ref, p, 0, text_at))
         ed.append(junction_block(p))
-    print(f'  power symbols placed: {n} (reused {len(reuse)} -> {17 - len(reuse)})')
+
+    # --- decoupling bay: one vertical bus per rail, GND along the bottom ---
+    for rail, col in RAIL_COLS.items():
+        bx = g(col - 7.62)
+        hi, lo = 38.10, max(RAIL_ROWS[:len(BAY_GROUPS[rail])])
+        r.w((bx, hi), (bx, lo))
+        top = (bx, g(hi - 2.54))
+        r.w((bx, hi), top)
+        sym(rail, top, (g(bx - 5.08), top[1]))
+        r.tee((bx, hi))
+        for key in BAY_GROUPS[rail]:
+            pin = sh.pin(key, 1)
+            r.w(pin, (bx, pin[1]))
+            r.tee((bx, pin[1]))
+            gpin = sh.pin(key, 2)
+            gx = g(col + 7.62)
+            r.w(gpin, (gx, gpin[1]))
+            r.w((gx, gpin[1]), (gx, GND_BUS_Y))
+            r.tee((gx, gpin[1]))
+            r.tee((gx, GND_BUS_Y))
+    for key in ('U105:3', 'U108:3'):
+        pin = sh.pin(key, 25)
+        r.w(pin, (pin[0], GND_BUS_Y))
+        r.tee((pin[0], GND_BUS_Y))
+    c106g = sh.pin('C106', 2)
+    r.w(c106g, (c106g[0], GND_BUS_Y))
+    r.tee((c106g[0], GND_BUS_Y))
+    r.w((BAY_X0, GND_BUS_Y), (BAY_X1, GND_BUS_Y))
+    gbottom = (BAY_X1, g(GND_BUS_Y + 2.54))
+    r.w((BAY_X1, GND_BUS_Y), gbottom)
+    sym('GND', gbottom, (BAY_X1, g(gbottom[1] + 3.81)))
+
+    # --- ADA4940 units: individual symbols, unrotated horizontal text ---
+    for key in ('U105:1', 'U105:2', 'U108:1', 'U108:2'):
+        ref = key.split(':')[0]
+        ox, oy, _ = sh.origin(key)
+        for num, p_ in sorted(sh.unit_pins(key).items(), key=lambda kv: int(kv[0])):
+            net = pinmap.get((ref, num))
+            if net not in RAILS:
+                continue
+            sgn = -1 if p_[0] < ox else 1
+            sym(net, p_, (g(p_[0] + sgn * 5.08), p_[1]))
+
+    # --- U101: one bus per rail on each side of the 64-pin body ---
+    ux, _, _ = sh.origin('U101')
+    upins = sh.unit_pins('U101')
+    for side, bx in (('right', 704.85), ('left', 619.76)):
+        sel = {n: p for n, p in upins.items()
+               if (p[0] > ux) == (side == 'right')}
+        for net in ('+5VA', 'GND'):
+            group = [p for n, p in sel.items()
+                     if pinmap.get(('U101', n)) == net]
+            if not group:
+                continue
+            y0, y1 = g(min(p[1] for p in group)), g(max(p[1] for p in group))
+            r.w((bx, y0), (bx, y1))
+            for p_ in group:
+                r.w(p_, (bx, p_[1]))
+                r.tee((bx, p_[1]))
+            tx = g(bx - 5.08) if side == 'right' else g(bx + 5.08)
+            ta = (g(bx + 5.08), y0) if net == 'GND' and side == 'right' else (bx, g(y0 - 3.81))
+            sym(net, (bx, y0), ta)
+            r.tee((bx, y0))
+    # +3.3V pins: one symbol each side, clear of the two rail buses
+    for q in [p for n, p in upins.items()
+              if pinmap.get(('U101', n)) == '+3.3V']:
+        sgn = 1 if q[0] > ux else -1
+        sym('+3.3V', q, (g(q[0] + sgn * 5.08), q[1]))
+
+    # --- remaining rail pins: one symbol each, unrotated horizontal text ---
+    skip = set(BAY_GROUPS['+12VA'] + BAY_GROUPS['-12VA'] + BAY_GROUPS['+5VA'])
+    skip |= {'U105:3', 'U108:3', 'C106', 'U101'}
+    for key in sorted(sh.inst):
+        if key in skip or sh.lib[sh.uuid_of[key]].startswith('power:'):
+            continue
+        ref = key.split(':')[0]
+        for num, p_ in sorted(sh.unit_pins(key).items(), key=lambda kv: int(kv[0])):
+            net = pinmap.get((ref, num))
+            if net not in RAILS:
+                continue
+            ox, oy, _ = sh.origin(key)
+            sgn = -1 if p_[0] < ox else 1
+            rotated = sh.lib[sh.uuid_of[key]] in ('Device:C', 'Device:R') \
+                and sh.origin(key)[2] in (90, 270)
+            tx = g(p_[0] + (10.16 if rotated and net == 'GND' else sgn * 5.08))
+            ty = p_[1] if net != 'GND' else g(p_[1] + 3.81)
+            sym(net, p_, (tx, ty))
+    print(f'  power symbols placed: {counter[0]} (reused {17 - len(reuse)})')
 
 
 def place_nc(r, ed, sh, ncbase):
@@ -848,15 +934,28 @@ def regenerate(text):
         x, y = g(x), g(y)
         u = base_sh.uuid_of[key]
         ed.move_symbol(u, x, y, rot)
-        # move property texts with the body, into clear lanes
-        if key.startswith('U105:') or key.startswith('U108:'):
-            rx, ry = g(x - 15.24), g(y - 6.35)
-            vx, vy = g(x + 15.24), g(y + 6.35)
-            ed.move_prop(u, 'Reference', rx, ry)
-            ed.move_prop(u, 'Value', vx, vy)
+        # Fields are never inside a body outline.  For a rotated passive the
+        # KiCad field angle is set to 90 so the composed text stays horizontal,
+        # and the anchors are offset along x with outward justification.
+        if rot in (90, 270):
+            ed.move_prop(u, 'Reference', g(x - 7.62), g(y - 3.81),
+                         justify='right', angle=90)
+            ed.move_prop(u, 'Value', g(x + 7.62), g(y + 3.81),
+                         justify='left', angle=90)
+        elif key.startswith('U105:') or key.startswith('U108:'):
+            ed.move_prop(u, 'Reference', g(x - 13.97), y - 6.35,
+                         justify='right')
+            ed.move_prop(u, 'Value', g(x + 13.97), y + 6.35,
+                         justify='left')
         elif key in ('U104', 'U106', 'U107'):
             ed.move_prop(u, 'Reference', x, g(y - 15.24))
             ed.move_prop(u, 'Value', x, g(y + 15.24))
+        elif key == 'U101':
+            ed.move_prop(u, 'Reference', g(x + 55.88), g(y - 73.66))
+            ed.move_prop(u, 'Value', g(x + 55.88), g(y - 69.85))
+        elif key in ('U102', 'U103'):
+            ed.move_prop(u, 'Reference', x, g(y - 10.16))
+            ed.move_prop(u, 'Value', x, g(y + 10.16))
         else:
             ed.move_prop(u, 'Reference', x, g(y - 6.35))
             ed.move_prop(u, 'Value', x, g(y + 6.35))

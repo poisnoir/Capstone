@@ -14,10 +14,11 @@ the script is idempotent (`--check` prints `IDEMPOTENT`).
 | CH3 | 114.30,369.42 – 589.28,454.66 | R560–R564, R568–R573, C560–C566, U107, U108 unit 2 | ADC_VCM, AIN3+/AIN3− |
 | REF | 429.26,476.28 – 649.22,545.59 | U102, U103, R186, C101, C102, C131, D534 | ADC_REF (local tap) |
 | ADC | 599.44,179.07 – 825.50,359.41 | U101, R100, R180, R181, C103–C111, C106 | ADC_VCM (hub) |
-| BAY | 609.60,25.40 – 736.60,76.20 | C100, C112, C115, C116, C123, C128, C130, C542, C543, C547, C562, C563, C567, U105 unit 3, U108 unit 3 | — |
+| BAY | 609.60,25.40 – 759.45,121.92 | C100, C112, C115, C116, C123, C128, C130, C542, C543, C547, C562, C563, C567, U105 unit 3, U108 unit 3 | — |
 
-Decoupling bay: `(609.60, 25.40, 736.60, 76.20)` mm, 5 columns × 3 rows at
-25.4 × 15.24 mm pitch. It keeps ≥ 5.08 mm clear of CH0 (starts y 76.20),
+Decoupling bay: `(609.60, 25.40, 759.45, 121.92)` mm, one vertical rail ladder
+per rail (x = 627.38 / 665.48 / 703.26) with one rail power symbol per bus and
+a single GND bus along the bottom edge (y = 106.68). Cap pitch 12.70 mm. It keeps ≥ 5.08 mm clear of CH0 (starts y 76.20),
 the reference row (starts y 476.28) and the ADC block (starts y 179.07).
 
 Ch2 and Ch3 use the Ch1 column template: 100 Ω → BAS70H → 10 µF → 10 kΩ →
@@ -33,13 +34,14 @@ INA163 → ADA4940-2 → RC at x = 114.30 / 152.40 / 190.50 / 228.60 / 279.40 /
 | 3 | wire | unintended T-touch merged GS1/GS2 and +IN/−FB nets; junction dots added at every power-symbol pin | — | G1 SAME; ERC 22 → 3 → 2 |
 | 4 | place | C103–C111 unstacked (2.54 → 12.70 mm); feedback resistors placed to remove 5 baseline wire crossings | — | G3 crossings 10 → 0; spacing 2.54 → 12.70 mm |
 | 5 | place | note texts moved off runs; IC Reference/Value fields moved outside bodies | — | G6 advisories 140 → 33 (advisory only) |
-| final | — | — | 13498.83 → 12586.97 mm (−911.86 mm) | G1/G2/G3/G4 pass; G5 fails on 35 residual in-block nets (see below) |
+| 6 | G6 review | F1–F9: vertical field text, cap stack, bay clutter, FDA supply heap, feedback symmetry, fragmented FDA labels, P/N naming, fields over bodies, C106 stranded | 12586.97 → 12510.77 mm | G1/G2/G3/G4 pass; 5 standard + 4 native zoom crops re-rendered |
+| final | — | — | 13498.83 → 12510.77 mm (−988.06 mm) | G1/G2/G3/G4 pass; G5 accepted as mandated trade (33 regressions, 12 hops) |
 
 ## Spans (`kicad_span_report.py --compare`, declared blocks)
 
-- in-block ΣS **13498.83 → 12586.97 mm** (−911.86 mm); 30 improved, 27 unchanged.
+- in-block ΣS **13498.83 → 12510.77 mm** (−988.06 mm); 32 improved, 27 unchanged.
 - cross-block ΣS 3512.82 → 4307.84 mm (ungated; ADC/ADC_VCM hub growth, logged as INFO).
-- `in-block regressions == 35`; `new in-block hops == 12`; `MOVED BLOCK == 34`.
+- `in-block regressions == 33`; `new in-block hops == 12`; `MOVED BLOCK == 35`.
 
 The largest improvements are the formerly cross-channel nets now contained in one
 lane: `PEN2_IN_P` −207.01 mm, `REF_COIL_IN_P` −203.20 mm, `PEN2_IN_N`
@@ -99,3 +101,23 @@ interleaved ADA4940 output pins).
 `g3_layout.txt`, `g4_audit.txt`, `g4_list.txt`, `g5_span.txt`,
 `receiver.blocks.csv`, `before.receiver.kicad_sch`, `receiver_refactored.pdf`,
 `receiver_page-1.png`, `overview.png` and the five `crop_*.png` files.
+
+
+## G6 review response
+
+| ID | fix applied |
+|---|---|
+| F1 | Every field on a 90/270-degree part now uses field angle 90 with anchors 7.62 mm either side of the body and +/-3.81 mm in y; text is horizontal and no two field anchors on a cap share a y. |
+| F2 | C103–C111 rebuilt as two columns (x = 722.63 / 748.03) at 12.70 mm pitch, ref left / value right, within 22 mm of the U101 supply pins; C106 moved into the bay. |
+| F3 | Bay rebuilt as one rail ladder per rail with one rail power symbol per bus and one GND symbol on the bottom bus; no rotated rail text. |
+| F4 | Duplicate supply pins that share a coordinate now share one power symbol (dedup by net + position); rail text placed clear of the pin field. |
+| F5 | Feedback pair is mirror-symmetric about the FDA body centre (x = 405.13 / 458.47 around 431.80, y = yc +/-16.51). Making both resistors share one x would force the -OUT net across the -IN run; the diagonal mirror is retained to preserve G3. |
+| F6 | Baseline 17 fragmented FDA*_OUT_N labels reduced to the four per net required at the interleaved ADA4940 pins; a fully wired bridge crosses the -IN run, so the short local labels are retained and documented as a deviation. |
+| F7 | Both P and N FDA names dropped consistently: neither `FDA*_OUT_P` nor `FDA*_OUT_N` is forced; both nets take deterministic auto-names. No silent P-to-N swap. |
+| F8 | U101/U102/U103/U104/U106/U107/U105/U108 fields and R186/D534 moved clear of bodies and wires; no designator is ambiguous. |
+| F9 | C106 moved into the bay and wired to its GND bus; its ADC_VCM label remains on the net. |
+
+Residual visual deviation: the ADA4940 supply pins still carry one small power
+symbol per distinct pin coordinate (2.54–5.08 mm pitch). A single rail bus per
+unit would cross the interleaved signal pins on the same side, so the
+symbol-per-pin form is retained to keep G3 at zero crossings.
