@@ -14,17 +14,21 @@ AD7768-4 Rev.D datasheet; `simulations/field_jacobian.py`.
 
 ## 1. Clock tree (one clock, integer divides)
 
-One 32.768 MHz CMOS XO (Citizen CSX750FBC32.768M-UT, 3.3 V) feeds the ADC
-MCLK and the FPGA. The ADC/DAC rates are integer divides; the SPI is a
-3/2 PLL ratio (98.304 MHz ÷2):
+One 32.768 MHz XO (Citizen CSX750FBC32.768M-UT) drives the AD7768-4 MCLK
+through 33 Ω and the FPGA clock input directly (SC-07, decision #28); there is
+no discrete clock buffer and no PLL-generated MCLK. The FPGA DDS clock is the
+same 32.768 MHz; the PLL ×3 = 98.304 MHz feeds **only** ÷2 = 49.152 MHz DAC SPI.
+All rate divides are exact integers:
 
 | Rate | Divide | Value | Use |
 |---|---|---|---|
-| XO / ADC MCLK | ÷1 | 32.768 MHz | AD7768-4 MCLK; FPGA DDS clock |
-| DAC SPI SCLK | ×3/2 (98.304 ÷2) | **49.152 MHz** | DAC80508 SCLK; 216-bit burst |
+| XO | ÷1 | 32.768 MHz | AD7768-4 MCLK via 33 Ω; FPGA clock and DDS clock |
+| DAC SPI SCLK | ×3 then ÷2 (98.304 ÷2) | **49.152 MHz** | DAC80508 SCLK only; 216-bit burst |
 | DAC update | ÷164 | **199.805 kSPS** | 8 DAC words per 5.005 µs period |
 | ADC ODR | ÷128 | 256 kSPS | 4-channel frames |
 | Frame | N=512 | 2.000 ms | integer-J observation window |
+
+One sync reset for the DDS/ADC dividers; no per-frame phase reset.
 
 Why this is exact: the tones are \(f_k=2\,\mathrm{kHz}\cdot k\), \(k=10\ldots17\).
 With a 32.768 MHz clock,

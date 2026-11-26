@@ -100,6 +100,14 @@ on-board DC-DC/LDO tree; outputs +15 V, −15 V, +5 V, +3.3 V (and +1.8 V only i
 the FPGA board needs it). Exact adapter/DC-DC/LDO parts are BOM decisions; the
 thesis ME60/PTN78000AAH/TPS7A33/47 chain is the reference.
 
+> **Rail-tree status (2026-11-25):** the rails above reflect LOCKED decision #20
+> (ME60A1503F01 15 V/60 W adapter, OKI-78SR-5/1.5 +5 V, RV-1515D ±15 V isolated,
+> TPS7A4701/TPS7A33 to ±12 V analog, TPS7A20 +3.3 V). `docs/phase2/power_tree_v2.md`
+> is **PROPOSED**, explicitly changes #20, and proposes +6 V / +3.3 V / +5V_EXC /
+> +5VA with MGJ2D151515SC for ±12 VA; it requires a `contract-change` PR before
+> these rails change. The +15 V driver swing (decision #8, single +15 V
+> AC-coupled) is unchanged by either tree.
+
 **No on-board mains stage.** The 108/120/132 V 60 Hz wall is handled by the
 external 15 V adapter; the board does not implement a mains rectifier,
 transformer, or isolation. The adapter is the mains safety/EMC boundary. The

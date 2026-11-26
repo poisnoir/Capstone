@@ -116,7 +116,7 @@ for 20, 22, 24, 26, 28, 30, 32, 34 kHz. Adjacent tones are 4 bins apart. With
 tone \(i\) in ascending order; FG-1 may reorder the assignment if the conditioning map
 requires it, but the tone set and spacing are fixed. Each coil transmits one tone, and
 the current-sense summer is the per-tone phase reference \(Y_I\). Frequency accuracy is
-set by the common TCXO: relative spacing is exact, absolute error is the TCXO ppm, and
+set by the common 32.768 MHz XO (Citizen CSX750FBC32.768M-UT; SC-07/#28): relative spacing is exact, absolute error is the XO ppm, and
 there is no per-tone drift because the DDS and ADC share the clock.
 
 - **Rectangular primary:** zero tone-to-tone leakage and the narrowest ENBW (best SNR).
@@ -138,10 +138,9 @@ there is no per-tone drift because the DDS and ADC share the clock.
 - **Passband:** 102.4 kHz at 0.4 × ODR; 34 kHz is 0.33 × passband, flat.
 - **Stopband:** 127.7 kHz at 105 dB; a single RC pole ahead of the AD7768's external
   RC/charge-reservoir network is sufficient.
-- **Data path:** 3 active channels × 32-bit frames × 256 kSPS = 24.576 Mbit/s.
-  - 4 DOUT lanes → DCLK = 6.144 MHz.
-  - 2 DOUT lanes → DCLK = 12.288 MHz.
-  - 4 active channels would be 32.768 Mbit/s (8.192 MHz on 4 lanes).
+- **Data path:** 4 active channels × 32-bit frames × 256 kSPS = 32.768 Mbit/s (SC-05b/D3-A).
+  - 4 DOUT lanes → DCLK = 8.192 MHz.
+  - 2 DOUT lanes → DCLK = 16.384 MHz.
 - **Data interface is DCLK/DOUT, not SPI.** SPI is configuration only.
 - **Control:** `SYNC_IN`, `START`, `SYNC_OUT`, `DRDY`; there is no `CONVST`. Wire
   `START` → `SYNC_OUT` → `SYNC_IN` for a one-time startup sync, or drive `SYNC_IN` from
@@ -151,7 +150,7 @@ there is no per-tone drift because the DDS and ADC share the clock.
 - **Clock jitter:** \(SNR_j=-20\log(2\pi f t_j)\). At 34 kHz, 1 ns rms gives only
   **73.4 dB**, not the 104 dB claimed in the old RQ-A4. For the ADC's 104 dB target,
   the clock jitter must be **≤30 ps rms**; if the system spur target is only 60–70 dB,
-  1 ns may be sufficient. Specify the TCXO/PLL from the chosen target and measure it;
+  1 ns may be sufficient. Specify the XO/clock jitter from the chosen target and measure it;
   do not claim 104 dB at 1 ns.
 - **Pin budget:** 4 DOUT + DCLK + DRDY + SYNC/START + MCLK + RESET = 10 signals, plus SPI
   configuration. A 2×6 Pmod has 8 I/O; use a 2×8 or custom header.

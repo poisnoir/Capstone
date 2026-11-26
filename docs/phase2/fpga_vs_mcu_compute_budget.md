@@ -238,9 +238,9 @@ raw DSP throughput. The exact placed-and-routed number is TBD, but the margin is
 |---|---|
 | Coil geometry | 8 coils × 101 points × 3 coords × 4 B ≈ **9.7 kB** |
 | Per-evaluation intermediates | 800 segments × 6 floats × 4 B ≈ **19.2 kB** |
-| ADC frame (3 channels, 24-bit) | 3 × 512 × 24 bits ≈ **4.6 kB** |
-| ADC data rate at 500 frames/s | ≈ **2.3 MB/s**; 18.4 Mbit/s |
-| DCLK, 4 lanes / 2 lanes | 6.144 MHz / 12.288 MHz |
+| ADC frame (4 channels, 32-bit) | 4 × 512 × 32 bits ≈ **8.2 kB** |
+| ADC data rate at 500 frames/s | ≈ **4.1 MB/s**; 32.768 Mbit/s |
+| DCLK, 4 lanes / 2 lanes | 8.192 MHz / 16.384 MHz |
 | Goertzel demod | 8 × 512 × 500 ≈ 2.05M complex MAC/s ≈ **8.2 MFLOP/s** |
 | Solver state | 5 parameters + 8×5 Jacobian + 8 residuals: **<1 kB** |
 
@@ -273,9 +273,10 @@ with margin. At 500 Hz, the MCU is not viable at all; the FPGA is the realistic 
   worst-case solver time variable; a retry can miss the 10 ms pose deadline even if the
   average looks acceptable. The 100 ms stop/tracking-lost requirement also needs a
   deterministic worst case.
-- **ADC capture.** The AD7768-4 data path is DCLK/DOUT lanes at 18.4 Mbit/s (3 channels,
-  24-bit, 256 kSPS), not SPI. The FPGA captures it in logic and frames it with DRDY. An
-  MCU would need a parallel capture peripheral (DCMI/FlexIO) plus DMA; the CPU then also
+- **ADC capture.** The AD7768-4 data path is DCLK/DOUT lanes at 32.768 Mbit/s
+  (4 channels, 32-bit, 256 kSPS; D3-A/SC-05b), not SPI. The FPGA captures it in logic
+  and frames it with DRDY. An MCU would need a parallel capture peripheral
+  (DCMI/FlexIO) plus DMA; the CPU then also
   runs the demod and solver.
 - **Demod.** Eight Goertzel tones × 512 samples at 500 frames/s ≈ 2M complex MAC/s.
   This is small, but it is another deterministic real-time task that the FPGA does in
@@ -331,7 +332,7 @@ frames; latency and stop within Phase 1 #14–17. A 500 Hz pose is a separate st
 - 10–40 iterations; `MaxFunEvals=500`; retry doubles to ~1000.
 - 20% solver/loop overhead included in the 50–58 kFLOP/evaluation figure.
 - MCU/FPGA effective throughput is an order-of-magnitude estimate; no benchmark yet.
-- The FPGA device is not frozen; resource/timing numbers are illustrative.
+- The FPGA device is locked (#26: XC7A35T-1FTG256C; XC7A50T same-footprint escape); placed-and-routed utilisation/timing remain TBD until synthesis.
 - The tone plan changes acquisition, not the solver’s segment count or iteration count.
 
 ---

@@ -20,8 +20,8 @@ $$
 \Delta\phi_i = \angle Y_{I,i} - \angle Y_{V,i} - \mathrm{DAQ\_phase}_i
 $$
 
-- \(Y_{I}\) = driver-summer current spectrum (ADC Ch1, volts, stationary).
-- \(Y_{V}\) = pen-sensor spectrum (ADC Ch2, µV–mV, moving). Reference sensor optionally Ch3.
+- \(Y_{I}\) = driver-summer current spectrum (ADC **Ch0**, volts, stationary; D3-A/SC-06).
+- \(Y_{V}\) = pen-sensor spectrum (ADC **Ch1**, µV–mV, moving; D3-A/SC-06). Ch2 is pen 2 (wired, enabled when built); Ch3 is the reference sensor.
 - Cost minimized in `fSysDecodeField.m:14`: \(F(p) = V_d - \kappa\cdot V_m(p)\), \(p = (x,y,z,\theta,\phi)\), bounded LM/TRF with retry \(+[0,0,0,\pi,\pi]\), residual gate 1e-15.
 
 So the ADC carries **phase**, not just magnitude. Any inter-channel skew, drift, or crosstalk lands directly in the orientation sign. Specs at stake:
@@ -123,15 +123,15 @@ Throughput is not the blocker (256 kS/s/ch × 512-sample frame = 2 ms acq — fa
 
 | Req ID | Threshold | Math / rationale | Verify |
 |---|---|---|---|
-| RQ-A1 simultaneous | Ch0 (current) + Ch1 (pen) [+ Ch2 ref] sampled at the same instant on shared START/SYNC/MCLK; skew ≡ 0 | §2b: removes Δφ(f) term entirely; no DAQ_phase_offset drift | two-tone phase test: Δφ flat vs f and temp; channel-skew test |
+| RQ-A1 simultaneous | Ch0 (current), Ch1 (pen 1), Ch2 (pen 2, wired), Ch3 (reference) sampled at the same instant on shared START/SYNC/MCLK; skew ≡ 0 (D3-A/SC-06) | §2b: removes Δφ(f) term entirely; no DAQ_phase_offset drift | two-tone phase test: Δφ flat vs f and temp; channel-skew test |
 | RQ-A2 resolution | ≥16 bit, SINAD ≥ 84 dB, THD ≤ −90 dB | §2a: 24 dB over XADC; holds 60–70 dB spur budget with thermal + leakage stacked; AD7768-4 is 24-bit, 107.5 dB SINAD, −120 dB THD | single-tone FFT @25 kHz, −1 dBFS and −40 dBFS; far-tone SNR |
 | RQ-A3 rate | ≥250 kS/s/ch sustained (256 kS/s used), no missing codes | N=512 at 256 k = 2.0 ms; N=1024 = 4.0 ms; leaves demod + LM inside 10 ms pose budget (§5) | sustained DRDY capture, code-density histogram |
-| RQ-A4 sync | external MCLK ≤32.768 MHz; SYNC/START/DRDY; aperture jitter set by the SNR target | \(SNR_j = -20\log(2\pi f t_j)\): 1 ns @34 kHz = 73.4 dB, not 104 dB. For 104 dB at 34 kHz, \(t_j \le 30\) ps. Specify the TCXO/PLL jitter from this, not from a 1 ns assumption | clock-phase sweep; integer-J leakage test (§5); jitter measurement |
-| RQ-A5 input | differential ±VREF (±4.096 V), VCM common mode, Zin ≥1 MΩ, CMRR ≥60 dB | AD7768-4 actual input; the earlier ±5/±10 V wording is stale; the front end must map the pen signal to ±4.096 V differential around VCM | CMRR sweep 20–30 kHz; Zin vs frequency; full-scale sweep |
-| RQ-A6 digital | DCLK/DOUT lanes to PL; DCLK ≤32.768 MHz; 3.3 V header; SPI configuration only | \(R_{data}=3\cdot32\cdot256\ \mathrm{k}=24.576\ \mathrm{Mbit/s}\); 4 lanes → 6.144 MHz, 2 lanes → 12.288 MHz; a 2×6 Pmod is too small (§6) | eye/continuity; sustained lane-rate soak |
+| RQ-A4 sync | external MCLK ≤32.768 MHz (XO direct); ODR 256 kSPS ceiling; SYNC/START/DRDY; aperture jitter set by the SNR target | \(SNR_j = -20\log(2\pi f t_j)\): 1 ns @34 kHz = 73.4 dB, not 104 dB. For 104 dB at 34 kHz, \(t_j \le 30\) ps. Specify the XO jitter from this (one XO drives MCLK directly, no PLL-generated MCLK — SC-07/#28), not from a 1 ns assumption | clock-phase sweep; integer-J leakage test (§5); jitter measurement |
+| RQ-A5 input | differential ±VREF = ±4.096 V (not ±5/±10 V), VCM common mode, Zin ≥1 MΩ, CMRR ≥60 dB | AD7768-4 actual input; the earlier ±5/±10 V wording is stale and superseded; the front end maps the pen signal to ±4.096 V differential around VCM | CMRR sweep 20–34 kHz; Zin vs frequency; full-scale sweep |
+| RQ-A6 digital | DCLK/DOUT lanes to PL; DCLK ≤32.768 MHz; 3.3 V header; SPI configuration only | \(R_{data}=4\cdot32\cdot256\ \mathrm{k}=32.768\ \mathrm{Mbit/s}\) (D3-A/SC-05b); 4 lanes → 8.192 MHz, 2 lanes → 16.384 MHz; a 2×6 Pmod is too small (§6) | eye/continuity; sustained lane-rate soak |
 | RQ-A7 determinism | DRDY → PL interrupt; ping-pong BRAM/DMA; zero dropped frames at ≥100 Hz | §2c; TL + Tsolv < 10 ms mapped in §5 | 1-hour ≥100 Hz moving-sensor run, drop counter = 0 |
 
-Locked class (BOM phase vets per §9e): simultaneous sigma-delta 24-bit (2× ADS127L11 synced or ADS1278-class). Fallback: AD7606C-16 (8-ch simultaneous 16-bit 1 MSPS, serial, ±10/±5 V) or TI ADS8688S/ADS85xx equivalents, with the §9a.1 analog-AA verification burden. Single-channel or muxed parts (e.g. AD4004 alone, ADS131M0x-class ≤32 kSPS) do **not** pass RQ-A1/§9c — rejected.
+**Locked part: AD7768-4** (simultaneous sigma-delta 24-bit, §9). The §9e shortlist (2× ADS127L11 synced or ADS1278-class) is a vetting fallback if the locked part fails. Fallback: AD7606C-16 (8-ch simultaneous 16-bit 1 MSPS, serial, ±10/±5 V) or TI ADS8688S/ADS85xx equivalents, with the §9a.1 analog-AA verification burden. Single-channel or muxed parts (e.g. AD4004 alone, ADS131M0x-class ≤32 kSPS) do **not** pass RQ-A1/§9c — rejected.
 
 ---
 
@@ -173,7 +173,7 @@ $$
 T_{acq} = N/F_s:\quad 512/256\ \mathrm{k} = 2.0\ \mathrm{ms}\quad (1024/256\ \mathrm{k} = 4.0\ \mathrm{ms})
 $$
 
-The AD7768-4 tops out at 256 kSPS, so the earlier 500 kSPS examples are stale. The Phase 2 tone plan (`docs/phase2/tone_plan.md`) uses 2 kHz spacing and N=512, which restores the 2.0 ms acquisition budget; the 1 kHz plan would need N=1024 for the Hamming fallback (4.0 ms), or N=512 rectangular with only 2-bin spacing. This leaves ~8 ms for streaming Goertzel demod (parallel per-tone, PL) + bounded LM/TRF (relaxed TolFun, warm-started from MA filter `fSysSetup.m:204-205`, ping-ponged with acquisition). Integer-J framing (frame = J DDS cycles, Fs = Fclk/N from one TCXO→PLL) keeps Goertzel bins leakage-free; the AD7768-4 `SYNC`/`START` and `DRDY` frame boundaries are the actuators of that lock — it has no `CONVST` pin.
+The AD7768-4 tops out at 256 kSPS, so the earlier 500 kSPS examples are stale. The Phase 2 tone plan (`docs/phase2/tone_plan.md`) uses 2 kHz spacing and N=512, which restores the 2.0 ms acquisition budget; the 1 kHz plan would need N=1024 for the Hamming fallback (4.0 ms), or N=512 rectangular with only 2-bin spacing. This leaves ~8 ms for streaming Goertzel demod (parallel per-tone, PL) + bounded LM/TRF (relaxed TolFun, warm-started from MA filter `fSysSetup.m:204-205`, ping-ponged with acquisition). Integer-J framing (frame = J DDS cycles, Fs = Fclk/N from the one 32.768 MHz XO; ADC ODR = XO ÷128, SC-07/#28) keeps Goertzel bins leakage-free; the AD7768-4 `SYNC`/`START` and `DRDY` frame boundaries are the actuators of that lock — it has no `CONVST` pin.
 
 ---
 
@@ -181,13 +181,13 @@ The AD7768-4 tops out at 256 kSPS, so the earlier 500 kSPS examples are stale. T
 
 Pmod = physical 2×6 100 mil, host-female / peripheral-male, 3.3 V. The AD7768-4 data path is **not SPI**: it outputs 24-bit data on DOUTx lanes synchronous to DCLK, framed by DRDY; SPI is configuration only. PL implements: one-time `START`/`SYNC` at startup, DCLK capture of the DOUT lanes, DRDY-gated frame ping-pong → AXI DMA. PS configures and consumes frames; nothing bit-banged at rate.
 
-Data rate (3 active channels, 32-bit frames, 256 kSPS):
+Data rate (4 active channels per D3-A/SC-05b, 32-bit frames, 256 kSPS):
 
 $$
-R_{data} = 3\cdot32\cdot256\ \mathrm{k} = 24.576\ \mathrm{Mbit/s}
+R_{data} = 4\cdot32\cdot256\ \mathrm{k} = 32.768\ \mathrm{Mbit/s}
 $$
 
-4 DOUT lanes → DCLK 6.144 MHz; 2 lanes → 12.288 MHz. With all 4 channels active, 32.768 Mbit/s (8.192 MHz on 4 lanes). A 2×6 Pmod has 8 I/O; 4 DOUT + DCLK + DRDY + SYNC/START + MCLK + RESET already needs 10 signals before SPI configuration. Use a 2×8 or custom header; FMC/LVDS is not needed at this rate.
+4 DOUT lanes → DCLK 8.192 MHz; 2 lanes → 16.384 MHz. A 2×6 Pmod has 8 I/O; 4 DOUT + DCLK + DRDY + SYNC/START + MCLK + RESET already needs 10 signals before SPI configuration. Use a 2×8 or custom header; FMC/LVDS is not needed at this rate.
 
 ---
 
@@ -242,13 +242,13 @@ Fallback trigger: sigma-delta vetting fails any of RQ-A1 (no simultaneous multi-
 
 - **Group delay is constant, not jitter.** Decimation delay \(D = N_{taps}/ODR\) (AD7768-4 wideband: 34/256 kSPS ≈ 133 µs) shifts every frame equally; it is subtracted once as a fixed timestamp offset in the pose log. Requirement: \(D < 0.5\) ms so \(T_{acq} + D\) stays inside the §5 <10 ms budget. Verify per datasheet filter tables at the chosen ODR — wideband/sharp modes trade taps for droop; FDM absorbs stable droop into per-tone \(\kappa\) (§1: one \(\kappa\) per coil-frequency), so prefer the lowest-delay mode whose droop is stable over temperature.
 - **ODR floor is hard:** passband must cover 34 kHz with margin → ODR ≥ ~4×34 ≈ 136 kSPS. The AD7768-4 fast mode (256 kSPS) meets this; parts capped at 32 kSPS (e.g. ADS131M0x class) are rejected without further review.
-- **Lane floor rises with word length:** 3 active ch × 32-bit frames (24 data + status) × 256 kSPS over 2 lanes:
+- **Lane floor rises with word length:** 4 active ch × 32-bit frames (24 data + status) × 256 kSPS over 2 lanes:
 
 $$
-R_{data} = 3\cdot32\cdot256\ \mathrm{k} = 24.576\ \mathrm{Mbit/s}\quad(12.288\ \mathrm{MHz\ on\ 2\ lanes})
+R_{data} = 4\cdot32\cdot256\ \mathrm{k} = 32.768\ \mathrm{Mbit/s}\quad(16.384\ \mathrm{MHz\ on\ 2\ lanes})
 $$
 
-Use 4 DOUT lanes at 6.144 MHz where possible; 2 lanes at 12.288 MHz is still within the AD7768-4 DCLK limit. The data path is DCLK/DOUT, not SPI; a 2×6 Pmod is too small (see §6).
+Use 4 DOUT lanes at 8.192 MHz where possible; 2 lanes at 16.384 MHz is still within the AD7768-4 DCLK limit. The data path is DCLK/DOUT, not SPI; a 2×6 Pmod is too small (see §6).
 
 - **Power/price:** SD modulators + MCLK tree draw more than SAR equivalents and 24-bit simultaneous parts cost more per channel; both fit the ≤1000 CAD/pair envelope at prototype qty (verify at BOM time) and neither touches the pen mass budget (preamp-box parts).
 
