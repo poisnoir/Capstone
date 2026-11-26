@@ -3,6 +3,26 @@
 All notable contract changes. Versioning: MAJOR = breaking interface change,
 MINOR = additive, PATCH = clarification.
 
+## 1.1.1 — 2026-11-26 — tag `contract-v1.1.1` pending review
+
+PATCH clarification; no electrical or interface behaviour changed. Prepared on
+branch `contract/pin1-nc`. **The tag, release zip/json and arm-repo sync have
+not happened**; they follow PR approval and the two required approvals.
+
+- **Decision #32 (Pico J123 pin 1 = no-connect):** the 6-pin Pico link is pin 1
+  NC, pin 2 GND, pin 3 `PICO_TX`, pin 4 `PICO_RX`, pin 5 `PICO_STOP_N`, pin 6
+  `PICO_HEARTBEAT`. BRD-01 does not supply 3V3 on J123; the Pico is powered from
+  its own USB. The committed netlist (`8d39a99`) has
+  `unconnected-(J123-Pin_1-Pad1)` with `J123.1` `passive+no_connect`, so the
+  ICD Rev A 3V3 text was the stale side.
+- `icd/pico_link.md` — Rev B (2026-11-26): pin-1 row is NC, the OPEN follow-up
+  note is deleted, and the USB-powered/no-3V3 statement is recorded.
+  `icd/README.md` status updated to Rev B; `decisions_log.md` #32 added and the
+  pin-1 OPEN bullet closed. Cross-referencing docs (`brd01_io_handoff.md`,
+  `brd01_wiring_manifest.md` note 2, `brd01_component_reference.md` item 5,
+  `brd01_power_v2_deepseek_handoff.md`, `estop_scope_change.md`, `robot-arm/`
+  README and INTEGRATION) now point at the closed decision.
+
 ## 1.1.0 — 2026-11-25 — tag `contract-v1.1.0` pending review
 
 MINOR: additive decisions and interface clarifications; no pose/accuracy spec moved. This

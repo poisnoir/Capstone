@@ -15,6 +15,9 @@ superseding the #20 part list; the captured schematic implements it. BOM
 reconciliation is not evidenced.
 Keep the stages below as the original proposal; do not treat their checklists
 as completed gates.
+**Designator note (2026-11-26):** `R184` in the historical work order below was
+renamed `R186` in commit `8d39a99` (10 Ω ADC-reference filter, U103 OUT/IN- →
+`/receiver/ADC_REF`). Read it as `R186`; the original text is kept as history.
 
 **Orchestrator:** `DeepSeek-V4.1-Flash-1017` (calculations gate, BOM/contract decisions, `tools/kicad_sch_helper.py`, `brd-01.kicad_sch` root, `kicad-cli` gates, `git`)  
 **Parallel Workers:** `Tencent Hy4 Flash` (read-only doc/math audits, supplier/part-cost screening, disjoint child-sheet edits via helper, SVG→PNG visual checks)  

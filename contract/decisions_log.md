@@ -1,6 +1,6 @@
 # Phase 2 — Locked decisions log
 
-**Canonical location:** `contract/` · **Version:** 1.1.0 · **Tag:** `contract-v1.1.0` (pending review)
+**Canonical location:** `contract/` · **Version:** 1.1.1 · **Tag:** `contract-v1.1.1` (pending review)
 **Change process:** `contract/README.md`.
 
 **Status:** decisions locked through 2026-11-25. **M16 selected 2026-10-27.**
@@ -45,6 +45,7 @@ no #29 row exists.
 | 28 | 2026-11-25 | **Clock tree clarification:** SC-07 corrected to match locked decision #21. One 32.768 MHz XO (CSX750FBC32.768M-UT) drives ADC MCLK through 33 Ω and the FPGA clock input directly; DDS clock = 32.768 MHz; PLL ×3 = 98.304 MHz only feeds ÷2 = 49.152 MHz DAC SPI; DAC update ÷164; ADC ODR ÷128; no discrete buffer. | The previous SC-07 text (“TCXO → FPGA PLL → clk_dds + MCLK_adc”) described a PLL-generated MCLK that does not exist on BRD-01 and a TCXO that is not the selected part. The XO-direct tree preserves the SC-07 invariant: one clock, exact integer divides, integer-J, no DDS/ADC beat. | **LOCKED (clarification, 2026-11-25)** | `system_contract.md` SC-07; `system_schematic.md` §5.1/§6.0; `dig6_requirements.md` §1 |
 | 30 | 2026-11-25 | **STOP scope = manipulator only.** No panel mushroom / K1 / K2 / opto status on BRD-01; `+15V_FUSED` feeds the eight LMH6321 unswitched and a STOP never removes the field. `PICO_STOP_N` (`U755.4` → `J123.5`) is the AND of `PICO_STOP_REQ_N` (`U4.P4` + `R754` pull-down) and the arm latch `U753.5 (Q)` on `/power/ARM_Q`; `U753.3 (~Q)` is NC. Power-up/+3.3 V brownout (U751) and `/DRIVER_FAULT_N` (U752) clear the latch and assert STOP; SW750 arms it. STOP is arm motion only, ≤100 ms; field, DDS/DAC and pose continue. A genuine FPGA/ADC/driver fault still stops the DDS (zero-scale + one TRIGGER). | User decision recorded in `estop_scope_change.md` §D; netlist/wiring manifest confirm the Q/~Q pin usage. The last hardware-independent stop path on the board is removed — accepted explicitly: STOP now depends on host link, FPGA, cable and Pico firmware. ICNIRP field sum is unchanged. | **LOCKED (user decision, 2026-11-25); tag/release pending review** — supersedes #10/#21/#22/#25 in part; SC-08 stop scope and three ICDs updated | `docs/phase2/estop_scope_change.md` §§C–D; `docs/phase2/brd01_wiring_manifest.md` §5 items 1–5; `docs/phase2/system_schematic.md` §4.5 |
 | 31 | 2026-11-25 | **Power tree = v2 (adopted).** 15 V / 60 W ME60A1503F01 adapter unchanged. U147 TPSM63604 6.0 V buck at 1.024 MHz (= 32.768 MHz / 32), synced to BUCK_SYNC, feeds +6V; U144/U145/U7 TPS62130A give +1V0_FPGA / +1V8_FPGA / +3.3V; U149 TPS7A4701 gives +5V_EXC (DAC80508 + 8x LTC1563-2); U146 TPS7A4701 gives +5VA (AD7768-4 + 2x ADA4940-2); U5 MGJ2D151515SC -> U6 LT3045-1 / U2 LT3093 gives +/-12VA. Removed: OKI-78SR-5 (+5V) and TPS7A2033. Supersedes the part list of #20; #20's adapter and one-board intent stand. | The v1 tree cannot hold 5.0 V from the OKI's 4.8-5.2 V output, puts 50-75 mV switching ripple on the DAC/filter rails, and burns 0.8-1.5 W in U146. The captured BRD-01 schematic already implements v2, so adopting it removes the contract-vs-board conflict. | **LOCKED (user decision, 2026-11-25)** | `power_tree_v2.md`; `contract_change_20_draft.md`; `system_schematic.md` §2; `icd/power.md`; captured BRD-01 schematic |
+| 32 | 2026-11-26 | **Pico connector J123 pin 1 = no-connect.** BRD-01's 6-pin Pico link is pin 1 NC, pin 2 GND, pin 3 PICO_TX, pin 4 PICO_RX, pin 5 PICO_STOP_N, pin 6 PICO_HEARTBEAT. BRD-01 does not supply 3V3 to the Pico; the Pico is powered from its own USB. | The committed netlist (8d39a99) has `unconnected-(J123-Pin_1-Pad1)`, node `J123.1` `passive+no_connect`; the ICD Rev A 3V3 text was the stale side. Matching the ICD to the board removes the last pin-level mismatch on the arm link. | **LOCKED (user decision, 2026-11-26)** | `icd/pico_link.md` Rev B; `brd01_wiring_manifest.md` note 2; `robot-arm/README.md` |
 
 > Editorial note on #31: the submitted decision text named a BOM revision that
 > cannot be verified from tracked files; that revision reference was removed.
@@ -97,12 +98,12 @@ of the locked interface.
   `docs/phase2/brd01_component_reference.md:357` lists U5 as MGJ2D151515SC.
   The part list of #20 is superseded by #31; its 15 V/60 W adapter and
   one-board intent stand.
-- **Pico `J123.1` — OPEN follow-up.** The ICD still lists pin 1 as `3V3`; the
-  committed netlist has `J123.1` as a no-connect
-  (`docs/phase2/brd01_wiring_manifest.md` §5 item 6;
-  `docs/handoff/brd01_io_handoff.md` §1; `power_tree_v2.md` §7 D4). The pinout
-  change is not written into the frozen Rev A ICD by #31's part-list row; align
-  it before wiring the follower harness.
+- **Pico `J123.1` — CLOSED by #32 (2026-11-26).** The ICD was the stale side:
+  Rev B now lists pin 1 as NC, matching the committed netlist's no-connect
+  (`docs/phase2/brd01_wiring_manifest.md` §5 note 2;
+  `docs/handoff/brd01_io_handoff.md` §1; `power_tree_v2.md` §7 D4). BRD-01
+  supplies no 3V3 on J123; the Pico is powered from its own USB. No pin-level
+  mismatch remains on the arm link.
 - **DAC DDS amplitude — OPEN follow-up.** `icd/dac_fpga.md` §3 item 2 keeps the
   M-variant gain-2 0–5 V default; `power_tree_v2.md` §7 D2 gives a 0.3–4.6 V
   limit on `+5V_EXC`. That limit is not written into the frozen DAC ICD by

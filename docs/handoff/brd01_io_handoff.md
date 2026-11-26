@@ -21,7 +21,7 @@ Sheet names below are KiCad sheet names: `power`, `driver`, `receiver`, `fpga`, 
 | `J121`, `J126` | JST PHR-2 harness plugs | internal harness from the panel XLRs; `PEN1_PANEL_P/N`, `PEN2_PANEL_P/N` | in (harness) | `connectors` |
 | `J122`, `J127` | on-board JST B2B-PH-K-S headers | pen 1 / pen 2 to receiver: `PEN1_P/N`, `PEN2_P/N` (Ch1/Ch2) | in | `connectors` |
 | `J128` | 2-pin JST BM02B-GHS-TBT | fixed reference coil: `REF_COIL_P/N` (Ch3) | in | `connectors` |
-| `J123` | 6-pin JST BM06B-GHS-TBT | Pico 2 follower link: pin 2 GND, pin 3 `PICO_TX`, pin 4 `PICO_RX`, pin 5 `PICO_STOP_N`, pin 6 `PICO_HEARTBEAT`; **pin 1 (3V3) is not wired** | bidirectional | `connectors` |
+| `J123` | 6-pin JST BM06B-GHS-TBT | Pico 2 follower link: pin 1 **NC** (contract #32, ICD Rev B), pin 2 GND, pin 3 `PICO_TX`, pin 4 `PICO_RX`, pin 5 `PICO_STOP_N`, pin 6 `PICO_HEARTBEAT`; BRD-01 supplies no 3V3, the Pico runs from its own USB | bidirectional | `connectors` |
 | `J124` | USB-C receptacle, USB4110-GF-A | USB 2.0 `USB_DP`/`USB_DM`, `USB_VBUS`, CC1/CC2, shield; SBU1/SBU2 no-connect | bidirectional (host PC) | `connectors` |
 | `J140` | 14-pin JTAG header, 87831-1420 | `JTAG_TCK/TMS/TDI/TDO`, VREF on pin 2, GND on 3/5/7/9/11; pins 1/12/13/14 no-connect | bidirectional (program/debug) | `fpga` |
 | `U141` | W25Q64JVSSIQ QSPI flash — **on board, not a chassis connector** | configuration image; `QSPI_CS`, `QSPI_D0`…`D3`, `CCLK_SRC` | internal (listed because it is the config boundary) | `fpga` |
@@ -302,13 +302,13 @@ unassigned, but the remaining bank 14/15/34 spares and the XADC pins have no doc
    `WATCHDOG_KICK` at U4. The Pico stop is split: `U4.P4` drives `PICO_STOP_REQ_N` into
    `U755.1` (with `R754` 100 kΩ pull-down to GND), and `PICO_STOP_N` is only `U755.4` →
    `J123.5`.
-3. **Pico 3V3.** ICD and schematic disagree; the netlist is authoritative and pin 1 is
-   no-connect; the ICD needs the correction. `contract/icd/pico_link.md` §2 lists a 6-pin
-   connector with 3V3, and `hardware/brd-01/kicad/power-tree.md` §4 lists `+3.3V` on `J123`
-   pin 1. The netlist has `unconnected-(J123-Pin_1-Pad1)`; BRD-01 does **not** power the Pico.
-   `docs/phase2/power_tree_v2.md` §"+3.3V (digital)" and decision D4 explicitly record the
-   no-connect; decision #31 adopts the power tree and the ICD pin-1 update is
-   handled in the parallel contract stream.
+3. **Pico 3V3 — CLOSED by #32 (2026-11-26).** ICD and schematic once disagreed; the
+   netlist was authoritative and pin 1 is no-connect. `contract/icd/pico_link.md`
+   Rev B §2 now lists pin 1 as NC (was 3V3 in Rev A), and
+   `hardware/brd-01/kicad/power-tree.md` §4's `+3.3V` on `J123` pin 1 is a
+   historical as-captured table under a SUPERSEDED banner. The netlist has
+   `unconnected-(J123-Pin_1-Pad1)`; BRD-01 does **not** power the Pico, which uses
+   its own USB. `docs/phase2/power_tree_v2.md` §7 D4 records the no-connect.
 4. **Power rails.** `hardware/brd-01/kicad/power-tree.md` (banner: as-captured at `4da4e95`) shows
    `U3` OKI-78SR → `+5V`, `U1` TPS7A2033 → `+3.3V`, `U146` fed from `+15V_FUSED`, and RV-1515D
    ±15 V. The present netlist has `U147` TPSM63604 → `+6V`, `U7` TPS62130 → `+3.3V`, `U149`

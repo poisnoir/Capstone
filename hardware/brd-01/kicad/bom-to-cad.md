@@ -148,7 +148,7 @@ specifies 13.5–16.5 V input, dual ±15 V at up to 67 mA per rail, and
 pins 1 +VIN, 2 −VIN, 5 −VOUT, 6 COM and 7 +VOUT. The pads are numbered
 the same as the pins and match the stock MGJ2D footprint at 2.54 mm pitch.
 The [distributor listing](https://www.digikey.ca/en/products/detail/murata-power-solutions-inc/MGJ2D151515SC/5825461)
-marks the part obsolete. The user confirmed the existing budget-approved parts as the BRD-01 selections: U5 MGJ2D151515SC, U6 LT3045EDD-1#TRPBF and U2 LT3093EMSE#TRPBF. The KiCad schematic uses those parts. BOM Rev 0.06 lists them; [decision #20](../../../contract/decisions_log.md) still names the v1 parts until the draft contract change lands.
+marks the part obsolete. The user confirmed the existing budget-approved parts as the BRD-01 selections: U5 MGJ2D151515SC, U6 LT3045EDD-1#TRPBF (LT3045-1) and U2 LT3093EMSE#TRPBF (LT3093). The KiCad schematic uses those parts; BOM Rev 0.06 lists them. **Decision #31 is LOCKED (2026-11-25):** U5 MGJ2D151515SC, U6 LT3045-1 and U2 LT3093 are the contract parts; #20's v1 part list is superseded (its adapter and one-board intent stand).
 
 #### ±12VA quiescent load check
 
@@ -197,13 +197,19 @@ existing library part before layout.
 | 27 / R20–R27 | For schematic capture use `Device:R`, 1 Ω, ±0.1%, ≥0.5 W. The searched 1206 options did not verify that combination. [Thin Film Technology TFT-DMS-165-1](https://www.thin-film.com/wp-content/uploads/2023/03/TFT-DMS-165-1.pdf) pp. 1–2 factory-code candidate: `TF2512HQ1R00B-T4`, two-terminal 2512, 1 Ω, ±0.1%, 1 W per the series table. CAD reserves the two-terminal `Resistor_SMD:R_2512_6332Metric` footprint provisionally based on the 6.35 × 3.20 mm body. Confirm the exact combination, MOQ, lead time and land pattern with the factory before release. |
 | 28 / C20–C27 | Prototype C212, C220, C228, C236, C244, C252, C260 and C268 use TDK CAA572X7R1E107M670LJ with `accubot:TDK_CAA572`. Electrical qualification remains open. |
 | 29 / C30–C31 | The schematic follows §2 and §4.2 with two provisional 1000 µF reservoirs. C30 on +15V_FUSED uses Panasonic EEUFR1V102 (35 V, Ø12.5 mm) and C282 on VMID_7V5 uses EEUFR1E102 (25 V, Ø10 mm). Both have 5 mm lead pitch and pin 1 positive. Confirm enclosure clearance, C30 inrush/filter damping and C282 ripple and polarity during shutdown. Reconcile C282 with the workbook’s C31 reference. [Panasonic FR series](https://industrial.panasonic.com/cdbs/www-data/pdf/RDF0000/ABA0000C1259.pdf) |
-| 32 / K2 | Kept as `accubot:Draft_EStop_Relay_NO` for the coil and NO power contact intended to switch +15 V_DRV. The user confirmed the draft capture as the rev 0.1 state; K1/K2 stay excluded from the BOM and PCB. Relay selection is the one open hardware item. See [K1/K2 roles](#k1k2-intended-roles-and-capture-hold). |
+| 32 / K2 | **HISTORICAL / SUPERSEDED by decision #30 — no relay to select, order or wire.** The row once kept `accubot:Draft_EStop_Relay_NO` for the coil and NO power contact intended to switch +15 V_DRV; the user confirmed that draft capture as the rev 0.1 state. #30 deleted K1/K2 from BRD-01 (no panel E-stop); they stay excluded from the BOM and PCB. See [K1/K2 roles](#k1k2-intended-roles-and-capture-hold) for the retained history. |
 | 33 / PROT | [Protection inventory](#prot--input-protection): holder, cover, TVS, input filtering and reverse protection captured; Schurter `0001.2509` cartridge recorded with the 3.15 A deviation. |
 | 34 / PASS-A | [Driver inventory](#pass-a--driver-and-excitation): loop, filter, mid-rail, current-sense, fault and access parts captured; values are prototype and need bench verification. |
 | 45 / PASS-C | [Digital inventory](#pass-c--fpga-and-host): digital passives, JTAG, host USB support and test access captured; watchdog is an FPGA PL timer, no external part. |
 | 60 / PASS-B | [Receiver inventory](#pass-b--receiver-and-adc): four front ends, ADC support and sensor connectors captured on Ch1–Ch3 templates; Ch2 gain = Ch1, Ch3 front end DNP in the BOM. |
 
 ### K1/K2 intended roles and capture hold
+
+> **HISTORICAL / SUPERSEDED by decision #30 (2026-11-25).** There is no panel
+> E-stop on BRD-01; K1 and K2 were deleted from the board and BOM. There is no
+> relay to select, order or wire. The intended-role notes, capture hold and
+> draft-symbol record below are kept only as history — none is a live work
+> order.
 
 **User clarification of intended circuit roles only.** This is not approval
 of the safety design, a part selection, or a contract change.
@@ -232,9 +238,10 @@ Confirm wire size and enclosure access with the panel assembly.
 D140 uses the provisional Nexperia `PMEG4010CEH,115` 40 V, 1 A
 Schottky with a SOD-123F footprint. The cathode connects to the switched
 coil feed. A diode across the coil limits the switch voltage and slows
-coil current decay. Measure contact opening and the decay of driver
-current for both a panel stop and an overcurrent trip. Qualify the clamp
-against the selected K2 coil and the Q750 drain voltage limit.
+coil current decay. **Work order removed by #30:** measuring contact opening
+and driver-current decay for a panel stop / overcurrent trip, and qualifying the
+clamp against a K2 coil, no longer apply — no panel stop or K2 is fitted. Kept
+as history only.
 [Nexperia datasheet](https://assets.nexperia.com/documents/data-sheet/PMEG4010CEH.pdf)
 
 SW750 is the prototype on-board rearm control. The Omron
@@ -250,10 +257,9 @@ Schematic §4.5 says K2 removes +15 V_DRV but also says its NO contact
 the LMH6321 has none. This ledger records the clarified intent without
 rewriting the design record.
 
-Before exact CAD mapping, the power/driver owner must establish the actual
-switched DC load, inrush and interrupt duty; reconcile the control and coil
-supply with the BOM's 15 V coil entry; resolve contact allocation and
-feedback; and confirm restart behavior and stop validation.
+**Work order removed by #30:** establishing the switched DC load, inrush and
+interrupt duty, coil supply/contact allocation and stop validation were K2
+selection tasks; no K1/K2 relay is fitted on BRD-01.
 
 The Omron G7SA 12 V coil has a 13.2 V maximum at the datasheet
 reference temperature, below the nominal 15 V feed. Its 18 V coil
@@ -267,8 +273,8 @@ Its linked contacts could use the NO path of one pole for driver power
 and the NC path of the other for feedback if specified. The published
 250 VAC rating does not establish the DC interruption capability
 for this load. TE lists the part as active but unavailable directly,
-and DigiKey lists it as nonstock. Resolve prototype sourcing and
-obtain DC contact limits before assigning K2.
+and DigiKey lists it as nonstock. **Work order removed by #30:** no K2 is
+assigned, so there is no prototype sourcing or DC contact limit to obtain.
 [TE part data](https://www.te.com/en/product-2-1415538-8.html) ·
 [DigiKey listing](https://www.digikey.com/en/products/detail/te-connectivity-potter-brumfield-relays/2-1415538-8/22850162)
 
@@ -573,9 +579,9 @@ settling and channel phase matching remain open.
 - **Fault and stop:** §4.4/§6 calls for a wired-OR/open-drain fault bus; the
   selected TLV3201 is push-pull. Approve the combining circuit or a reviewed
   part change. The [K1/K2 intended roles](#k1k2-intended-roles-and-capture-hold)
-  do not close the hardwired stop design. Resolve the K1 selection, K2
-  capture hold, and hardwired stop versus FPGA status roles with the
-  power, driver, and follower owners.
+  are history, not a hardwired stop design. **Superseded by #30:** no K1/K2
+  selection, capture hold or hardwired stop role remains — arm STOP is the
+  FPGA/Pico `PICO_STOP_N` path.
 - **Reference designators and quantity:** allocate two unlisted OPA192 refs
   (row 22); confirm which of the U40–U45 and U80–U88 labels are spares; U3/U4
   receiver refs collide with the optos. §5.1 says repeat the pen front end for

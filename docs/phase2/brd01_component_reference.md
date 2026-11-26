@@ -1,5 +1,19 @@
 # BRD-01 component reference — component → pins → wires
-**Provenance (2026-11-25, base commit `ef04f63`):** generated with `kicad-cli sch export netlist --format kicadxml -o net.xml hardware/brd-01/kicad/brd-01.kicad_sch` (KiCad 10.0.8); regenerate after any BRD-01 netlist change — regeneration pends the uncommitted KiCad WIP, so these tables describe the committed netlist only.
+
+> **⚠ STALE TABLES — DO NOT USE AS WIRING TRUTH (2026-11-26).** Every table
+> below was generated from the `ef04f63` netlist. Commit `8d39a99` changed that
+> netlist: `/power/BUCK1_FB` → `Net-(U144-FB)`,
+> `/receiver/DREGCAP` → `Net-(U101-DREGCAP)`,
+> `/receiver/FDA1_N` → `Net-(U105B--IN2)`,
+> `/receiver/REF_RAW` → `Net-(U102-VOUT)`,
+> `/receiver/REGCAPA` → `Net-(U101-REGCAPA)`,
+> `/receiver/REGCAPB` → `Net-(U101-REGCAPB)`, and the 10 Ω ADC-reference
+> filter resistor `R184` → `R186` (U103 OUT/IN- → `/receiver/ADC_REF`). Net
+> names, part designators and the crossing/sheet classification below may have
+> changed. Regenerate before relying on any table here:
+> `kicad-cli sch export netlist --format kicadxml -o net.xml hardware/brd-01/kicad/brd-01.kicad_sch`.
+
+**Provenance (2026-11-26; tables generated 2026-11-25 from base commit `ef04f63`):** generated with `kicad-cli sch export netlist --format kicadxml -o net.xml hardware/brd-01/kicad/brd-01.kicad_sch` (KiCad 10.0.8); the committed netlist changed at `8d39a99` (see banner), so these tables describe `ef04f63` only — regenerate before using them as wiring truth.
 This is the **component-centric** reference for BRD-01. Its companion,
 `brd01_wiring_manifest.md` (and `brd01_wiring_manifest.csv`), is **net-centric**:
 net → pins. This document starts at a component and follows each pin to the other
@@ -206,7 +220,7 @@ wording are called out in the item text.
 | 2 | **`contract-updates` branch is local-only.** Verified: `b527659`, 8 commits ahead of and 10 behind the stated base `213ac41`, `contract/VERSION` = `2.0.0`, `contract_ci` green on that tree (`contract 2.0.0: 18 SC rows, 28 decisions, ICDs OK`). Not on main, not pushed. The E-stop scope, power tree and SC-08 arm-only STOP changes exist in `contract/` only there. Needs the `contract-change` issue → PR → two approvals → version bump/tag flow, which needs `gh` auth. | Blocking (contract and arm repo cannot pull the changes) | Contract release, arm-repo ICD update, SC-08 closure | Contract owner + interface owner and integrator |
 | 3 | **Docs teach the inverted latch.** Verified: `docs/phase2/system_schematic.md:214,219-223` and `hardware/brd-01/kicad/README.md:107-108` say `U755` ANDs with `U753.~Q` (pin 3) and that `U753.Q` (pin 5) is NC. Netlist is the opposite: `/power/ARM_Q` = `U753.5` + `U755.2`; `U753.3` is `+no_connect`. Partially duplicated already in `brd01_wiring_manifest.md:1346`. | Major (safety documentation wrong) | System-schematic and README sign-off; fault-injection procedure | System-schematic / KiCad README owner |
 | 4 | **Stale power narrative — CONFIRMED.** `hardware/brd-01/kicad/power-tree.md` §§2–5 carry `+15V_DRV` (lines 33, 57, 85, 129, 151, 174, 246), `+5V` (35, 59, 86–89, 245, 250), K1/K2 (32, 56, 116, 129, 136–142), `ESTOP_ASSERTED` (120, 137, 172); `docs/handoff/brd01_io_handoff.md:232` still has `+15V_DRV` and K2. None of those nets/parts exists in the netlist (`R185` now exists, but as the chassis 1M bleed in connectors). | Major (wrong power tree) | Power handoff, BOM ordering, integration | Power owner / docs owner |
-| 5 | **`contract/icd/pico_link.md:25`** lists 6-pin `J123.1` as `3V3`; the netlist has `unconnected-(J123-Pin_1-Pad1)` whose only member is `J123.1` with `pintype=passive+no_connect`. Contract change required. | Major (ICD wrong) | Pico harness pinout, arm-repo integration | Contract owner (ICD) |
+| 5 | **RESOLVED by #32 (2026-11-26).** `contract/icd/pico_link.md` Rev B §2 now lists 6-pin `J123.1` as NC, matching the netlist's `unconnected-(J123-Pin_1-Pad1)` (`pintype=passive+no_connect`). BRD-01 supplies no 3V3; the Pico uses its own USB. Retained as history — no contract change remains. | Was Major (ICD wrong); now closed | Pico harness pinout, arm-repo integration | Contract owner (ICD) |
 | 6 | **`TRIP_REF` threshold unresolved — CONFIRMED.** `R710` 52.3 kΩ from `+3.3V`, `R711` 10 kΩ to GND → 3.3 × 10/62.3 ≈ **0.53 V**; driver-sheet notes say **~253 mA** (positive-peak trip, 1 Ω shunt) and **~280 mA** (LMH6321 nominal clamp). `power_tree_v2.md:486-495` lists all three as unreconciled and forbids changing resistors before measurement. | Major (protection threshold unverified) | Overcurrent protection validation; driver acceptance | Power/driver owner + bench |
 | 7 | **FG-1 simulation report (`REPORT.md`) absent — CONFIRMED.** `design_order.md:105` cites it for per-coil 0.83×, array 0.97× and ICNIRP 18.7 µT at 250 mA, and itself says it must be regenerated. No such file on disk and no object in any git ref (`git rev-list --all --objects | grep simulations/fg1` empty). | Blocking for the ICNIRP claim | FG-1 field/ICNIRP closure and volume gate | FG owner |
 | 8 | **`D751` symbol pin names — CONFIRMED.** Netlist library part `TPD2EUSB30` has pin functions `D+_1`, `D-_2`, `GND_3`, while the pins are wired to `/connectors/USB_CC1`, `/connectors/USB_CC2`, GND. Symbol naming is misleading, connectivity is right. | Minor (review/maintenance) | Connector sheet readability; future symbol library cleanup | Connector owner |

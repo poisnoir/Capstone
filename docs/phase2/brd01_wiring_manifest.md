@@ -1,5 +1,19 @@
 # BRD-01 wiring manifest
-**Provenance (2026-11-25, base commit `ef04f63`):** generated with `kicad-cli sch export netlist --format kicadxml -o net.xml hardware/brd-01/kicad/brd-01.kicad_sch` (KiCad 10.0.8); regenerate after any BRD-01 netlist change — regeneration pends the uncommitted KiCad WIP, so these tables describe the committed netlist only.
+
+> **⚠ STALE TABLES — DO NOT USE AS WIRING TRUTH (2026-11-26).** Every table
+> below was generated from the `ef04f63` netlist. Commit `8d39a99` changed that
+> netlist: `/power/BUCK1_FB` → `Net-(U144-FB)`,
+> `/receiver/DREGCAP` → `Net-(U101-DREGCAP)`,
+> `/receiver/FDA1_N` → `Net-(U105B--IN2)`,
+> `/receiver/REF_RAW` → `Net-(U102-VOUT)`,
+> `/receiver/REGCAPA` → `Net-(U101-REGCAPA)`,
+> `/receiver/REGCAPB` → `Net-(U101-REGCAPB)`, and the 10 Ω ADC-reference
+> filter resistor `R184` → `R186` (U103 OUT/IN- → `/receiver/ADC_REF`). Net
+> names, part designators and the crossing/sheet classification below may have
+> changed. Regenerate before relying on any table here:
+> `kicad-cli sch export netlist --format kicadxml -o net.xml hardware/brd-01/kicad/brd-01.kicad_sch`.
+
+**Provenance (2026-11-26; tables generated 2026-11-25 from base commit `ef04f63`):** generated with `kicad-cli sch export netlist --format kicadxml -o net.xml hardware/brd-01/kicad/brd-01.kicad_sch` (KiCad 10.0.8); the committed netlist changed at `8d39a99` (see banner), so these tables describe `ef04f63` only — regenerate before using them as wiring truth.
 Generated from the KiCad netlist of `hardware/brd-01/kicad/brd-01.kicad_sch` (KiCad 10.0.8) by `kicad-cli sch export netlist --format kicadxml`. Companion machine-readable file: `brd01_wiring_manifest.csv` (one row per sheet, net, ref and pin).
 
 ## 1. How to read it
@@ -1345,7 +1359,7 @@ Every net whose pins land on more than one sheet. Pin counts are the `<node>` co
 
 1. **Latch polarity — CLOSED (2026-11-25).** This note recorded that `docs/phase2/system_schematic.md` §4.5 lines 214, 219–223 and `hardware/brd-01/kicad/README.md` lines 107–108 said `U755` ANDs the FPGA request with `U753.~Q` (pin 3) and that `U753.Q` is an unused/no-connect. The netlist has `<net code="227" name="/power/ARM_Q">` at net.xml line 19303; `<net code="369" name="PICO_STOP_N">` at net.xml line 20440; `<net code="370" name="PICO_STOP_REQ_N">` at net.xml line 20445; `<net code="604" name="unconnected-(U753-~{Q}-Pad3)">` at net.xml line 21162: `U753.5 (Q, output)` drives U755.2 through `/power/ARM_Q`, `U755.4 (output)` drives `PICO_STOP_N`, and `U753.3 (~Q)` is the no-connect. The Pico split in `docs/handoff/brd01_io_handoff.md` §3/§5 matches the netlist. **Closed in this pass:** the KiCad README and I/O handoff now state the netlist truth — `U753.5 (Q)` drives `/power/ARM_Q` → `U755.2`, `U755.4` drives `PICO_STOP_N`, and `U753.3 (~Q)` is the no-connect. `system_schematic.md` §4.5 now also states the netlist truth (Q on ARM_Q, ~Q no-connect); this note is closed.
 
-2. **STOP connector pin 1 — contract not yet updated.** `contract/icd/pico_link.md` §2 line 25 lists the 6-pin Pico connector pin 1 as 3V3. The netlist has `<net code="379" name="unconnected-(J123-Pin_1-Pad1)">` at net.xml line 20487 with `J123.1 (passive+no_connect)`, and the connectors sheet says BRD-01 does not supply 3V3 to the Pico (power_tree_v2 §7 D4). This is an open contract change, not a wiring defect.
+2. **STOP connector pin 1 — CLOSED (2026-11-26, #32).** This note recorded that `contract/icd/pico_link.md` §2 listed the 6-pin Pico connector pin 1 as 3V3 while the netlist has `unconnected-(J123-Pin_1-Pad1)` with `J123.1 (passive+no_connect)` and BRD-01 does not supply 3V3 to the Pico (power_tree_v2 §7 D4). The ICD is now Rev B and lists pin 1 as NC; the Pico is powered from its own USB. No contract change remains open; this was never a wiring defect.
 
 3. **`+15V_DRV` / `+5V` / panel K1-K2 — CLOSED (2026-11-25).** This note recorded that the historical `hardware/brd-01/kicad/power-tree.md` §§2–5 still tabulates `+15V_DRV`, `+5V`, a K2 contact and `ESTOP_ASSERTED` to `U4.R2`, and that `docs/handoff/brd01_io_handoff.md` §5 line 232 also still listed `+15V_DRV`. None of those nets exists in the netlist. The captured rail is `<net code="9" name="+15V_FUSED">` at net.xml line 18123; `<net code="5" name="+5V_EXC">` at net.xml line 18000: `+15V_FUSED` has 41 pins on power and driver (the field rail is unswitched) and the excitation rail is `+5V_EXC` (31 pins on power and driver). **Closed in this pass:** the live I/O handoff now lists `+15V_FUSED` and `+5V_EXC`, with no K1/K2 relay, and its cross-sheet count is **59 global plus 2 hierarchical = 61 nets**, not 57. The v1 `power-tree.md` keeps its historical tables under a SUPERSEDED/historical banner; no netlist change.
 
