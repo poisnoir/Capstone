@@ -141,5 +141,16 @@ with a 90-degree field angle.
 
 Residual visual deviation: the ADA4940 supply pins still carry one small power
 symbol per distinct pin coordinate (2.54–5.08 mm pitch); a single bus per unit
-would cross the interleaved signal pins on the same side. No crossing, no
-ambiguous designator, and all rail text is horizontal.
+would cross the interleaved signal pins on the same side. Duplicate rail Values
+on those pins are hidden (only one visible +5VA and one visible GND per unit),
+so the checker reports zero Value-vs-Value and zero Value-vs-wire collisions.
+
+Round 4 final text pass: 86 -> 0 checker text advisories; specifically
+Value-vs-Value 20 -> 0 and Value-vs-wire 40 -> 0. Fixes: one row per INA rail
+with arrows away from the body and text at x-25.40; repeated FDA rail Values
+hidden; bay cap Reference/Value stacked at y +/-5.08 on the cap centreline;
+R121/R549/R569 and R104/R543/R563 fields offset from their GND symbols; R103/
+R542/R562 references moved off the vertical pin wire; R186 value moved above
+its route; U102/U103 rail text moved outside the bodies.
+
+G5 ruling (unchanged): span gate accepted as a mandated trade, not fixed.

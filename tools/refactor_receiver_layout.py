@@ -181,11 +181,13 @@ GND_BUS_Y = 106.68
 BAY_X0, BAY_X1 = 635.00, 745.49  # 500 G, 586 G
 RAIL_COLS = {'+12VA': 627.38, '-12VA': 665.48, '+5VA': 703.26}
 RAIL_ROWS = [43.18, 55.88, 68.58, 81.28, 93.98]
+BAY_CAPS = set()
 BAY_GROUPS = {
     '+12VA': ['C100', 'C115', 'C130', 'C542', 'C562'],
     '-12VA': ['C116', 'C543', 'C563'],
     '+5VA': ['C112', 'C123', 'C128', 'C547', 'C567'],
 }
+BAY_CAPS.update(BAY_GROUPS['+12VA'] + BAY_GROUPS['-12VA'] + BAY_GROUPS['+5VA'] + ['C106'])
 for rail, refs in BAY_GROUPS.items():
     for ref, y in zip(refs, RAIL_ROWS):
         PLACE[ref] = (RAIL_COLS[rail], y, 90)
@@ -657,7 +659,7 @@ def place_power(r, ed, sh, pinmap, ncbase, sh0):
 
     placed = set()
 
-    def sym(net, p, text_at, rot=0):
+    def sym(net, p, text_at, rot=0, hide_value=False):
         sig = (net, round(p[0], 4), round(p[1], 4))
         if sig in placed:
             return
@@ -678,14 +680,20 @@ def place_power(r, ed, sh, pinmap, ncbase, sh0):
             m = re.search(r'\(property "Value" "GND"\s*\n\s*\(at [\d.-]+ [\d.-]+ [\d.-]+\)',
                           blk)
             if m:
-                blk = blk[:m.start()] + re.sub(
-                    r'\(at [\d.-]+ [\d.-]+ [\d.-]+\)',
-                    f'(at {f(text_at[0])} {f(text_at[1])} 0)', m.group(0)) \
-                    + blk[m.end():]
+                sub = re.sub(r'\(at [\d.-]+ [\d.-]+ [\d.-]+\)',
+                             f'(at {f(text_at[0])} {f(text_at[1])} 0)', m.group(0))
+                if hide_value and '(hide yes)' not in sub:
+                    sub = sub.replace('(show_name no)', '(hide yes)\n\t\t\t(show_name no)')
+                blk = blk[:m.start()] + sub + blk[m.end():]
             ed.t = ed.t[:a] + blk + ed.t[b:]
         else:
-            ed.append(power_block(lib, ref, p, rot, text_at,
-                                  90 if rot in (90, 270) else 0))
+            blk = power_block(lib, ref, p, rot, text_at,
+                              90 if rot in (90, 270) else 0)
+            if hide_value:
+                m2 = re.search(r'(\(property "Value" "[^"]+"\s*\n\s*\(at [^\)]*\))', blk)
+                if m2:
+                    blk = blk[:m2.end()] + '\n\t\t\t(hide yes)' + blk[m2.end():]
+            ed.append(blk)
         ed.append(junction_block(p))
 
     # --- decoupling bay: one vertical bus per rail, GND along the bottom ---
@@ -723,12 +731,28 @@ def place_power(r, ed, sh, pinmap, ncbase, sh0):
     for key in ('U105:1', 'U105:2', 'U108:1', 'U108:2'):
         ref = key.split(':')[0]
         ox, oy, _ = sh.origin(key)
+        seen = set()
         for num, p_ in sorted(sh.unit_pins(key).items(), key=lambda kv: int(kv[0])):
             net = pinmap.get((ref, num))
             if net not in RAILS:
                 continue
             sgn = -1 if p_[0] < ox else 1
             sym(net, p_, (g(p_[0] + sgn * 5.08), p_[1]),
+                270 if sgn < 0 else 90, net in seen)
+            seen.add(net)
+
+    # --- INA163 units: one row per rail, arrows away from the body ---
+    for key in ('U104', 'U106', 'U107'):
+        railpins = [(n, p) for n, p in sh.unit_pins(key).items()
+                    if pinmap.get((key, n)) in RAILS]
+        railpins.sort(key=lambda t: t[1][1])
+        count = len(railpins)
+        for idx, (num, p_) in enumerate(railpins):
+            net = pinmap[(key, num)]
+            ox, _, _ = sh.origin(key)
+            sgn = -1 if p_[0] < ox else 1
+            ty = g(p_[1] + (idx - (count - 1) / 2.0) * 10.16)
+            sym(net, p_, (g(p_[0] + sgn * 25.40), ty),
                 270 if sgn < 0 else 90)
 
     # --- U101: one bus per rail on each side of the 64-pin body ---
@@ -759,7 +783,7 @@ def place_power(r, ed, sh, pinmap, ncbase, sh0):
 
     # --- remaining rail pins: one symbol each, unrotated horizontal text ---
     skip = set(BAY_GROUPS['+12VA'] + BAY_GROUPS['-12VA'] + BAY_GROUPS['+5VA'])
-    skip |= {'U105:3', 'U108:3', 'C106', 'U101'}
+    skip |= {'U105:3', 'U108:3', 'C106', 'U101', 'U104', 'U106', 'U107'}
     for key in sorted(sh.inst):
         if key in skip or sh.lib[sh.uuid_of[key]].startswith('power:'):
             continue
@@ -772,10 +796,14 @@ def place_power(r, ed, sh, pinmap, ncbase, sh0):
             sgn = -1 if p_[0] < ox else 1
             rotated = sh.lib[sh.uuid_of[key]] in ('Device:C', 'Device:R') \
                 and sh.origin(key)[2] in (90, 270)
-            tx = g(p_[0] + (10.16 if rotated and net == 'GND' else sgn * 5.08))
+            tx = g(p_[0] - 12.70) if key in ('U102', 'U103') else \
+                g(p_[0] + (10.16 if rotated and net == 'GND'
+                           else (-12.70 if net == '+3.3V' else
+                                 (12.70 if not rotated else 5.08))))
             ty = g(p_[1] + (2.54 if net != 'GND' else -2.54)) \
                 if sh.lib[sh.uuid_of[key]] == 'Device:D_Schottky' else \
-                (p_[1] if net != 'GND' else g(p_[1] + 3.81))
+                (p_[1] if net != 'GND' else
+                 g(p_[1] - 2.54 if rotated else p_[1] + 3.81))
             sym(net, p_, (tx, ty))
     print(f'  power symbols placed: {counter[0]} (reused {17 - len(reuse)})')
 
@@ -958,10 +986,14 @@ def regenerate(text):
         # Fields are never inside a body outline.  For a rotated passive the
         # KiCad field angle is set to 90 so the composed text stays horizontal,
         # and the anchors are offset along x with outward justification.
-        if rot in (90, 270):
-            ed.move_prop(u, 'Reference', g(x - 7.62), g(y - 3.81),
+        if key in BAY_CAPS:
+            ed.move_prop(u, 'Reference', x, g(y - 5.08))
+            ed.move_prop(u, 'Value', x, g(y + 5.08))
+        elif rot in (90, 270):
+            vy = g(y - 6.35) if key == 'R186' else g(y + 6.35)
+            ed.move_prop(u, 'Reference', g(x - 7.62), g(y - 6.35),
                          justify='right', angle=90)
-            ed.move_prop(u, 'Value', g(x + 7.62), g(y + 3.81),
+            ed.move_prop(u, 'Value', g(x + 7.62), vy,
                          justify='left', angle=90)
         elif key.startswith('U105:') or key.startswith('U108:'):
             ed.move_prop(u, 'Reference', g(x - 20.32), g(y - 10.16),
@@ -970,7 +1002,10 @@ def regenerate(text):
                          justify='left')
         elif base_sh.lib[base_sh.uuid_of[key]] == 'Device:D_Schottky':
             ed.move_prop(u, 'Reference', g(x - 15.24), y)
-            ed.move_prop(u, 'Value', g(x + 15.24), y)
+            if key == 'D534':
+                ed.move_prop(u, 'Value', x, g(y - 8.89))
+            else:
+                ed.move_prop(u, 'Value', g(x + 15.24), y)
         elif key in ('U104', 'U106', 'U107'):
             ed.move_prop(u, 'Reference', x, g(y - 15.24))
             ed.move_prop(u, 'Value', x, g(y + 15.24))
@@ -978,6 +1013,15 @@ def regenerate(text):
             ed.move_prop(u, 'Reference', g(x + 55.88), g(y - 73.66))
             ed.move_prop(u, 'Value', g(x + 55.88), g(y - 69.85))
         elif key in ('U102', 'U103'):
+            ed.move_prop(u, 'Reference', x, g(y - 10.16))
+            ed.move_prop(u, 'Value', x, g(y + 10.16))
+        elif key in ('R103', 'R542', 'R562'):
+            ed.move_prop(u, 'Reference', g(x - 7.62), y, justify='right')
+            ed.move_prop(u, 'Value', g(x + 7.62), y, justify='left')
+        elif key in ('R104', 'R543', 'R563'):
+            ed.move_prop(u, 'Reference', x, g(y - 8.89))
+            ed.move_prop(u, 'Value', x, g(y + 10.16))
+        elif key in ('R123', 'R551', 'R571'):
             ed.move_prop(u, 'Reference', x, g(y - 10.16))
             ed.move_prop(u, 'Value', x, g(y + 10.16))
         else:
