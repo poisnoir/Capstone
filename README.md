@@ -46,7 +46,7 @@ tools/        checkers, manifest generator, extract script
 
 ## The contract is versioned
 
-- Current version: `contract/VERSION` (tag `contract-v1.0.0`).
+- Current version: `contract/VERSION` (1.1.0; tag `contract-v1.1.0` pending review).
 - On every push to `main` that changes `contract/`, CI publishes
   `contract-vX.Y.Z.zip` + `contract-vX.Y.Z.json` as a GitHub Release, plus a
   rolling `contract-latest`.
@@ -65,8 +65,9 @@ obtain it. Run `python3 tools/check_references.py` to verify coverage.
 ## Status
 
 Phase 2 design. Full-FPGA pose locked 2026-10-12; one-board BRD-01 and PS-less
-Artix-7 locked 2026-10-28; M16 DAC/filter selected 2026-10-27. See
-`contract/decisions_log.md` for the full record.
+Artix-7 locked 2026-10-28; M16 DAC/filter selected 2026-10-27; arm-only STOP
+(#30) and power tree v2 (#31) recorded 2026-11-25 (contract 1.1.0 pending tag).
+See `contract/decisions_log.md` for the full record.
 
 ## Working rules
 

@@ -1,8 +1,13 @@
 # Draft `contract-change` issue — E-stop scope: manipulator-only stop, tracker unaffected
 
-> **Draft only.** Do not edit `contract/` from this work stream. File this body as a
-> `contract-change` issue; the interface owner + integrator approval flow is owned by the
-> Orchestrator. Stage 1: no electrical change is made.
+> **Historical draft — the scope decision is closed, the contract release is pending.**
+> This was filed as a draft, not merged here. The arm-only STOP decision is recorded as
+> #30 in the 1.1.0 contract PR on `docs/spine-consistency` (tag pending review); this
+> document keeps its original analysis and approval checklist as history. No further
+> electrical change is required for the stage-2 wiring, but the bench check in §5 and
+> the arm-repo release sync remain open. §3's latch row used the earlier `~Q` wording;
+> the executed netlist uses `U753.5 (Q)` via `/power/ARM_Q`, with `U753.3 (~Q)` NC
+> (`docs/phase2/brd01_wiring_manifest.md` §5 item 1; `system_schematic.md` §4.5).
 
 **Title:** `contract-change`: delete the physical E-stop from BRD-01; arm STOP is host request
 plus hardware latch (AND gate); tracker keeps field and pose
@@ -21,9 +26,7 @@ FPGA or by the hardware latch on power-up/brownout, overcurrent and pre-configur
 stop the host link, FPGA, cable and Pico firmware are still involved, and the previous
 "hardware E-stop independent of both processors" claim in `pico_link.md` §6 is gone: **the last
 hardware-independent stop path on the board has been removed**. The reviewer must accept that
-loss explicitly. The
-reviewer must accept that loss explicitly; it is the single most important consequence of this
-change and is not softened here. `+15V_DRV` stays powered, the DDS/DAC and coil loops keep
+loss explicitly; it is the single most important consequence of this change and is not softened here. `+15V_DRV` stays powered, the DDS/DAC and coil loops keep
 running, and pose solutions keep flowing during a stop. The ≤100 ms requirement is re-scoped to
 **arm motion**. A genuine FPGA/ADC/driver fault remains a separate tracker-side safe-state
 condition and may still stop the DDS — that behaviour is retained. Evidence and the affected-text
@@ -52,10 +55,10 @@ only.
 | K1 / K2 | K1 NC (`K1.NC1` on `+15V_FUSED`, `K1.NC2` on `ESTOP_NC_15V`) drops K2; `K2.NO2` self-latches the coil feed; `K2.NO1` removes the driver rail | Deleted; no panel E-stop on BRD-01. `+15V_FUSED` is bridged straight to the driver rail |
 | `/power/ESTOP_NC_15V` | `K1.NC2`, `K2.COIL2`, `J750.2`, `D140.1`, `R185.1` | Removed with K1/K2, J750, D140 and R185 |
 | `/ESTOP_ASSERTED` (docs call it `ESTOP_STATUS`, pin 37) | `U143.4` opto collector, `R186.2` pull-up, `U750.2`, `U4.R2`; root pins power-out → fpga-in; no RTL consumer | Deleted with the button/opto; root sheet pins and fpga landing removed. **`U4.R2` is freed and marked no-connect: the FPGA loses this input and the RTL team must be told.** |
-| `U750`/`U751`/`U752`/`U753`/`U754`, `Q750`, `SW750`, `R750`–`R754`, `C755`, `D140` | `U750` inverts E-stop → `U751.~MR`; `U752` ANDs supervisor reset with `/DRIVER_FAULT_N`; `U753.Q` → `ARM_GATE` → `Q750` → K2 coil → `+15V_DRV` | Latch survives and is retargeted: `U753.~Q` (pin 3) drives new AND gate `U755.B`; `U753.Q` (pin 5) is an explicit NC. `U751.~MR` tied high; `/DRIVER_FAULT_N` still reaches `U752.2` and `U4.R1` |
-| `PICO_STOP_N` / `PICO_STOP_REQ_N` | `U4.P4` → `J123.5` on one net | Split: `PICO_STOP_REQ_N` = `U4.P4` + `R754.1` (pull-down for unconfigured FPGA) + `U755.A`; `PICO_STOP_N` = `U755.Y` → `J123.5`. U755 (74LVC1G08) ANDs request with `U753.~Q`; a resistor-only fix was rejected because it cannot assert low against a push-pull high |
+| `U750`/`U751`/`U752`/`U753`/`U754`, `Q750`, `SW750`, `R750`–`R754`, `C755`, `D140` | `U750` inverts E-stop → `U751.~MR`; `U752` ANDs supervisor reset with `/DRIVER_FAULT_N`; `U753.Q` → `ARM_GATE` → `Q750` → K2 coil → `+15V_DRV` | Latch survives and is retargeted: `U753.~Q` (pin 3) drives new AND gate `U755.B`; `U753.Q` (pin 5) is an explicit NC. `U751.~MR` tied high; `/DRIVER_FAULT_N` still reaches `U752.2` and `U4.R1` **[historical wording — netlist uses `U753.5 (Q)` on `/power/ARM_Q` into `U755.2`; `U753.3 (~Q)` is NC]** |
+| `PICO_STOP_N` / `PICO_STOP_REQ_N` | `U4.P4` → `J123.5` on one net | Split: `PICO_STOP_REQ_N` = `U4.P4` + `R754.1` (pull-down for unconfigured FPGA) + `U755.A`; `PICO_STOP_N` = `U755.Y` → `J123.5`. U755 (74LVC1G08) ANDs request with `U753.~Q` **[historical wording — actual input is `U753.5 (Q)` via `/power/ARM_Q`; `U753.3 (~Q)` NC]**; a resistor-only fix was rejected because it cannot assert low against a push-pull high |
 | `PICO_HEARTBEAT` | `U4.P3` → `J123.6`; missing 100 ms → Pico stops | Unchanged |
-| `/DRIVER_FAULT_N` | comparator bus `U600`–`U603`, `R712.2`, `U752.2`, `U4.R1` | Unchanged: reaches both `U752.2` (clears latch → `~Q=1` → STOP) and `U4.R1` |
+| `/DRIVER_FAULT_N` | comparator bus `U600`–`U603`, `R712.2`, `U752.2`, `U4.R1` | Unchanged: reaches both `U752.2` (clears latch → `~Q=1` → STOP **[historical polarity text; cleared Q=0 asserts STOP]**) and `U4.R1` |
 | DAC safe state (`dac_fpga.md` §3 item 4) | "On fault/E-stop: stop the DDS, write zero-scale to all 8 channels, then one TRIGGER" | Split: **genuine fault** → DDS off / zero-scale / one TRIGGER (survives); **software arm stop** → no DDS/DAC/coil effect |
 | Stop timing | E-stop <1 ms hardware cut of driver enable; follower stop ≤100 ms | Arm motion ≤100 ms from host request, power-up/brownout, overcurrent or unconfigured FPGA; field and pose unchanged; ICNIRP field sum unchanged |
 
@@ -128,4 +131,6 @@ File the issue and PR for exactly these items; do not edit `contract/` from this
 4. The board has **no panel E-stop**; the removal of the last hardware-independent stop path
    must be accepted by the interface owner and integrator.
 5. `J123.1` is NC in the netlist but `pico_link.md` §2 calls pin 1 3V3 (D4 records no_connect);
-   a pre-existing mismatch, untouched by this change.
+   a pre-existing mismatch, untouched by this change. **Still OPEN (2026-11-25):** the
+   v2 rails were adopted by decision #31, but the frozen ICD pinout was not changed;
+   `pico_link.md` keeps 3V3 with an OPEN note before §3.
