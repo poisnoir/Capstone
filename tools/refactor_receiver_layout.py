@@ -106,7 +106,7 @@ for lane in LANES:
     if lane['id'] == 'ch1':
         PLACE[p['Rn']] = (CX['Rn'], g(yc + 10.16), 0)
     else:
-        PLACE[p['Rn']] = (238.76, g(yc - 1.27), 0)
+        PLACE[p['Rn']] = (238.76, g(yc + 20.32), 0)
     PLACE[p['INA']] = (CX['INA'], yc, 0)
     PLACE[p['Rg']] = (CX['Rg'], yc, 180 if lane['id'] == 'ch1' else 0)
     PLACE[p['S1']] = (CX['S1'], g(yc - 7.62), 90)
@@ -223,6 +223,23 @@ class Sheet:
 
     def pin(self, key, num):
         return self.pins(key)[str(num)]
+
+    def unit_pins(self, key):
+        """Only the pins belonging to this instance's unit (plus common unit 0)."""
+        inst = self.inst[key]
+        unit = int((H.child(inst, 'unit') or [None, 1])[1])
+        lib = self.lib[self.uuid_of[key]]
+        libsym = next((s for s in H.children(H.child(self.root, 'lib_symbols'),
+                                             'symbol') if s[1] == lib), None)
+        allowed = set()
+        if libsym is not None:
+            for sub in H.children(libsym, 'symbol'):
+                parts = sub[1].rsplit('_', 2)
+                if len(parts) >= 3 and parts[-2].isdigit() \
+                        and int(parts[-2]) in (0, unit):
+                    allowed.update(H.child(p, 'number')[1]
+                                   for p in H.children(sub, 'pin'))
+        return {n: p for n, p in self.pins(key).items() if n in allowed}
 
 
 # ---------------------------------------------------------------------------
@@ -546,11 +563,14 @@ def route_lane(r, lane, sh0):
     # inverting input: INA IN- -> pulldown -> coupling cap (Ch2/Ch3 only;
     # Ch1 grounds INA IN- and biases C114/R104 from +12VA in the baseline)
     if lane['id'] != 'ch1':
-        r.poly([P(p['INA'], 4), (P(p['Rn'], 1)[0], P(p['INA'], 4)[1]),
-                P(p['Rn'], 1)])
-        r.poly([P(p['C2'], 2), (P(p['Rn'], 1)[0], P(p['C2'], 2)[1]),
-                P(p['Rn'], 1)])
-        r.tee(P(p['Rn'], 1))
+        rn1 = P(p['Rn'], 1)
+        xi = g(P(p['INA'], 4)[0] - 26.67)
+        r.poly([P(p['INA'], 4), (xi, P(p['INA'], 4)[1]),
+                (xi, rn1[1]), rn1])
+        xc2 = g(P(p['C2'], 2)[0] + 16.51)
+        r.poly([P(p['C2'], 2), (xc2, P(p['C2'], 2)[1]),
+                (xc2, rn1[1]), rn1])
+        r.tee(rn1)
 
 
 def route_ch0(r):
@@ -564,8 +584,8 @@ def route_ch0(r):
 
 def route_reference(r):
     P = r.P
-    r.L(P('U102', 6), P('C131', 1))
-    c1 = P('C131', 1)
+    u6, c1 = P('U102', 6), P('C131', 1)
+    r.poly([u6, (g(u6[0] + 14.0), u6[1]), (g(u6[0] + 14.0), c1[1]), c1])
     v3 = P('U103', 3)
     r.poly([c1, (v3[0], c1[1]), v3])
     o1, i4, r1 = P('U103', 1), P('U103', 4), P('R186', 1)
@@ -575,9 +595,12 @@ def route_reference(r):
             (xb, g(r1[1] + 6.35)), (xb, r1[1])])
     r.tee((xb, r1[1]))
     r.w((xb, r1[1]), r1)
-    r.L(P('R186', 2), P('D534', 2))
-    r.L(P('D534', 2), P('C101', 1))
-    r.L(P('D534', 2), P('C102', 1))
+    r2, d2 = P('R186', 2), P('D534', 2)
+    yb = g(d2[1] + 6.35)
+    r.poly([r2, (r2[0], yb), (d2[0], yb), d2])
+    c101, c102 = P('C101', 1), P('C102', 1)
+    r.poly([d2, (g(d2[0] + 10.16), d2[1]), (g(d2[0] + 10.16), c101[1]), c101])
+    r.poly([d2, (g(c102[0] + 7.62), d2[1]), (g(c102[0] + 7.62), c102[1]), c102])
 
 
 def route_adc(r):
@@ -602,17 +625,17 @@ def route_adc(r):
 # Power symbols, labels, no-connects
 # ---------------------------------------------------------------------------
 def place_power(r, ed, sh, pinmap, ncbase, sh0):
-    """Put a power symbol on every rail pin; reuse the 17 baseline GND UUIDs."""
-    n = 0
-    for key, s in sorted(sh.inst.items()):
+    """Put a power symbol on every rail pin, reusing the baseline GND UUIDs."""
+    reuse = [u for u, lib in sh.lib.items() if lib.startswith('power:')]
+    jobs = []
+    for key in sorted(sh.inst):
         if sh.lib[sh.uuid_of[key]].startswith('power:'):
             continue
         ref = key.split(':')[0]
-        for num, p in sorted(sh.pins(key).items(), key=lambda kv: int(kv[0])):
+        for num, p in sorted(sh.unit_pins(key).items(), key=lambda kv: int(kv[0])):
             net = pinmap.get((ref, num))
             if net not in RAILS:
                 continue
-            lib = RAILS[net]
             ox, oy, _ = sh.origin(key)
             dx, dy = p[0] - ox, p[1] - oy
             if abs(dx) >= abs(dy):
@@ -623,11 +646,35 @@ def place_power(r, ed, sh, pinmap, ncbase, sh0):
                 sgn = 1 if dy >= 0 else -1
                 rot = 0 if sgn > 0 else 180
                 tx, ty = p[0], g(p[1] + sgn * 5.08)
-            n += 1
-            pwrref = f'#PWR{n:03d}'
-            blk = power_block(lib, pwrref, p, rot, (tx, ty))
-            ed.append(blk)
-    print(f'  power symbols placed: {n}')
+            jobs.append((net, RAILS[net], p, rot, (tx, ty)))
+    # first serve GND pins with the baseline symbols (all are power:GND)
+    jobs.sort(key=lambda j: j[0] != 'GND')
+    n = 0
+    for net, lib, p, rot, text_at in jobs:
+        n += 1
+        pwrref = f'#PWR{n:03d}'
+        if reuse and lib == 'power:GND':
+            u = reuse.pop()
+            s, e = H.block_span(ed.t, u)
+            blk = ed.t[s:e]
+            blk = re.sub(r'\t\t\(at [\d.-]+ [\d.-]+ [\d.-]+\)',
+                         f'\t\t(at {f(p[0])} {f(p[1])} 0)', blk, count=1)
+            blk = re.sub(r'\(property "Reference" "[^"]*"',
+                         f'(property "Reference" "{pwrref}"', blk, count=1)
+            blk = re.sub(r'\(reference "[^"]*"',
+                         f'(reference "{pwrref}"', blk, count=1)
+            m = re.search(r'\(property "Value" "GND"\s*\n\s*\(at [\d.-]+ [\d.-]+ [\d.-]+\)',
+                          blk)
+            if m:
+                blk = blk[:m.start()] + re.sub(
+                    r'\(at [\d.-]+ [\d.-]+ [\d.-]+\)',
+                    f'(at {f(text_at[0])} {f(text_at[1])} 0)', m.group(0)) \
+                    + blk[m.end():]
+            ed.t = ed.t[:s] + blk + ed.t[e:]
+        else:
+            ed.append(power_block(lib, pwrref, p, rot, text_at))
+        ed.append(junction_block(p))
+    print(f'  power symbols placed: {n} (reused {len(reuse)} -> {17 - len(reuse)})')
 
 
 def place_nc(r, ed, sh, ncbase):
@@ -651,7 +698,7 @@ def place_labels(r, ed, sh, pinmap, offsheet):
             continue
         ref = key.split(':')[0]
         ox, oy, _ = sh.origin(key)
-        for num, p in sorted(sh.pins(key).items(), key=lambda kv: int(kv[0])):
+        for num, p in sorted(sh.unit_pins(key).items(), key=lambda kv: int(kv[0])):
             net = pinmap.get((ref, num))
             if net is None:
                 continue
@@ -718,17 +765,15 @@ def add_lib_symbols(text):
     root = H.parse(text)
     libs = H.child(root, 'lib_symbols')
     have = {s[1] for s in H.children(libs, 'symbol')}
-    power_sheet = (ROOT / 'hardware/brd-01/kicad/power.kicad_sch').read_text()
-    proot = H.parse(power_sheet)
-    plibs = H.child(proot, 'lib_symbols')
-    blocks = {s[1]: s for s in H.children(plibs, 'symbol')}
-    need = {'power:+5VA': 'power:+5V', 'power:+12VA': 'power:+12VA',
-            'power:+3.3V': 'power:+3.3V', 'power:-12VA': 'power:-12VA'}
-    # render blocks from the power sheet text with original indentation
+    # Copy the symbols verbatim from the installed KiCad power library so ERC's
+    # lib_symbol_mismatch check sees the stock definitions.
+    power_sheet = Path('/usr/share/kicad/symbols/power.kicad_sym').read_text()
+    need = ['power:+5VA', 'power:+12VA', 'power:+3.3V', 'power:-12VA']
     added = []
-    for name, template in need.items():
+    for name in need:
         if name in have:
             continue
+        template = name.split(':')[1]
         s = power_sheet.index(f'(symbol "{template}"')
         depth, j, quoted = 0, s, False
         while j < len(power_sheet):
@@ -752,10 +797,7 @@ def add_lib_symbols(text):
         else:
             raise KeyError(template)
         blk = power_sheet[s:e]
-        if name != template:
-            blk = blk.replace(f'(symbol "{template}"', f'(symbol "{name}"')
-            blk = blk.replace(f'{template[6:]}_', f'{name[6:]}_')
-            blk = blk.replace(f'"{template[6:]}"', f'"{name[6:]}"')
+        blk = blk.replace(f'(symbol "{template}"', f'(symbol "{name}"', 1)
         idx = _lib_symbols_end(text)
         text = text[:idx] + '\n\t\t' + blk + text[idx:]
         added.append(name)
@@ -766,6 +808,35 @@ def add_lib_symbols(text):
 # ---------------------------------------------------------------------------
 # Main
 # ---------------------------------------------------------------------------
+NOTE_POS = {
+    'Pen 1 | INA163': (90.17, 163.83),
+    'Ch0 unity-gain': (199.85, 262.89),
+    'Ch2 is wired': (199.85, 270.51),
+    'Ch2 | PEN2': (92.71, 277.99),
+    'Ch3 | REF_COIL': (94.85, 365.76),
+    'Reference fed': (429.26, 462.28),
+    'R184 isolates': (429.26, 469.90),
+    '+5VA source': (429.26, 477.52),
+}
+
+
+def move_notes(ed):
+    """Move the free-text notes off the signal runs (grid-snapped)."""
+    blocks = list(H.top_blocks(ed.t, 'text'))
+    for start, end, _name in reversed(blocks):
+        blk = ed.t[start:end]
+        m = re.search(r'\(text "([^"]*)"', blk)
+        if not m:
+            continue
+        key = next((k for k in NOTE_POS if blk.startswith(f'(text "{k}')), None)
+        if key is None:
+            continue
+        x, y = NOTE_POS[key]
+        at = re.search(r'\(at [\d.-]+ [\d.-]+', blk)
+        blk = blk[:at.start()] + f'(at {f(x)} {f(y)}' + blk[at.end():]
+        ed.t = ed.t[:start] + blk + ed.t[end:]
+
+
 def regenerate(text):
     _U[0] = 0
     base_sh = Sheet(text)
@@ -778,8 +849,17 @@ def regenerate(text):
         u = base_sh.uuid_of[key]
         ed.move_symbol(u, x, y, rot)
         # move property texts with the body, into clear lanes
-        ed.move_prop(u, 'Reference', x, g(y - 6.35))
-        ed.move_prop(u, 'Value', x, g(y + 6.35))
+        if key.startswith('U105:') or key.startswith('U108:'):
+            rx, ry = g(x - 15.24), g(y - 6.35)
+            vx, vy = g(x + 15.24), g(y + 6.35)
+            ed.move_prop(u, 'Reference', rx, ry)
+            ed.move_prop(u, 'Value', vx, vy)
+        elif key in ('U104', 'U106', 'U107'):
+            ed.move_prop(u, 'Reference', x, g(y - 15.24))
+            ed.move_prop(u, 'Value', x, g(y + 15.24))
+        else:
+            ed.move_prop(u, 'Reference', x, g(y - 6.35))
+            ed.move_prop(u, 'Value', x, g(y + 6.35))
     text = ed.t
     sh = Sheet(text)
     pinmap = pin_net_map()
@@ -799,8 +879,8 @@ def regenerate(text):
     offsheet = {l['text'] for l in H.labels(base_sh.root, 'global_label')
                 if l['text'] not in RAILS}
     place_labels(r, ed, sh, pinmap, offsheet)
-    text = ed.t
-    text = add_lib_symbols(text)
+    move_notes(ed)
+    text = add_lib_symbols(ed.t)
     return text
 
 
