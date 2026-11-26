@@ -448,11 +448,15 @@ def zone_a(rz: Rezone):
     for ball in ('L4', 'M2', 'M1'):
         px, py = rz.pin('U4', ball)
         rz.del_wire((px, py), (px - 5.08, py))
+    # clear stale vertical jog wires from an earlier row assignment
+    for w in list(K.wires(rz.root)):
+        if abs(w['a'][0] - w['b'][0]) < 1e-6 and w['a'][0] in (20.32, 22.86, 24.13):
+            rz.del_wire(w['a'], w['b'])
     # Vertical bodies at 5.08 mm pitch in the clear area above the DAC pins;
     # Reference left / Value right, orthogonal jogs back down to the balls.
     for ref, ball, net, row, jx in (('R147', 'L4', 'DAC_SDI', 49.53, 24.13),
                                     ('R145', 'M2', 'DAC_CS', 40.64, 22.86),
-                                    ('R146', 'M1', 'DAC_SCLK', 58.42, 20.32)):
+                                    ('R146', 'M1', 'DAC_SCLK', 63.50, 20.32)):
         px, py = rz.pin('U4', ball)          # FPGA pin end, from lib_symbols
         rz.move(ref, (19.05, row), rot=0)
         p1, p2 = rz.pin(ref, '1'), rz.pin(ref, '2')
@@ -464,14 +468,15 @@ def zone_a(rz: Rezone):
         rz.junction((jx, py))
         rz.junction((jx, jog_y))
         rz.wire((jx, jog_y), p1, ref + 'top')
-        lab = (15.24, p2[1]) if ref != 'R147' else (13.97, p2[1])
-        if ref:
-            rz.wire(p2, lab, ref + 'labstub')
+        lab = (15.24, p2[1]) if ref != 'R147' else (11.43, p2[1])
+        rz.wire(p2, lab, ref + 'labstub')
         rz.glabel(net, lab, 180 if ref in ('R145', 'R146') else 0)
         rz.prop_pos(ref, 'Reference', (15.24, row), 0)
         rz.prop_pos(ref, 'Value', (22.86, row), 0)
     # keep the pre-existing DAC_SDO flag on its own pin, off the new jog wire
-    rz.label_at('global_label', 'DAC_SDO', (21.59, 57.15), (21.59, 57.15), 90)
+    rz.label_at('global_label', 'DAC_SDO', (21.59, 57.15), (21.59, 57.15), 180)
+    rz.label_at('global_label', 'PICO_RX', (21.59, 64.77), (21.59, 64.77), 0)
+    rz.label_at('global_label', 'PICO_TX', (21.59, 67.31), (21.59, 67.31), 0)
     rz.move('R162', (15.24, 31.75), rot=0)
     p1, p2 = rz.pin('R162', '1'), rz.pin('R162', '2')
     rz.glabel('+3.3V', (p1[0], p1[1] - 3.81), 90)
@@ -485,11 +490,15 @@ def zone_b(rz: Rezone):
     rz.detach(['R163', 'R164', 'R165', 'R166', 'Y1', 'C141'])
     rz.del_wire((440.69, 73.66), (440.69, 113.03))   # old clock dog-leg
     rz.del_wire((447.04, 115.57), (447.04, 96.52))
-    for y in (81.28, 83.82, 91.44, 93.98, 96.52, 99.06, 116.84):
-        rz.del_wire((290.83, y), (295.91, y))        # old FPGA-to-label stubs
+    for y in (81.28, 83.82, 86.36, 91.44, 93.98, 96.52, 99.06, 101.60, 116.84):
+        rz.del_wire((290.83, y), (295.91, y))        # old FPGA-to-jog stubs
     for net, y in (('ADC_SDI', 83.82), ('ADC_SCLK', 91.44)):
         rz.del_label_at('global_label', net, (295.91, y))
-        rz.glabel(net, (290.83, y), 0)               # same flag, at the pin
+        rz.del_label_at('global_label', net, (290.83, y))
+        anchor = (287.02, y) if net == 'ADC_SCLK' else (290.83, y)
+        if anchor != (290.83, y):
+            rz.wire((290.83, y), anchor, net + 'stub')
+        rz.glabel(net, anchor, 0)                   # flag on a wire/pin end
     # 5.08 mm pitch rows give Reference/Value room at the sheet's normal 1 mm text.
     rows = {'R164': 86.36, 'R163': 91.44, 'R166': 96.52, 'R165': 101.60}
     for ref, ball, net in (('R163', 'A14', 'ADC_RESET_N'),
@@ -503,10 +512,11 @@ def zone_b(rz: Rezone):
         cx = 317.50
         rz.move(ref, (cx, row), rot=270)
         p1, p2 = rz.pin(ref, '1'), rz.pin(ref, '2')
-        knee = (295.91, row)
-        rz.wire((px, py), (295.91, py), ref + 'in')
+        knee = (300.99, row)
+        rz.del_wire((295.91, py), (295.91, row))
+        rz.wire((px, py), (300.99, py), ref + 'in')
         if abs(row - py) > 1e-6:
-            rz.wire((295.91, py), knee, ref + 'jog')
+            rz.wire((300.99, py), knee, ref + 'jog')
         rz.wire(knee, p2, ref + 'out')
         rail_end = (p1[0] + 5.08, row)           # stub out of the resistor body
         rz.wire(p1, rail_end, ref + 'rail')
@@ -889,6 +899,160 @@ def text_collision_data(path: str):
     return records
 
 
+LABEL_ZONES = {'A': (8, 42, 44, 68), 'B': (283, 74, 330, 122)}
+
+
+def label_bbox(text: str, at, size: float, angle: float):
+    """KiCad label flag: starts at the anchor and extends one way, with padding."""
+    w = 0.9 * size * max(len(str(text)), 1) + 2.54
+    h = 1.6 * size
+    a = int(round(angle)) % 360
+    if a in (90, 270):
+        w, h = h, w
+    x, y = float(at[1]), float(at[2])
+    if a == 180:
+        return (x - w, y - h / 2, x, y + h / 2)
+    if a == 90:
+        return (x - w / 2, y - h, x + w / 2, y)
+    if a == 270:
+        return (x - w / 2, y, x + w / 2, y + h)
+    return (x, y - h / 2, x + w, y + h / 2)
+
+
+def check_label_rules(path: str):
+    """R1-R4 label placement rules plus an A/B clearance table."""
+    root = K.parse(Path(path).read_text(encoding='utf-8'))
+    wires = K.wires(root)
+    pins = pins_from_root(root)
+    pinpts = {(round(v[1], 4), round(v[2], 4)) for v in pins.values()}
+    ends = set()
+    for w in wires:
+        ends.add((round(w['a'][0], 4), round(w['a'][1], 4)))
+        ends.add((round(w['b'][0], 4), round(w['b'][1], 4)))
+
+    labels = []
+    for kind in ('label', 'global_label'):
+        for node in K.children(root, kind):
+            at = K.child(node, 'at')
+            eff = K.child(node, 'effects')
+            size = 1.0
+            if eff is not None:
+                font = K.child(eff, 'font')
+                if font is not None:
+                    sz = K.child(font, 'size')
+                    if sz is not None:
+                        size = float(sz[1])
+            angle = float(at[3]) if len(at) > 3 else 0
+            anchor = (round(float(at[1]), 4), round(float(at[2]), 4))
+            bb = label_bbox(node[1], at, size, angle)
+            labels.append(dict(text=node[1], kind=kind, anchor=anchor,
+                               angle=angle, bb=bb))
+
+    # symbol body boxes
+    lib = S.library_unit_pins(root)
+    libs = K.child(root, 'lib_symbols')
+    rects = {}
+    for sym in K.children(libs or [], 'symbol'):
+        r = {}
+        for sub in K.children(sym, 'symbol'):
+            m = re.search(r'_(\d+)_(\d+)$', str(sub[1]))
+            un = K.child(sub, 'unit')
+            u = int(m.group(1)) if m else (int(un[1]) if un else 0)
+            rr = K.child(sub, 'rectangle')
+            if rr is not None:
+                r[u] = (float(K.child(rr, 'start')[1]),
+                        float(K.child(rr, 'start')[2]),
+                        float(K.child(rr, 'end')[1]),
+                        float(K.child(rr, 'end')[2]))
+        rects[str(sym[1])] = r
+    bodies = []
+    for sym in K.children(root, 'symbol'):
+        libid = K.child(sym, 'lib_id')
+        at = K.child(sym, 'at')
+        if libid is None or at is None:
+            continue
+        ref = next((p[2] for p in K.children(sym, 'property')
+                    if p[1] == 'Reference'), None)
+        x, y = float(at[1]), float(at[2])
+        rot = int(float(at[3])) if len(at) > 3 else 0
+        mir = K.child(sym, 'mirror')
+        un = K.child(sym, 'unit')
+        u = int(un[1]) if un else 1
+        rr = rects.get(str(libid[1]), {})
+        b = rr.get(u) or rr.get(0)
+        if not b:
+            continue
+        cs = []
+        for px, py in ((b[0], b[1]), (b[2], b[3])):
+            qx, qy = K.rotate(px, py, rot, mir[1] if mir else None)
+            cs.append((x + qx, y - qy))
+        bodies.append((ref, min(c[0] for c in cs), min(c[1] for c in cs),
+                       max(c[0] for c in cs), max(c[1] for c in cs)))
+
+    def ov(a, b):
+        return (min(a[2], b[2]) - max(a[0], b[0]) > 1e-6
+                and min(a[3], b[3]) - max(a[1], b[1]) > 1e-6)
+
+    def seg_box(w, b):
+        ax, ay = w['a']; bx, by = w['b']
+        if abs(ay - by) < 1e-6:
+            return max(min(ax, bx), b[0]) < min(max(ax, bx), b[2]) and b[1] < ay < b[3]
+        if abs(ax - bx) < 1e-6:
+            return max(min(ay, by), b[1]) < min(max(ay, by), b[3]) and b[0] < ax < b[2]
+        return False
+
+    r1 = [l for l in labels if l['anchor'] not in ends and l['anchor'] not in pinpts]
+    r2 = []
+    for i, a in enumerate(labels):
+        for b in labels[i + 1:]:
+            if ov(a['bb'], b['bb']):
+                r2.append((a['text'], b['text']))
+    r3 = []
+    for l in labels:
+        for w in wires:
+            if l['anchor'] in (w['a'], w['b']):
+                continue
+            if seg_box(w, l['bb']):
+                r3.append((l['text'], w['a'], w['b']))
+    r4 = []
+    for l in labels:
+        for ref, x0, y0, x1, y1 in bodies:
+            if ov(l['bb'], (x0, y0, x1, y1)):
+                r4.append((l['text'], ref))
+    print(f'R1 anchors off wire/pin ends = {len(r1)}')
+    for l in r1[:20]:
+        print('   ', l['text'], l['anchor'])
+    print(f'R2 overlapping label boxes = {len(r2)}')
+    for p in r2[:20]:
+        print('   ', p)
+    print(f'R3 wires through label boxes = {len(r3)}')
+    for p in r3[:20]:
+        print('   ', p)
+    print(f'R4 labels over symbol bodies = {len(r4)}')
+    for p in r4[:20]:
+        print('   ', p)
+
+    # per-label clearance table for zones A and B
+    for zname, (x0, y0, x1, y1) in LABEL_ZONES.items():
+        sel = [l for l in labels if x0 <= l['anchor'][0] <= x1 and y0 <= l['anchor'][1] <= y1]
+        print(f'--- zone {zname}: label | anchor | w x h | nearest neighbour | clearance mm ---')
+        for l in sorted(sel, key=lambda d: (d['anchor'][1], d['anchor'][0])):
+            b = l['bb']
+            best, gap = '', float('inf')
+            for o in sel:
+                if o is l:
+                    continue
+                ob = o['bb']
+                dx = max(ob[0] - b[2], b[0] - ob[2], 0.0)
+                dy = max(ob[1] - b[3], b[1] - ob[3], 0.0)
+                d = (dx * dx + dy * dy) ** 0.5
+                if d < gap:
+                    gap, best = d, o['text']
+            print(f"   {l['text']:18s} | {l['anchor']} | {b[2]-b[0]:5.2f} x {b[3]-b[1]:4.2f}"
+                  f" | {best:18s} | {gap:5.2f}")
+    return len(r1) + len(r2) + len(r3) + len(r4)
+
+
 def verify(path: str, baseline: str | None = None) -> int:
     """Assertion pass over the finished sheet. Returns the violation count."""
     root = K.parse(Path(path).read_text(encoding='utf-8'))
@@ -1062,6 +1226,7 @@ def verify(path: str, baseline: str | None = None) -> int:
         for r in records[:60]:
             print('   ', r['kind'], r['a'], r['apos'], 'vs', r['b'], r['bpos'])
         bad.append('text collisions')
+    check_label_rules(path)
     print(f'VERIFY: {"FAIL" if bad else "PASS"} ({len(bad)} violation classes)')
     return len(bad)
 
