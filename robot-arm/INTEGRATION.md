@@ -40,7 +40,10 @@ the same TX/RX pins if the ground test shows >200 mV.
 
 ## Safety
 
-- STOP is a hardware level, not a message. The UART is never the safety path.
+- Under #30 (arm-only STOP), a host STOP arrives as a software request over
+  the UART/link and is latched to `PICO_STOP_N`; field drive, DDS and pose
+  continue. The UART is the stop-request path, not a hardwired driver interlock.
+  `PICO_STOP_N` itself remains a hardware level from U755.4 to J123.5.
 - The BRD-01 arm STOP latch drives `PICO_STOP_N` independently of both
   processors; there is no relay E-stop and the `+15V_FUSED` driver rail is
   unswitched. The ICD's older E-stop wording is being updated in the parallel
