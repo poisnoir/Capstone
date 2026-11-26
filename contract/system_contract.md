@@ -1,13 +1,14 @@
 # Phase 2 — System contract (SC-0)
 
-**Canonical location:** `contract/` · **Version:** 1.1.3 · **Tag:** `contract-v1.1.3` (pending review)
+**Canonical location:** `contract/` · **Version:** 1.1.4 · **Tag:** `contract-v1.1.4` (pending review)
 **Change process:** `contract/README.md` — do not edit without a contract-change PR.
 
 **Status:** draft for team sign-off, 2026-10-27. Technical items SC-01…SC-05 are
 locked. **D1-B, D3-A, and D4 were approved by the team on 2026-10-27. FE-4 is
 locked to INA163 + ADA4940-2.** FG-1 may proceed. SC-05b transport wording,
 SC-07 clock tree and the SC-08 STOP scope were updated in the 1.1.3 contract PR
-(decisions #21/#25/#28/#30/#31/#32/#33/#34); the tag is pending review. The #20 power part
+(decisions #21/#25/#28/#30/#31/#32/#33/#34); SC-06's Ch3 reference path was
+clarified in 1.1.4 (#35). The tag is pending review. The #20 power part
 list is superseded by decision #31 (v2 adopted 2026-11-25); see `decisions_log.md`.
 
 **Sources:** `docs/phase2/design_order.md`; `docs/phase2/tone_plan.md`;
@@ -37,7 +38,7 @@ deviation; `PROPOSED` = needs approval/test; `OPEN` = team decision required.
 | SC-05a | ADC clock jitter: design target ≤30 ps rms for the ADC's 104 dB target; minimum acceptable 1 ns rms = 73.4 dB at 34 kHz, with a written deviation if used. | \(SNR_j=-20\log(2\pi f t_j)\); RQ-A4 correction | LOCKED target |
 | SC-05b | ADC digital lane rate: **4 active channels** × 32-bit frames × 256 kSPS = 32.768 Mbit/s; 4 DOUT lanes → DCLK 8.192 MHz; 2 lanes → 16.384 MHz. A 2×6 Pmod (8 I/O) is insufficient; on BRD-01 the lanes are **board nets, not an external 2×8/custom header** (#21/#25). | AD7768-4 datasheet; `adc_justification.md` §6; D3-A; #21/#25 | LOCKED lane rate; transport clarified 1.1.0 |
 | SC-05c | Coil capacitance budget: 73 pF total at 34 kHz (cable + connector + preamp input; 10 pF connector per RQ-C3, 10 pF preamp-input stack, 53 pF cable budget). The AD7768 switched-cap network is behind the preamp and is not part of this budget. | `tone_plan.md` §6; `adc_justification.md` §4 (decision #34) | LOCKED |
-| SC-06 | Channel map = **D3-A (LOCKED)**: Ch0 current-sense, Ch1 pen 1, Ch2 pen 2, Ch3 reference sensor; Ch2 wired but enabled when pen 2 is built | `adc_justification.md`; `fSysSetup.m`; D3 decision 2026-10-27 | LOCKED |
+| SC-06 | Channel map = **D3-A (LOCKED)**: Ch0 current-sense, Ch1 pen 1, Ch2 pen 2, Ch3 reference sensor path wired but parts DNP on the first build (#35); enable when populated; Ch2 wired but enabled when pen 2 is built | `adc_justification.md`; `fSysSetup.m`; D3 decision 2026-10-27; #35 | LOCKED |
 | SC-07 | Clock tree: one 32.768 MHz XO (Citizen CSX750FBC32.768M-UT) drives ADC MCLK through 33 Ω and the FPGA clock input directly; FPGA DDS clock = 32.768 MHz; PLL ×3 = 98.304 MHz → ÷2 = 49.152 MHz DAC SPI; DAC update ÷164 = 199.805 kSPS; ADC ODR ÷128 = 256 kSPS; no discrete clock buffer; single sync reset; DDS 32-bit; integer-J frames; one-time ADC START/SYNC, then count DRDY; discard the first 68 samples (266 µs) after sync. | Decision #21 (locked XO/clock interface); `system_schematic.md` §5.1/§6.0; `dig6_requirements.md` §1; BRD-01 netlist | LOCKED architecture + part (#21); verify clock integrity on BRD-01 |
 | SC-08 | Budget: \(T_{acq}=512/256\text{ k}=2.000\) ms; ADC group delay 0.133 ms; 2.133 ms total; 7.867 ms left for demod + solver + overhead at 10 ms/100 Hz; filter-off latency <20 ms, filter-on <100 ms; **arm-motion STOP ≤100 ms — the tracker keeps field and pose through a STOP (#30)**. | `tone_plan.md` §3; Phase 1 #14–17; #30 | LOCKED budget; STOP scope clarified 1.1.0 |
 | SC-09 | Units/naming: RMS unless stated; dBc; T/A; mm; frame = N samples; tone frequencies in Hz; phase in degrees/radians; ICNIRP field values RMS. | Team convention | LOCKED |
@@ -183,8 +184,9 @@ measured evidence.
 **Decision: A — LOCKED (2026-10-27).** Ch0 current, Ch1 pen 1, Ch2 pen 2, Ch3
 reference sensor. Phase 1 #1–2 supports 1–2 pens, so the second pen channel is
 committed; the reference is retained. Ch2 is wired and captured from the first
-build but enabled/used only when pen 2 exists. The first build is one pen +
-reference; the second pen is a build option, not a new ADC/mux. The ADC lane
+build but enabled/used only when pen 2 exists. The first build is one pen plus
+the wired Ch3 reference path (front end DNP, #35); the second pen is a build
+option, not a new ADC/mux. The ADC lane
 budget is 4 channels × 32 bit × 256 kSPS = 32.768 Mbit/s; 4 DOUT lanes = 8.192
 MHz DCLK. Option B (spare) and C (pen 2 later without reference) are rejected.
 
