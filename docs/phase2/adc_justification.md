@@ -155,7 +155,28 @@ $$
 C_{max} = \frac{1}{(2\pi\cdot340\ \mathrm{kHz})^2\cdot 3\ \mathrm{mH}} \approx 73\ \mathrm{pF}
 $$
 
-Filed whip (W2697 0.6 m ≈ 39 pF + 10 pF conn + 10 pF preamp input = 59 pF) passes with 14 pF left for \(C_{tune}\) or margin; a 0.8 m whip is marginal (~72 pF). Built air coils (B 804 µH → 272 pF max; C 91 µH → nF) pass trivially. The capacitance seen by the coil is cable + connector + **preamp input**; the ADC's switched-cap input sits after the preamp and is a separate drive requirement in FE-4/ADC-5. The earlier "ADC \(C_{in}\)" wording conflated the two. Any preamp with input capacitance >20 pF must be re-budgeted; the ADC's external RC/charge reservoirs are not directly across the coil. Updated to 73 pF in `connector_requirements.xlsx` Rev D and `BOM_PEN-ANA-01.xlsx` Rev 0.03.
+**Recalculated 2026-11-26** (number-for-number agreement with `tone_plan.md` §6).
+With \(f_{res}\ge10\times34=340\) kHz and worst-case coil E + ferrite
+\(L\approx3\) mH (Jaeger Table 7.1 as quoted in AGENTS.md; thesis local-only,
+coil value not re-derived here):
+\[
+C_{max}=\frac{1}{(2\pi\cdot340\times10^3)^2\cdot3\times10^{-3}}
+=73.04\ \mathrm{pF}\approx73\ \mathrm{pF}\ (3\ \mathrm{s.f.})
+\]
+Air coils at the same threshold: B 804 µH → \(1/((2\pi\cdot340\times10^3)^2\cdot804\times10^{-6})=272.5\) pF ≈ 272 pF; C 91 µH → 2.41 nF. Both pass trivially; the 350 pF figure in the point-in-time flowchart handoff is stale.
+
+**Preamp-input stack (derivation replaces the unsourced "10 pF"):**
+
+- INA163: TI datasheet SBOS177D (Rev. D, May 2005), p.3 Electrical Characteristics, INPUT IMPEDANCE — Differential 60 MΩ ‖ **2 pF**, Common-Mode 60 MΩ ‖ **2 pF** (typ). Fetched from `https://www.ti.com/lit/ds/symlink/ina163.pdf` on 2026-11-26; the REF-08 local datasheet cache is absent on this machine. → 2 pF directly across the two inputs, 2 pF from each input to ground.
+- BAS70H dual Schottky clamps: two diodes per leg, each ≤2 pF at 0 V / 1 MHz → **4 pF per leg** to the ±12 V rails (AC ground) (`hardware/brd-01/kicad/bom-to-cad.md`:530; Nexperia BAS70H data sheet). Mapping to the differential shunt the coil sees: two equal 4 pF legs to ground are in series across the coil → 2 pF when the legs are symmetric; if one leg is held at AC ground by its 10 kΩ bias return, that leg's full 4 pF appears across the coil (worst case).
+- 100 Ω series per leg (`system_schematic.md` §5.1) adds no shunt capacitance; \(X_C(4\ \mathrm{pF}@34\ \mathrm{kHz})\approx1.17\ \mathrm{M\Omega}\gg100\ \Omega\), so the clamp capacitance is essentially fully across the link. The 10 µF coupling caps are ~0.47 Ω at 34 kHz and do not reduce it.
+- Sum: symmetric = 2 (INA diff) + 1 (INA common-mode pair in series) + 2 (clamp pair in series) = 5 pF; worst leg = 2 + 2 + 4 = 8 pF; plus 2 pF board-pad/layout allowance → **\(C_{preamp}=10\) pF allocation**, inside FE-01's ≤20 pF gate with 10 pF headroom. Verify on the assembled BRD-01 pen channel.
+
+\[
+C_{cable}=73.04-10\ (\mathrm{conn,\ RQ\!-\!C3})-10\ (\mathrm{preamp})=53.04\ \mathrm{pF}\approx53\ \mathrm{pF}.
+\]
+
+SC-05c's "56 pF cable budget" is stale; a contract change is proposed, not applied here. The filed W2697 0.6 m whip is \(0.6\times65=39\) pF cable, 59 pF with the 20 pF terminations: it passes the 53 pF cable line by 14 pF (total \(f_{res}\approx378\) kHz). Maximum compliant length at 65 pF/m is \(53.04/65=0.816\) m; the 0.8 m alternate is 52 pF cable / 72 pF total (\(f_{res}\approx342\) kHz), with only 1 pF of cable margin — it passes only if \(C_{tune}\approx0\) and is not worst-case robust. Topology: the capacitance seen by the coil is cable + connector + **preamp input** (+ tuning cap); the ADC's switched-cap input sits after the preamp and is a separate drive requirement in FE-4/ADC-5. The earlier "ADC \(C_{in}\)" wording conflated the two; the ADC's external RC/charge reservoirs are not directly across the coil. Any preamp above the 20 pF gate must be re-budgeted; `connector_requirements.xlsx` Rev D and `BOM_PEN-ANA-01.xlsx` Rev 0.03 still quote the stale cable allocation.
 
 ---
 

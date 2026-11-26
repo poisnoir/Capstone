@@ -54,7 +54,7 @@ pen coil B (air) → protection/ESD → INA163 (G≈35) → single-ended
 
 | ID | Requirement | Rationale | Verification |
 |---|---|---|---|
-| FE-01 | Input: **INA163 (LOCKED)**, differential, \(Z_{in}\ge1\) MΩ, CMRR ≥60 dB (target 100 dB), input protection/ESD, bias/return for the floating coil; preamp input capacitance ≤20 pF in the 73 pF coil budget | Phase 2 §4; INA163 12 µA bias; cable/coil resonance | CMRR sweep 20–34 kHz; Zin; bias/offset check |
+| FE-01 | Input: **INA163 (LOCKED)**, differential, \(Z_{in}\ge1\) MΩ, CMRR ≥60 dB (target 100 dB), input protection/ESD, bias/return for the floating coil; preamp input capacitance ≤20 pF in the 73 pF coil budget; 10 pF is allocated to the INA163 + BAS70H clamp + layout stack | `adc_justification.md` §4 (2026-11-26 derivation); INA163 12 µA bias; cable/coil resonance | CMRR sweep 20–34 kHz; Zin; bias/offset check; assembled-input capacitance |
 | FE-02 | Gain: INA163 ~35× + differential stage ~2× (total ~70×); strongest tone at 150/200 mm ≤−6 dBFS; weakest tone above the noise floor; headroom for the 30–40 dB tone spread | `pen_link_budget.md`; AD7768 ±4.096 V | Gain/phase sweep; full-scale/headroom test |
 | FE-03 | Noise: INA163 1.1 nV/√Hz; total input-referred ≤26 nV over the 500 Hz demod bin; \(\sigma_B\le26\) pT at 150 mm/B (≤11 pT at 200, ≤58 pT at 100) | SC-01e; PEN-3 link budget | Input-referred noise; weighted CRLB |
 | FE-04 | Output: single-ended-to-differential, \(V_{CM}\) = ADC VCM, ±4.096 V differential max; **ADA4940-2 (LOCKED)**; ADA4896-2 alternate; AD7768 external RC/charge reservoirs; inter-channel phase match ≤0.1° | AD7768 datasheet; `adc_justification.md` §9a; AN-1384 | Output swing/settling; phase match |
@@ -109,8 +109,8 @@ The 150/200 gates are met with coil B air. Coil C (120 T) is 3.5× noisier
   coil or use a low-impedance bias/return network so the 12 µA does not create
   a large offset.
 - Input protection: ESD/clamp at the connector, series resistance, and the
-  INA163 input rating; keep the protection capacitance within the 73 pF coil
-  budget.
+  INA163 input rating; keep the protection capacitance within the 10 pF
+  preamp-input allocation of the 73 pF coil budget (`adc_justification.md` §4).
 - The E301 AD620/AD627 input stage has lower bias current but 7–8× higher
   voltage noise; it cannot meet the 200 mm/B \(\sigma_B\) gate and is only
   marginal for 150 mm/B (B/E at 34 kHz). Use it only as the 100 mm
