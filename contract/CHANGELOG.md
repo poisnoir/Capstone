@@ -3,6 +3,24 @@
 All notable contract changes. Versioning: MAJOR = breaking interface change,
 MINOR = additive, PATCH = clarification.
 
+## 1.1.4 — 2026-11-26 — tag `contract-v1.1.4` pending release
+
+PATCH clarification; no interface change. The Ch3 reference sensor channel
+stays in the SC-06 channel map, but its front-end parts stay DNP in the BOM and
+assembly on the first build; firmware enables the channel when populated. The
+user approved this directly on 2026-11-26 (decision #35) in place of the usual
+`contract-change` PR and two approvals. The tag, release zip/json and arm-repo
+sync remain pending, as for 1.1.1–1.1.3.
+
+- **Decision #35 (Ch3 reference path):** wired but DNP on the first build. No
+  board, BOM or firmware interface change: the first build keeps three
+  populated channels plus the reference path, and Ch3 is enabled once fitted.
+- `system_contract.md` SC-06 and D3 — the channel map now states the wired/DNP
+  assembly state explicitly, matching `hardware/brd-01/kicad/README.md` and
+  `hardware/brd-01/kicad/bom-to-cad.md`.
+- `docs/phase2/frontend_requirements.md` §1 — the existing DNP statement now
+  cites #35.
+
 ## 1.1.3 — 2026-11-26 — tag `contract-v1.1.3` pending release
 
 PATCH defect correction in a locked SC row; no interface added or removed. The

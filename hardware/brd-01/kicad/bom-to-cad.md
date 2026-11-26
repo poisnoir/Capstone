@@ -52,9 +52,10 @@ abbreviated MPN and Amphenol entry. It has no PCB footprint. The JST harness
 carries only SIG+/SIG−; panel pin 1 and the separate shell node go to chassis
 star per Locked-CAB C3. Physical contacts 2 and 3 are shown by number, with
 signal polarity left for the cable schedule. The cable-side `IO-TXLR3-F` is
-unchanged. JST pin assignment and receiver
-channel population remain open. Measure the assembled total pen link, including
-the internal harness and connector, against the 73 pF limit at 34 kHz (SC-05c).
+unchanged. JST pin assignment remains open; receiver channel population is
+closed by #35 (Ch3 wired, DNP on the first build). Measure the assembled total
+pen link, including the internal harness and connector, against the 73 pF limit
+at 34 kHz (SC-05c).
 
 ## Partial PROT lot mappings
 
@@ -585,8 +586,9 @@ settling and channel phase matching remain open.
 - **Reference designators and quantity:** allocate two unlisted OPA192 refs
   (row 22); confirm which of the U40–U45 and U80–U88 labels are spares; U3/U4
   receiver refs collide with the optos. §5.1 says repeat the pen front end for
-  the reference channel, while row 52 budgets one installed INA163. Resolve
-  receiver channel population before BOM freeze.
+  the reference channel, while row 52 budgets one installed INA163. **Closed by
+  #35:** Ch3 stays wired but DNP on the first build; firmware enables it when
+  populated.
 - **Interface and layout:** select the Pico connector against the
   [Pico ICD](../../../contract/icd/pico_link.md); pin-to-pad verification does not
   assign FPGA nets, validate HR-bank use, or certify 35T→50T interchange.

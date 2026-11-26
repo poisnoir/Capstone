@@ -1,6 +1,6 @@
 # Phase 2 — Locked decisions log
 
-**Canonical location:** `contract/` · **Version:** 1.1.3 · **Tag:** `contract-v1.1.3` (pending review)
+**Canonical location:** `contract/` · **Version:** 1.1.4 · **Tag:** `contract-v1.1.4` (pending review)
 **Change process:** `contract/README.md`.
 
 **Status:** decisions locked through 2026-11-26. **M16 selected 2026-10-27.**
@@ -8,7 +8,7 @@ D1/D3/D4/FE-4 and the M16 DAC/filter are locked; the remaining rows state their
 own status. Each row links the decision to its justification and source.
 Hardware-dependent items are listed separately as **verification gates** (tests,
 not open design choices). Order-time items are under **procurement checks**.
-#30 (arm-only STOP), #31 (power tree v2), #32 (Pico J123 pin 1 NC), #33 (DAC tone band) and #34 (pen-cable budget) are recorded across the 1.1.0-1.1.3 contract updates on `main`; tags 1.1.1-1.1.3, the release artifacts and the arm-repo sync are pending. Rows superseded
+#30 (arm-only STOP), #31 (power tree v2), #32 (Pico J123 pin 1 NC), #33 (DAC tone band), #34 (pen-cable budget) and #35 (Ch3 reference path wired, DNP on the first build) are recorded across the 1.1.0-1.1.4 contract updates on `main`; tags 1.1.1-1.1.4, the release artifacts and the arm-repo sync are pending. Rows superseded
 in part keep their original text as history. Decision number 29 was withdrawn and
 no #29 row exists.
 
@@ -47,6 +47,7 @@ no #29 row exists.
 | 32 | 2026-11-26 | **Pico connector J123 pin 1 = no-connect.** BRD-01's 6-pin Pico link is pin 1 NC, pin 2 GND, pin 3 PICO_TX, pin 4 PICO_RX, pin 5 PICO_STOP_N, pin 6 PICO_HEARTBEAT. BRD-01 does not supply 3V3 to the Pico; the Pico is powered from its own USB. | The committed netlist (8d39a99) has `unconnected-(J123-Pin_1-Pad1)`, node `J123.1` `passive+no_connect`; the ICD Rev A 3V3 text was the stale side. Matching the ICD to the board removes the last pin-level mismatch on the arm link. | **LOCKED (user decision, 2026-11-26)** | `icd/pico_link.md` Rev B; `brd01_wiring_manifest.md` note 2; `robot-arm/README.md` |
 | 33 | 2026-11-26 | **DAC tone band = 0.3–4.6 V, centre 2.45 V.** `+5V_EXC` stays 5.0 V. The DAC80508 keeps its gain-2 0–5 V hardware span, but the DDS must stay within 0.3–4.6 V (≤92 % FS). The 5.3 V ANY-OUT alternative is rejected: it leaves only 70 mV under the DAC 5.5 V maximum. | At 5.0 V nominal (4.875 V worst case) the DAC output clips above about 4.7 V (0.15 V headroom at 5 mA) and the LTC1563-2 sits about 0.2 V below its rail; 0.3–4.6 V preserves margin at both ends, and the extra ~0.4 V of swing is not worth re-validating the rail. | **LOCKED (user decision, 2026-11-26)** | `icd/dac_fpga.md` §3; `power_tree_v2.md` §7 D2; `docs/handoff/m16-fpga-handoff.md`; `dig6_requirements.md` |
 | 34 | 2026-11-26 | **Pen-cable capacitance budget re-derived: SC-05c cable phrase corrected 56 → 53 pF.** Total budget is 73 pF at 34 kHz = 10 pF connector (RQ-C3) + 10 pF preamp-input stack + **53 pF cable**. The filed W2697 0.6 m whip (39 pF cable / 59 pF total) passes by 14 pF; at 65 pF/m the longest compliant cable is 0.816 m. | 56 + 10 + 10 = 76 pF puts the coil self-resonance at 333 kHz, below the 340 kHz floor (10× the 34 kHz top tone): the old cable number fails its own rule. With \(C_{max}=1/((2\pi\cdot340\,\mathrm{kHz})^2\cdot3\,\mathrm{mH})=73.04\) pF, subtracting the 10 pF connector and 10 pF preamp stack (INA163 2 pF diff + 2 pF CM worst leg, BAS70H clamps 4 pF worst leg, 2 pF layout) leaves 53.04 ≈ 53 pF. | **LOCKED (user decision, 2026-11-26)** — supersedes SC-05c's 56 pF cable phrase | `docs/phase2/tone_plan.md` §6; `docs/phase2/adc_justification.md` §4; INA163 SBOS177D; BAS70H datasheet |
+| 35 | 2026-11-26 | **Ch3 reference path = wired, DNP on the first build.** SC-06 keeps Ch3 = reference sensor; the Ch3 front-end parts stay in the board design but are DNP in the BOM/assembly (decision c4122de) until fitted. Firmware enables the channel when populated. | Removes the last ambiguity between SC-06 and the BOM/assembly notes; no board or BOM change, and the first build remains three populated sensor channels plus the reference path. | **LOCKED (user decision, 2026-11-26)** | `system_contract.md` SC-06; `frontend_requirements.md` §4; `hardware/brd-01/kicad/README.md`; `bom-to-cad.md` |
 
 > Editorial note on #31: the submitted decision text named a BOM revision that
 > cannot be verified from tracked files; that revision reference was removed.

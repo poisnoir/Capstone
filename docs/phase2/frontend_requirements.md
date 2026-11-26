@@ -46,7 +46,7 @@ pen coil B (air) → protection/ESD → INA163 (G≈35) → single-ended
 - The current-sense Ch0 and the pen channels Ch1/Ch2 are separate channels;
   the preamp design is for the pen channel, and **Ch2 uses the same gain as
   Ch1**. The Ch3 fixed-reference front end remains in the board design but is
-  **DNP in the BOM** — its parts are not ordered or fitted.
+  **DNP in the BOM (decision #35)** — its parts are not ordered or fitted.
 
 ---
 

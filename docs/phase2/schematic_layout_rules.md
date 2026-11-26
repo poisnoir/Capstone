@@ -341,9 +341,10 @@ These need the block owner or integrator, not a layout commit:
   open item; a `move` or `wire` does not settle it.
 - **Reference designator assignment** — refs are identity; renumbering is a separate
   decision, not a way to make text fit.
-- **Part value changes** — e.g. Ch2 gain values and Ch3 population, open in
+- **Part value changes** — e.g. Ch2 gain values, open in
   `hardware/brd-01/kicad/README.md`, or any BOM substitution (`setvalue` is not a layout
-  tool).
+  tool). Ch3 population is closed by decision #35: the path is wired and its
+  front-end parts are DNP on the first build.
 - **Sheet partitioning across the hierarchy** — which net is local, global or a
   hierarchical sheet pin; that changes the contract boundary and its owner.
 
