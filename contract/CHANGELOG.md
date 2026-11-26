@@ -5,6 +5,10 @@ MINOR = additive, PATCH = clarification.
 
 ## Unreleased
 
+- `system_contract.md` — SC-07 corrected to the locked XO-direct clock tree (decision #21):
+  one 32.768 MHz XO drives ADC MCLK and the FPGA; the PLL only makes the 49.152 MHz DAC SPI;
+  the selected part is an XO, not a TCXO, and there is no PLL-generated MCLK or discrete buffer.
+  Decision #28 records the clarification.
 - `icd/dac_fpga.md` — frozen Rev A (2026-11-02): 216-bit burst, TRIGGER cadence, CS gaps,
   CPOL/CPHA, SDI +2.5 ns delay, readback/CRC limits.
 - `decisions_log.md` — #18, #20, #22, #23 promoted to LOCKED; #21 updated for the PS-less

@@ -256,8 +256,8 @@ ADA4940-2 OUT− ──► R4 20Ω ──► C4 470pF ─┼──► C5 100pF �
 - **VCM:** AD7768 VCM (2.5 V) sets the ADA4940-2 output common mode; each
   output stays in 0.45–4.55 V.
 - **Reference:** ADR434 4.096 V + OPA192 buffer; 10 µF + 100 nF at the ADC.
-- **Clock:** 32.768 MHz XO → 33 Ω series → ADC MCLK; buffered branch to the
-  FPGA.
+- **Clock:** 32.768 MHz XO → 33 Ω series → ADC MCLK; direct branch to the FPGA
+  clock input (no discrete buffer).
 
 ### 5.2 ADC channel map
 
