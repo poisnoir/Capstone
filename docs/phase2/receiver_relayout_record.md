@@ -127,12 +127,19 @@ native zoom crops (`zoom_bypass.png`, `zoom_fda.png`, `zoom_bay.png`,
 | F3 | Bay rebuilt as one rail ladder per rail with one rail power symbol per bus and one GND symbol on the bottom bus; no rotated rail text. |
 | F4 | Duplicate supply pins that share a coordinate now share one power symbol (dedup by net + position); rail text placed clear of the pin field. |
 | F5 | Feedback pair is mirror-symmetric about the FDA body centre (x = 405.13 / 458.47 around 431.80, y = yc +/-16.51). Making both resistors share one x would force the -OUT net across the -IN run; the diagonal mirror is retained to preserve G3. |
-| F6 | Baseline 17 fragmented FDA*_OUT_N labels reduced to the four per net required at the interleaved ADA4940 pins; a fully wired bridge crosses the -IN run, so the short local labels are retained and documented as a deviation. |
-| F7 | Both P and N FDA names dropped consistently: neither `FDA*_OUT_P` nor `FDA*_OUT_N` is forced; both nets take deterministic auto-names. No silent P-to-N swap. |
+| F6 | Round 3: all 17 FDA*_OUT_* labels removed. Each -OUT/-FB pair is joined by a riser outside the +OUT exit (OUT_RISER=2.54, OUT_RUN=25.40, NEG_RISER=2.54, NEG_TOP=15.24 mm, searched for zero crossings); `grep -c 'FDA[0-3]_OUT_'` = 0. |
+| F7 | Both P and N FDA names dropped consistently; all eight output nets take deterministic `Net-(U10xA/B-+FBn)` / `Net-(U10xA/B--FBn)` names. No silent P-to-N swap. |
 | F8 | U101/U102/U103/U104/U106/U107/U105/U108 fields and R186/D534 moved clear of bodies and wires; no designator is ambiguous. |
 | F9 | C106 moved into the bay and wired to its GND bus; its ADC_VCM label remains on the net. |
 
+R3 response (round 3): R3-1 FDA label removal verified by grep; R3-2 diode
+reference/value fields centred at x +/- 15.24 mm with rail text staggered;
+R3-3 ADC_REF tips moved to 7.62 mm off U101; R3-4 FDA references at x -/+20.32
+and y +/-10.16 mm; R3-5 the red X was script-introduced (the +5VA arrow on pin
+20 pointed into pin 17) and is fixed by rotating those supply symbols 270/90
+with a 90-degree field angle.
+
 Residual visual deviation: the ADA4940 supply pins still carry one small power
-symbol per distinct pin coordinate (2.54–5.08 mm pitch). A single rail bus per
-unit would cross the interleaved signal pins on the same side, so the
-symbol-per-pin form is retained to keep G3 at zero crossings.
+symbol per distinct pin coordinate (2.54–5.08 mm pitch); a single bus per unit
+would cross the interleaved signal pins on the same side. No crossing, no
+ambiguous designator, and all rail text is horizontal.
