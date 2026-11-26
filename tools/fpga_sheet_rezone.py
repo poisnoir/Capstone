@@ -468,7 +468,7 @@ def zone_a(rz: Rezone):
         rz.junction((jx, py))
         rz.junction((jx, jog_y))
         rz.wire((jx, jog_y), p1, ref + 'top')
-        lab = (15.24, p2[1]) if ref != 'R147' else (11.43, p2[1])
+        lab = (15.24, p2[1]) if ref != 'R147' else (8.89, p2[1])
         rz.wire(p2, lab, ref + 'labstub')
         rz.glabel(net, lab, 180 if ref in ('R145', 'R146') else 0)
         rz.prop_pos(ref, 'Reference', (15.24, row), 0)
@@ -495,9 +495,12 @@ def zone_b(rz: Rezone):
     for net, y in (('ADC_SDI', 83.82), ('ADC_SCLK', 91.44)):
         rz.del_label_at('global_label', net, (295.91, y))
         rz.del_label_at('global_label', net, (290.83, y))
-        anchor = (287.02, y) if net == 'ADC_SCLK' else (290.83, y)
+        rz.del_label_at('global_label', net, (287.02, y))
+        rz.del_wire((290.83, y), (287.02, y))          # stale stub
+        anchor = (292.10, 88.90) if net == 'ADC_SCLK' else (290.83, y)
         if anchor != (290.83, y):
-            rz.wire((290.83, y), anchor, net + 'stub')
+            rz.wire((290.83, y), (292.10, y), net + 'stub')
+            rz.wire((292.10, y), anchor, net + 'drop')
         rz.glabel(net, anchor, 0)                   # flag on a wire/pin end
     # 5.08 mm pitch rows give Reference/Value room at the sheet's normal 1 mm text.
     rows = {'R164': 86.36, 'R163': 91.44, 'R166': 96.52, 'R165': 101.60}
@@ -672,7 +675,7 @@ def finalize_property_text(rz: Rezone):
         'TP791': ((421.65, 132.08), (421.65, 134.62)),
         'TP792': ((421.65, 124.46), (421.65, 127.00)),
         'C142': ((388.62, 241.30), (388.62, 248.92)),
-        'C140': ((435.61, 126.365), (447.04, 132.08)),
+        'C140': ((435.61, 135.89), (435.61, 138.43)),
         'C145': ((254.00, 269.24), (248.92, 270.51)),
         'R160': ((258.32, 274.32), (258.32, 276.86)),
         'R161': ((258.32, 269.24), (258.32, 271.78)),
@@ -1010,7 +1013,8 @@ def check_label_rules(path: str):
     r3 = []
     for l in labels:
         for w in wires:
-            if l['anchor'] in (w['a'], w['b']):
+            # exempt ONLY the single segment whose end is this label's anchor
+            if l['anchor'] == w['a'] or l['anchor'] == w['b']:
                 continue
             if seg_box(w, l['bb']):
                 r3.append((l['text'], w['a'], w['b']))
@@ -1032,10 +1036,75 @@ def check_label_rules(path: str):
     for p in r4[:20]:
         print('   ', p)
 
-    # per-label clearance table for zones A and B
+    # R5 -- pin-number and pin-name text boxes
+    size = 1.0
+    bmap = {b[0]: b[1:] for b in bodies}
+    pintext = []
+    for (ref, num), (nm, px, py, _u) in pins.items():
+        b = bmap.get(ref)
+        if b is None:
+            continue
+        x0, y0, x1, y1 = b
+        if px <= x0 + 1e-6:            # left edge, horizontal pin line
+            mid = ((px + x0) / 2, py)
+            name_at = (x0 + 0.6 * 0.9 * size * max(len(nm), 1), py)
+            off = (0, -0.5 * size)
+        elif px >= x1 - 1e-6:          # right edge
+            mid = ((px + x1) / 2, py)
+            name_at = (x1 - 0.6 * 0.9 * size * max(len(nm), 1), py)
+            off = (0, -0.5 * size)
+        elif py <= y0 + 1e-6:          # top edge, vertical pin line
+            mid = (px, (py + y0) / 2)
+            name_at = (px, y0 + 0.6 * 0.9 * size * max(len(nm), 1))
+            off = (0.5 * size, 0)
+        else:                          # bottom edge
+            mid = (px, (py + y1) / 2)
+            name_at = (px, y1 - 0.6 * 0.9 * size * max(len(nm), 1))
+            off = (0.5 * size, 0)
+        for label, value, where in (('no', str(num), (mid[0] + off[0], mid[1] + off[1])),
+                                    ('pn', nm, name_at)):
+            w = 0.9 * size * max(len(value), 1)
+            bb = (where[0] - w / 2, where[1] - size / 2,
+                  where[0] + w / 2, where[1] + size / 2)
+            pintext.append(dict(text=value, owner=f'{ref}.{num}:{label}',
+                                bb=bb, anchor=where))
+    # text boxes from properties and notes
+    others = []
+    sym_rot = {}
+    for sym in K.children(root, 'symbol'):
+        rr = next((p[2] for p in K.children(sym, 'property')
+                   if p[1] == 'Reference'), '?')
+        a0 = K.child(sym, 'at')
+        sym_rot[rr] = int(float(a0[3])) if a0 is not None and len(a0) > 3 else 0
+    for sym in K.children(root, 'symbol'):
+        ref = next((p[2] for p in K.children(sym, 'property')
+                    if p[1] == 'Reference'), '?')
+        for p in K.children(sym, 'property'):
+            if p[1] not in ('Reference', 'Value'):
+                continue
+            at = K.child(p, 'at')
+            rot = sym_rot.get(ref, 0)
+            a = (float(at[3]) if len(at) > 3 else 0) + rot
+            others.append((f'{ref}.{p[1]}', label_bbox(p[2], at, 1.1, a % 360), (float(at[1]), float(at[2]))))
+    for node in K.children(root, 'text'):
+        at = K.child(node, 'at')
+        others.append((f'text:{node[1][:22]}',
+                       label_bbox(node[1], at, 1.0, float(at[3]) if len(at) > 3 else 0),
+                       (float(at[1]), float(at[2]))))
+    others += [(l['text'], l['bb'], l['anchor']) for l in labels]
+    r5 = []
+    for o, obb, oanchor in others:
+        for pt in pintext:
+            if ov(obb, pt['bb']):
+                r5.append((o, pt['owner']))
+    print(f'R5 text over pin numbers/names = {len(r5)}')
+    for p in r5[:25]:
+        print('   ', p)
+
+    # per-label clearance table for zones A and B, including nearest pin number
     for zname, (x0, y0, x1, y1) in LABEL_ZONES.items():
         sel = [l for l in labels if x0 <= l['anchor'][0] <= x1 and y0 <= l['anchor'][1] <= y1]
-        print(f'--- zone {zname}: label | anchor | w x h | nearest neighbour | clearance mm ---')
+        print(f'--- zone {zname}: label | anchor | w x h | nearest label | clearance mm ---')
         for l in sorted(sel, key=lambda d: (d['anchor'][1], d['anchor'][0])):
             b = l['bb']
             best, gap = '', float('inf')
@@ -1048,9 +1117,19 @@ def check_label_rules(path: str):
                 d = (dx * dx + dy * dy) ** 0.5
                 if d < gap:
                     gap, best = d, o['text']
+            pbest, pgap = '', float('inf')
+            for pt in pintext:
+                if not (x0 <= pt['anchor'][0] <= x1 and y0 <= pt['anchor'][1] <= y1):
+                    continue
+                pb = pt['bb']
+                dx = max(pb[0] - b[2], b[0] - pb[2], 0.0)
+                dy = max(pb[1] - b[3], b[1] - pb[3], 0.0)
+                d = (dx * dx + dy * dy) ** 0.5
+                if d < pgap:
+                    pgap, pbest = d, pt['owner']
             print(f"   {l['text']:18s} | {l['anchor']} | {b[2]-b[0]:5.2f} x {b[3]-b[1]:4.2f}"
-                  f" | {best:18s} | {gap:5.2f}")
-    return len(r1) + len(r2) + len(r3) + len(r4)
+                  f" | {best:18s} | {gap:5.2f} | pin: {pbest:16s} {pgap:5.2f}")
+    return len(r1) + len(r2) + len(r3) + len(r4) + len(r5)
 
 
 def verify(path: str, baseline: str | None = None) -> int:
