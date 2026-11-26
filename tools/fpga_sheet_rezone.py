@@ -1021,6 +1021,17 @@ def check_label_rules(path: str):
             return max(min(ay, by), b[1]) < min(max(ay, by), b[3]) and b[0] < ax < b[2]
         return False
 
+    def seg_dist(w, b):
+        """Distance from an axis-aligned wire segment to a text box."""
+        ax, ay = w['a']; bx, by = w['b']
+        if abs(ay - by) < 1e-6:
+            dx = max(min(ax, bx) - b[2], b[0] - max(ax, bx), 0.0)
+            dy = max(b[1] - ay, ay - b[3], 0.0)
+        else:
+            dx = max(b[0] - ax, ax - b[2], 0.0)
+            dy = max(min(ay, by) - b[3], b[1] - max(ay, by), 0.0)
+        return (dx * dx + dy * dy) ** 0.5
+
     r1 = [l for l in labels if l['anchor'] not in ends and l['anchor'] not in pinpts]
     r2 = []
     for i, a in enumerate(labels):
@@ -1147,6 +1158,13 @@ def check_label_rules(path: str):
                 d = (dx * dx + dy * dy) ** 0.5
                 if d < gap:
                     gap, best = d, o['text']
+            wbest, wgap = '', float('inf')
+            for w in wires:
+                if l['anchor'] in (w['a'], w['b']):
+                    continue
+                d = seg_dist(w, b)
+                if d < wgap:
+                    wgap, wbest = d, str(w['a'])
             pbest, pgap = '', float('inf')
             for pt in pintext:
                 if not (x0 <= pt['anchor'][0] <= x1 and y0 <= pt['anchor'][1] <= y1):
@@ -1159,6 +1177,7 @@ def check_label_rules(path: str):
                     pgap, pbest = d, pt['owner']
             print(f"   {l['text']:18s} | {l['anchor']} | {b[2]-b[0]:5.2f} x {b[3]-b[1]:4.2f}"
                   f" | {best:18s} | {gap:5.2f} | pin: {pbest:16s} {pgap:5.2f}"
+                  f" | wire: {wbest:16s} {wgap:5.2f}"
                   f" | frame: {b[0]-fx0:5.2f}")
     return len(r1) + len(r2) + len(r3) + len(r4) + len(r5) + len(r6)
 
