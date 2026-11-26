@@ -204,7 +204,7 @@ there is no per-tone drift because the DDS and ADC share the clock.
    applicable.
 5. **Driver:** current/voltage at 34 kHz, 250 mA nominal and 500 mA peak; compliance,
    THD, thermal.
-6. **Moving run:** 1 h at ≥100 Hz, zero dropped frames; latency and stop timing.
+6. **Moving run:** 1 h at ≥100 Hz, zero dropped frames; latency and arm-motion STOP timing (#30; field/tones continue).
 7. **ICNIRP:** field-probe scan at the final current; linear sum ≤27 µT at accessible
    points. The tone plan does not change the field sum, but verify at 34 kHz.
 

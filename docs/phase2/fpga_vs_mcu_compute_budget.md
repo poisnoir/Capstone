@@ -271,8 +271,9 @@ with margin. At 500 Hz, the MCU is not viable at all; the FPGA is the realistic 
 - **Deterministic timing.** The FPGA pipeline has no cache, no interrupt jitter, and a
   fixed frame cadence. The MCU’s cache, DMA arbitration, and interrupts make the
   worst-case solver time variable; a retry can miss the 10 ms pose deadline even if the
-  average looks acceptable. The 100 ms stop/tracking-lost requirement also needs a
-  deterministic worst case.
+  average looks acceptable. The 100 ms arm-motion STOP / tracking-lost halt
+  requirement also needs a deterministic worst case (#30; field, DDS and pose
+  continue).
 - **ADC capture.** The AD7768-4 data path is DCLK/DOUT lanes at 32.768 Mbit/s
   (4 channels, 32-bit, 256 kSPS; D3-A/SC-05b), not SPI. The FPGA captures it in logic
   and frames it with DRDY. An MCU would need a parallel capture peripheral
@@ -316,11 +317,12 @@ as headroom, not a 500 Hz pose promise.
 4. Measure the **worst case**, including `MaxFunEvals` and the mirrored retry, not just
    the average.
 5. Run the 1-hour moving-sensor test at ≥100 Hz with a drop counter; confirm zero dropped
-   frames and the ≤100 ms stop.
+   frames and the ≤100 ms arm-motion STOP (#30).
 6. Report the measured pose rate, latency, and solver eval count in the Phase 2 report.
 
 **Acceptance:** ≥100 poses/s worst-case; raw frame capture at 500 frames/s; zero dropped
-frames; latency and stop within Phase 1 #14–17. A 500 Hz pose is a separate stretch goal.
+frames; latency and arm-motion STOP within Phase 1 #14–17 (#30). A 500 Hz pose is a
+separate stretch goal.
 
 ---
 

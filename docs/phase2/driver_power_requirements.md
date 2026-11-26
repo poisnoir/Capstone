@@ -7,8 +7,10 @@ on-board tree is the v2 tree locked by decision #31 (2026-11-25).
 Current-sense A+ (summed Ch0 + individual peak/fault taps) is LOCKED.
 DAC/filter is LOCKED: **M16 — 1× DAC80508 (16-bit, 8 ch, 200 kSPS) + 8×
 LTC1563-2 (4th-order, 60 kHz)**; DAC update 199.805 kSPS, SPI 49.152 MHz. Enclosure is LOCKED:
-one box with an internal shield partition. Hardware E-stop is LOCKED: NC
-mushroom button in the driver enable chain, independent of the FPGA.
+one box with an internal shield partition. STOP is **arm-motion only** (#30):
+NC mushroom button, no K1/K2, field rail `+15V_FUSED` unswitched; field, DDS/DAC
+and pose continue. A genuine FPGA/ADC/driver fault is the separate tracker-side
+safe state.
 **Current: 150 mA prototype first; 250 mA fallback; 500 mA max; programmable
 150–500 mA.** BOM/schematic/test details remain open at the BOM pass.
 
@@ -44,10 +46,11 @@ mushroom button in the driver enable chain, independent of the FPGA.
   driver/DC-DC section and the FE/ADC. Star ground, LDO analog rails, 15 V input
   CMC/CLC; thermal/EMI test. Two-box split is a fallback only if the EMI test
   fails and a deviation is approved.
-- **LOCKED: hardware E-stop** — normally-closed mushroom button in the driver
-  enable chain, independent of the FPGA. It cuts the +15 V driver/load-switch
-  enable; the FPGA gets an opto-isolated status and runs a separate software
-  watchdog. The follower stop remains ≤100 ms.
+- **LOCKED: STOP is arm-motion only (decision #30)** — normally-closed mushroom
+  button; **no K1/K2** and the `+15V_FUSED` field rail is **unswitched**. Field,
+  DDS/DAC and pose continue; only arm motion stops (≤100 ms). The FPGA gets an
+  opto-isolated STOP status. A genuine FPGA/ADC/driver fault triggers the
+  separate tracker-side safe state, not the arm STOP.
 
 ---
 
@@ -61,7 +64,7 @@ mushroom button in the driver enable chain, independent of the FPGA.
 | DRV-04 | Distortion: THD ≤−60 dBc at 250 mA; all-tone IMD below the spur budget; channel crosstalk ≤−60 dB; noise | Docs spur budget; `tone_plan.md` IMD note | PROPOSED | Sense-resistor FFT + 8-tone IMD |
 | DRV-05 | Power: **C1 + medical-grade locked; on-board tree v2 locked (#31)** — one external 15 V/60 W-class medical-grade adapter; +15 V driver rail, +6 V, +5V_EXC, +5VA, +3.3 V/+1V0_FPGA/+1V8_FPGA, ±12VA; no on-board mains stage | §3; #31 | LOCKED | Rail noise/load test |
 | DRV-06 | Thermal: 8 channels at 250 mA; coil \(I^2R\) ≈0.125 W/coil, sense ≈0.06 W each, LMH6321 dissipation; no 3 kg heatsink; ~180 cm² board | Thesis §4.3; measured R/L | PROPOSED | Thermal soak |
-| DRV-07 | Protection: overcurrent, overtemp, disable, fault, stop ≤100 ms; AC coupling prevents DC coil current | Phase 1 #17; thesis §4.3.1 | PROPOSED | Fault injection |
+| DRV-07 | Protection: overcurrent, overtemp; **arm-motion STOP ≤100 ms** (field/DDS/DAC/pose continue, #30); AC coupling prevents DC coil current; genuine FPGA/ADC/driver fault → separate tracker-side safe state | Phase 1 #17; thesis §4.3.1; #30 | PROPOSED | Fault injection |
 | DRV-08 | Current-sense: \(R_{store}\) per coil, summer scale 2.0103, V/I transfer, bandwidth ≥34 kHz, phase, common-mode, ADC Ch0 | `fSysSetup.m` | PROPOSED | Known-current injection |
 | DRV-09 | Test: constant-current step/load, THD/IMD, thermal, fault/disable | Phase 1 test plan | PROPOSED | Test report |
 
@@ -159,8 +162,9 @@ change from C1; trade size/cost/availability.
 - **FPGA rail scope (v2, #31):** the PSU provides +3.3 V, +1V0_FPGA and
   +1V8_FPGA from +6 V; no added rail is needed.
 - Add input common-mode choke, CLC filtering, fusing, reverse-polarity
-  protection, and a hardware disable for the driver; the stop path must remove
-  coil current within 100 ms.
+  protection, and a hardware disable reserved for genuine driver faults; STOP
+  is arm-motion only (#30) — it must not remove coil current or interrupt
+  `+15V_FUSED`; the arm halt is ≤100 ms.
 - The 60 W adapter covers eight channels at 250 mA plus analog/digital
   housekeeping; verify inrush and thermal.
 
@@ -268,10 +272,10 @@ EVM ≤−60 dBc; output 0–5 V into the LMH6321 loop. SPICE screen:
   the INA163 inputs, and check its switching spur on the bench; place the +6 V
   module and FPGA bucks at the power/driver end of the board. The digital clocks
   are the other inside source. See `docs/phase2/power_tree_v2.md` §6.
-- **Hardware E-stop LOCKED:** normally-closed mushroom button in the driver
-  enable chain, independent of the FPGA; it cuts the +15 V driver/load-switch
-  enable. The FPGA gets an opto-isolated status and runs a separate software
-  watchdog. The follower stop remains ≤100 ms.
+- **STOP is arm-motion only (decision #30):** normally-closed mushroom button,
+  no K1/K2, `+15V_FUSED` unswitched; field, DDS/DAC and pose continue, only the
+  arm halts (≤100 ms). FPGA gets opto-isolated STOP status. A genuine
+  FPGA/ADC/driver fault is the separate tracker-side safe state.
 - **LMH6321 availability**: if the part is obsolete/unavailable, use the
   vendor Rev A discrete stage as a fallback, or a comparable high-current
   buffer; re-check the thermal/loop.

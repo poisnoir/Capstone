@@ -292,7 +292,7 @@ raise throughput but cannot reduce latency.
 | Solver | LM/TRF, 5 DOF, bounds, warm start, retry, residual gate |
 | Calibration | κ per coil/tone, 7×7 grid, 98 points, per-sensor switch |
 | Output/status | 5-DOF pose + timestamp + tracking status; host and motor links |
-| Safety/watchdog | tracking-lost, out-of-volume, fault, comm-loss; stop ≤100 ms |
+| Safety/watchdog | tracking-lost, out-of-volume, fault, comm-loss; arm-motion STOP ≤100 ms, field/DDS/DAC/pose continue (#30); genuine FPGA/ADC/driver fault → separate tracker-side safe state |
 
 ### 5.2 Data flow and timing
 
@@ -328,7 +328,7 @@ Status tags: `LOCKED` (source-backed), `PROPOSED` (needs approval/test), `TBD`.
 | ID | Requirement | Threshold | Rationale | Verification |
 |---|---|---|---|---|
 | FPGA-P01 | Pose rate | **≥100 poses/s worst-case**, including `MaxFunEvals`/retry; 500 raw frames/s; 500 Hz pose stretch | Phase 1 #16 | Worst-case timed run; drop counter |
-| FPGA-P02 | Latency/stop | Filter-off ≤20 ms; filter-on ≤100 ms; stop ≤100 ms | Phase 1 #14–15, #17 | Onset/stop timing |
+| FPGA-P02 | Latency/stop | Filter-off ≤20 ms; filter-on ≤100 ms; arm-motion STOP ≤100 ms (field/DDS/DAC/pose continue, #30) | Phase 1 #14–15, #17; #30 | Onset/stop timing |
 | FPGA-P03 | Timing budget | Acquisition 2.000 ms; group delay 0.133 ms; demod+solve <7.87 ms sequential | `docs/phase2/tone_plan.md`; 10 ms budget | Timed measurement |
 | FPGA-P04 | Solver throughput | 2.5–5.8 GFLOP/s worst-case at 100 Hz; FPGA margin | `fpga_vs_mcu_compute_budget.md` | HLS/benchmark |
 | FPGA-P05 | Tone accuracy/stability | XO ppm (CSX750FBC32.768M-UT); integer-J; phase noise within budget | Tone plan; SC-07 | Spectrum/phase test |
@@ -341,7 +341,7 @@ Status tags: `LOCKED` (source-backed), `PROPOSED` (needs approval/test), `TBD`.
 | FPGA-I01 | ADC header | 4 active channels; 4/2 DOUT lanes; DCLK 8.192/16.384 MHz; 2×8/custom header, not 2×6 Pmod | AD7768-4 pin count; SC-05b/D3-A | Pin-budget review; capture |
 | FPGA-I02 | DAC/excitation | 8 tones; M16 DAC80508 (16-bit, 8 ch, 200 kSPS) + 8× LTC1563-2 (4th-order, 60 kHz); SPI 49.152 MHz; DAC update 199.805 kSPS | Driver interface | Two-tone/8-tone FFT; filter/image/EVM |
 | FPGA-I03 | Host link | ≥100 Hz pose log; calibration UI; no pose solve on host | Full-FPGA decision | Log rate; host review |
-| FPGA-I04 | Motor/Pico link | Pose/status; engage/stop; ≤100 ms | Phase 1 #17 | Integration test |
+| FPGA-I04 | Motor/Pico link | Pose/status; engage/arm-motion STOP; ≤100 ms; no field or rail switching (#30) | Phase 1 #17; #30 | Integration test |
 | FPGA-I05 | Clock/jitter | MCLK 32.768 MHz; jitter ≤30 ps for 104 dB (or system target) | RQ-A4 correction | Jitter measurement |
 
 ### 6.4 Resource and implementation
@@ -357,7 +357,7 @@ Status tags: `LOCKED` (source-backed), `PROPOSED` (needs approval/test), `TBD`.
 
 | ID | Requirement | Threshold | Rationale | Verification |
 |---|---|---|---|---|
-| FPGA-S01 | Fault/tracking loss | Status + stop ≤100 ms | Phase 1 #17 | Fault injection |
+| FPGA-S01 | Fault/tracking loss | Status + arm-motion STOP ≤100 ms (#30); genuine FPGA/ADC/driver fault → separate tracker-side safe state | Phase 1 #17; #30 | Fault injection |
 | FPGA-S02 | Watchdog/comm loss | Safe state; no motion on loss | Phase 1 non-functional | Fault injection |
 | FPGA-S03 | Pose-path integrity | No single point of failure; self-test/CRC | Safety review | Review/test |
 
@@ -365,7 +365,7 @@ Status tags: `LOCKED` (source-backed), `PROPOSED` (needs approval/test), `TBD`.
 
 - ≥100 poses/s **worst-case**, including `MaxFunEvals` and retry.
 - 2.000 ms frame; 500 raw frames/s; zero dropped frames over 1 hour.
-- Filter-off latency ≤20 ms; filter-on ≤100 ms; stop ≤100 ms.
+- Filter-off latency ≤20 ms; filter-on ≤100 ms; arm-motion STOP ≤100 ms (#30; field/DDS/DAC/pose continue).
 - 5-DOF accuracy/repeatability per Phase 1 #5–6, #11; 98-point RMS Eq.7.10.
 - ICNIRP ≤27 µT at accessible points; thermal/EMC per Phase 1 #20–25.
 - 500 Hz pose is a stretch goal, not the baseline.
@@ -415,7 +415,7 @@ Status tags: `LOCKED` (source-backed), `PROPOSED` (needs approval/test), `TBD`.
 | Filament B/J | Model correctness | ≤20% vs field probe / golden |
 | Worst-case solver | 100 Hz guarantee | ≥100 poses/s with retry |
 | 1-hour moving run | Determinism | Zero dropped frames |
-| Latency/stop | Real-time safety | ≤20/100 ms; stop ≤100 ms |
+| Latency/stop | Real-time safety | ≤20/100 ms; arm-motion STOP ≤100 ms (#30) |
 | 98-point RMS | Accuracy | Eq.7.10 target |
 | ICNIRP/thermal/EMC | Safety/environment | Phase 1 #20–25 |
 
@@ -552,6 +552,6 @@ Detailed derivation: `docs/phase2/fpga_vs_mcu_compute_budget.md`.
 | #9–10 tool accuracy | FPGA-P01/P03; solver |
 | #12–13 tremor | FPGA-P01; 100 Hz pose |
 | #14–16 latency/rate | FPGA-P01/P02/P03 |
-| #17 stop | FPGA-S01/S02 |
+| #17 arm-motion stop | FPGA-S01/S02 (#30) |
 | #20 ICNIRP | FG-1; INT-7 |
 | #24 cost | §9.2 |

@@ -202,7 +202,7 @@ Slow DC housekeeping through the PS: die temperature, rail monitors, static fiel
 - Single/dual-tone FFT per RQ-A2 at −1 and −40 dBFS; far-tone (attenuated 40 dB) SNR and sign stability over temperature (RQ-A1).
 - Skew sweep: Δφ vs f flat within ±0.1° (RQ-A1); the AD7768-4 is simultaneous, so mux skew is zero. Aperture jitter: measure rms; 1 ns at 34 kHz = 73.4 dB, 30 ps for 104 dB (RQ-A4).
 - Integer-J on/off: rectangular vs Hamming leakage/spur delta ≥10 dB (§5, `docs/phase2/tone_plan.md`).
-- 1-hour ≥100 Hz moving-sensor run: zero dropped frames, stop/tracking-lost halt ≤100 ms (RQ-A7, specs #16–17).
+- 1-hour ≥100 Hz moving-sensor run: zero dropped frames, arm-motion STOP / tracking-lost arm halt ≤100 ms with field, DDS/DAC and pose continuing (#30) (RQ-A7, specs #16–17).
 - \(C_{total}\) LCR + \(f_{res}\) sweep 20–500 kHz per coil ( §4).
 - 7×7 κ grid + 98-pt RMS Eq.(7.10) as the acceptance gate for the whole chain (#5–6).
 
@@ -230,7 +230,7 @@ and \(d\phi/df_c\cdot 1\%\) mismatch lands at \(\sim 0.3\)–\(0.5^\circ\) per s
 
 ### 9b. What happens if SAR (the fallback)
 
-A simultaneous SAR (AD7606C-16 class: 8-ch simultaneous, 16-bit, 1 MSPS, serial) **passes** RQ-A1–A7 as written and would track: zero group delay (~µs conversion), exact sample-instant locking, simpler timing, lower interface rate (≈7 MHz floor for 3 ch/16-bit/256 kS/s/2 lanes, §6). Cost of choosing it:
+A simultaneous SAR (AD7606C-16 class: 8-ch simultaneous, 16-bit, 1 MSPS, serial) **passes** RQ-A1–A7 as written and would track: zero group delay (~µs conversion), exact sample-instant locking, simpler timing, and a lower interface rate than the locked 32-bit path (§6/§9c: 4 channels, 32.768 Mbit/s, 8.192 MHz on 4 lanes / 16.384 MHz on 2). Cost of choosing it:
 
 - Design, match, and temperature-qualify the 5th–6th-order analog AA pair whose phase mismatch analysis above becomes a Phase 2 deliverable with measured drift data (extra fab + test weeks on the fast-buildable schedule).
 - ~20 dB less headroom on null/edge tones and short frames (§9a.2); the ≤1° orientation spec then depends on per-tone analog-phase calibration holding over 18–28 °C — the same drift class that already threatens \(\kappa\).
