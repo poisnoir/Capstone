@@ -75,7 +75,9 @@ intended rail changes only (`+5V` split into `+5V_EXC` and `+3.3V`,
 
 ## Still open after this change
 
-- Relay K1/K2 selection (draft symbols, excluded from BOM and PCB).
+- ~~Relay K1/K2 selection (draft symbols, excluded from BOM and PCB).~~ **Historical —
+  superseded by #30:** #30 deleted the panel E-stop, K1 and K2 from BRD-01; there is
+  no relay left to select.
 - `D_REF` (BAS70H) bench check: cycle power with a tone applied and confirm
   the reference stays within a Schottky drop of `+5VA`. The clamped level is
   AVDD1 + Vf and the AD7768-4 absolute maximum is AVDD1 + 0.3 V, so this
