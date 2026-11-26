@@ -64,8 +64,8 @@ required approvals.
 ## 1.1.1 — 2026-11-26 — tag `contract-v1.1.1` published 2026-11-26; two-approval review pending
 
 PATCH clarification; no electrical or interface behaviour changed. Prepared on
-branch `contract/pin1-nc`. **The tag, release zip/json and arm-repo sync have
-not happened**; they follow PR approval and the two required approvals.
+branch `contract/pin1-nc`. The two-approval PR, arm-repo sync and any remaining
+release checks are outstanding; the tag and release artifacts are published.
 
 - **Decision #32 (Pico J123 pin 1 = no-connect):** the 6-pin Pico link is pin 1
   NC, pin 2 GND, pin 3 `PICO_TX`, pin 4 `PICO_RX`, pin 5 `PICO_STOP_N`, pin 6
@@ -84,8 +84,9 @@ not happened**; they follow PR approval and the two required approvals.
 ## 1.1.0 — 2026-11-25 — tag `contract-v1.1.0` published 2026-11-26; two-approval review pending
 
 MINOR: additive decisions and interface clarifications; no pose/accuracy spec moved. This
-section is prepared on branch `docs/spine-consistency`. **The tag, release zip/json and
-arm-repo sync have not happened**; they follow PR approval and the two required approvals.
+section is prepared on branch `docs/spine-consistency`. The two-approval PR,
+arm-repo sync and any remaining release checks are outstanding; the tag and
+release artifacts are published.
 
 - `system_contract.md` — SC-07 corrected to the locked XO-direct clock tree (decision #21/#28):
   one 32.768 MHz XO drives ADC MCLK and the FPGA; the PLL only makes the 49.152 MHz DAC SPI;

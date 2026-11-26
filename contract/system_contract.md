@@ -8,7 +8,7 @@ locked. **D1-B, D3-A, and D4 were approved by the team on 2026-10-27. FE-4 is
 locked to INA163 + ADA4940-2.** FG-1 may proceed. SC-05b transport wording,
 SC-07 clock tree and the SC-08 STOP scope were updated in the 1.1.3 contract PR
 (decisions #21/#25/#28/#30/#31/#32/#33/#34); SC-06's Ch3 reference path was
-clarified in 1.1.4 (#35). The tag is pending review. The #20 power part
+clarified in 1.1.4 (#35). The tags are published (2026-11-26); the two-approval review is pending. The #20 power part
 list is superseded by decision #31 (v2 adopted 2026-11-25); see `decisions_log.md`.
 
 **Sources:** `docs/phase2/design_order.md`; `docs/phase2/tone_plan.md`;
