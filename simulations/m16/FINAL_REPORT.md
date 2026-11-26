@@ -2,7 +2,7 @@
 
 **Project:** EM AccuBot, Team 25 (ELEC/COEN 490) — Phase 2
 **Date:** 2026-10-28
-**Scope:** one channel of the M16 path — DAC80508 (16-bit, 199.805 kSPS) → LTC1563-2 (4th-order Butterworth, 60 kHz) → OPA192/LMH6321 current loop → 70 µH + 2 Ω coil → 1 Ω sense. Eight tones, 20–34 kHz, 150 mA prototype / 250 mA nominal.
+**Scope:** one channel of the M16 path — DAC80508 (16-bit, 199.805 kSPS) → LTC1563-2 (4th-order Butterworth, 60 kHz) → OPA192/LMH6321 current loop → 70 µH + 2 Ω **model load** (legacy driver-budget value; the locked FG coil is **79 µH / 2.9 Ω, 25 turns in two layers**, decision #27) → 1 Ω sense. Eight tones, 20–34 kHz, 150 mA prototype / 250 mA nominal.
 **Status:** M16 **selected 2026-10-27**; simulation-only, datasheet-consistent models. The final 8-tone IMD, loop stability, EMI, and thermal are bench items.
 **Decision record:** `contract/decisions_log.md` #19 (LOCKED). **FPGA handoff:** `../../docs/handoff/m16-fpga-handoff.md`. **Block diagram:** `../../docs/handoff/m16-section-diagram.png` / `.svg`.
 
@@ -12,7 +12,7 @@
 
 ![M16 block diagram](../../docs/handoff/m16-section-diagram.png)
 
-The FPGA PL runs the DDS/SPI/capture/demod/solver. The PS is the host/coordinator: host link, pose log, calibration UI, camera/viz, and the UART/SPI link to the Pico 2. The Pico 2 is the follower motor controller (step/dir, encoder loop, homing/limits, local stop), not the pose solver. The chart and `../../docs/handoff/m16-fpga-handoff.md` are cross-referenced.
+The FPGA PL runs the DDS/SPI/capture/demod/solver; there is **no PS** (#26). The host is a **PC** (USB-UART pose log, calibration UI, camera/viz), not a board coordinator, and it does not solve pose. The Pico 2 is the follower motor controller (step/dir, encoder loop, homing/limits, local stop) reached over a UART link with hardware STOP/heartbeat, not the pose solver. The chart and `../../docs/handoff/m16-fpga-handoff.md` are cross-referenced.
 
 ---
 
