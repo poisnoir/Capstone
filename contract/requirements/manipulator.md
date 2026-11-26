@@ -1,6 +1,6 @@
 # Phase 2 — Manipulator requirements (XYZ + pitch/yaw follower)
 
-**Canonical location:** `contract/requirements/manipulator.md` · **Contract version:** 1.1.4; tag `contract-v1.1.4` published 2026-11-26; two-approval review pending
+**Canonical location:** `contract/requirements/manipulator.md` · **Contract version:** 1.1.5; tag `contract-v1.1.5` published when CI runs; two-approval review pending
 **Change process:** `contract/README.md`.
 
 This doc tells the stage builders what the follower must do, and tells the

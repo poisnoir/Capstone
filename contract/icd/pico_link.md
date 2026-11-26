@@ -1,6 +1,6 @@
 # Pico 2 link — interface control document
 
-**Canonical location:** `contract/icd/pico_link.md` · **Contract version:** 1.1.4; tag `contract-v1.1.4` published 2026-11-26; two-approval review pending
+**Canonical location:** `contract/icd/pico_link.md` · **Contract version:** 1.1.5; tag `contract-v1.1.5` published when CI runs; two-approval review pending
 **Status:** Rev B, 2026-11-26; STOP scope clarified 2026-11-25 (#30); pin 1
 changed to no-connect by #32. Applies to BRD-01 (PL) ↔ Pico 2 (follower).
 **Owners:** PL side = FPGA engineer; Pico side = follower firmware.

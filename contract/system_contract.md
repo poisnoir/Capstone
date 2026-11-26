@@ -1,6 +1,6 @@
 # Phase 2 — System contract (SC-0)
 
-**Canonical location:** `contract/` · **Version:** 1.1.4 · **Tag:** `contract-v1.1.4` (published 2026-11-26; two-approval review pending)
+**Canonical location:** `contract/` · **Version:** 1.1.5 · **Tag:** `contract-v1.1.5` (published when CI runs; two-approval review pending)
 **Change process:** `contract/README.md` — do not edit without a contract-change PR.
 
 **Status:** draft for team sign-off, 2026-10-27. Technical items SC-01…SC-05 are

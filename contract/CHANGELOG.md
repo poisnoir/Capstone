@@ -3,6 +3,19 @@
 All notable contract changes. Versioning: MAJOR = breaking interface change,
 MINOR = additive, PATCH = clarification.
 
+## 1.1.5 — 2026-11-26 — tag `contract-v1.1.5` pending release
+
+PATCH metadata correction; no decision, SC row, ICD interface or value changed.
+
+- Release-status text corrected: tags `contract-v1.1.0`-`contract-v1.1.4` are
+  published (2026-11-26); the two-approval review and arm-repo sync remain
+  outstanding.
+- `README.md` status vocabulary: `ACCEPTED` (row #12) and `ISSUED` (row #24)
+  defined; #24 restated as ISSUED.
+- Contract-version headers aligned to the current release in
+  `system_contract.md`, `decisions_log.md`, `icd/pico_link.md`,
+  `requirements/manipulator.md`.
+
 ## 1.1.4 — 2026-11-26 — tag `contract-v1.1.4` published 2026-11-26; two-approval review pending
 
 PATCH clarification; no interface change. The Ch3 reference sensor channel
