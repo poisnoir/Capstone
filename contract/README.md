@@ -18,6 +18,9 @@ Status tags used everywhere:
 - `PROPOSED` — needs approval or a test.
 - `OPEN` — team decision required.
 - `TBD` — blocked by a missing input.
+- `ACCEPTED` — a gate reviewed and accepted, with downstream items explicitly
+  deferred (row #12).
+- `ISSUED` — a document/revision issuance row, not a design decision (row #24).
 
 ## Versioning
 

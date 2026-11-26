@@ -3,14 +3,15 @@
 All notable contract changes. Versioning: MAJOR = breaking interface change,
 MINOR = additive, PATCH = clarification.
 
-## 1.1.4 — 2026-11-26 — tag `contract-v1.1.4` pending release
+## 1.1.4 — 2026-11-26 — tag `contract-v1.1.4` published 2026-11-26; two-approval review pending
 
 PATCH clarification; no interface change. The Ch3 reference sensor channel
 stays in the SC-06 channel map, but its front-end parts stay DNP in the BOM and
 assembly on the first build; firmware enables the channel when populated. The
 user approved this directly on 2026-11-26 (decision #35) in place of the usual
-`contract-change` PR and two approvals. The tag, release zip/json and arm-repo
-sync remain pending, as for 1.1.1–1.1.3.
+`contract-change` PR and two approvals. The tag and release artifacts are
+published; the two-approval review and arm-repo sync remain pending, as for
+1.1.1–1.1.3.
 
 - **Decision #35 (Ch3 reference path):** wired but DNP on the first build. No
   board, BOM or firmware interface change: the first build keeps three
@@ -21,14 +22,14 @@ sync remain pending, as for 1.1.1–1.1.3.
 - `docs/phase2/frontend_requirements.md` §1 — the existing DNP statement now
   cites #35.
 
-## 1.1.3 — 2026-11-26 — tag `contract-v1.1.3` pending release
+## 1.1.3 — 2026-11-26 — tag `contract-v1.1.3` published 2026-11-26; two-approval review pending
 
 PATCH defect correction in a locked SC row; no interface added or removed. The
 cable requirement is tightened from a number that failed its own self-resonance
 rule. The user approved this change directly on 2026-11-26; that approval is
 recorded here (and in decision #34) in place of the usual `contract-change` PR
-and two approvals. The tag, release zip/json and arm-repo sync remain pending,
-as for 1.1.1 and 1.1.2.
+and two approvals. The tag and release artifacts are published; the two-approval
+review and arm-repo sync remain pending, as for 1.1.1 and 1.1.2.
 
 - **Decision #34 (pen-cable capacitance):** SC-05c's cable allocation is
   corrected 56 → 53 pF. The locked total stays 73 pF at 34 kHz: 10 pF connector
@@ -44,7 +45,7 @@ as for 1.1.1 and 1.1.2.
   quotes the superseded 56 pF cable allocation. The row now cites the two
   recalculated design documents instead, as does `decisions_log.md` #34.
 
-## 1.1.2 — 2026-11-26 — tag `contract-v1.1.2` pending release
+## 1.1.2 — 2026-11-26 — tag `contract-v1.1.2` published 2026-11-26; two-approval review pending
 
 PATCH clarification; no rail, part or wire-interface behaviour changed. The
 tag, release zip/json and arm-repo sync are pending PR approval and the two
@@ -60,7 +61,7 @@ required approvals.
   docs (`power_tree_v2.md` §7 D2, `system_schematic.md`, the M16 FPGA handoff,
   `dig6_requirements.md` and `driver_power_requirements.md`) state the same band.
 
-## 1.1.1 — 2026-11-26 — tag `contract-v1.1.1` pending review
+## 1.1.1 — 2026-11-26 — tag `contract-v1.1.1` published 2026-11-26; two-approval review pending
 
 PATCH clarification; no electrical or interface behaviour changed. Prepared on
 branch `contract/pin1-nc`. **The tag, release zip/json and arm-repo sync have
@@ -80,7 +81,7 @@ not happened**; they follow PR approval and the two required approvals.
   `brd01_power_v2_deepseek_handoff.md`, `estop_scope_change.md`, `robot-arm/`
   README and INTEGRATION) now point at the closed decision.
 
-## 1.1.0 — 2026-11-25 — tag `contract-v1.1.0` pending review
+## 1.1.0 — 2026-11-25 — tag `contract-v1.1.0` published 2026-11-26; two-approval review pending
 
 MINOR: additive decisions and interface clarifications; no pose/accuracy spec moved. This
 section is prepared on branch `docs/spine-consistency`. **The tag, release zip/json and
