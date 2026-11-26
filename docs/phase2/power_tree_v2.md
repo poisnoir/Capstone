@@ -278,7 +278,7 @@ full scale, centered on 2.5 V).** The alternative is 5.3 V (add 0P2V +
 ### D_REF: ADC reference clamp (new)
 
 ```text
- U103 OPA192 (on +12VA) ── R184 10 Ω ──┬── ADC_REF (AD7768-4 REF1+, REF2+)
+ U103 OPA192 (on +12VA) ── R186 10 Ω ──┬── ADC_REF (AD7768-4 REF1+, REF2+)
                                        │
                                      D_REF  BAT54 (or the BAS70 already on the receiver BOM)
                                        │ anode at ADC_REF, cathode at +5VA
@@ -459,8 +459,9 @@ The power sheet is captured and wired. The §7 cross-sheet changes are done:
 - connectors: `J123.1` is a no-connect (D4).
 - receiver: `D_REF` (§4, C7) is placed as `D534` (`BAS70H,115`,
   `Diode_SMD:D_SOD-123F`, the part already on the receiver BOM). Anode on
-  `/receiver/ADC_REF` after `R184`, cathode on `+5VA`; ADC_REF is 6 pins and
-  +5VA 30 pins in the netlist.
+  `/receiver/ADC_REF` after `R186`, cathode on `+5VA`; ADC_REF is 6 pins and
+  +5VA 30 pins in the netlist. The reference-filter resistor was renamed
+  R184 → R186 in commit `8d39a99`.
 
 ERC on the full hierarchy is **0 errors / 0 warnings**.
 

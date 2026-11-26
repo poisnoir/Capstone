@@ -1,5 +1,19 @@
 # BRD-01 component reference — component → pins → wires
-**Provenance (2026-11-25, base commit `ef04f63`):** generated with `kicad-cli sch export netlist --format kicadxml -o net.xml hardware/brd-01/kicad/brd-01.kicad_sch` (KiCad 10.0.8); regenerate after any BRD-01 netlist change — regeneration pends the uncommitted KiCad WIP, so these tables describe the committed netlist only.
+
+> **⚠ STALE TABLES — DO NOT USE AS WIRING TRUTH (2026-11-26).** Every table
+> below was generated from the `ef04f63` netlist. Commit `8d39a99` changed that
+> netlist: `/power/BUCK1_FB` → `Net-(U144-FB)`,
+> `/receiver/DREGCAP` → `Net-(U101-DREGCAP)`,
+> `/receiver/FDA1_N` → `Net-(U105B--IN2)`,
+> `/receiver/REF_RAW` → `Net-(U102-VOUT)`,
+> `/receiver/REGCAPA` → `Net-(U101-REGCAPA)`,
+> `/receiver/REGCAPB` → `Net-(U101-REGCAPB)`, and the 10 Ω ADC-reference
+> filter resistor `R184` → `R186` (U103 OUT/IN- → `/receiver/ADC_REF`). Net
+> names, part designators and the crossing/sheet classification below may have
+> changed. Regenerate before relying on any table here:
+> `kicad-cli sch export netlist --format kicadxml -o net.xml hardware/brd-01/kicad/brd-01.kicad_sch`.
+
+**Provenance (2026-11-26; tables generated 2026-11-25 from base commit `ef04f63`):** generated with `kicad-cli sch export netlist --format kicadxml -o net.xml hardware/brd-01/kicad/brd-01.kicad_sch` (KiCad 10.0.8); the committed netlist changed at `8d39a99` (see banner), so these tables describe `ef04f63` only — regenerate before using them as wiring truth.
 This is the **component-centric** reference for BRD-01. Its companion,
 `brd01_wiring_manifest.md` (and `brd01_wiring_manifest.csv`), is **net-centric**:
 net → pins. This document starts at a component and follows each pin to the other

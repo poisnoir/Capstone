@@ -14,6 +14,10 @@ no-connect; BRD-01 supplies no 3V3 and the Pico uses its own USB.
 items in `power_tree_v2.md` §7 C1/C5/C7. The instructions below are the original
 plan, not current work orders — do not re-open the #20 change or treat v2 as
 proposed.
+**Designator note (2026-11-26):** `R184` in the historical work orders below
+(`W2-C` and its table row) was renamed `R186` in commit `8d39a99` — the 10 Ω
+ADC-reference filter between U103 OUT/IN- and `/receiver/ADC_REF`. Read those
+references as `R186`; the original text is kept as history.
 
 **Orchestrator:** `DeepSeek-V4.1-Flash-1017` (state, `git`, `tools/kicad_sch_helper.py`, `power.kicad_sch`, `brd-01.kicad_sch` root wiring, `kicad-cli` gates)  
 **Parallel Workers:** `Tencent Hy4 Flash` (read-only audits, SVG/PNG vision checks, disjoint child-sheet edits via helper, docs/issue drafting)  
