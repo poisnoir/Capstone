@@ -1,8 +1,10 @@
 # Phase 2 — System schematic (Rev A, board level)
 
-**Status:** Rev A draft, 2026-10-27. This is the board-level schematic and
-interface document for the Phase 2 design review. It proposes the rails,
-connectors, channel map, and signal nets; the team's decision sheet is the
+**Status:** Rev A draft, 2026-10-27; updated 2026-11-25 for arm-only STOP (#30)
+and option-D FPGA (#26). The committed board uses power tree v2, but locked
+decision #20 still governs the contract rails — see the OPEN note in §2. This is the
+board-level schematic and interface document for the Phase 2 design review. It
+states the rails, connectors, channel map, and signal nets; the contract is the
 approval gate. The EDA capture (KiCad) adds symbols, footprints, and pin numbers;
 it must not change approved interfaces without a deviation.
 
@@ -13,7 +15,7 @@ left-to-right, power top-to-bottom, faults red dashed, calibration blue dashed.
 
 | Board | Function | Size | Power |
 |---|---|---|---|
-| **BRD-01** | **single electronics board** — power entry + DC-DC/LDO; FPGA + clock (§6.0); DAC80508 + 8× LTC1563-2 + 8 current loops + current sense; receiver (INA163 + ADA4940-2 + AD7768-4 + ADR434); FG and pen connectors | ~250 × 200 mm, 4-layer | +15 V in |
+| **BRD-01** | **single electronics board** — power entry + DC-DC/LDO; FPGA + clock (§6.0); DAC80508 + 8× LTC1563-2 + 8 current loops + current sense; receiver (INA163 + ADA4940-2 + AD7768-4 + ADR434); FG and pen connectors; arm STOP latch (no panel E-stop) | ~250 × 200 mm, 4-layer | +15 V in |
 | FG-01 | 8 vendor emitter coils on machined plates (passive; mechanically separate) | 8 × ~91 mm PCB + 2 plates | passive |
 | PEN-01 | Coil B + cable + mini-XLR | pen | passive |
 | PMS-01 | Pico 2 + XYZ stage + camera | bench | 5 V |
@@ -22,8 +24,8 @@ left-to-right, power top-to-bottom, faults red dashed, calibration blue dashed.
 **Board count.** Decision #10 locks **one box with an internal shield partition**, not a board
 count. Since 2026-10-28 the electronics is **one board, BRD-01**; the old PWR-DRV-01 /
 FE-ADC-01 / FPGA-IF-01 split is now three **zones** of that board (§4, §5, §6). FG-01 stays a
-separate passive PCB because the 300 × 300 mm coil array sits under the tracking volume. How the
-FPGA is integrated into BRD-01 (on-board, module, or the owned dev board) is still open — §6.0.
+separate passive PCB because the 300 × 300 mm coil array sits under the tracking volume. FPGA
+integration is **option D: PS-less FPGA on BRD-01** (decision #26, 2026-10-28) — §6.0.
 
 ---
 
@@ -35,8 +37,8 @@ FPGA is integrated into BRD-01 (on-board, module, or the owned dev board) is sti
  ┌────────────────────────────▼──────────────────────────────────────────┐
  │ BRD-01 — one 4-layer board, ~250 × 200 mm                             │
  │                                                                       │
- │  power entry F1/TVS/L1 ──► +15 V_FUSED ──► 8× LMH6321                │
- │        ├─► OKI 5 V ─► 3.3 V LDO ─► FPGA                               │
+ │  power entry F1/TVS/L1 ──► +15V_FUSED ──► 8× LMH6321 (unswitched)     │
+ │        ├─► OKI 5 V ─► 3.3 V LDO ─► FPGA (locked #20 rails)            │
  │        └─► RV-1515D ±15 V iso ─► TPS7A47/33 ─► ±12 V_A                │
  │                                                                       │
  │   ┌────────────┐    SPI 49.152 MHz    ┌───────────────┐               │
@@ -63,9 +65,10 @@ FPGA is integrated into BRD-01 (on-board, module, or the owned dev board) is sti
                  └────────── B field ──────────► pen coil ─► INA163
 ```
 
-The FPGA is drawn inside the board boundary for options A/B (§6.0). With the owned dev board
-(option C) it sits outside, and the SPI crosses a header — that is the case the timing note in §6
-warns about.
+The FPGA is drawn inside the board boundary for the selected option D (§6.0, #26): PS-less
+Artix-7 on BRD-01, with the 49.152 MHz SPI as a short on-board trace. Options A/B/C in
+`fpga_integration_options.md` are the rejected evaluation trail; no SPI header or ribbon
+exists in the selected design.
 
 The two signal chains are short loops on one board: **drive** FPGA → DAC → filter → current loop →
 FG coil → \(R_{store}\) → summer → ADC Ch0; **receive** pen coil → INA163 → ADA4940-2 → AD7768-4
@@ -74,6 +77,10 @@ Ch1–3 → FPGA.
 ---
 
 ## 2. Power tree
+
+**Contract-governing table: locked decision #20.** The +15 V rail is labelled
+`+15V_FUSED` at the BRD-01 input after F1/TVS/L1; the obsolete `+15V_DRV` name
+is gone and no E-stop contact interrupts the driver rail (#30).
 
 | Rail | Source | Load | Current (typ/max) | Notes |
 |---|---|---|---|---|
@@ -86,6 +93,22 @@ Ch1–3 → FPGA.
 | +12 V_A | TPS7A4701 | INA163, OPA192 | 25 mA / 50 mA | low-noise LDO |
 | −12 V_A | TPS7A33 | INA163, OPA192 | 25 mA / 50 mA | low-noise LDO |
 | +5 V_A | TPS7A4701 from +5 V_D | ADC AVDD1/2, ADA4940, ADR434 | 80 mA / 150 mA | low-noise LDO |
+
+> **OPEN — power tree conflict, not a contract change.** `docs/phase2/power_tree_v2.md:3`
+> is **PROPOSED (2026-11-24)** and says it changes locked decision #20;
+> `docs/phase2/contract_change_20_draft.md:3` is **DRAFT, not filed**. #20 above
+> (#20 = ME60A1503F01, OKI-78SR-5, RV-1515D, TPS7A4701/TPS7A33, TPS7A20)
+> **governs the contract**. The committed board/netlist already implements v2:
+> `hardware/brd-01/kicad/brd-01.kicad_sch` at `ef04f63` contains `MGJ2D151515SC`
+> and no `OKI-78SR`, `RV-1515`, `TPS7A20` or `TPS7A4701` strings;
+> `hardware/brd-01/kicad/bom-to-cad.md:151` records the user's part confirmation
+> (U5 MGJ2D151515SC, U6 LT3045EDD-1#TRPBF, U2 LT3093EMSE#TRPBF) and that the
+> legacy BOM and #20 still list the earlier parts pending separate reconciliation;
+> `docs/phase2/brd01_component_reference.md:357` lists U5 as MGJ2D151515SC;
+> `docs/phase2/brd01_wiring_manifest.md` §5 item 3 confirms the captured rails.
+> This schematic must state which tree it implements: the table is #20; the
+> as-captured board is v2. The user must decide whether to ratify v2 into the
+> contract or reconcile the board/BOM to #20. No rail values were changed here.
 
 **Protection at the adapter input:** F1 3 A slow-blow, D1 TVS (SMBJ18A),
 L1 common-mode choke, C1 1000 µF/25 V, reverse-polarity MOSFET or ideal diode.
@@ -108,7 +131,7 @@ total ≈ 40 W. The LMH6321 thermal soak, not the adapter, is the limit.
 | Centres | \(x=[-93.543,0,93.543,-68.55,68.55,-93.543,0,93.543]\) mm; \(y=[93.543,68.55,93.543,0,0,-93.543,-68.55,-93.543]\) mm |
 | Orientation | vertical: 1,3,6,8; angled 45°: 2,4,5,7 |
 | Tone map | coil \(i\) → tone \(i\): 20,22,24,26,28,30,32,34 kHz (FG-1 may reassign weakest → 34 kHz) |
-| Connector | J1–J8, 2-pin 3 A keyed (Molex Mini-Fit Jr or JST VH), pin 1 = drive, pin 2 = return |
+| Connector | J20–J27, 2-pin keyed FG headers on BRD-01 (Molex 39-30-1020; `J1` is the DC barrel jack), pin 1 = drive, pin 2 = return |
 | Guard | non-metal open-top ring at the ~57 mm contour (27 µT at 250 mA); removable |
 | Metal rule | no metal within 150 mm of the 150 mm cube; the plates sit below the coil plane and outside the 57 mm guard contour |
 
@@ -154,7 +177,7 @@ DAC80508 ch_i ──► LTC1563-2 60 kHz ──► R1 10k ──► A1 + ──�
 ```
 
 - **A1** OPA192 error amplifier, ±12 V; **A2** OPA192 difference amplifier
-  across \(R_{store}\); **Q1** LMH6321 on +15 V_DRV.
+  across \(R_{store}\); **Q1** LMH6321 on the unswitched +15V_FUSED driver rail.
 - **Vmid** is a 7.5 V low-impedance mid-rail (10k/10k divider + 1000 µF +
   100 nF). The coil is AC-coupled by C1, so the DC operating point is 7.5 V and
   the LMH6321 output stays inside 0–15 V while the coil current is bipolar.
@@ -211,16 +234,18 @@ R_store7 ──► A17 buffer ──┘
 
 U4.P4 ──► PICO_STOP_REQ_N ──┐
             R754 pull-down  ├──► U755 74LVC1G08 ──► PICO_STOP_N ──► J123.5
-U753.~Q (pin 3) ────────────┘
+U753.5 (Q) ─► /power/ARM_Q ─┘        (U753.3 ~Q = no-connect)
 ```
 
 - There is no panel mushroom or K2 relay on BRD-01. The field rail is never
   interrupted by a stop.
-- `PICO_STOP_N` is active low. U755 (74LVC1G08) ANDs the FPGA request with
-  `U753.~Q`; either input low asserts STOP to the arm.
+- `PICO_STOP_N` is active low. U755 (74LVC1G08) ANDs the FPGA request with the
+  latch output `U753.5 (Q)` on `/power/ARM_Q`; either input low asserts STOP to
+  the arm. `U753.3 (~Q)` is the **no-connect**, not the arming signal — netlist
+  evidence in `docs/phase2/brd01_wiring_manifest.md` §5 item 1.
 - U753 is cleared at power-up/brownout by U751 and on overcurrent via
-  `/DRIVER_FAULT_N` → U752. With CLR asserted, `~Q=1`, so STOP is asserted;
-  U753.Q (pin 5) is no longer used.
+  `/DRIVER_FAULT_N` → U752. With CLR asserted, `Q=0`, so STOP is asserted; the
+  latch is armed by SW750 (`Q=1`), which passes the FPGA request through.
 - R754 pulls the FPGA-side request low while the FPGA is unconfigured.
 - The watchdog is an **internal timer in the FPGA PL**. No TPS3823 or other
   external supervisor part exists on BRD-01, and no watchdog part or net is
@@ -256,17 +281,20 @@ ADA4940-2 OUT− ──► R4 20Ω ──► C4 470pF ─┼──► C5 100pF �
 - **VCM:** AD7768 VCM (2.5 V) sets the ADA4940-2 output common mode; each
   output stays in 0.45–4.55 V.
 - **Reference:** ADR434 4.096 V + OPA192 buffer; 10 µF + 100 nF at the ADC.
-- **Clock:** 32.768 MHz XO → 33 Ω series → ADC MCLK; direct branch to the FPGA
-  clock input (no discrete buffer).
+- **Clock (SC-07, decision #28):** one 32.768 MHz XO (CSX750FBC32.768M-UT) →
+  33 Ω series → ADC MCLK; direct branch to the FPGA clock input (no discrete
+  buffer). FPGA DDS clock = 32.768 MHz; PLL ×3 = 98.304 MHz feeds only ÷2 =
+  49.152 MHz DAC SCLK; DAC update ÷164 = 199.805 kSPS; ADC ODR ÷128 =
+  256 kSPS. There is no TCXO and no PLL-generated MCLK.
 
 ### 5.2 ADC channel map
 
 | ADC channel | Input | Connector | Notes |
 |---|---|---|---|
 | Ch0 | current-sense summer | on-board, driver zone | \(Y_I\) |
-| Ch1 | pen 1 | J1 | moving |
-| Ch2 | pen 2 | J2 | wired, enabled when built |
-| Ch3 | reference coil | J4 | fixed at FG edge |
+| Ch1 | pen 1 | J122 (panel XLR J120 via J121) | moving |
+| Ch2 | pen 2 | J127 (panel XLR J125 via J126) | wired, enabled when built |
+| Ch3 | reference coil | J128 | fixed at FG edge |
 
 ### 5.3 ADC pin/interface summary
 
@@ -331,15 +359,18 @@ The pin list below is the on-board net assignment (no cable).
 | 22 | DAC_SDO | in | optional readback |
 | 23–35 | spare | — | **13** pins freed (no LDAC pin; 8-lane DAC removed) |
 | 36 | GND | power | — |
-| 37 | — | — | freed (was ESTOP_STATUS opto input) |
+| 37 | — | — | no-connect (was ESTOP_STATUS opto input; removed by #30) |
 | 38 | WATCHDOG_KICK | out | to Pico/relay |
 | 39 | FAULT_IRQ | in | wired-OR fault bus |
 | 40 | GND | power | — |
 
-**Where the SPI runs depends on §6.0.** With option A or B the 49.152 MHz SPI is a ~30–50 mm board
-trace from the FPGA to the DAC — no ribbon. With option C (owned dev board) it crosses a header and
-a cable, and the hold margin has to be bought back with the matched pair, the ~2.5 ns SDI delay and
-a per-board calibration; at 0.5 m it is not signable.
+**The FPGA clock input is the XO direct (§5.1, SC-07/#28).** The PLL ×3 output is
+used only for the 49.152 MHz DAC SCLK; it does not generate ADC MCLK.
+
+**SPI placement (option D, #26).** The 49.152 MHz SPI is a ~30–50 mm on-board
+trace from the FPGA to the DAC — no header or ribbon. The hold margin is bought
+back with the matched pair, the ~2.5 ns SDI delay and probe pads; a cable is not
+signable at this rate.
 
 **SPI timing constraint (49.152 MHz).** The DAC80508 needs `tSDIH` = 10 ns and the half
 period at 49.152 MHz is 10.17 ns, so hold margin is **0.17 ns** — about 3 cm of trace.
@@ -354,14 +385,14 @@ the FPGA (balanced result 7.7 / 12.7 ns → 2.7 ns margin each). See
 
 | Tone | Coil | Driver | \(R_{store}\) | FG J | ADC Ch | Pen |
 |---|---|---|---|---|---|---|
-| 20 kHz | 1 | 0 | 1.00 Ω | J1 | Ch0 (Y_I) / Ch1 | pen 1 |
-| 22 kHz | 2 | 1 | 1.00 Ω | J2 | Ch0 / Ch1 | pen 1 |
-| 24 kHz | 3 | 2 | 1.00 Ω | J3 | Ch0 / Ch1 | pen 1 |
-| 26 kHz | 4 | 3 | 1.00 Ω | J4 | Ch0 / Ch1 | pen 1 |
-| 28 kHz | 5 | 4 | 1.00 Ω | J5 | Ch0 / Ch1 | pen 1 |
-| 30 kHz | 6 | 5 | 1.00 Ω | J6 | Ch0 / Ch1 | pen 1 |
-| 32 kHz | 7 | 6 | 1.00 Ω | J7 | Ch0 / Ch1 | pen 1 |
-| 34 kHz | 8 | 7 | 1.00 Ω | J8 | Ch0 / Ch1 | pen 1 |
+| 20 kHz | 1 | 0 | 1.00 Ω | J20 | Ch0 (Y_I) / Ch1 | pen 1 |
+| 22 kHz | 2 | 1 | 1.00 Ω | J21 | Ch0 / Ch1 | pen 1 |
+| 24 kHz | 3 | 2 | 1.00 Ω | J22 | Ch0 / Ch1 | pen 1 |
+| 26 kHz | 4 | 3 | 1.00 Ω | J23 | Ch0 / Ch1 | pen 1 |
+| 28 kHz | 5 | 4 | 1.00 Ω | J24 | Ch0 / Ch1 | pen 1 |
+| 30 kHz | 6 | 5 | 1.00 Ω | J25 | Ch0 / Ch1 | pen 1 |
+| 32 kHz | 7 | 6 | 1.00 Ω | J26 | Ch0 / Ch1 | pen 1 |
+| 34 kHz | 8 | 7 | 1.00 Ω | J27 | Ch0 / Ch1 | pen 1 |
 
 Ch2 is pen 2 (same eight tones); Ch3 is the reference coil. The FG-1 field map
 may swap coil→tone assignment; the tone set and 2 kHz spacing are fixed.
@@ -387,24 +418,29 @@ may swap coil→tone assignment; the tone set and 2 kHz spacing are fixed.
   on-board can, fan with
   filter; no metal within 150 mm of the tracking volume. The ICNIRP guard is
   non-metal and removable.
-- **Arm STOP:** no panel E-stop on BRD-01; stop comes from the host request or
-  the hardware latch, and the field rail is unaffected.
+- **Arm STOP (#30):** no panel E-stop on BRD-01; STOP is the AND of the host
+  request and the arm latch, and the field rail is unaffected. Tracker stays up
+  through a STOP; the last hardware-independent stop path is gone.
 
 ---
 
 ## 9. Bring-up order
 
-1. **Power only:** adapter, +15 V_RAW, +5 V_D, ±12 V_A, +3.3 V_D; check rails,
-   ripple, no load; then verify the unswitched +15 V_FUSED driver rail.
-2. **FG continuity:** 8 coils, 2 Ω ±0.5, no shorts; LCR 70 µH ±20 %.
-3. **Driver one channel:** 150 mA into a 2 Ω/70 µH load; step response, phase
+1. **Power only:** adapter, +15 V_RAW / +15 V_FUSED, +5 V_D, ±12 V_A, +3.3 V_D
+   (locked #20 tree in §2; the as-built board uses the PROPOSED v2 tree — see the
+   OPEN note); check rails, ripple, no load; then verify the unswitched driver rail.
+2. **FG continuity:** 8 vendor coils, R ≈ 2.9 Ω, L ≈ 79 µH (AnserEMT Table 2,
+   decision #27; thesis heritage 2 Ω / 70 µH), no shorts; measure each board.
+3. **Driver one channel:** 150 mA into a 2.9 Ω / 79 µH load; step response, phase
    margin, THD; then all 8.
 4. **Current sense:** known current, Ch0 V/I/phase; comparator trip.
 5. **FE one channel:** Helmholtz \(A_{sens}(f)\), noise, CMRR; then ADC.
 6. **ADC:** 4-channel capture, 32.768 Mbit/s, zero dropped frames; FFT/SINAD.
-7. **DDS/DAC:** 8 tones, FTWs, amplitude/phase; DAC80508 192-bit SPI; LTC1563-2 filter; current-sense FFT.
+7. **DDS/DAC:** 8 tones, FTWs, amplitude/phase; DAC80508 216-bit frame (8 data +
+   TRIGGER, `icd/dac_fpga.md`); LTC1563-2 filter; current-sense FFT.
 8. **Closed loop:** demod → solver → pose on the 7×7 grid; κ.
-9. **System:** arm STOP, watchdog, thermal soak, EMI, 1-hour run.
+9. **System:** arm STOP (field and pose continue), watchdog, thermal soak, EMI,
+   1-hour run.
 
 ---
 

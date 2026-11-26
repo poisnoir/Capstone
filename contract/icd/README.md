@@ -6,10 +6,10 @@ Each ICD names an owner on each side.
 
 | ICD | Interface | Status | Owners |
 |---|---|---|---|
-| `pico_link.md` | BRD-01 (FPGA) ↔ Pico 2 follower | **Rev A, frozen 2026-10-28** | FPGA engineer / follower firmware |
-| `adc_fpga.md` | AD7768-4 ↔ FPGA capture | Stub — see SC-05/SC-05a–c, SC-07 | Tung / William |
-| `dac_fpga.md` | DAC80508 ↔ FPGA DDS/SPI | Stub — see decision #19, SC-07 | Tung / Kevin |
-| `power.md` | Power entry, E-stop, rails, grounding | Stub — see decision #7/#10/#20 | Tung |
+| `pico_link.md` | BRD-01 (FPGA) ↔ Pico 2 follower | **Rev A, frozen 2026-10-28**; STOP scope clarified 2026-11-25 (#30); pin 1 OPEN | FPGA engineer / follower firmware |
+| `adc_fpga.md` | AD7768-4 ↔ FPGA capture | Stub — see SC-05/SC-05a–c, SC-07; on-board nets (#21/#25) | Tung / William |
+| `dac_fpga.md` | DAC80508 ↔ FPGA DDS/SPI | **FROZEN Rev A, 2026-11-02**; safe-state clause clarified 2026-11-25 (#30) | Tung / Kevin |
+| `power.md` | Power entry, rails, grounding, arm STOP | Stub — see #7/#10/#20/#25/#30; v2 proposal OPEN, #20 governs rails | Tung |
 | `mechanical.md` | FG/pen/enclosure/arm mounts, 150 mm rule | Stub — see SC-01c, SC-04b, D2 | Tung / Tristan |
 
 **A stub is not a frozen interface.** Until an ICD is marked frozen, the

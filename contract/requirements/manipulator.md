@@ -1,6 +1,6 @@
 # Phase 2 — Manipulator requirements (XYZ + pitch/yaw follower)
 
-**Canonical location:** `contract/requirements/manipulator.md` · **Contract version:** 1.0.0
+**Canonical location:** `contract/requirements/manipulator.md` · **Contract version:** 1.1.0 (tag pending review)
 **Change process:** `contract/README.md`.
 
 This doc tells the stage builders what the follower must do, and tells the
@@ -181,7 +181,9 @@ Over 50 mm/s for longer than 100 ms → cap at 50/scale and flag `clamped`.
 Over 100 mm/s, jump over 10 mm, or tracking lost → brakes on, flag
 `stopped`, require re-engage, all inside 100 ms. Z-down caps at half. Tilt
 past 45° or 90°/s → hold last good tilt, flag `tilt-stale`. Log every event
-with its pose and timestamp.
+with its pose and timestamp. A STOP here is **arm motion only** (decision #30):
+the tracker keeps its field, DAC output and pose stream; RQ-M12's 100 ms is the
+arm-motion limit.
 
 ---
 

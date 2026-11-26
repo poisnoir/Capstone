@@ -50,6 +50,8 @@ logging, calibration, viz). The camera/magnified view belongs to the follower/de
 | 49 MHz SPI | on-board | on-board | header/ribbon, marginal | on-board |
 
 Cost figures are estimates, not quotes; the part prices move and the fab line is a placeholder.
+The part/package column is the pre-decision trade study; the locked D implementation is
+**XC7A35T-1FTG256C in FTG256** (XC7A50T-1FTG256C upgrade), not CSG324 (#26).
 
 ## 4. Criteria
 
@@ -63,26 +65,25 @@ Cost figures are estimates, not quotes; the part prices move and the fab line is
 | Cost | medium | high | high | lowest | lowest |
 | Team effort to design/layout | high | high | low | none | medium |
 
-## 5. Open questions to close before deciding
+## 5. Questions from the evaluation (history, closed by #26)
 
-1. **Which FPGA board do we actually own?** The Phase 1 baseline says "owned" but the model is TBD.
-   If none is owned, option C is not free and its advantage shrinks.
-2. **Is the host PC guaranteed at every demo?** D puts the UI, log and camera on the host. If the
-   demo must be self-contained, D loses.
-3. **Can we assemble a 0.8 mm BGA?** JLCPCB/PCBWay assembly can; the lab may not. This decides
-   whether A/D are buildable at all.
-4. **Does the FPGA part need to be a Zynq for the course?** Some capstones expect an SoC. If the
-   rubric requires a PS, D is out.
-5. **What does the solver need in practice?** Synthesise the HLS kernel for a 35T/50T early; if it
-   does not fit, D moves to 100T or back to A/B.
-6. **Host link choice for D:** USB-UART (FT2232H/CP2102N) vs Ethernet PHY (RGMII, more pins and
-   another clock domain). USB-UART is enough for pose + config.
+These were the open questions **at evaluation time**. They are kept for the record;
+decision #26 (2026-10-28) closed the choice as D. The host link is USB-UART
+(FT231X on BRD-01); the host PC does UI, log and camera.
 
-## 6. Gate
+1. Which FPGA board was owned — the Phase 1 "owned" model was TBD. Closed by the
+   BRD-01 one-board decision (#25): the FPGA is a zone of BRD-01, not a dev board.
+2. Was the host PC guaranteed at every demo? Closed by #26: yes, host-side UI/log/camera.
+3. Could a 0.8 mm BGA be assembled? Closed by #26: FTBGA-256 on BRD-01.
+4. Did the course require a Zynq PS? Closed by #26: no PS, no DDR3, no Linux.
+5. Would the HLS kernel fit? Still a **pre-layout check**: HLS filament/LM fit on
+   the XC7A35T, with the XC7A50T in the same FTG256 footprint as the escape.
+6. Host link: USB-UART chosen (FT231X), no Ethernet PHY.
 
-Decide after (a) the owned-board question, (b) an HLS resource estimate for the filament/LM kernel
-on a 50T, and (c) the assembly route. Until then BRD-01 keeps the FPGA as a **zone with an open
-part** (`system_schematic.md` §6.0) and the 2×20 pin list stays valid as board nets.
+## 6. Gate — closed 2026-10-28 (decision #26)
 
-**Current leaning:** D if the host PC is always present and a 50T fits; B if on-board Linux is
-required; A only if someone owns a 6-layer DDR3 design and can absorb a respin.
+Option **D** is locked: PS-less XC7A35T-1FTG256C on BRD-01 (XC7A50T same-footprint
+upgrade), QSPI config, USB-UART host link, 3.3 V HR banks; no PS/DDR3/Linux and
+**no 2×20 IDC** — all signals are on-board nets (`system_schematic.md` §6.0).
+A/B/C remain above as the rejected evaluation trail. Pre-layout checks still
+due: HR bank coverage, 35T→50T pin compatibility and HLS fit.

@@ -1,11 +1,14 @@
 # Phase 2 — System contract (SC-0)
 
-**Canonical location:** `contract/` · **Version:** 1.0.0 · **Tag:** `contract-v1.0.0`
+**Canonical location:** `contract/` · **Version:** 1.1.0 · **Tag:** `contract-v1.1.0` (pending review)
 **Change process:** `contract/README.md` — do not edit without a contract-change PR.
 
 **Status:** draft for team sign-off, 2026-10-27. Technical items SC-01…SC-05 are
 locked. **D1-B, D3-A, and D4 were approved by the team on 2026-10-27. FE-4 is
-locked to INA163 + ADA4940-2.** FG-1 may proceed.
+locked to INA163 + ADA4940-2.** FG-1 may proceed. SC-05b transport wording,
+SC-07 clock tree and the SC-08 STOP scope were updated in the 1.1.0 contract PR
+(decisions #21/#25/#28/#30); the tag is pending review. Locked power parts (#20)
+are unchanged — the v2 power proposal is OPEN (see `decisions_log.md`).
 
 **Sources:** `docs/phase2/design_order.md`; `docs/phase2/tone_plan.md`;
 `docs/phase2/adc_justification.md`; `hardware/bom/BOM_ADC-01.xlsx`; AD7768/AD7768-4 Rev.D
@@ -32,11 +35,11 @@ deviation; `PROPOSED` = needs approval/test; `OPEN` = team decision required.
 | SC-04b | ICNIRP guard: **non-metal access barrier**, not an EMF shield. Open-top ring/fence/spacer at the 27 µT contour (~57 mm above the board at 250 mA), no metal within 150 mm, plastic fasteners, removable for calibration/field mapping. It does not reduce the 150 mm working volume: with the B cube bottom at 85.6 mm, the guard is 28.6 mm below the cube. A metal box is prohibited (eddy-current distortion). Guard is a mechanical/safety BOM item, not a field-generator part. | D2 decision 2026-10-27; Phase 1 #20; 150 mm metal-free rule | LOCKED; verify field probe at accessible boundary + guard check |
 | SC-05 | ADC: AD7768-4BSTZ-RL7 (2 pcs: build + spare); differential ±VREF = ±4.096 V; VCM output; precharge buffer + external RC/charge reservoirs; ADR434BRZ 4.096 V reference; MCLK ≤32.768 MHz; fast mode, decimation ×32, ODR 256 kSPS; wideband filter, group delay 34/ODR = 133 µs; DCLK/DOUT data lanes, DRDY, SYNC/START (no CONVST); SPI configuration only. | AD7768-4 datasheet; `BOM_ADC-01` | LOCKED part/contract |
 | SC-05a | ADC clock jitter: design target ≤30 ps rms for the ADC's 104 dB target; minimum acceptable 1 ns rms = 73.4 dB at 34 kHz, with a written deviation if used. | \(SNR_j=-20\log(2\pi f t_j)\); RQ-A4 correction | LOCKED target |
-| SC-05b | ADC digital lane rate: **4 active channels** × 32-bit frames × 256 kSPS = 32.768 Mbit/s; 4 DOUT lanes → DCLK 8.192 MHz; 2 lanes → 16.384 MHz. A 2×6 Pmod (8 I/O) is insufficient; use 2×8/custom header. | AD7768-4 datasheet; `adc_justification.md` §6; D3-A | LOCKED |
+| SC-05b | ADC digital lane rate: **4 active channels** × 32-bit frames × 256 kSPS = 32.768 Mbit/s; 4 DOUT lanes → DCLK 8.192 MHz; 2 lanes → 16.384 MHz. A 2×6 Pmod (8 I/O) is insufficient; on BRD-01 the lanes are **board nets, not an external 2×8/custom header** (#21/#25). | AD7768-4 datasheet; `adc_justification.md` §6; D3-A; #21/#25 | LOCKED lane rate; transport clarified 1.1.0 |
 | SC-05c | Coil capacitance budget: 73 pF total at 34 kHz (cable + connector + preamp input); 56 pF cable budget. The AD7768 switched-cap network is behind the preamp and is not part of this budget. | `tone_plan.md` §6; connector Rev D | LOCKED |
 | SC-06 | Channel map = **D3-A (LOCKED)**: Ch0 current-sense, Ch1 pen 1, Ch2 pen 2, Ch3 reference sensor; Ch2 wired but enabled when pen 2 is built | `adc_justification.md`; `fSysSetup.m`; D3 decision 2026-10-27 | LOCKED |
 | SC-07 | Clock tree: one 32.768 MHz XO (Citizen CSX750FBC32.768M-UT) drives ADC MCLK through 33 Ω and the FPGA clock input directly; FPGA DDS clock = 32.768 MHz; PLL ×3 = 98.304 MHz → ÷2 = 49.152 MHz DAC SPI; DAC update ÷164 = 199.805 kSPS; ADC ODR ÷128 = 256 kSPS; no discrete clock buffer; single sync reset; DDS 32-bit; integer-J frames; one-time ADC START/SYNC, then count DRDY; discard the first 68 samples (266 µs) after sync. | Decision #21 (locked XO/clock interface); `system_schematic.md` §5.1/§6.0; `dig6_requirements.md` §1; BRD-01 netlist | LOCKED architecture + part (#21); verify clock integrity on BRD-01 |
-| SC-08 | Budget: \(T_{acq}=512/256\text{ k}=2.000\) ms; ADC group delay 0.133 ms; 2.133 ms total; 7.867 ms left for demod + solver + overhead at 10 ms/100 Hz; filter-off latency <20 ms, filter-on <100 ms, stop <100 ms. | `tone_plan.md` §3; Phase 1 #14–17 | LOCKED |
+| SC-08 | Budget: \(T_{acq}=512/256\text{ k}=2.000\) ms; ADC group delay 0.133 ms; 2.133 ms total; 7.867 ms left for demod + solver + overhead at 10 ms/100 Hz; filter-off latency <20 ms, filter-on <100 ms; **arm-motion STOP ≤100 ms — the tracker keeps field and pose through a STOP (#30)**. | `tone_plan.md` §3; Phase 1 #14–17; #30 | LOCKED budget; STOP scope clarified 1.1.0 |
 | SC-09 | Units/naming: RMS unless stated; dBc; T/A; mm; frame = N samples; tone frequencies in Hz; phase in degrees/radians; ICNIRP field values RMS. | Team convention | LOCKED |
 | SC-10 | Change control: one owner per interface; SC-0 sign-off freezes the contract; any change requires a written deviation and re-run of affected gates. Owners follow `design_order.md` (FG/driver/front-end/ADC: Tung; DDS: Kevin; sampling/demod: William; solver: Kevin+William+Tristan; filter/scaling: Amirmohammad; PMS: Tristan/Joyal; view/log/failsafe: shared). | Phase 1 Table 8; `design_order.md` | PROPOSED |
 

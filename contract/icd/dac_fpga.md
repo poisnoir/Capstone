@@ -1,6 +1,7 @@
 # ICD — DAC80508 ↔ FPGA DDS/SPI
 
-**Status:** **FROZEN Rev A, 2026-11-02.** **Owners:** Tung (hardware/DAC), Kevin (FPGA DDS).
+**Status:** **FROZEN Rev A, 2026-11-02**; §3 safe-state clause clarified 2026-11-25
+(decision #30) — the wire interface is unchanged. **Owners:** Tung (hardware/DAC), Kevin (FPGA DDS).
 **Canonical sources:** `contract/decisions_log.md` #19 and #21;
 `contract/system_contract.md` SC-03 and SC-07; `docs/phase2/system_schematic.md`;
 `simulations/m16/FINAL_REPORT.md`; `docs/handoff/m16-fpga-handoff.md` §4.
@@ -38,9 +39,14 @@ M16 SPICE evidence.
 1. Write SYNC `0x02` = `0x00FF` once (frame `0x0200FF`) to put all 8 channels in
    synchronous mode. Reset value `0xFF00` is asynchronous.
 2. Gain 2 (0–5 V) is the M-variant default; no CONFIG write needed.
+   **OPEN, not a contract change:** `power_tree_v2.md` §7 D2 proposes holding the
+   DDS command within 0.3–4.6 V on its proposed `+5V_EXC` rail; the draft power
+   contract change is unfiled, so this ICD keeps the 0–5 V default.
 3. Power-on reset is **midscale** (2.5 V), matching the AC-coupled current loop.
-4. On fault/E-stop: stop the DDS, write zero-scale to all 8 channels, then one TRIGGER.
-   A missed TRIGGER holds the previous sample for one period — a one-sample stall, not a glitch.
+4. **Genuine FPGA/ADC/driver fault:** stop the DDS, write zero-scale to all 8
+   channels, then one TRIGGER. **Arm-only STOP (#30):** no DDS/DAC/coil effect —
+   field and pose continue. A missed TRIGGER holds the previous sample for one
+   period — a one-sample stall, not a glitch.
 
 ## 4. Timing margin (mandatory FPGA constraint)
 

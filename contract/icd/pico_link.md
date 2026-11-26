@@ -1,7 +1,9 @@
 # Pico 2 link — interface control document
 
-**Canonical location:** `contract/icd/pico_link.md` · **Contract version:** 1.0.0
-**Status:** Rev A, 2026-10-28. Applies to BRD-01 (PL) ↔ Pico 2 (follower).
+**Canonical location:** `contract/icd/pico_link.md` · **Contract version:** 1.1.0 (tag pending review)
+**Status:** Rev A, 2026-10-28; STOP scope clarified 2026-11-25 (#30). The
+pin-1 power change proposed in `power_tree_v2.md` is not in the contract (OPEN).
+Applies to BRD-01 (PL) ↔ Pico 2 (follower).
 **Owners:** PL side = FPGA engineer; Pico side = follower firmware.
 **Scope:** the minimum contract. Encoding, framing and timing details are the implementers' choice
 as long as this document holds.
@@ -22,7 +24,7 @@ The PL also keeps the ADC capture and Goertzel regardless — raw ADC would be ~
 
 | Item | Value |
 |---|---|
-| Connector on BRD-01 | 6-pin: 3V3, GND, TX, RX, STOP, HEARTBEAT |
+| Connector on BRD-01 | 6-pin `J123`: pin 1 3V3 (Rev A), pin 2 GND, pin 3 TX, pin 4 RX, pin 5 STOP, pin 6 HEARTBEAT — **pin 1 is OPEN, see note below** |
 | Cable | 1 m, shielded, **signal ground only** — no motor current in it |
 | Level | 3.3 V LVCMOS UART, no translation (both ends 3.3 V) |
 | Rate | 1 Mbaud default; 0.5–3 Mbaud acceptable |
@@ -30,6 +32,12 @@ The PL also keeps the ADC capture and Goertzel regardless — raw ADC would be ~
 | Fallback | RS-485 on the same TX/RX pins if the ground test shows >200 mV |
 
 RP2350 I/O is **not** 5 V tolerant. Keep everything 3.3 V.
+
+> **OPEN — pin 1 power.** The committed netlist has `J123.1` as a no-connect
+> (`docs/phase2/brd01_wiring_manifest.md` §5 item 6; `docs/handoff/brd01_io_handoff.md` §1;
+> `power_tree_v2.md` §7 D4 proposes BRD-01 not powering the Pico). Rev A and this ICD
+> still list pin 1 as 3V3. Changing the pinout is part of the unfiled power-tree contract
+> change, so no change is made here; resolve before wiring the follower harness.
 
 ## 3. Information that must cross
 
@@ -47,7 +55,7 @@ RP2350 I/O is **not** 5 V tolerant. Keep everything 3.3 V.
 | Pose update | ≥100 Hz |
 | Maximum pose age acted on | **50 ms** — older → stop |
 | State / encoder report | ≥50 Hz |
-| Stop response | ≤100 ms |
+| Arm-motion stop response | ≤100 ms from host request, power-up/brownout, overcurrent or unconfigured FPGA; tracker field and pose continue (#30) |
 
 ## 5. Free choices (implementers)
 
@@ -57,11 +65,22 @@ acceleration profile, steps/mm, limit handling, and how the Pico clamps out-of-r
 
 ## 6. Failsafe
 
-- **STOP** is a hardware active-low level with a pull-down at the Pico. Cable unplugged → 0 V →
-  stop. It is a level, not a message.
+- **STOP** is an active-low level at `J123.5` (`PICO_STOP_N`), driven by the
+  power-sheet latch: `U755` (74LVC1G08) ANDs `PICO_STOP_REQ_N` (`U4.P4`, with the
+  `R754` pull-down for an unconfigured FPGA) with the arm latch `U753.5 (Q)` on
+  `/power/ARM_Q`. `U753.3 (~Q)` is a no-connect. Cable unplugged → 0 V → stop.
+  It is a level, not a message.
+- Power-up / +3.3 V brownout (U751) and `/DRIVER_FAULT_N` (U752) clear the latch,
+  which asserts STOP; SW750 arms it. STOP is **arm motion only**, ≤100 ms; the
+  field rail `+15V_FUSED` is unswitched and pose keeps flowing (#30).
 - **HEARTBEAT** absent for 100 ms → the Pico stops locally.
-- The **hardware E-stop** drops the driver enable independently of both processors.
-- The UART carries control data only. It is never the safety path.
+- There is **no panel E-stop on BRD-01**. The last hardware-independent stop path
+  was removed by explicit decision (#30): STOP depends on the host link, the
+  FPGA, the cable and the Pico firmware. The UART carries control data, and a
+  host STOP request travels over it; it is no longer correct to call the UART
+  "never the safety path".
+- A genuine FPGA/ADC/driver fault is a separate tracker-side safe state: the DDS
+  stops and all eight DAC channels go zero-scale (`icd/dac_fpga.md` §3).
 
 ## 7. Open items
 

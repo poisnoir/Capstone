@@ -1,7 +1,13 @@
 # contract-change: decision #20 power parts superseded by power-tree v2
 
-**Status: DRAFT, not filed.** Needs a `contract-change` issue, a PR against
-`contract/`, two approvals, and a `contract/VERSION` bump (currently `1.0.0`).
+**Status: DRAFT, not filed — OPEN (2026-11-25).** This draft has **not** been
+executed: no `contract-change` issue, PR or approvals, and the power parts in
+locked decision #20 are unchanged. `contract/VERSION` is now 1.1.0 for other
+additive decisions, **not** for this change. The as-built board already
+implements the v2 parts (`hardware/brd-01/kicad/brd-01.kicad_sch` at `ef04f63`;
+`hardware/brd-01/kicad/bom-to-cad.md:151`; `docs/phase2/brd01_component_reference.md:357`),
+so the user must decide whether to ratify this draft or reconcile the board to
+#20; see `contract/decisions_log.md` → "Open contract changes".
 Prepared 2026-11-24; evidence is on branch `main` at `387f90e`.
 
 ## What changes and why

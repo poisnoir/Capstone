@@ -1,7 +1,12 @@
 # E-stop scope change — stage 1 inventory and plan (2026-11-24)
 
-**Status: inventory and plan only.** No `.kicad_sch`, `.kicad_pro` or `contract/` file is
-changed in this stage. Branch `hw/estop-scope`.
+**Status: historical stage-1 inventory/plan; the decision is closed.** The stage-2
+wiring was executed and the arm-only STOP scope is recorded as decision #30 in the
+1.1.0 contract PR (tag pending review). The netlist observations and line inventory
+below are kept as written before that change; line numbers and "before" text are
+historical. The netlist was later corrected to `U753.5 (Q)` on `/power/ARM_Q` with
+`U753.3 (~Q)` NC (`brd01_wiring_manifest.md` §5 item 1) — see the correction at §D.
+No `.kicad_sch` or `.kicad_pro` was edited by this documentation stream.
 
 **User intent (verbatim):** *"remove the emergency stop from the tracker, it should instead only
 be for manipulator. it will track regardless of what happens, a person can press the estop to
@@ -347,6 +352,13 @@ choice is the next question.
 FPGA high. `U751.~MR` is tied high; `/DRIVER_FAULT_N` still reaches `U752.2` and `U4.R1`.
 `+15V_DRV` is deleted as a name and every driver-sheet label is now `+15V_FUSED`. Net parts
 645 → 637 (nine removals, one addition). `U4.R2` is freed and marked no-connect.
+
+**Correction (2026-11-25, netlist-authoritative):** the `~Q` wording in this section
+and in §C is historical. The committed netlist has `U753.5 (Q)` driving `/power/ARM_Q`
+into `U755.2`; `U753.3 (~Q)` is the no-connect. Evidence:
+`docs/phase2/brd01_wiring_manifest.md` §5 item 1 and `system_schematic.md` §4.5.
+The arm-latch behaviour (disarmed/cleared → STOP asserted; armed → request passed)
+is unchanged by this pin correction.
 
 ### Stage 2 plan (executed)
 

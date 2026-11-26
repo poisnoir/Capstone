@@ -1,8 +1,13 @@
 # Draft `contract-change` issue — E-stop scope: manipulator-only stop, tracker unaffected
 
-> **Draft only.** Do not edit `contract/` from this work stream. File this body as a
-> `contract-change` issue; the interface owner + integrator approval flow is owned by the
-> Orchestrator. Stage 1: no electrical change is made.
+> **Historical draft — the scope decision is closed, the contract release is pending.**
+> This was filed as a draft, not merged here. The arm-only STOP decision is recorded as
+> #30 in the 1.1.0 contract PR on `docs/spine-consistency` (tag pending review); this
+> document keeps its original analysis and approval checklist as history. No further
+> electrical change is required for the stage-2 wiring, but the bench check in §5 and
+> the arm-repo release sync remain open. §3's latch row used the earlier `~Q` wording;
+> the executed netlist uses `U753.5 (Q)` via `/power/ARM_Q`, with `U753.3 (~Q)` NC
+> (`docs/phase2/brd01_wiring_manifest.md` §5 item 1; `system_schematic.md` §4.5).
 
 **Title:** `contract-change`: delete the physical E-stop from BRD-01; arm STOP is host request
 plus hardware latch (AND gate); tracker keeps field and pose
@@ -128,4 +133,6 @@ File the issue and PR for exactly these items; do not edit `contract/` from this
 4. The board has **no panel E-stop**; the removal of the last hardware-independent stop path
    must be accepted by the interface owner and integrator.
 5. `J123.1` is NC in the netlist but `pico_link.md` §2 calls pin 1 3V3 (D4 records no_connect);
-   a pre-existing mismatch, untouched by this change.
+   a pre-existing mismatch, untouched by this change. **Still OPEN (2026-11-25):** the
+   pinout change belongs to the unfiled power-tree contract change, so the ICD keeps 3V3
+   with an OPEN note before §3.

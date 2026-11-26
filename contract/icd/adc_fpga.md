@@ -1,6 +1,6 @@
 # ICD — ADC ↔ FPGA capture
 
-**Status:** stub, not frozen — but decision **#18 is LOCKED (2026-11-02)**: 4 ch, 4 DOUT lanes, DCLK 8.192 MHz, 32-bit frames, RC range 10–82 Ω / 470–680 pF. The capture-side detail below is what remains open. **Owners:** Tung (hardware/ADC), William (FPGA
+**Status:** stub, not frozen — but decision **#18 is LOCKED (2026-11-02)**: 4 ch, 4 DOUT lanes, DCLK 8.192 MHz, 32-bit frames, RC range 10–82 Ω / 470–680 pF. BRD-01 routes the capture signals as on-board nets (#21/#25); the older 2×8-header plan is superseded. The capture-side detail below is what remains open. **Owners:** Tung (hardware/ADC), William (FPGA
 capture). **Canonical sources:** `contract/system_contract.md` SC-05, SC-05a,
 SC-05b, SC-05c, SC-06, SC-07; `docs/phase2/adc_justification.md`;
 `docs/phase2/adc_interface_closure.md`; `docs/phase2/system_schematic.md` §6.
@@ -12,16 +12,20 @@ requirements. Until it is frozen, the SC rows above are authoritative.
 
 - Part: AD7768-4BSTZ-RL7 (build + spare).
 - 4 active channels, 4 DOUT lanes, DCLK 8.192 MHz, 32-bit frames, 256 kSPS.
-- MCLK ≤32.768 MHz; fast mode, decimation ×32; wideband filter; group delay
+- MCLK ≤32.768 MHz; on BRD-01 it is driven directly by the 32.768 MHz XO through
+  33 Ω (SC-07/#28); fast mode, decimation ×32; wideband filter; group delay
   34/ODR = 133 µs.
 - DRDY, SYNC/START (no CONVST); SPI configuration only.
 - Channel map D3-A: Ch0 current-sense, Ch1 pen 1, Ch2 pen 2, Ch3 reference.
-- Connector: 2×8/custom header (a 2×6 Pmod is insufficient).
+- Transport: the four DOUT lanes plus DCLK/DRDY/SYNC/control are on-board nets
+  on BRD-01 (#21/#25); a 2×6 Pmod (8 I/O) remains insufficient, but no external
+  2×8/custom header exists on the one-board design.
 - RC start values: R_IN = 20 Ω, C1 = C2 = 470 pF, C3 = 100 pF (tune at ADC-5).
 
 ## Open (must close before calling this ICD frozen)
 
-- Exact pin assignment on the 2×8 header and the FPGA bank.
+- Exact FPGA ball assignment for the on-board nets (BRD-01 netlist;
+  `docs/phase2/system_schematic.md` §6).
 - Lane-to-channel mapping and frame bit order.
 - SYNC/START polarity and the one-time start sequence.
 - Precharge-buffer network and reference distribution.
