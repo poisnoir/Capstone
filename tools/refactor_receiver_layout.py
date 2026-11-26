@@ -28,6 +28,11 @@ SHEET = ROOT / 'hardware/brd-01/kicad/receiver.kicad_sch'
 BASE = '9f7dddb:hardware/brd-01/kicad/receiver.kicad_sch'
 NETLIST = Path('/tmp/baseline_netlist.xml')
 G = 1.27
+# FDA output riser offsets (mm), searched for zero crossings
+OUT_RISER = 2.54
+OUT_RUN = 25.40
+NEG_RISER = 2.54
+NEG_TOP = 15.24
 RAILS = {'GND': 'power:GND', '+5VA': 'power:+5VA', '+12VA': 'power:+12VA',
          '-12VA': 'power:-12VA', '+3.3V': 'power:+3.3V'}
 
@@ -350,7 +355,7 @@ def label_block(kind, text, p, angle=0, shape='passive'):
     return '\n'.join(out) + '\n'
 
 
-def power_block(lib, ref, p, rot, text_at):
+def power_block(lib, ref, p, rot, text_at, field_angle=0):
     name = lib.split(':')[1]
     desc = ('Power symbol creates a global label with name '
             f'\\"{name}\\" , power')
@@ -366,7 +371,7 @@ def power_block(lib, ref, p, rot, text_at):
         '\t\t\t(show_name no)', '\t\t\t(do_not_autoplace no)',
         '\t\t\t(effects\n\t\t\t\t(font\n\t\t\t\t\t(size 1.27 1.27)\n\t\t\t\t)\n\t\t\t)\n\t\t)',
         f'\t\t(property "Value" "{name}"',
-        f'\t\t\t(at {f(text_at[0])} {f(text_at[1])} 0)',
+        f'\t\t\t(at {f(text_at[0])} {f(text_at[1])} {field_angle})',
         '\t\t\t(show_name no)', '\t\t\t(do_not_autoplace no)',
         '\t\t\t(effects\n\t\t\t\t(font\n\t\t\t\t\t(size 1.27 1.27)\n\t\t\t\t)\n\t\t\t)\n\t\t)',
         f'\t\t(property "Footprint" ""\n\t\t\t(at {f(p[0])} {f(p[1])} 0)',
@@ -497,22 +502,30 @@ def fda_section(r, p, f, lanecfg, refcfg, plus_src, minus_src, dplus, dminus,
 
     # +OUT: tight loop on the pin column, then down to F2 and the AIN resistor
     f2p, out_p, fb_p = P(p['F2'], 1), P(p['FDA'], f['out_p']), P(p['FDA'], f['fb_p'])
-    x9 = g(out_p[0] + 2.54)
-    x10 = g(out_p[0] + 15.24)
+    x9 = g(out_p[0] + OUT_RISER)
+    x10 = g(out_p[0] + OUT_RUN)
     r.poly([out_p, (x9, out_p[1]), (x9, fb_p[1]), fb_p])
     r.poly([(x9, out_p[1]), (x10, out_p[1]), (x10, f2p[1]), f2p])
     r.poly([f2p, (g(f2p[0] + 19.05), f2p[1]),
             (g(f2p[0] + 19.05), P(p['Op'], 1)[1]), P(p['Op'], 1)])
 
-    # -OUT: short local labels at each of the net's pins (the ADA4940 output
-    # pins interleave +OUT/-OUT/+FB/-FB; wiring between them would cross).
-    netn = refcfg['outn'] + '_OUT_N'
-    out_keys = [(p['FDA'], f['out_n']), (p['FDA'], f['fb_n']),
-                (p['F1'], fi['minus']), (p['On'], 1)]
+    # -OUT: join -OUT/-FB on a riser beyond the +OUT exit, then run the net
+    # above the body to F1 and right of the output resistor to On.  No local
+    # labels: all four FDA*_OUT_N fragments become continuous wire.
+    out_n, fb_n = P(p['FDA'], f['out_n']), P(p['FDA'], f['fb_n'])
+    fn = P(p['F1'], fi['minus'])
+    on = P(p['On'], 1)
+    xr = g(out_n[0] + NEG_RISER)
+    ytop = g(min(out_n[1], fb_n[1]) - NEG_TOP)
+    xleft = fn[0]
+    xright = g(P(p['Op'], 2)[0] - 5.08)
+    r.poly([out_n, (xr, out_n[1]), (xr, fb_n[1]), fb_n])
+    r.poly([(xr, out_n[1]), (xr, ytop), (xleft, ytop), fn])
+    r.poly([(xr, ytop), (xright, ytop), (xright, on[1]), on])
     if not f2_in:
-        out_keys.append((p['F2'], 2))
-    for key in out_keys:
-        r.label('label', netn, P(*key), 0)
+        f2m = P(p['F2'], 2)
+        xf = g(f2m[0] + 7.62)
+        r.poly([f2m, (xf, f2m[1]), (xf, on[1]), on])
 
     aplus, aminus = P(p['Op'], 2), P(p['On'], 2)
     c1p, c2p = P(p['Co1'], 1), P(p['Co2'], 1)
@@ -616,7 +629,7 @@ def route_adc(r):
     # reference taps into U101 are labelled at the ADC pin (bus tap)
     for num in (6, 43):
         a = P('U101', num)
-        tip = (g(a[0] - 5.08), a[1])
+        tip = (g(a[0] - 7.62), a[1])
         r.poly([a, tip])
         r.label('label', 'ADC_REF', tip)
     r.w(P('U101', 34), P('C103', 1))
@@ -644,7 +657,7 @@ def place_power(r, ed, sh, pinmap, ncbase, sh0):
 
     placed = set()
 
-    def sym(net, p, text_at):
+    def sym(net, p, text_at, rot=0):
         sig = (net, round(p[0], 4), round(p[1], 4))
         if sig in placed:
             return
@@ -671,7 +684,8 @@ def place_power(r, ed, sh, pinmap, ncbase, sh0):
                     + blk[m.end():]
             ed.t = ed.t[:a] + blk + ed.t[b:]
         else:
-            ed.append(power_block(lib, ref, p, 0, text_at))
+            ed.append(power_block(lib, ref, p, rot, text_at,
+                                  90 if rot in (90, 270) else 0))
         ed.append(junction_block(p))
 
     # --- decoupling bay: one vertical bus per rail, GND along the bottom ---
@@ -714,7 +728,8 @@ def place_power(r, ed, sh, pinmap, ncbase, sh0):
             if net not in RAILS:
                 continue
             sgn = -1 if p_[0] < ox else 1
-            sym(net, p_, (g(p_[0] + sgn * 5.08), p_[1]))
+            sym(net, p_, (g(p_[0] + sgn * 5.08), p_[1]),
+                270 if sgn < 0 else 90)
 
     # --- U101: one bus per rail on each side of the 64-pin body ---
     ux, _, _ = sh.origin('U101')
@@ -758,7 +773,9 @@ def place_power(r, ed, sh, pinmap, ncbase, sh0):
             rotated = sh.lib[sh.uuid_of[key]] in ('Device:C', 'Device:R') \
                 and sh.origin(key)[2] in (90, 270)
             tx = g(p_[0] + (10.16 if rotated and net == 'GND' else sgn * 5.08))
-            ty = p_[1] if net != 'GND' else g(p_[1] + 3.81)
+            ty = g(p_[1] + (2.54 if net != 'GND' else -2.54)) \
+                if sh.lib[sh.uuid_of[key]] == 'Device:D_Schottky' else \
+                (p_[1] if net != 'GND' else g(p_[1] + 3.81))
             sym(net, p_, (tx, ty))
     print(f'  power symbols placed: {counter[0]} (reused {17 - len(reuse)})')
 
@@ -798,7 +815,11 @@ def place_labels(r, ed, sh, pinmap, offsheet):
                 ed.append(label_block('global_label', net, tip, ang))
                 ng += 1
             elif base == 'ADC_VCM':
-                ed.append(label_block('label', 'ADC_VCM', p, 0))
+                sgn = -1 if p[0] < ox else 1
+                tip = (g(p[0] + sgn * 5.08), p[1])
+                r.w(p, tip)
+                ed.append(label_block('label', 'ADC_VCM', tip,
+                                      0 if sgn > 0 else 180))
                 nl += 1
             elif base.startswith('AIN') and ref == 'U101':
                 ed.append(label_block('label', base, p, 180))
@@ -943,10 +964,13 @@ def regenerate(text):
             ed.move_prop(u, 'Value', g(x + 7.62), g(y + 3.81),
                          justify='left', angle=90)
         elif key.startswith('U105:') or key.startswith('U108:'):
-            ed.move_prop(u, 'Reference', g(x - 13.97), y - 6.35,
+            ed.move_prop(u, 'Reference', g(x - 20.32), g(y - 10.16),
                          justify='right')
-            ed.move_prop(u, 'Value', g(x + 13.97), y + 6.35,
+            ed.move_prop(u, 'Value', g(x + 20.32), g(y + 10.16),
                          justify='left')
+        elif base_sh.lib[base_sh.uuid_of[key]] == 'Device:D_Schottky':
+            ed.move_prop(u, 'Reference', g(x - 15.24), y)
+            ed.move_prop(u, 'Value', g(x + 15.24), y)
         elif key in ('U104', 'U106', 'U107'):
             ed.move_prop(u, 'Reference', x, g(y - 15.24))
             ed.move_prop(u, 'Value', x, g(y + 15.24))

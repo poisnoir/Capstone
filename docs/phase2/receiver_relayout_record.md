@@ -55,7 +55,7 @@ baseline pin proximity would violate the ≥ 7.62 mm passive spacing rule and
 the four-lane block allocation, so these are reported rather than silently
 reverted.
 
-## Net renames (26; pin membership proven identical by `kicad_netlist_compare.py`)
+## Final net-name table (26 renames; pin membership proven identical by G1)
 
 | baseline | after |
 |---|---|
@@ -64,8 +64,10 @@ reverted.
 | /receiver/FDA0_OUT_P | Net-(U105A-+FB1) |
 | /receiver/FDA1_OUT_P | Net-(U105B-+FB2) |
 | /receiver/FDA2_N | Net-(U108A--IN1) |
+| /receiver/FDA2_OUT_N | Net-(U108A--FB1) |
 | /receiver/FDA2_OUT_P | Net-(U108A-+FB1) |
 | /receiver/FDA3_N | Net-(U108B--IN2) |
+| /receiver/FDA3_OUT_N | Net-(U108B--FB2) |
 | /receiver/FDA3_OUT_P | Net-(U108B-+FB2) |
 | /receiver/INA_IN_P | Net-(U104-IN+) |
 | /receiver/MCLK | Net-(U101-XTAL2/MCLK) |
@@ -83,8 +85,19 @@ reverted.
 | /receiver/REF_COIL_PROT_P | Net-(D530-A) |
 | /receiver/REF_COIL_RG1 | Net-(U107-GS1) |
 | /receiver/REF_COIL_RG2 | Net-(U107-GS2) |
-| Net-(U105A--FB1) | /receiver/FDA0_OUT_N |
-| Net-(U105B--FB2) | /receiver/FDA1_OUT_N |
+
+The four FDA output pairs are now named symmetrically: `Net-(U105A-+FB1)` /
+`Net-(U105A--FB1)`, `Net-(U105B-+FB2)` / `Net-(U105B--FB2)`, and the two U108
+pairs. No `FDA*_OUT_*` label survives: `grep -c 'FDA[0-3]_OUT_'` on the sheet
+returns 0. All four -OUT nets are continuous orthogonal wire with junctions.
+
+## G5 ruling
+
+The span gate is **accepted as a mandated trade, not fixed**. Orchestrator
+ruling 2026-11-26: the span gate is subordinate to the user's binding geometry
+(four lanes at 100–590 mm, >= 7.62 mm passive spacing, unstacked C103–C111).
+Recorded: in-block ΣS 13498.83 -> 12510.77 mm (-988.06), 33 in-block
+regressions, 12 new in-block hops, cross-block ΣS 3512.82 -> 4353.56 mm.
 
 All 61 GND and 51 other rail global labels became `power:GND`,
 `power:+5VA`, `power:+12VA`, `power:-12VA`, `power:+3.3V` symbols copied
