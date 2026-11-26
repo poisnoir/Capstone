@@ -1,6 +1,6 @@
 # Phase 2 — Locked decisions log
 
-**Canonical location:** `contract/` · **Version:** 1.1.2 · **Tag:** `contract-v1.1.2` (pending review)
+**Canonical location:** `contract/` · **Version:** 1.1.3 · **Tag:** `contract-v1.1.3` (pending review)
 **Change process:** `contract/README.md`.
 
 **Status:** decisions locked through 2026-11-26. **M16 selected 2026-10-27.**
@@ -8,8 +8,7 @@ D1/D3/D4/FE-4 and the M16 DAC/filter are locked; the remaining rows state their
 own status. Each row links the decision to its justification and source.
 Hardware-dependent items are listed separately as **verification gates** (tests,
 not open design choices). Order-time items are under **procurement checks**.
-#30 (arm-only STOP) and #31 (power tree v2) are recorded in the 1.1.0 contract PR
-on `docs/spine-consistency`; the tag and arm-repo sync are pending. Rows superseded
+#30 (arm-only STOP), #31 (power tree v2), #32 (Pico J123 pin 1 NC), #33 (DAC tone band) and #34 (pen-cable budget) are recorded across the 1.1.0-1.1.3 contract updates on `main`; tags 1.1.1-1.1.3, the release artifacts and the arm-repo sync are pending. Rows superseded
 in part keep their original text as history. Decision number 29 was withdrawn and
 no #29 row exists.
 

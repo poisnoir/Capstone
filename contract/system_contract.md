@@ -1,13 +1,13 @@
 # Phase 2 — System contract (SC-0)
 
-**Canonical location:** `contract/` · **Version:** 1.1.0 · **Tag:** `contract-v1.1.0` (pending review)
+**Canonical location:** `contract/` · **Version:** 1.1.3 · **Tag:** `contract-v1.1.3` (pending review)
 **Change process:** `contract/README.md` — do not edit without a contract-change PR.
 
 **Status:** draft for team sign-off, 2026-10-27. Technical items SC-01…SC-05 are
 locked. **D1-B, D3-A, and D4 were approved by the team on 2026-10-27. FE-4 is
 locked to INA163 + ADA4940-2.** FG-1 may proceed. SC-05b transport wording,
-SC-07 clock tree and the SC-08 STOP scope were updated in the 1.1.0 contract PR
-(decisions #21/#25/#28/#30/#31); the tag is pending review. The #20 power part
+SC-07 clock tree and the SC-08 STOP scope were updated in the 1.1.3 contract PR
+(decisions #21/#25/#28/#30/#31/#32/#33/#34); the tag is pending review. The #20 power part
 list is superseded by decision #31 (v2 adopted 2026-11-25); see `decisions_log.md`.
 
 **Sources:** `docs/phase2/design_order.md`; `docs/phase2/tone_plan.md`;
