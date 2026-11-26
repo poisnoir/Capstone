@@ -1,6 +1,6 @@
 # BRD-01 BOM-to-CAD ledger
 
-**Scope:** [SYSTEM-01](../../bom/BOM_SYSTEM-01.xlsx) Rev 0.05, sheet **BOM**
+**Scope:** [SYSTEM-01](../../bom/BOM_SYSTEM-01.xlsx) Rev 0.06, sheet **BOM**
 (Excel row numbers below); [ADC-01](../../bom/BOM_ADC-01.xlsx), sheet
 `BOM_ADC-01`, rows 9–11 and note row 13; [PEN-ANA-01](../../bom/BOM_PEN-ANA-01.xlsx),
 sheet `BOM_PEN-ANA-01`, rows 9–12 and note row 15; and the
@@ -148,7 +148,7 @@ specifies 13.5–16.5 V input, dual ±15 V at up to 67 mA per rail, and
 pins 1 +VIN, 2 −VIN, 5 −VOUT, 6 COM and 7 +VOUT. The pads are numbered
 the same as the pins and match the stock MGJ2D footprint at 2.54 mm pitch.
 The [distributor listing](https://www.digikey.ca/en/products/detail/murata-power-solutions-inc/MGJ2D151515SC/5825461)
-marks the part obsolete. The user confirmed the existing budget-approved parts as the BRD-01 selections: U5 MGJ2D151515SC, U6 LT3045EDD-1#TRPBF and U2 LT3093EMSE#TRPBF. The KiCad schematic uses those parts. The legacy BOM and [decision #20](../../../contract/decisions_log.md) still list the earlier converter and LDOs and require separate reconciliation.
+marks the part obsolete. The user confirmed the existing budget-approved parts as the BRD-01 selections: U5 MGJ2D151515SC, U6 LT3045EDD-1#TRPBF and U2 LT3093EMSE#TRPBF. The KiCad schematic uses those parts. BOM Rev 0.06 lists them; [decision #20](../../../contract/decisions_log.md) still names the v1 parts until the draft contract change lands.
 
 #### ±12VA quiescent load check
 
