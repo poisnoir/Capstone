@@ -5717,7 +5717,7 @@
 	)
 	(symbol
 		(lib_id "Device:C")
-		(at 232.41 86.36 0)
+		(at 283.21 105.41 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -5727,7 +5727,7 @@
 		(dnp no)
 		(uuid "30d496d4-45dc-4408-ab53-50b1b4156f3d")
 		(property "Reference" "C213"
-			(at 232.41 83.82 0)
+			(at 283.21 102.87 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -5738,7 +5738,7 @@
 			)
 		)
 		(property "Value" "100n"
-			(at 232.41 88.9 0)
+			(at 283.21 107.95 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -8425,7 +8425,7 @@
 	)
 	(symbol
 		(lib_id "power:+15V")
-		(at 232.41 77.47 0)
+		(at 283.21 96.52 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -8531,7 +8531,7 @@
 	)
 	(symbol
 		(lib_id "power:GND")
-		(at 232.41 95.25 0)
+		(at 283.21 111.76 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -9952,26 +9952,6 @@
 	)
 	(wire
 		(pts
-			(xy 232.41 82.55) (xy 232.41 77.47)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "64464c00-277e-43b5-b62a-d792d98316c9")
-	)
-	(wire
-		(pts
-			(xy 232.41 90.17) (xy 232.41 95.25)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "ac1f7800-d6ab-44c6-93b7-3b433a1e9a0b")
-	)
-	(wire
-		(pts
 			(xy 243.84 82.55) (xy 243.84 77.47)
 		)
 		(stroke
@@ -10957,5 +10937,25 @@
 			(justify left)
 		)
 		(uuid "4a81ff5a-876c-4cfa-ba14-cac0dc86ce17")
+	)
+	(wire
+		(pts
+			(xy 283.21 101.6) (xy 283.21 96.52)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "16fb2d95-923f-4013-9b1f-c75c2744418b")
+	)
+	(wire
+		(pts
+			(xy 283.21 109.22) (xy 283.21 111.76)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "266afd80-5723-4224-b56c-c3c73fe9449a")
 	)
 )
