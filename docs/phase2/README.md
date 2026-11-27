@@ -14,6 +14,8 @@ Sources (frozen, do not edit):
 - `AGENTS.md` (2026-10-12 architecture decision) — **full-FPGA pose overrides Phase 1 §1** ("pose on PC" is stale).
 - `docs/phase2/anser-baseline-findings.md` — Anser baseline vs Phase 1 gap analysis (pose rate, jitter, spur budget).
 - `software/anser-matlab-ref/README.md` — MATLAB golden-model port map for the FPGA solver.
+- `docs/phase2/signal_chain_math.md` — source-backed equations from excitation and field model through sensing, demodulation and the 5-DOF pose solve.
+- `docs/phase2/signal-chain-slides.html` — self-contained 9-slide deck built from that reference; arrow-key navigation, printable to PDF.
 
 ## 1. Official Phase 2 deliverables (manual p.13)
 
