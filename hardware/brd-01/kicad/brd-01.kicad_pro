@@ -701,6 +701,38 @@
     [
       "1e7ea821-dced-4e77-a47d-753913008d55",
       "connectors"
+    ],
+    [
+      "9a9adfdb-a51f-4bf8-b190-6ab2b28f2406",
+      "CH0"
+    ],
+    [
+      "8c7ba0fd-08b3-46f4-b30d-171fefe7e5bf",
+      "CH1"
+    ],
+    [
+      "5dcaff43-ce58-4761-9e3b-a9378ebfdd33",
+      "CH2"
+    ],
+    [
+      "ede878ef-06d0-44b6-a478-0bde524b75df",
+      "CH3"
+    ],
+    [
+      "9137483f-6a6a-42ef-bbed-569e8a10f04f",
+      "CH4"
+    ],
+    [
+      "58108772-932f-44ab-9f2c-529de275ada9",
+      "CH5"
+    ],
+    [
+      "62d13cad-5408-412c-a0e1-26399611d3f9",
+      "CH6"
+    ],
+    [
+      "631e1161-c9ee-491f-abc9-9cbf2a74df03",
+      "CH7"
     ]
   ],
   "text_variables": {},
