@@ -4763,7 +4763,7 @@
 			(font
 				(size 1 1)
 			)
-			(justify right bottom)
+			(justify right top)
 		)
 		(uuid "24f7fe16-9d5d-46cb-8c34-7638c964aa7f")
 	)
@@ -7073,7 +7073,6 @@
 		)
 		(property "Value" "+3.3V"
 			(at 560.07 186.69 0)
-			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -7389,8 +7388,7 @@
 			)
 		)
 		(property "Value" "-12VA"
-			(at 481.33 346.71 0)
-			(hide yes)
+			(at 481.33 344.17 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -7643,8 +7641,7 @@
 			)
 		)
 		(property "Value" "+12VA"
-			(at 481.33 312.42 0)
-			(hide yes)
+			(at 481.33 313.69 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -7803,14 +7800,14 @@
 			)
 		)
 		(property "Value" "+3.3V"
-			(at 410.21 285.75 0)
-			(hide yes)
+			(at 411.48 288.29 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(justify left)
 			)
 		)
 		(property "Footprint" ""
@@ -7883,7 +7880,6 @@
 		)
 		(property "Value" "+3.3V"
 			(at 500.38 180.34 0)
-			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -8120,13 +8116,13 @@
 		)
 		(property "Value" "GND"
 			(at 364.49 68.58 0)
-			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(justify right)
 			)
 		)
 		(property "Footprint" ""
@@ -8524,7 +8520,6 @@
 		)
 		(property "Value" "GND"
 			(at 500.38 120.65 0)
-			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -8602,14 +8597,14 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 410.21 334.01 0)
-			(hide yes)
+			(at 408.94 334.01 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(justify right)
 			)
 		)
 		(property "Footprint" ""
@@ -8682,13 +8677,13 @@
 		)
 		(property "Value" "GND"
 			(at 330.2 189.23 0)
-			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(justify right)
 			)
 		)
 		(property "Footprint" ""
@@ -8760,14 +8755,14 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 49.53 153.67 0)
-			(hide yes)
+			(at 48.26 153.67 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(justify right)
 			)
 		)
 		(property "Footprint" ""
@@ -9170,14 +9165,14 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 410.21 303.53 0)
-			(hide yes)
+			(at 408.94 303.53 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(justify right)
 			)
 		)
 		(property "Footprint" ""
@@ -9250,7 +9245,6 @@
 		)
 		(property "Value" "+3.3V"
 			(at 90.17 275.59 0)
-			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -9566,7 +9560,6 @@
 		)
 		(property "Value" "+3.3V"
 			(at 410.21 241.3 0)
-			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -9644,14 +9637,14 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 425.45 68.58 0)
-			(hide yes)
+			(at 426.72 68.58 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(justify left)
 			)
 		)
 		(property "Footprint" ""
@@ -9820,14 +9813,14 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 410.21 259.08 0)
-			(hide yes)
+			(at 408.94 259.08 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(justify right)
 			)
 		)
 		(property "Footprint" ""
@@ -9898,8 +9891,7 @@
 			)
 		)
 		(property "Value" "+12VA"
-			(at 481.33 354.33 0)
-			(hide yes)
+			(at 481.33 355.6 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -9977,8 +9969,7 @@
 			)
 		)
 		(property "Value" "-12VA"
-			(at 481.33 220.98 0)
-			(hide yes)
+			(at 481.33 218.44 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -10751,13 +10742,13 @@
 		)
 		(property "Value" "GND"
 			(at 90.17 228.6 0)
-			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(justify right)
 			)
 		)
 		(property "Footprint" ""
@@ -10830,7 +10821,6 @@
 		)
 		(property "Value" "+3.3V"
 			(at 560.07 50.8 0)
-			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -11067,13 +11057,13 @@
 		)
 		(property "Value" "GND"
 			(at 90.17 308.61 0)
-			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(justify right)
 			)
 		)
 		(property "Footprint" ""
@@ -11145,14 +11135,14 @@
 			)
 		)
 		(property "Value" "+5V_EXC"
-			(at 49.53 91.44 0)
-			(hide yes)
+			(at 50.8 93.98 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(justify left)
 			)
 		)
 		(property "Footprint" ""
@@ -11224,14 +11214,14 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 49.53 109.22 0)
-			(hide yes)
+			(at 48.26 109.22 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(justify right)
 			)
 		)
 		(property "Footprint" ""
@@ -11383,7 +11373,6 @@
 		)
 		(property "Value" "GND"
 			(at 49.53 269.24 0)
-			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -11461,14 +11450,14 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 500.38 74.93 0)
-			(hide yes)
+			(at 499.11 74.93 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(justify left)
 			)
 		)
 		(property "Footprint" ""
@@ -11540,14 +11529,14 @@
 			)
 		)
 		(property "Value" "+3.3V"
-			(at 410.21 331.47 0)
-			(hide yes)
+			(at 411.48 334.01 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(justify left)
 			)
 		)
 		(property "Footprint" ""
@@ -11618,8 +11607,7 @@
 			)
 		)
 		(property "Value" "+12VA"
-			(at 396.24 66.04 0)
-			(hide yes)
+			(at 401.32 68.58 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -11953,7 +11941,6 @@
 		)
 		(property "Value" "+3.3V"
 			(at 500.38 90.17 0)
-			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -12032,13 +12019,13 @@
 		)
 		(property "Value" "GND"
 			(at 364.49 128.27 0)
-			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(justify right)
 			)
 		)
 		(property "Footprint" ""
@@ -12268,14 +12255,14 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 425.45 83.82 0)
-			(hide yes)
+			(at 424.18 83.82 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(justify right)
 			)
 		)
 		(property "Footprint" ""
@@ -12347,14 +12334,14 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 425.45 53.34 0)
-			(hide yes)
+			(at 427.99 53.34 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(justify left)
 			)
 		)
 		(property "Footprint" ""
@@ -12505,14 +12492,14 @@
 			)
 		)
 		(property "Value" "+3.3V"
-			(at 410.21 256.54 0)
-			(hide yes)
+			(at 411.48 259.08 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(justify left)
 			)
 		)
 		(property "Footprint" ""
@@ -12742,14 +12729,14 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 410.21 274.32 0)
-			(hide yes)
+			(at 408.94 274.32 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(justify right)
 			)
 		)
 		(property "Footprint" ""
@@ -12822,13 +12809,13 @@
 		)
 		(property "Value" "GND"
 			(at 330.2 68.58 0)
-			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(justify right)
 			)
 		)
 		(property "Footprint" ""
@@ -12979,14 +12966,14 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 397.51 50.8 0)
-			(hide yes)
+			(at 402.59 66.04 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(justify right)
 			)
 		)
 		(property "Footprint" ""
@@ -13059,7 +13046,6 @@
 		)
 		(property "Value" "+3.3V"
 			(at 560.07 140.97 0)
-			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -13137,14 +13123,14 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 49.53 93.98 0)
-			(hide yes)
+			(at 48.26 93.98 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(justify right)
 			)
 		)
 		(property "Footprint" ""
@@ -13298,7 +13284,6 @@
 		)
 		(property "Value" "GND"
 			(at 560.07 114.3 0)
-			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -13707,14 +13692,14 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 49.53 238.76 0)
-			(hide yes)
+			(at 50.8 238.76 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(justify left)
 			)
 		)
 		(property "Footprint" ""
@@ -13865,8 +13850,7 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 45.72 199.39 0)
-			(hide yes)
+			(at 45.72 201.93 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -13944,14 +13928,14 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 49.53 138.43 0)
-			(hide yes)
+			(at 50.8 138.43 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(justify left)
 			)
 		)
 		(property "Footprint" ""
@@ -14023,14 +14007,14 @@
 			)
 		)
 		(property "Value" "+3.3V"
-			(at 410.21 270.51 0)
-			(hide yes)
+			(at 411.48 274.32 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(justify left)
 			)
 		)
 		(property "Footprint" ""
@@ -14103,13 +14087,13 @@
 		)
 		(property "Value" "GND"
 			(at 90.17 213.36 0)
-			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(justify right)
 			)
 		)
 		(property "Footprint" ""
@@ -14181,14 +14165,14 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 410.21 288.29 0)
-			(hide yes)
+			(at 408.94 288.29 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(justify right)
 			)
 		)
 		(property "Footprint" ""
@@ -14261,7 +14245,6 @@
 		)
 		(property "Value" "GND"
 			(at 560.07 204.47 0)
-			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -14417,14 +14400,14 @@
 			)
 		)
 		(property "Value" "+12VA"
-			(at 49.53 146.05 0)
-			(hide yes)
+			(at 50.8 142.24 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(justify left)
 			)
 		)
 		(property "Footprint" ""
@@ -14744,14 +14727,14 @@
 			)
 		)
 		(property "Value" "+12VA"
-			(at 425.45 76.2 0)
-			(hide yes)
+			(at 426.72 72.39 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(justify left)
 			)
 		)
 		(property "Footprint" ""
@@ -15000,13 +14983,13 @@
 		)
 		(property "Value" "GND"
 			(at 49.53 254 0)
-			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(justify right)
 			)
 		)
 		(property "Footprint" ""
@@ -15405,14 +15388,14 @@
 			)
 		)
 		(property "Value" "+3.3V"
-			(at 410.21 300.99 0)
-			(hide yes)
+			(at 411.48 303.53 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(justify left)
 			)
 		)
 		(property "Footprint" ""
@@ -15654,14 +15637,14 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 410.21 318.77 0)
-			(hide yes)
+			(at 408.94 318.77 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(justify right)
 			)
 		)
 		(property "Footprint" ""
@@ -16758,7 +16741,6 @@
 		)
 		(property "Value" "GND"
 			(at 500.38 210.82 0)
-			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -16835,14 +16817,14 @@
 			)
 		)
 		(property "Value" "+15V_FUSED"
-			(at 49.53 215.9 0)
-			(hide yes)
+			(at 40.64 219.71 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(justify left)
 			)
 		)
 		(property "Footprint" ""
@@ -16914,14 +16896,14 @@
 			)
 		)
 		(property "Value" "+5V_EXC"
-			(at 43.18 54.61 0)
-			(hide yes)
+			(at 41.91 59.69 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(justify right)
 			)
 		)
 		(property "Footprint" ""
@@ -17230,14 +17212,14 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 425.45 99.06 0)
-			(hide yes)
+			(at 426.72 99.06 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(justify left)
 			)
 		)
 		(property "Footprint" ""
@@ -17497,8 +17479,7 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 43.18 72.39 0)
-			(hide yes)
+			(at 41.91 74.93 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -17919,8 +17900,7 @@
 			)
 		)
 		(property "Value" "-12VA"
-			(at 396.24 68.58 0)
-			(hide yes)
+			(at 402.59 71.12 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -17998,14 +17978,14 @@
 			)
 		)
 		(property "Value" "+3.3V"
-			(at 410.21 346.71 0)
-			(hide yes)
+			(at 411.48 349.25 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(justify left)
 			)
 		)
 		(property "Footprint" ""
@@ -18077,14 +18057,14 @@
 			)
 		)
 		(property "Value" "+3.3V"
-			(at 410.21 316.23 0)
-			(hide yes)
+			(at 411.48 318.77 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(justify left)
 			)
 		)
 		(property "Footprint" ""
@@ -18156,8 +18136,7 @@
 			)
 		)
 		(property "Value" "-12VA"
-			(at 481.33 304.8 0)
-			(hide yes)
+			(at 481.33 302.26 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -18393,14 +18372,14 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 500.38 165.1 0)
-			(hide yes)
+			(at 499.11 165.1 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(justify left)
 			)
 		)
 		(property "Footprint" ""
@@ -18548,14 +18527,14 @@
 			)
 		)
 		(property "Value" "+3.3V"
-			(at 43.18 57.15 0)
-			(hide yes)
+			(at 41.91 62.23 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(justify right)
 			)
 		)
 		(property "Footprint" ""
@@ -18628,13 +18607,13 @@
 		)
 		(property "Value" "GND"
 			(at 364.49 189.23 0)
-			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(justify right)
 			)
 		)
 		(property "Footprint" ""
@@ -18786,7 +18765,6 @@
 		)
 		(property "Value" "GND"
 			(at 425.45 158.75 0)
-			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -18863,8 +18841,7 @@
 			)
 		)
 		(property "Value" "+12VA"
-			(at 481.33 228.6 0)
-			(hide yes)
+			(at 481.33 229.87 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -19191,14 +19168,14 @@
 			)
 		)
 		(property "Value" "-12VA"
-			(at 425.45 81.28 0)
-			(hide yes)
+			(at 426.72 83.82 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(justify left)
 			)
 		)
 		(property "Footprint" ""
@@ -19362,7 +19339,6 @@
 		)
 		(property "Value" "+3.3V"
 			(at 560.07 96.52 0)
-			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -19440,8 +19416,7 @@
 			)
 		)
 		(property "Value" "-12VA"
-			(at 481.33 262.89 0)
-			(hide yes)
+			(at 481.33 260.35 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -19518,8 +19493,7 @@
 			)
 		)
 		(property "Value" "+15V_FUSED"
-			(at 45.72 196.85 0)
-			(hide yes)
+			(at 45.72 199.39 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -19598,7 +19572,6 @@
 		)
 		(property "Value" "GND"
 			(at 90.17 323.85 0)
-			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -19677,7 +19650,6 @@
 		)
 		(property "Value" "+3.3V"
 			(at 500.38 44.45 0)
-			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -19755,14 +19727,14 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 425.45 143.51 0)
-			(hide yes)
+			(at 424.18 143.51 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(justify right)
 			)
 		)
 		(property "Footprint" ""
@@ -20007,7 +19979,6 @@
 		)
 		(property "Value" "+3.3V"
 			(at 469.9 231.14 0)
-			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -20334,14 +20305,14 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 43.18 69.85 0)
-			(hide yes)
+			(at 44.45 72.39 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(justify right)
 			)
 		)
 		(property "Footprint" ""
@@ -20414,7 +20385,6 @@
 		)
 		(property "Value" "GND"
 			(at 560.07 158.75 0)
-			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -20492,14 +20462,14 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 425.45 114.3 0)
-			(hide yes)
+			(at 424.18 114.3 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(justify right)
 			)
 		)
 		(property "Footprint" ""
@@ -20651,7 +20621,6 @@
 		)
 		(property "Value" "GND"
 			(at 49.53 168.91 0)
-			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -20807,14 +20776,14 @@
 			)
 		)
 		(property "Value" "+15V_FUSED"
-			(at 49.53 246.38 0)
-			(hide yes)
+			(at 50.8 242.57 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(justify left)
 			)
 		)
 		(property "Footprint" ""
@@ -20964,8 +20933,7 @@
 			)
 		)
 		(property "Value" "+12VA"
-			(at 481.33 270.51 0)
-			(hide yes)
+			(at 481.33 271.78 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -21219,14 +21187,14 @@
 			)
 		)
 		(property "Value" "-12VA"
-			(at 425.45 140.97 0)
-			(hide yes)
+			(at 426.72 143.51 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(justify left)
 			)
 		)
 		(property "Footprint" ""
@@ -21299,13 +21267,13 @@
 		)
 		(property "Value" "GND"
 			(at 330.2 248.92 0)
-			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(justify right)
 			)
 		)
 		(property "Footprint" ""
@@ -21458,14 +21426,14 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 410.21 349.25 0)
-			(hide yes)
+			(at 408.94 349.25 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(justify right)
 			)
 		)
 		(property "Footprint" ""
@@ -21773,14 +21741,14 @@
 			)
 		)
 		(property "Value" "+15V_FUSED"
-			(at 90.17 191.77 0)
-			(hide yes)
+			(at 81.28 195.58 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(justify left)
 			)
 		)
 		(property "Footprint" ""
@@ -21933,14 +21901,14 @@
 			)
 		)
 		(property "Value" "-12VA"
-			(at 425.45 110.49 0)
-			(hide yes)
+			(at 426.72 114.3 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(justify left)
 			)
 		)
 		(property "Footprint" ""
@@ -22011,14 +21979,14 @@
 			)
 		)
 		(property "Value" "+12VA"
-			(at 425.45 45.72 0)
-			(hide yes)
+			(at 426.72 41.91 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(justify left)
 			)
 		)
 		(property "Footprint" ""
@@ -22090,14 +22058,14 @@
 			)
 		)
 		(property "Value" "+3.3V"
-			(at 49.53 106.68 0)
-			(hide yes)
+			(at 50.8 109.22 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(justify left)
 			)
 		)
 		(property "Footprint" ""
@@ -22170,13 +22138,13 @@
 		)
 		(property "Value" "GND"
 			(at 49.53 124.46 0)
-			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(justify right)
 			)
 		)
 		(property "Footprint" ""
@@ -22328,7 +22296,6 @@
 		)
 		(property "Value" "+3.3V"
 			(at 500.38 134.62 0)
-			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -22485,14 +22452,14 @@
 			)
 		)
 		(property "Value" "-12VA"
-			(at 49.53 151.13 0)
-			(hide yes)
+			(at 50.8 153.67 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(justify left)
 			)
 		)
 		(property "Footprint" ""
@@ -22640,14 +22607,14 @@
 			)
 		)
 		(property "Value" "-12VA"
-			(at 425.45 50.8 0)
-			(hide yes)
+			(at 427.99 50.8 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(justify left)
 			)
 		)
 		(property "Footprint" ""
@@ -22718,14 +22685,14 @@
 			)
 		)
 		(property "Value" "+12VA"
-			(at 425.45 135.89 0)
-			(hide yes)
+			(at 424.18 132.08 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(justify right)
 			)
 		)
 		(property "Footprint" ""
@@ -23034,13 +23001,13 @@
 		)
 		(property "Value" "GND"
 			(at 364.49 248.92 0)
-			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(justify right)
 			)
 		)
 		(property "Footprint" ""
@@ -23190,14 +23157,14 @@
 			)
 		)
 		(property "Value" "+12VA"
-			(at 425.45 106.68 0)
-			(hide yes)
+			(at 424.18 102.87 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(justify right)
 			)
 		)
 		(property "Footprint" ""
@@ -23270,7 +23237,6 @@
 		)
 		(property "Value" "GND"
 			(at 90.17 243.84 0)
-			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -23440,7 +23406,6 @@
 		)
 		(property "Value" "GND"
 			(at 410.21 364.49 0)
-			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -23676,14 +23641,14 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 425.45 128.27 0)
-			(hide yes)
+			(at 426.72 128.27 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(justify left)
 			)
 		)
 		(property "Footprint" ""
@@ -23756,7 +23721,6 @@
 		)
 		(property "Value" "GND"
 			(at 560.07 68.58 0)
-			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -23835,13 +23799,13 @@
 		)
 		(property "Value" "GND"
 			(at 330.2 128.27 0)
-			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(justify right)
 			)
 		)
 		(property "Footprint" ""
@@ -23993,7 +23957,6 @@
 		)
 		(property "Value" "+5V_EXC"
 			(at 49.53 76.2 0)
-			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
