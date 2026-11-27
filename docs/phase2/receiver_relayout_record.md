@@ -112,7 +112,8 @@ interleaved ADA4940 output pins).
 
 `/tmp/opencode/`: `after_netlist.xml`, `g1_compare.txt`, `after_erc.rpt`,
 `g3_layout.txt`, `g4_audit.txt`, `g4_list.txt`, `g5_span.txt`,
-`receiver.blocks.csv`, `before.receiver.kicad_sch`, `receiver_refactored.pdf`,
+`receiver.blocks.csv`, `before.receiver.kicad_sch`, the render
+`/tmp/opencode/receiver_refactored.pdf`,
 `receiver_page-1.png`, `overview.png`, the five `crop_*.png` files and four
 native zoom crops (`zoom_bypass.png`, `zoom_fda.png`, `zoom_bay.png`,
 `zoom_ref.png`, each a 40 x 40 mm region enlarged to 1600 px).
