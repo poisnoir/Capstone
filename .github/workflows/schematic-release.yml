@@ -1,0 +1,47 @@
+name: schematic-release
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Release tag to attach the PDF to
+        required: true
+
+permissions:
+  contents: write
+
+jobs:
+  pdf:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.release.tag_name || inputs.tag }}
+
+      - name: Install KiCad 10
+        run: |
+          sudo add-apt-repository --yes ppa:kicad/kicad-10.0-releases
+          sudo apt-get update
+          sudo apt-get install -y kicad poppler-utils
+          kicad-cli version
+
+      - name: Export BRD-01 schematic PDF
+        run: |
+          kicad-cli sch export pdf -o BRD-01_schematic.pdf \
+            hardware/brd-01/kicad/brd-01.kicad_sch
+
+      - name: Sanity-check the PDF
+        run: |
+          pages=$(pdfinfo BRD-01_schematic.pdf | awk '/^Pages:/{print $2}')
+          size=$(stat -c%s BRD-01_schematic.pdf)
+          echo "pages=$pages bytes=$size"
+          test "$pages" -ge 6
+          test "$size" -gt 200000
+
+      - name: Attach to the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ github.event.release.tag_name || inputs.tag }}
+        run: gh release upload "$TAG" BRD-01_schematic.pdf --clobber
