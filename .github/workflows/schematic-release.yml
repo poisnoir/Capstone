@@ -14,7 +14,7 @@ permissions:
 
 jobs:
   pdf:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
         with:
@@ -26,6 +26,9 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y kicad poppler-utils
           kicad-cli version
+          # KiCad 10 is required: the schematic files use format 20260306.
+          kicad-cli version | grep -q '^10\.' || {
+            echo "::error::kicad-cli $(kicad-cli version) cannot read KiCad 10 schematics"; exit 1; }
 
       - name: Export BRD-01 schematic PDF
         run: |
